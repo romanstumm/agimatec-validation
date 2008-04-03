@@ -78,10 +78,12 @@ public class ValidationContext {
             try {
                 switch (metaProperty.getAccess()) {
                     case FIELD:
+                        // TODO RSt - need the Field here, could be inherited (name not unique)
                         propertyValue =
                                 bean.getClass().getDeclaredField(metaProperty.getName()).get(bean);
                         break;
                     default:
+                        // TODO RSt - what about private methods (need the Method here)
                         propertyValue =
                                 PropertyUtils.getSimpleProperty(bean, metaProperty.getName());
                 }

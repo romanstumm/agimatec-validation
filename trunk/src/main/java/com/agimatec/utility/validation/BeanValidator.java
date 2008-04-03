@@ -32,7 +32,22 @@ public class BeanValidator {
     }
 
     /**
-     * API - validate a complex 'bean' with related beans according to
+     * convenience API. validate a single property.
+     * @param bean - the root object
+     * @param metaProperty - metadata for the property
+     * @return validation results
+     */
+    public ValidationResults validateProperty(Object bean, MetaProperty metaProperty) {
+        ValidationResults result = new ValidationResults();
+        ValidationContext context = new ValidationContext();
+        context.setBean(bean);
+        context.setMetaProperty(metaProperty);
+        validateProperty(context, result);
+        return result;
+    }
+
+    /**
+     * validate a complex 'bean' with related beans according to
      * validation rules in 'metaBean'
      *
      * @param context - the context is initialized with:
@@ -72,7 +87,7 @@ public class BeanValidator {
         }
     }
 
-    /** API - validate a single bean only. no related beans will be validated */
+    /** validate a single bean only. no related beans will be validated */
     public void validateBean(ValidationContext context, ValidationListener listener) {
         /**
          * field-level validations
@@ -103,7 +118,7 @@ public class BeanValidator {
     }
 
     /**
-     * API - validate a single property only. performs all validations
+     * validate a single property only. performs all validations
      * for this property.
      */
     public void validateProperty(ValidationContext context, ValidationListener listener) {

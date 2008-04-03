@@ -28,6 +28,8 @@ public class Jsr303Test extends TestCase {
         Set<InvalidConstraint<BusinessObject>> violations = validator.validate(object);
         assertNotNull(violations);
         assertTrue(!violations.isEmpty());
+
+        assertTrue(!validator.validateProperty(object, "title").isEmpty());
     }
 
     public void testMetadataAPI_Book() {

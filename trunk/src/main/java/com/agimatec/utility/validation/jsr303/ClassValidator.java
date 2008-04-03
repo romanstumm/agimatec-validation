@@ -76,11 +76,17 @@ public class ClassValidator<T> implements Validator<T> {
         return result.getInvalidConstraints();
     }
 
-    /** validate all constraints on <code>propertyName</code> property of object */
+    /**
+     * validate all constraints on <code>propertyName</code> property of object
+     * @param propertyName - the attribute name 
+     * TODO RSt - are nested property with dot-notation supported, private fields etc.?
+     **/
     public Set<InvalidConstraint<T>> validateProperty(T object, String propertyName,
                                                       String... groups) {
         GroupValidationContext context = createContext(object, groups);
         context.setMetaProperty(metaBean.getProperty(propertyName));
+        if (context.getMetaProperty() == null) throw new IllegalArgumentException(
+                "Unknown property " + object.getClass().getName() + "." + propertyName);
         ConstraintValidationListener<T> result = new ConstraintValidationListener<T>(object);
         List<String> sequence = context.getSequencedGroups();
         for (String currentGroup : sequence) {
@@ -158,7 +164,7 @@ public class ClassValidator<T> implements Validator<T> {
 
     public ElementDescriptor getConstraintsForProperty(String propertyName) {
         MetaProperty prop = metaBean.getProperty(propertyName);
-        if(prop == null) return null;
+        if (prop == null) return null;
         ElementDescriptorImpl edesc = prop.getFeature(Jsr303Features.Property.ElementDescriptor);
         if (edesc == null) {
             edesc = new ElementDescriptorImpl();

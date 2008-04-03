@@ -17,6 +17,7 @@ import java.util.ArrayList;
  * @author ${USER}
  * @version 1.0
  * @since <pre>07/06/2007</pre>
+ * Copyright: Agimatec GmbH 2008
  */
 public class BeanValidatorTest extends TestCase {
     public BeanValidatorTest(String name) {

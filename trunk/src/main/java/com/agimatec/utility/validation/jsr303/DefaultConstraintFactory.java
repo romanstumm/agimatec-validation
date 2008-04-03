@@ -8,7 +8,7 @@ import javax.validation.ConstraintFactory;
  * User: roman.stumm <br/>
  * Date: 01.04.2008 <br/>
  * Time: 13:18:36 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 public class DefaultConstraintFactory implements ConstraintFactory {
     /**

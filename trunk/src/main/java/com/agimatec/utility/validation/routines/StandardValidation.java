@@ -20,7 +20,7 @@ import java.util.regex.PatternSyntaxException;
  * User: roman.stumm <br/>
  * Date: 06.07.2007 <br/>
  * Time: 12:41:06 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 public class StandardValidation implements Validation {
     /**

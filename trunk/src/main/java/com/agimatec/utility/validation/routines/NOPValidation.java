@@ -9,7 +9,7 @@ import com.agimatec.utility.validation.ValidationListener;
  * User: roman.stumm <br/>
  * Date: 06.07.2007 <br/>
  * Time: 16:51:28 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 public class NOPValidation implements Validation {
     public void validate(ValidationContext context, ValidationListener listener) {

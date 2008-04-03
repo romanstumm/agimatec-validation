@@ -5,7 +5,7 @@ package com.agimatec.utility.validation.example;
  * User: roman.stumm <br/>
  * Date: 06.07.2007 <br/>
  * Time: 09:13:50 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 public class BusinessObjectAddress {
     private String city, country;

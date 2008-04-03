@@ -10,7 +10,7 @@ import java.lang.annotation.ElementType;
  * User: roman.stumm <br/>
  * Date: 02.04.2008 <br/>
  * Time: 12:23:45 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 class ElementDescriptorImpl implements ElementDescriptor {
     private ElementType elementType;

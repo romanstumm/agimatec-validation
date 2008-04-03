@@ -14,7 +14,7 @@ import java.util.HashSet;
  * User: roman.stumm <br/>
  * Date: 01.04.2008 <br/>
  * Time: 17:31:36 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 class ConstraintValidation implements Validation {
     private final Constraint constraint;

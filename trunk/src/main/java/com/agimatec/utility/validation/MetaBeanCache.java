@@ -11,7 +11,7 @@ import java.util.Map;
  * User: roman.stumm <br/>
  * Date: 18.02.2008 <br/>
  * Time: 11:38:53 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 public class MetaBeanCache implements MetaBeanFinder, Serializable {
     protected final FastHashMap cacheById;

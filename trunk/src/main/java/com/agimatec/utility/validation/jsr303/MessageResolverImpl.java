@@ -13,7 +13,7 @@ import java.util.*;
  * User: roman.stumm <br/>
  * Date: 02.04.2008 <br/>
  * Time: 17:21:51 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 public class MessageResolverImpl implements MessageResolver {
     private static final String DEFAULT_BUNDLE_NAME =

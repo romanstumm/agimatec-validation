@@ -10,6 +10,7 @@ import junit.framework.TestSuite;
  * @author ${USER}
  * @since <pre>04/02/2008</pre>
  * @version 1.0
+ * Copyright: Agimatec GmbH 2008
  */
 public class ValidationProviderFactoryTest extends TestCase {
     public ValidationProviderFactoryTest(String name) {

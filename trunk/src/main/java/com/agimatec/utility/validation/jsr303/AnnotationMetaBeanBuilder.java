@@ -22,7 +22,7 @@ import java.util.*;
  * User: roman.stumm <br/>
  * Date: 01.04.2008 <br/>
  * Time: 14:12:51 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
     private final Provider provider;

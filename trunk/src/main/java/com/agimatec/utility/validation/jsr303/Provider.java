@@ -4,7 +4,6 @@ import com.agimatec.utility.validation.BeanValidator;
 import com.agimatec.utility.validation.MetaBeanManager;
 
 import javax.validation.*;
-import java.io.Serializable;
 
 /**
  * Description: This is the main configuration class to customize this
@@ -12,7 +11,7 @@ import java.io.Serializable;
  * User: roman.stumm <br/>
  * Date: 01.04.2008 <br/>
  * Time: 14:03:48 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 public class Provider implements ValidationProvider {
     private static Provider instance;

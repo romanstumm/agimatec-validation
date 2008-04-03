@@ -12,7 +12,7 @@ import com.agimatec.utility.validation.Validation;
  * User: roman.stumm <br/>
  * Date: 06.07.2007 <br/>
  * Time: 10:29:57 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 public abstract class FeaturesCapable implements Serializable {
     private FastHashMap features = new FastHashMap();

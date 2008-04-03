@@ -4,6 +4,12 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.agimatec</groupId>
   <artifactId>agimatec-validation</artifactId>
+  <distributionManagement>
+	  <site>
+		  <id>www.agimatec.de</id>
+		  <url>scp://monty.agimatec.de/usr/local/apache2/htdocs/agimatec/agimatec-validation/site</url>
+	  </site>
+  </distributionManagement>
   <packaging>jar</packaging>
   <version>0.3-SNAPSHOT</version>
   <name>JSR 303: bean-validation by agimatec GmbH</name>

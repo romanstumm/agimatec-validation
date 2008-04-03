@@ -5,7 +5,7 @@ package com.agimatec.utility.validation.xml;
  * User: roman.stumm <br/>
  * Date: 05.07.2007 <br/>
  * Time: 15:18:17 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 public interface XMLMetaValue {
     // keys for Annotations

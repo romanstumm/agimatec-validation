@@ -8,7 +8,7 @@ import javax.validation.InvalidConstraint;
  * User: roman.stumm <br/>
  * Date: 01.04.2008 <br/>
  * Time: 14:50:12 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 class InvalidConstraintImpl<T> implements InvalidConstraint {
     private String message;

@@ -9,7 +9,7 @@ import java.util.List;
  * User: roman.stumm <br/>
  * Date: 05.07.2007 <br/>
  * Time: 11:41:34 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 public class BusinessObject {
     private long userId;

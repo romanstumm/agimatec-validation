@@ -16,6 +16,7 @@ import java.util.Map;
  * @author ${USER}
  * @since <pre>07/05/2007</pre>
  * @version 1.0
+ * Copyright: Agimatec GmbH 2008
  */
 public class XMLMetaBeanInfosTest extends TestCase {
 

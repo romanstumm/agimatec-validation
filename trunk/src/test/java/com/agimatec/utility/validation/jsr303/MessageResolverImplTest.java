@@ -12,6 +12,7 @@ import javax.validation.*;
  * @author ${USER}
  * @version 1.0
  * @since <pre>04/02/2008</pre>
+ * Copyright: Agimatec GmbH 2008
  */
 public class MessageResolverImplTest extends TestCase {
     MessageResolverImpl resolver = new MessageResolverImpl();

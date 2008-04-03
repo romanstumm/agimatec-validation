@@ -9,7 +9,7 @@ import java.util.Map;
  * User: roman.stumm <br/>
  * Date: 05.07.2007 <br/>
  * Time: 16:17:20 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 public interface MetaBeanFinder {
     /**

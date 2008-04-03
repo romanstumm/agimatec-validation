@@ -15,7 +15,7 @@ import com.agimatec.utility.validation.jsr303.ClassValidator;
  * User: roman.stumm <br/>
  * Date: 01.04.2008 <br/>
  * Time: 11:48:37 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 public class ValidationTest extends TestCase {
     public void testBook() {
@@ -51,7 +51,6 @@ public class ValidationTest extends TestCase {
         book.setAuthor(author);
         Set<InvalidConstraint> invalidConstraints = validator.validate(book);
         //assuming an english locale, the interpolated message is returned
-        int i = 0;
         for (InvalidConstraint invalidConstraint : invalidConstraints) {
             if (invalidConstraint.getBeanClass() == Book.class) {
                 assertTrue("may not be null or empty".equals(invalidConstraint.getMessage()));
@@ -79,7 +78,6 @@ public class ValidationTest extends TestCase {
                 //the offending property
                 assertTrue( "author.lastName".equals(invalidConstraint.getPropertyPath()));
             }
-            i++;
         }
     }
 

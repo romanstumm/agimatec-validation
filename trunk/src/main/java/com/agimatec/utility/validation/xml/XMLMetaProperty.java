@@ -10,7 +10,7 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
  * User: roman.stumm <br/>
  * Date: 05.07.2007 <br/>
  * Time: 14:27:30 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 @XStreamAlias("property")
 public class XMLMetaProperty extends XMLMetaElement {

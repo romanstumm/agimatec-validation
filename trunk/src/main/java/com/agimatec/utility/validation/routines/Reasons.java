@@ -8,7 +8,7 @@ import com.agimatec.utility.validation.model.Features;
  * User: roman.stumm <br/>
  * Date: 06.07.2007 <br/>
  * Time: 13:20:43 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 public interface Reasons extends Features.Property {
     // The reasons inherited from Features are VALIDATION features only.

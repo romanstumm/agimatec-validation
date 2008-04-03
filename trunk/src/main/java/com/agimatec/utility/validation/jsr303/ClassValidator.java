@@ -24,7 +24,7 @@ import java.util.Set;
  * User: roman.stumm <br/>
  * Date: 01.04.2008 <br/>
  * Time: 13:36:33 <br/>
- * 
+ * Copyright: Agimatec GmbH 2008
  */
 public class ClassValidator<T> implements Validator<T> {
     protected final MetaBean metaBean;

@@ -17,6 +17,7 @@ import java.lang.reflect.Method;
  * @author ${USER}
  * @version 1.0
  * @since <pre>07/09/2007</pre>
+ * Copyright: Agimatec GmbH 2008
  */
 public class ThreadBeanValidatorTest extends TestCase {
     private ThreadBeanValidator validator;

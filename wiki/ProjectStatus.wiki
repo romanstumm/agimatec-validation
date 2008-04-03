@@ -12,4 +12,4 @@
   Refer to classes in packages javax.validation and com.agimatec.utility.validation.jsr303
   
   or you can access the propriatary APIs of agimatec-validation for additional features.
-  Refer to classes MetaBeanManagerFactory, BeanValidator and ThreadBeanValidator.
+  Refer to classes !MetaBeanManagerFactory, !BeanValidator and !ThreadBeanValidator.

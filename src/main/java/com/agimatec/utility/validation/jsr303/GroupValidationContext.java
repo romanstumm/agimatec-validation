@@ -1,8 +1,8 @@
 package com.agimatec.utility.validation.jsr303;
 
 import com.agimatec.utility.validation.ValidationContext;
-import com.agimatec.utility.validation.model.MetaProperty;
 import com.agimatec.utility.validation.model.MetaBean;
+import com.agimatec.utility.validation.model.MetaProperty;
 
 import javax.validation.Constraint;
 import javax.validation.MessageResolver;
@@ -30,6 +30,7 @@ class GroupValidationContext extends ValidationContext {
     private String[] requestedGroups;
     private List<String> sequencedGroups;
     private String currentGroup;
+    private boolean fieldAccessOnly;
 
     /**
      * contains the validation constraints that have already been processed during

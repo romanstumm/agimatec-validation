@@ -1,14 +1,13 @@
 package javax.validation;
 
+import com.agimatec.utility.validation.jsr303.ClassValidator;
 import junit.framework.TestCase;
 
-import java.util.Set;
-import java.util.List;
+import java.lang.annotation.ElementType;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.lang.annotation.ElementType;
-
-import com.agimatec.utility.validation.jsr303.ClassValidator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Description: <br/>
@@ -118,6 +117,7 @@ public class ValidationTest extends TestCase {
         assertTrue(((Integer) constraintDescriptor.getParameters().get("max")) == 30);
         assertTrue(constraintDescriptor.getGroups().size() == 1);
         propertyDescriptor = bookValidator.getConstraintsForProperty("author");
+        assertEquals(ElementType.FIELD, propertyDescriptor.getElementType());
         assertTrue(propertyDescriptor.getConstraintDescriptors().size() == 1);
         assertTrue(propertyDescriptor.isCascaded());
     }

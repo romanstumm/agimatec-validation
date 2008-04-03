@@ -1,8 +1,8 @@
 package com.agimatec.utility.validation;
 
+import com.agimatec.utility.validation.model.Features;
 import com.agimatec.utility.validation.model.MetaBean;
 import com.agimatec.utility.validation.model.MetaProperty;
-import com.agimatec.utility.validation.model.Features;
 
 import java.util.Collection;
 
@@ -33,7 +33,8 @@ public class BeanValidator {
 
     /**
      * convenience API. validate a single property.
-     * @param bean - the root object
+     *
+     * @param bean         - the root object
      * @param metaProperty - metadata for the property
      * @return validation results
      */
@@ -44,6 +45,11 @@ public class BeanValidator {
         context.setMetaProperty(metaProperty);
         validateProperty(context, result);
         return result;
+    }
+
+    public void validateProperty(ValidationContext context, ValidationListener listener) {
+        validateFields(context, listener);
+        validateMethods(context, listener);
     }
 
     /**
@@ -90,26 +96,21 @@ public class BeanValidator {
     /** validate a single bean only. no related beans will be validated */
     public void validateBean(ValidationContext context, ValidationListener listener) {
         /**
-         * field-level validations
+         * execute all field level validations
          */
         for (MetaProperty prop : context.getMetaBean().getProperties()) {
-            if (prop.getAccess() == MetaProperty.ACCESS.FIELD) {
-                context.setMetaProperty(prop);
-                validateProperty(context, listener);
-            }
+            context.setMetaProperty(prop);
+            validateFields(context, listener);
         }
-
         /**
-         * property-level validation
+         * execute all method level validations
          */
         for (MetaProperty prop : context.getMetaBean().getProperties()) {
-            if (prop.getAccess() == MetaProperty.ACCESS.METHOD) {
-                context.setMetaProperty(prop);
-                validateProperty(context, listener);
-            }
+            context.setMetaProperty(prop);
+            validateMethods(context, listener);
         }
         /**
-         * bean-level validation
+         * execute all bean level validations
          */
         context.setMetaProperty(null);
         for (Validation validation : context.getMetaBean().getValidations()) {
@@ -117,13 +118,19 @@ public class BeanValidator {
         }
     }
 
+    protected void validateFields(ValidationContext context, ValidationListener listener) {
+        for (Validation validation : context.getMetaProperty().getValidations()) {
+            if(validation.isFieldAccess()) validation.validate(context, listener);
+        }
+    }
+
     /**
      * validate a single property only. performs all validations
      * for this property.
      */
-    public void validateProperty(ValidationContext context, ValidationListener listener) {
+    protected void validateMethods(ValidationContext context, ValidationListener listener) {
         for (Validation validation : context.getMetaProperty().getValidations()) {
-            validation.validate(context, listener);
+            if(!validation.isFieldAccess()) validation.validate(context, listener);
         }
     }
 

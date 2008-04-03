@@ -5,6 +5,9 @@ import com.agimatec.utility.validation.model.MetaBean;
 import com.agimatec.utility.validation.model.MetaProperty;
 import org.apache.commons.beanutils.PropertyUtils;
 
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.IdentityHashMap;
 
 /**
@@ -67,7 +70,28 @@ public class ValidationContext {
         return this;
     }
 
+    /** get the value from the given reflection element */
+    public Object getPropertyValue(AnnotatedElement element) {
+        if (metaProperty == null) throw new IllegalStateException();
+        try {
+            if (element instanceof Field) {
+                Field f = (Field)element;
+                if(!f.isAccessible()) { f.setAccessible(true); }
+                propertyValue = f.get(bean);
+            } else if (element instanceof Method) {
+                propertyValue = ((Method) element).invoke(bean);
+            } else {
+                return getPropertyValue();
+            }
+        } catch (Exception e) {
+            throw new IllegalArgumentException("cannot access " + metaProperty, e);
+        }
+        return propertyValue;
+    }
+
     /**
+     * get the cached value or access it somehow (via field or method)
+     *
      * @return the current value of the property accessed by reflection
      * @throws IllegalArgumentException - error accessing attribute (config error, reflection problem)
      * @throws IllegalStateException    - when no property is currently set in the context (application logic bug)
@@ -76,16 +100,26 @@ public class ValidationContext {
         if (metaProperty == null) throw new IllegalStateException();
         if (propertyValue == UNKNOWN) {
             try {
-                switch (metaProperty.getAccess()) {
-                    case FIELD:
-                        // TODO RSt - need the Field here, could be inherited (name not unique)
-                        propertyValue =
-                                bean.getClass().getDeclaredField(metaProperty.getName()).get(bean);
-                        break;
-                    default:
-                        // TODO RSt - what about private methods (need the Method here)
-                        propertyValue =
-                                PropertyUtils.getSimpleProperty(bean, metaProperty.getName());
+                try {   // try public method
+                    propertyValue = PropertyUtils.getSimpleProperty(bean, metaProperty.getName());
+                } catch (NoSuchMethodException ex) {
+                    try { // try public field
+                        propertyValue = bean.getClass().getField(metaProperty.getName()).get(bean);
+                    } catch (NoSuchFieldException ex2) {
+                        // search for private/protected field up the hierarchy
+                        Class theClass = bean.getClass();
+                        while (theClass != null) {
+                            try {
+                                Field f = theClass.getDeclaredField(metaProperty.getName());
+                                if(!f.isAccessible()) { f.setAccessible(true); }
+                                propertyValue =f.get(bean);                                
+                                break;
+                            } catch (NoSuchFieldException ex3) {
+                                // do nothing
+                            }
+                            theClass = theClass.getSuperclass();
+                        }
+                    }
                 }
             } catch (Exception e) {
                 throw new IllegalArgumentException("cannot access " + metaProperty, e);
@@ -169,4 +203,5 @@ public class ValidationContext {
     protected void moveUp(Object bean, MetaBean metaBean) {
         setBean(bean, metaBean); // reset context state
     }
+
 }

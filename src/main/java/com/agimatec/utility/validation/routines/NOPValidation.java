@@ -12,6 +12,10 @@ import com.agimatec.utility.validation.ValidationListener;
  * Copyright: Agimatec GmbH 2008
  */
 public class NOPValidation implements Validation {
+    public boolean isFieldAccess() {
+        return false;  
+    }
+
     public void validate(ValidationContext context, ValidationListener listener) {
         // do nothing
     }

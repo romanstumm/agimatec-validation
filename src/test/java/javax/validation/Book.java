@@ -2,7 +2,6 @@ package javax.validation;
 
 @GroupSequence(name = "default", sequence = {"first", "second", "last"})
 public class Book {
-    @NotEmpty(groups = "first")
     private String title;
     @Length(max = 30, groups = "second")
     private String subtitle;
@@ -10,6 +9,7 @@ public class Book {
     @NotNull(groups = "first")
     private Author author;
 
+    @NotEmpty(groups = "first")
     public String getTitle() {
         return title;
     }

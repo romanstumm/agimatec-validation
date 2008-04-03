@@ -7,6 +7,8 @@ import com.agimatec.utility.validation.ValidationListener;
 import javax.validation.Constraint;
 import javax.validation.MessageResolver;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
 
 /**
  * Description: Adapter between Constraint (JSR303) and Validation (Agimatec)<br/>
@@ -21,14 +23,16 @@ class ConstraintValidation implements Validation {
     private final String messageKey;
     private final Annotation annotation; // for metadata request API
     private ConstraintDescriptorImpl descriptor;
+    private final AnnotatedElement element;
 
-    public ConstraintValidation(Constraint constraint, String messageKey, String[] groups,
-                                Annotation annotation) {
+    protected ConstraintValidation(Constraint constraint, String messageKey, String[] groups,
+                                Annotation annotation, AnnotatedElement element) {
         this.constraint = constraint;
         this.messageKey = messageKey;
         this.groups = (groups == null || groups.length == 0) ?
                 GroupValidationContext.DEFAULT_GROUPS : groups;
         this.annotation = annotation;
+        this.element= element;
     }
 
     public ConstraintDescriptorImpl getConstraintDescriptor() {
@@ -38,6 +42,9 @@ class ConstraintValidation implements Validation {
         return descriptor;
     }
 
+    public boolean isFieldAccess() {
+        return element instanceof Field;
+    }
 
     public void validate(ValidationContext context, ValidationListener listener) {
         MessageResolver messageResolver = null;
@@ -53,10 +60,11 @@ class ConstraintValidation implements Validation {
             if (!groupContext.collectValidated(context.getBean(), constraint))
                 return; // already done
             messageResolver = groupContext.getMessageResolver();
+
         }
         Object value;
         if (context.getMetaProperty() != null) {
-            value = context.getPropertyValue();
+            value = context.getPropertyValue(element);
         } else {
             value = context.getBean();
         }
@@ -92,5 +100,9 @@ class ConstraintValidation implements Validation {
 
     public Annotation getAnnotation() {
         return annotation;
+    }
+
+    public AnnotatedElement getElement() {
+        return element;
     }
 }

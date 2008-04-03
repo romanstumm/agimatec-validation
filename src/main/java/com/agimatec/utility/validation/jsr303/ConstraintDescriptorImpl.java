@@ -3,6 +3,7 @@ package com.agimatec.utility.validation.jsr303;
 import javax.validation.Constraint;
 import javax.validation.ConstraintDescriptor;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -33,6 +34,10 @@ class ConstraintDescriptorImpl implements ConstraintDescriptor {
     /** TODO RSt - what if the constraint is NOT based on a annotation? */
     public Annotation getAnnotation() {
         return constraintValidation.getAnnotation();
+    }
+
+    public boolean isFieldAccess() {
+        return constraintValidation.getElement() instanceof Field;
     }
 
     public Map<String, Object> getParameters() {

@@ -19,6 +19,12 @@ class ElementDescriptorImpl implements ElementDescriptor {
     private Set<ConstraintDescriptor> constraintDescriptors;
     private String propertyPath;
 
+    /**
+     * TODO RSt - what if the constraint is NOT based on annotations?
+     * TODO RSt - what when both field and method of property is annotated?
+     * 
+     * @return
+     */
     public ElementType getElementType() {
         return elementType;
     }

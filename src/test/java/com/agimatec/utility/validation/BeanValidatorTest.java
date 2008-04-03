@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * @author ${USER}
  * @version 1.0
  * @since <pre>07/06/2007</pre>
- * Copyright: Agimatec GmbH 2008
+ *        Copyright: Agimatec GmbH 2008
  */
 public class BeanValidatorTest extends TestCase {
     public BeanValidatorTest(String name) {
@@ -34,8 +34,8 @@ public class BeanValidatorTest extends TestCase {
 
     public void testValidate() {
         MetaBeanFinder finder = MetaBeanManagerFactory.getFinder();
-        MetaBeanManagerFactory.getRegistry().addLoader(new XMLMetaBeanURLLoader(
-                BusinessObject.class.getResource("test-beanInfos.xml")));
+        MetaBeanManagerFactory.getRegistry().addLoader(
+                new XMLMetaBeanURLLoader(BusinessObject.class.getResource("test-beanInfos.xml")));
         MetaBean info = finder.findForClass(BusinessObject.class);
         BusinessObject object = new BusinessObject();
         object.setAddress(new BusinessObjectAddress());
@@ -45,6 +45,9 @@ public class BeanValidatorTest extends TestCase {
         assertTrue(results.hasErrorForReason(Reasons.MANDATORY));
         assertTrue(results.hasError(object, null));
         assertTrue(results.hasError(object.getAddress(), null));
+
+        assertTrue(validator.validateProperty(object, info.getProperty("firstName")).hasError(
+                object, "firstName"));
 
         object.setUserId(1L);
         object.setFirstName("Hans");

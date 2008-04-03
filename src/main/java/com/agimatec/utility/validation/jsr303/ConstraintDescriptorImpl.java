@@ -22,6 +22,10 @@ class ConstraintDescriptorImpl implements ConstraintDescriptor {
     private Map<String, Object> parameters;
     private Set<String> groups = Collections.EMPTY_SET;
 
+    /**
+     * TODO RSt - what if the constraint is NOT based on a annotation?
+     * @return
+     */
     public Annotation getAnnotation() {
         return annotation;
     }

@@ -1,0 +1,19 @@
+#summary Dashboard agimatec-validation framework
+
+= Introduction =
+
+The Wiki of "agimatec-validation" is open for community contribution. Useful information will be eventually incorporated into other parts of this site. Please be careful not to overwrite content from other people! 
+
+= Project status =
+
+  * The agimatec-validation framework is older than the JSR 303 specification, but the similarities were striking so that the adaption to the standard was possible withing a short time.  There are still things to be done...
+
+  * The specification is still in a early draft state and subject to change. This implementation will change as soon as the specification is stable.
+
+  * The classes in javax.validation will be removed as soon as they are available from official sites.
+
+  * You can use the framework with the JSR303 interfaces if you want to strictly use the standard.
+  Refer to classes in packages javax.validation and com.agimatec.utility.validation.jsr303
+  
+  or you can access the propriatary APIs of agimatec-validation for additional features.
+  Refer to classes MetaBeanManagerFactory, BeanValidator and ThreadBeanValidator.

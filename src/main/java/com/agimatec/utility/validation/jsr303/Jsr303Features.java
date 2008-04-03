@@ -8,7 +8,7 @@ import com.agimatec.utility.validation.model.Features;
  * User: roman.stumm <br/>
  * Date: 02.04.2008 <br/>
  * Time: 15:22:49 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  * @see com.agimatec.utility.validation.model.FeaturesCapable
  * @see com.agimatec.utility.validation.model.Features
  */

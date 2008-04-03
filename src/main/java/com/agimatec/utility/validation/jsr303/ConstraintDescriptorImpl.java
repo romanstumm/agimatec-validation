@@ -14,7 +14,7 @@ import java.util.Collections;
  * User: roman.stumm <br/>
  * Date: 02.04.2008 <br/>
  * Time: 12:26:50 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 class ConstraintDescriptorImpl implements ConstraintDescriptor {
     private Constraint constraint;

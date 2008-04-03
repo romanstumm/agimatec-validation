@@ -5,7 +5,7 @@ package com.agimatec.utility.validation;
  * User: roman.stumm <br/>
  * Date: 06.07.2007 <br/>
  * Time: 13:18:24 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 public interface ValidationListener {
     /**

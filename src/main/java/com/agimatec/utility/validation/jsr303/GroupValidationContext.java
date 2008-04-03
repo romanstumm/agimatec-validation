@@ -13,7 +13,7 @@ import java.util.*;
  * User: roman.stumm <br/>
  * Date: 01.04.2008 <br/>
  * Time: 16:32:35 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 class GroupValidationContext extends ValidationContext {
     public static final String DEFAULT_GROUP = "default";

@@ -8,7 +8,7 @@ import com.agimatec.utility.validation.xml.XMLMetaBeanRegistry;
  * User: roman.stumm <br/>
  * Date: 05.07.2007 <br/>
  * Time: 16:20:03 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  * @see com.agimatec.utility.validation.model.MetaBean
  * @see com.agimatec.utility.validation.MetaBeanManager
  */

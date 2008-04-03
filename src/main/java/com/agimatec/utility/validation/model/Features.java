@@ -8,7 +8,7 @@ package com.agimatec.utility.validation.model;
  * User: roman.stumm <br/>
  * Date: 05.07.2007 <br/>
  * Time: 17:03:47 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  * @see FeaturesCapable
  */
 public interface Features {

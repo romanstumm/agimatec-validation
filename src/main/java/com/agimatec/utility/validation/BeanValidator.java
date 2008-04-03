@@ -16,7 +16,7 @@ import java.util.Collection;
  * User: roman.stumm <br/>
  * Date: 06.07.2007 <br/>
  * Time: 12:28:46 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 public class BeanValidator {
     /**

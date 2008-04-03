@@ -14,7 +14,7 @@ import java.beans.IntrospectionException;
  * User: roman.stumm <br/>
  * Date: 02.04.2008 <br/>
  * Time: 11:42:50 <br/>
- * 
+ * Copyright: Agimatec GmbH 2008
  */
 public class ReflectUtils {
     public static Class getBeanTypeFromField(Field field) {

@@ -8,7 +8,7 @@ import com.thoughtworks.xstream.annotations.Annotations;
  * User: roman.stumm <br/>
  * Date: 05.07.2007 <br/>
  * Time: 14:54:13 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 public class XMLMapper {
     private static final XMLMapper instance = new XMLMapper();

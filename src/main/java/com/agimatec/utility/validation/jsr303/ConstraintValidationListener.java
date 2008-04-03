@@ -1,19 +1,18 @@
 package com.agimatec.utility.validation.jsr303;
 
-import com.agimatec.utility.validation.ValidationListener;
 import com.agimatec.utility.validation.ValidationContext;
+import com.agimatec.utility.validation.ValidationListener;
 
 import javax.validation.InvalidConstraint;
-import javax.validation.MessageResolver;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Description: <br/>
  * User: roman.stumm <br/>
  * Date: 01.04.2008 <br/>
  * Time: 14:52:19 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 class ConstraintValidationListener<T> implements ValidationListener {
     private final Set<InvalidConstraint<T>> invalidConstraints = new HashSet();

@@ -12,7 +12,7 @@ import java.io.Serializable;
  * User: roman.stumm <br/>
  * Date: 05.07.2007 <br/>
  * Time: 14:34:46 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 @XStreamAlias("validator")
 public class XMLMetaValidator implements Serializable {

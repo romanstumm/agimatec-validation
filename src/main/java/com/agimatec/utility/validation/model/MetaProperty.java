@@ -8,7 +8,7 @@ import com.agimatec.utility.validation.Validation;
  * User: roman.stumm <br/>
  * Date: 06.07.2007 <br/>
  * Time: 09:58:57 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  * @see Validation
  * @see MetaBean
  */

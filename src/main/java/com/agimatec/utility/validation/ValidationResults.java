@@ -8,7 +8,7 @@ import java.util.*;
  * User: roman.stumm <br/>
  * Date: 06.07.2007 <br/>
  * Time: 12:26:55 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 public class ValidationResults implements ValidationListener, Serializable {
     private Map<String, List<Error>> errorsByReason;

@@ -16,7 +16,7 @@ import java.util.*;
  * User: roman.stumm <br/>
  * Date: 09.07.2007 <br/>
  * Time: 17:14:12 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 public class JSONGenerator {
     private Template template;

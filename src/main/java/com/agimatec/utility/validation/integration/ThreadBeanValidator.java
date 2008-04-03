@@ -15,7 +15,7 @@ import java.util.Collection;
  * User: roman.stumm <br/>
  * Date: 09.07.2007 <br/>
  * Time: 13:49:11 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  * @see Validate
  * @see ThreadValidationContext
  */

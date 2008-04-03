@@ -10,7 +10,7 @@ import java.util.Map;
  * User: roman.stumm <br/>
  * Date: 14.02.2008 <br/>
  * Time: 11:00:21 <br/>
- *
+ * Copyright: Agimatec GmbH 2008
  */
 public interface MetaBeanEnricher {
 

@@ -7,7 +7,6 @@ import com.agimatec.utility.validation.ValidationListener;
 import javax.validation.Constraint;
 import javax.validation.MessageResolver;
 import java.lang.annotation.Annotation;
-import java.util.HashSet;
 
 /**
  * Description: Adapter between Constraint (JSR303) and Validation (Agimatec)<br/>
@@ -34,15 +33,7 @@ class ConstraintValidation implements Validation {
 
     public ConstraintDescriptorImpl getConstraintDescriptor() {
         if (descriptor == null) {
-            descriptor = new ConstraintDescriptorImpl();
-            descriptor.setAnnotation(getAnnotation());
-            if (getGroups() != null) {
-                descriptor.setGroups(new HashSet(getGroups().length));
-                for (String eachGroup : getGroups()) {
-                    descriptor.getGroups().add(eachGroup);
-                }
-            }
-            descriptor.setConstraint(getConstraint());
+            descriptor = new ConstraintDescriptorImpl(this);
         }
         return descriptor;
     }

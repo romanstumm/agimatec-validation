@@ -47,6 +47,11 @@ public class BeanValidator {
         return result;
     }
 
+
+    /**
+     * validate a single property only. performs all validations
+     * for this property.
+     */
     public void validateProperty(ValidationContext context, ValidationListener listener) {
         validateFields(context, listener);
         validateMethods(context, listener);
@@ -118,19 +123,23 @@ public class BeanValidator {
         }
     }
 
+    /**
+     * validate a single property only. performs all field-access validations
+     * for this property.
+     */
     protected void validateFields(ValidationContext context, ValidationListener listener) {
         for (Validation validation : context.getMetaProperty().getValidations()) {
-            if(validation.isFieldAccess()) validation.validate(context, listener);
+            if (validation.isFieldAccess()) validation.validate(context, listener);
         }
     }
 
     /**
-     * validate a single property only. performs all validations
+     * validate a single property only. performs all method-access validations
      * for this property.
      */
     protected void validateMethods(ValidationContext context, ValidationListener listener) {
         for (Validation validation : context.getMetaProperty().getValidations()) {
-            if(!validation.isFieldAccess()) validation.validate(context, listener);
+            if (!validation.isFieldAccess()) validation.validate(context, listener);
         }
     }
 

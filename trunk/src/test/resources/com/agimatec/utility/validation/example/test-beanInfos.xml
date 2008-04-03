@@ -1,0 +1,55 @@
+<beanInfos>
+  <validator id="standard" java="com.agimatec.utility.validation.routines.NOPValidation"
+             jsFunction="noop"/>
+  <validator id="email" java="com.agimatec.utility.validation.routines.EMailValidation"/>
+  <bean id="com.agimatec.utility.validation.example.BusinessObject" impl="com.agimatec.utility.validation.example.BusinessObject">
+    <feature key="mainKey">
+      <value class="string">userId</value>
+    </feature>
+    <feature key="DOMAIN">
+      <value class="string">TestObjects</value>
+    </feature>
+    <feature key="WIDGET">
+      <value class="string">entry</value>
+    </feature>
+    <property name="userId" mandatory="true"/>
+    <property name="firstName" mandatory="true" maxLength="100"/>
+    <property name="lastName" mandatory="true" maxLength="100"/>
+    <property name="title" mandatory="false" maxLength="10"/>
+    <property timeLag="PAST" name="dateBirth" mandatory="false"/>
+    <property timeLag="FUTURE" name="validTo" mandatory="false"/>
+    <property name="email">
+      <feature key="WIDGET">
+        <value class="string">entry</value>
+      </feature>
+      <feature key="TABLE_COLUMN">
+        <value class="boolean">true</value>
+      </feature>
+      <feature key="ajax-formatter">
+        <value class="map">
+          <entry>
+            <string>locale</string>
+            <string>DE</string>
+          </entry>
+          <entry>
+            <string>style</string>
+            <string>info</string>
+          </entry>
+        </value>
+      </feature>
+      <validator refId="email"/>
+      <validator refId="standard"/>
+    </property>
+    <relationship beanId="com.agimatec.utility.validation.example.Address" name="address" mandatory="false"
+                  displayName="UserAddress"/>
+    <relationship beanId="com.agimatec.utility.validation.example.Address" name="addresses" maxLength="3"/>
+  </bean>
+  <bean id="com.agimatec.utility.validation.example.Address" impl="com.agimatec.utility.validation.example.BusinessObjectAddress">
+    <feature key="DOMAIN">
+      <value class="string">TestObjects</value>
+    </feature>
+    <property name="city"/>
+    <property name="country" mandatory="true" maxLength="10"/>
+    <relationship name="owner" beanId="com.agimatec.utility.validation.example.BusinessObject" mandatory="true"/>
+  </bean>
+</beanInfos>

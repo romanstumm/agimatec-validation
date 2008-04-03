@@ -22,7 +22,7 @@ javax.validation.Validator customerValidator = new ClassValidator(Customer.class
 
 or use the !ValidationProviderFactory 
 {{{
-javax.validation.Validator customerValidator = ValidationProviderFactory.createValidator(Customer.class);
+javax.validation.Validator<Customer> customerValidator = ValidationProviderFactory.createValidator(Customer.class);
 }}}
 
 2. validate an instance of your business class
@@ -32,7 +32,7 @@ javax.validation.Validator customerValidator = ValidationProviderFactory.createV
 // ... some business code to create the customer instance
 
 // validate the instance and its child objects
-Set<InvalidConstraint<BusinessObject>> violations = customerValidator.validate(customer);
+Set<InvalidConstraint<Customer>> violations = customerValidator.validate(customer);
 }}}
 
 3. Create constraints for your classes with annotations
@@ -40,7 +40,7 @@ Set<InvalidConstraint<BusinessObject>> violations = customerValidator.validate(c
 If you want the validator to find some !InvalidConstraints, annotate your business objects with the annotations in javax.validation or create your own annotations for custom validation rules.
 
 {{{
-public class Author {
+public class Customer{
     @NotEmpty(groups = "last")
     private String firstName;
     @NotEmpty(groups = "first")

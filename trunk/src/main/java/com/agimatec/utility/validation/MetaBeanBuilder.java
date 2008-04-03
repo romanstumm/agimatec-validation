@@ -3,6 +3,7 @@ package com.agimatec.utility.validation;
 import static com.agimatec.utility.validation.model.Features.Property.*;
 import com.agimatec.utility.validation.model.MetaBean;
 import com.agimatec.utility.validation.model.MetaProperty;
+import com.agimatec.utility.validation.model.FeaturesCapable;
 import com.agimatec.utility.validation.routines.StandardValidation;
 import com.agimatec.utility.validation.xml.*;
 import org.apache.commons.lang.ClassUtils;
@@ -288,6 +289,7 @@ public class MetaBeanBuilder {
             meta.setBeanClass(findLocalClass(result.xmlMeta.getImpl()));
         }*/
         result.xmlMeta.mergeFeaturesInto(meta);
+        enrichValidations(meta, result.xmlMeta, result);
         if (result.xmlMeta.getProperties() != null) {
             for (XMLMetaProperty xmlProp : result.xmlMeta.getProperties()) {
                 enrichElement(meta, xmlProp, result);
@@ -313,7 +315,7 @@ public class MetaBeanBuilder {
         return prop;
     }
 
-    protected void enrichValidations(MetaProperty prop, XMLMetaElement xmlProp,
+    protected void enrichValidations(FeaturesCapable prop, XMLFeaturesCapable xmlProp,
                                      XMLResult result) throws Exception {
         if (xmlProp.getValidators() != null) {
             String[] func = prop.getFeature(JAVASCRIPT_VALIDATION_FUNCTIONS);

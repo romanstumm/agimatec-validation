@@ -129,14 +129,7 @@ This implementation is based on the validation framework of agimatec GmbH, that 
       <version>2.3.10</version>
     </dependency>
   </dependencies>
-
-  <repositories>
-    <repository>
-      <id>proxy</id>
-      <name>local mirror</name>
-      <url>http://172.29.134.4:9999/repository</url>
-    </repository>
-  </repositories>
+  
   <build>
     <plugins>
       <plugin>

@@ -88,10 +88,8 @@ The framework offers additional features that are not part of the upcoming speci
 }}}
 
   * the xml describes two classes: Address and Country
-  * validator validates Adress.country, because of <relationship/> tag, that links
-    the address to its child country
-  * you can add more "features" to both a <bean/> or a <property/> with the <feature/>
-    tag.
+  * validator validates Adress.country, because of <relationship/> tag, that links the address to its child country
+  * you can add more "features" to both a <bean/> or a <property/> with the <feature/> tag.
   * the value of the feature can be of any type (based on XStream xml serializer)
 
 You can also add custom validators or exchange the default validators:

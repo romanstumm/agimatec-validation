@@ -12,6 +12,7 @@ The Wiki of "agimatec-validation" is open for community contribution. Useful inf
   * Flexible meta data model can be used for various purposes (see class !MetaBean)
   * Decorate classes and define validators with XML on multiple layers of your application
   * Support for dynamic creation of !MetaBeans (e.g. role-specific validation rules for different users, administration/change of meta data during runtime)
+  * A class can have more than one set of validation (multiple !MetaBeans per class identified by !IDs)
   * Load the XML descriptors from any resource (classpath, URL/webservice, database), create own loaders (see interface !XMLMetaBeanLoader and !XMLMetaBeanRegistry)
   * Generate JSON code (based on a freemarker template) from the meta data (e.g. use meta data in AJAX GUIs to support validation or create a generic GUI for your beans - this framework provides the basis for such solutions) 
   * Integrate automatic validation of method-calls (e.g. tested with XFire, call the class !ThreadBeanValidator from within a custom org.codehaus.xfire.service.invoker.Invoker)

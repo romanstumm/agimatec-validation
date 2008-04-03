@@ -1,0 +1,57 @@
+#summary Getting started with agimatec-validation framework
+
+= Requirements =
+
+  * add agimatec-validation.jar to the classpath of your project
+  * you might need some of the following jars in the classpath, 
+    that agimatec-validation depends upon (for a current list refer to the dependencies list of the project [MavenSite Maven-site])
+
+
+= Examples =
+
+== Using the JSR 303 API ==
+If you want to use the standard JSR APIs, your code only references classes in 
+  * package javax.validation
+  and
+  * package com.agimatec.utility.validation.jsr303
+
+1. create a validator for one of your business classes (e.g. Customer.java)
+
+{{{
+javax.validation.Validator customerValidator = new ClassValidator(Customer.class);
+}}}
+
+or use the !ValidationProviderFactory 
+{{{
+javax.validation.Validator customerValidator = ValidationProviderFactory.createValidator(Customer.class);
+}}}
+
+2. validate an instance of your business class
+
+{{{
+// Customer customer = new Customer();
+// ... some business code to create the customer instance
+
+// validate the instance and its child objects
+Set<InvalidConstraint<BusinessObject>> violations = customerValidator.validate(customer);
+}}}
+
+3. Create constraints for your classes with annotations
+
+If you want the validator to find some !InvalidConstraints, annotate your business objects with the annotations in javax.validation or create your own annotations for custom validation rules.
+
+{{{
+public class Author {
+    @NotEmpty(groups = "last")
+    private String firstName;
+    @NotEmpty(groups = "first")
+    private String lastName;
+    @Length(max = 30, groups = "last")
+    private String company;
+
+    @Valid
+    private List<Address> addresses;
+
+    // ... getter and setter methods if required...
+}
+}}}

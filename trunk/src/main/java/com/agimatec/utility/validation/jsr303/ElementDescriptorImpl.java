@@ -1,9 +1,9 @@
 package com.agimatec.utility.validation.jsr303;
 
-import javax.validation.ElementDescriptor;
 import javax.validation.ConstraintDescriptor;
-import java.util.Set;
+import javax.validation.ElementDescriptor;
 import java.lang.annotation.ElementType;
+import java.util.Set;
 
 /**
  * Description: MetaData class<br/>
@@ -21,9 +21,7 @@ class ElementDescriptorImpl implements ElementDescriptor {
 
     /**
      * TODO RSt - what if the constraint is NOT based on annotations?
-     * TODO RSt - what when both field and method of property is annotated?
-     * 
-     * @return
+     * TODO RSt - what when both field and method of property are annotated? - elementType can vary for each constraintdescriptor?
      */
     public ElementType getElementType() {
         return elementType;

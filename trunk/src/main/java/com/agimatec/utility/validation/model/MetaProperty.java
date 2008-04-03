@@ -14,7 +14,6 @@ import com.agimatec.utility.validation.Validation;
  */
 public class MetaProperty extends FeaturesCapable implements Cloneable, Features.Property {
     private String name;
-    private ACCESS access = ACCESS.METHOD;
 
     private Class<?> type;
     private MetaBean metaBean;
@@ -62,25 +61,5 @@ public class MetaProperty extends FeaturesCapable implements Cloneable, Features
 
     public String toString() {
         return "MetaProperty{" + "name='" + name + '\'' + ", type=" + type + '}';
-    }
-
-    public ACCESS getAccess() {
-        return access;
-    }
-
-    public void setAccess(ACCESS access) {
-        this.access = access;
-    }
-
-    // enum are always static
-    public enum ACCESS {
-        /**
-         * direct field access
-         */
-        FIELD,
-        /**
-         * getter/setter access
-         */
-        METHOD
     }
 }

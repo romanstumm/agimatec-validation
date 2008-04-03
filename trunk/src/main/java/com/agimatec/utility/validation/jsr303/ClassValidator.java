@@ -5,10 +5,7 @@ import com.agimatec.utility.validation.model.Features;
 import com.agimatec.utility.validation.model.MetaBean;
 import com.agimatec.utility.validation.model.MetaProperty;
 
-import javax.validation.ElementDescriptor;
-import javax.validation.InvalidConstraint;
-import javax.validation.MessageResolver;
-import javax.validation.Validator;
+import javax.validation.*;
 import java.lang.annotation.ElementType;
 import java.util.HashSet;
 import java.util.List;
@@ -168,13 +165,18 @@ public class ClassValidator<T> implements Validator<T> {
         ElementDescriptorImpl edesc = prop.getFeature(Jsr303Features.Property.ElementDescriptor);
         if (edesc == null) {
             edesc = new ElementDescriptorImpl();
-
-            edesc.setElementType(prop.getAccess() == MetaProperty.ACCESS.METHOD ?
-                    ElementType.METHOD : ElementType.FIELD);
             edesc.setReturnType(prop.getFeature(Features.Property.REF_BEAN_TYPE, prop.getType()));
             edesc.setCascaded(prop.getFeature(Features.Property.REF_CASCADE, false));
             edesc.setPropertyPath(propertyName);
             createConstraintDescriptors(edesc, prop.getValidations());
+            // hack try to find if elementType is FIELD
+            edesc.setElementType(ElementType.FIELD);
+            for(ConstraintDescriptor each : edesc.getConstraintDescriptors()) {
+                if(!((ConstraintDescriptorImpl)each).isFieldAccess()) {
+                    edesc.setElementType(ElementType.METHOD);
+                    break;
+                }
+            }
             prop.putFeature(Jsr303Features.Property.ElementDescriptor, edesc);
         }
         return edesc;

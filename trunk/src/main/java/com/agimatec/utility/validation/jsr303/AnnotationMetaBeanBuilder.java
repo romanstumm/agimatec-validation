@@ -87,12 +87,14 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
             // create a property for those fields for which there is not yet a MetaProperty
             if (metaProperty == null) {
                 metaProperty = new MetaProperty();
-                metaProperty.setAccess(MetaProperty.ACCESS.FIELD);
                 metaProperty.setName(field.getName());
                 metaProperty.setType(field.getType());
-                metabean.putProperty(metaProperty.getName(), metaProperty);
+                if (processAnnotations(metabean, metaProperty, field)) {
+                    metabean.putProperty(metaProperty.getName(), metaProperty);
+                }
+            } else {
+                processAnnotations(metabean, metaProperty, field);
             }
-            processAnnotations(metabean, metaProperty, field);
         }
         Method[] methods = beanClass.getDeclaredMethods();
         for (Method method : methods) {
@@ -116,24 +118,29 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
         }
     }
 
-    private void processAnnotations(MetaBean metabean, MetaProperty prop, AnnotatedElement element)
+    private boolean processAnnotations(MetaBean metabean, MetaProperty prop,
+                                       AnnotatedElement element)
             throws IllegalAccessException, InvocationTargetException {
+        boolean changed = false;
         for (Annotation annotation : element.getDeclaredAnnotations()) {
-            processAnnotation(annotation, prop, metabean, element);
+            changed |= processAnnotation(annotation, prop, metabean, element);
         }
+        return changed;
     }
 
-    private void processAnnotation(Annotation annotation, MetaProperty prop, MetaBean metabean,
-                                   AnnotatedElement element)
+    private boolean processAnnotation(Annotation annotation, MetaProperty prop, MetaBean metabean,
+                                      AnnotatedElement element)
             throws IllegalAccessException, InvocationTargetException {
         if (annotation instanceof Valid) {
-            processValid(element, metabean, prop);
+            return processValid(element, metabean, prop);
         } else if (annotation instanceof GroupSequence) {
             processGroupSequence((GroupSequence) annotation, metabean);
+            return true;
         } else if (annotation instanceof GroupSequences) {
             for (GroupSequence each : ((GroupSequences) annotation).value()) {
                 processGroupSequence(each, metabean);
             }
+            return ((GroupSequences) annotation).value().length > 0;
         } else {
             /*
             * An annotation is considered a constraint
@@ -143,7 +150,8 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
             ConstraintValidator vcAnno =
                     annotation.annotationType().getAnnotation(ConstraintValidator.class);
             if (vcAnno != null) {
-                applyConstraint(annotation, vcAnno.value(), metabean, prop);
+                applyConstraint(annotation, vcAnno.value(), metabean, prop, element);
+                return true;
             } else {
                 /**
                  * Multi-valued constraints:
@@ -160,12 +168,14 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
                     for (Annotation each : (Annotation[]) result) {
                         processAnnotation(each, prop, metabean, element);
                     }
+                    return ((Annotation[]) result).length > 0;
                 }
             }
         }
+        return false;
     }
 
-    private void processValid(AnnotatedElement element, MetaBean metabean, MetaProperty prop) {
+    private boolean processValid(AnnotatedElement element, MetaBean metabean, MetaProperty prop) {
         if (prop != null && prop.getMetaBean() == null && prop.getType() != null) {
             prop.putFeature(Features.Property.REF_CASCADE, Boolean.TRUE);
             if (Collection.class.isAssignableFrom(prop.getType())) { // determine beanType
@@ -175,12 +185,13 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
                     prop.putFeature(Features.Property.REF_BEAN_TYPE, clazz);
                 }
             }
+            return true;
         }
+        return false;
     }
 
     private void processGroupSequence(GroupSequence each, MetaBean metabean) {
-        Map<String, String[]> groupSeqMap =
-                metabean.getFeature(Jsr303Features.Bean.GROUP_SEQ);
+        Map<String, String[]> groupSeqMap = metabean.getFeature(Jsr303Features.Bean.GROUP_SEQ);
         if (groupSeqMap == null) {
             groupSeqMap = new HashMap();
             metabean.putFeature(Jsr303Features.Bean.GROUP_SEQ, groupSeqMap);
@@ -218,7 +229,7 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
     }
 
     private void applyConstraint(Annotation annotation, Class<? extends Constraint> constraintClass,
-                                 MetaBean metabean, MetaProperty prop)
+                                 MetaBean metabean, MetaProperty prop, AnnotatedElement element)
             throws IllegalAccessException, InvocationTargetException {
         // The lifetime of a constraint validation implementation instance is undefined.
         Constraint constraint = provider.getConstraintFactory().getInstance(constraintClass);
@@ -234,8 +245,8 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
         if (!(groups instanceof String[])) {
             groups = null;
         }
-        ConstraintValidation validation =
-                new ConstraintValidation(constraint, (String) msg, (String[]) groups, annotation);
+        ConstraintValidation validation = new ConstraintValidation(constraint, (String) msg,
+                (String[]) groups, annotation, element);
         if (prop != null) {
             prop.addValidation(validation);
         } else {

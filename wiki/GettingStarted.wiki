@@ -5,7 +5,7 @@
   * add agimatec-validation.jar to the classpath of your project
   * you might need some of the following jars in the classpath, that agimatec-validation depends upon (for a current list refer to the dependencies list of the project [http://www.agimatec.de/agimatec-validation/site/project-info.html Maven-site])
 
-|| *GroupId* || *ArtifactId* || *Version* || *Optional* ||
+|| *!GroupId* || *!ArtifactId* || *Version* || *Optional* ||
 || commons-beanutils || commons-beanutils || 1.7.0 || required ||
 || commons-collections || commons-collections || 3.1 || required ||
 || commons-lang || commons-lang || 2.3 || required ||

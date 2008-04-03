@@ -17,6 +17,8 @@ import java.util.List;
 public class XMLFeaturesCapable implements Serializable {
     @XStreamImplicit
     private List<XMLMetaFeature> features;
+    @XStreamImplicit(itemFieldName = "validator")
+    private List<XMLMetaValidatorReference> validators;
 
     public List<XMLMetaFeature> getFeatures() {
         return features;
@@ -47,6 +49,19 @@ public class XMLFeaturesCapable implements Serializable {
             if (key.equals(anno.getKey())) return anno;
         }
         return null;
+    }
+    
+    public List<XMLMetaValidatorReference> getValidators() {
+        return validators;
+    }
+
+    public void setValidators(List<XMLMetaValidatorReference> validators) {
+        this.validators = validators;
+    }
+
+    public void addValidator(String validatorId) {
+        if (validators == null) validators = new ArrayList<XMLMetaValidatorReference>();
+        validators.add(new XMLMetaValidatorReference(validatorId));
     }
 
     public void mergeFeaturesInto(FeaturesCapable fc) {

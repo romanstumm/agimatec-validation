@@ -3,11 +3,7 @@ package com.agimatec.utility.validation.xml;
 import static com.agimatec.utility.validation.model.Features.Property.*;
 import com.agimatec.utility.validation.model.MetaProperty;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
-import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import org.apache.commons.lang.ClassUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Description: <br/>
@@ -23,8 +19,7 @@ public class XMLMetaElement extends XMLFeaturesCapable
     private String name;
     @XStreamAsAttribute()
     private String mandatory;
-    @XStreamImplicit(itemFieldName = "validator")
-    private List<XMLMetaValidatorReference> validators;
+
     @XStreamAsAttribute()
     private Integer minLength;
     @XStreamAsAttribute()
@@ -89,19 +84,6 @@ public class XMLMetaElement extends XMLFeaturesCapable
 
     public void setDenied(Boolean denied) {
         this.denied = denied;
-    }
-
-    public List<XMLMetaValidatorReference> getValidators() {
-        return validators;
-    }
-
-    public void setValidators(List<XMLMetaValidatorReference> validators) {
-        this.validators = validators;
-    }
-
-    public void addValidator(String validatorId) {
-        if (validators == null) validators = new ArrayList<XMLMetaValidatorReference>();
-        validators.add(new XMLMetaValidatorReference(validatorId));
     }
 
     public Boolean getHidden() {

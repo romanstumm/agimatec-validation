@@ -16,10 +16,9 @@
 = Examples =
 
 == Using the JSR 303 API ==
-If you want to use the standard JSR APIs, your code only references classes in 
-  * package javax.validation
-  and
-  * package com.agimatec.utility.validation.jsr303
+If you want to use the standard JSR APIs, your code 
+  * references classes in package javax.validation  
+  * and directly uses classes in package com.agimatec.utility.validation.jsr303
 
 1. create a validator for one of your business classes (e.g. Customer.java)
 
@@ -61,3 +60,7 @@ public class Customer{
     // ... getter and setter methods if required...
 }
 }}}
+
+== Using the agimatec-validation API ==
+The framework offers additional features that are not part of the upcoming specification.
+

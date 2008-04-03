@@ -64,3 +64,87 @@ public class Customer{
 == Using the agimatec-validation API ==
 The framework offers additional features that are not part of the upcoming specification.
 
+1. describe your business classes with XML
+
+{{{
+<beanInfos>
+  <bean id="Address" impl="com.agimatec.example.Address">
+    <property name="city" mandatory="true" maxLength="10"/>
+    <relationship name="country" beanId="Country" mandatory="true"/>
+  </bean>
+
+  <bean id="Country" impl="com.agimatec.example.Country">
+    <feature key="mainKey">
+      <value class="string">isoCode</value>
+    </feature>
+
+    <property name="isoCode">
+       <feature key="readonly">
+         <value class="boolean">true</value>
+       </feature>
+    </property>
+  </bean>
+</beanInfos>
+}}}
+
+  * the xml describes two classes: Address and Country
+  * validator validates Adress.country, because of <relationship/> tag, that links
+    the address to its child country
+  * you can add more "features" to both a <bean/> or a <property/> with the <feature/>
+    tag.
+  * the value of the feature can be of any type (based on XStream xml serializer)
+
+You can also add custom validators or exchange the default validators:
+{{{
+<beanInfos>
+  <validator id="email" java="com.agimatec.utility.validation.routines.EMailValidation"/>
+
+  <bean id="Customer" impl="com.agimatec.example.Customer">
+    <property name="email">
+      <validator refId="email"/>
+    </property>
+  </bean>
+</beanInfos>
+}}}
+
+  * <validator> under <beanInfos> registers a custom-validator implementation that you can use for validating beans or properties described in the xml-file
+  * the default validator has id="standard", when registering another implementation under this name, you hook in you custom validator instead of the default implementation
+  * <validator/> tag can by added under <property/> (property-level-valiation) and under <bean/> (bean-level-validation). The attribute "refId" refers to the "id" of the <validator/> under <beanInfos/>
+
+2. create a !BeanValidator
+You need to register the xml-files at a !XMLMetaBeanRegistry, so that the framework finds them. You can register multiple xml-files. When the same bean-id occurs in more than one file, the descriptions are merged into a single !MetaBean. Thus you can "decorate" and extend the meta data on different layers. (e.g. on xml file comes from the server, the other xml file describes features for the GUI layer).
+
+{{{
+// initialize code (once, e.g. as a static initializer):
+MetaBeanManagerFactory.getRegistry().addResourceLoader("my-beanInfos.xml");
+
+// business code:
+BeanValidator validator = new BeanValidator();
+}}}
+
+3. validate your beans
+
+{{{
+Customer object = new Customer();
+// ... some business code to create the customer instance
+
+// you can access the MetaBean by class or by id
+MetaBean metaBean = MetaBeanManagerFactory.getFinder().findForClass(Customer.class);
+
+ValidationResults results = validator.validate(object, metaBean);
+}}}
+
+  * you can have more than one !MetaBean per class, that allows you to use different validation rules according to the role of the user or class, 
+    * e.g. the Address class can have different validation rules when references from a Customer than from a Company
+    * e.g. an administrator user can use different validation rules for Customer beans than a guest user
+
+4. check the results
+
+{{{
+if(results.hasError(object, "firstName")) {
+  // something wrong with customer.firstName
+}
+if(!results.getErrorsByOwner(object.getAddress()).isEmpty()) {
+  // something wrong with customer.address.*
+}
+}}}

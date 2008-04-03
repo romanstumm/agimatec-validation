@@ -4,6 +4,18 @@
 
 The Wiki of "agimatec-validation" is open for community contribution. Useful information will be eventually incorporated into other parts of this site. Please be careful not to overwrite content from other people! 
 
+= Supported features =
+  * implementation of [http://jcp.org/aboutJava/communityprocess/edr/jsr303/ JSR 303: bean-validation]
+  * Define constraints with predefined annotations
+  * Create own validators and annotations to define custom constraints
+  * Use annotations on business objects (POJOs, value-object classes)
+  * Flexible meta data model can be used for various purposes (see class !MetaBean)
+  * Decorate classes and define validators with XML on multiple layers of your application
+  * Support for dynamic creation of !MetaBeans (e.g. role-specific validation rules for different users, administration/change of meta data during runtime)
+  * Load the XML descriptors from any resource (classpath, URL/webservice, database), create own loaders (see interface !XMLMetaBeanLoader and !XMLMetaBeanRegistry)
+  * Generate JSON code (based on a freemarker template) from the meta data (e.g. use meta data in AJAX GUIs to support validation or create a generic GUI for your beans - this framework provides the basis for such solutions) 
+  * Integrate automatic validation of method-calls (e.g. tested with XFire, call the class !ThreadBeanValidator from within a custom org.codehaus.xfire.service.invoker.Invoker)
+
 = Project status =
 [ProjectStatus project status]
 

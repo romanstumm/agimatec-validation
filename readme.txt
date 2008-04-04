@@ -36,6 +36,15 @@ mvn source:test-jar
 -----------------------------
 mvn idea:idea
 
+(optional) deploy maven-site and javadoc:
+------------------------------
+[ Note:
+  You must set the properties ${agimatec-validation-site-id} and ${agimatec-validation-site-url} to
+  adequate values. You can do that by adding them to your maven settings.xml. This is the place
+  where the server credenticals for uploads are kept. ]
+ 
+mvn site-deploy
+
 Getting started
 ---------------
 Refer to the project page and WIKI at:

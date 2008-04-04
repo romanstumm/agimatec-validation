@@ -4,22 +4,28 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.agimatec</groupId>
   <artifactId>agimatec-validation</artifactId>
-  <distributionManagement>
-	  <site>
-		  <id>www.agimatec.de</id>
-		  <url>scp://monty.agimatec.de/usr/local/apache2/htdocs/agimatec/agimatec-validation/site</url>
-	  </site>
-  </distributionManagement>
+
+    <distributionManagement>
+        <site>
+          <id>${agimatec-validation-site-id}</id>
+          <url>${agimatec-validation-site-url}</url>
+        </site>
+    </distributionManagement>  
   <packaging>jar</packaging>
   <version>0.4-SNAPSHOT</version>
   <name>JSR 303: bean-validation by agimatec GmbH</name>
   <description>
-This is an early implementation of JSR 303 (Bean Validation), a specification of the Java API for Javabean validation in Java EE and Java SE.
+    This is an early implementation of JSR 303 (Bean Validation), a specification of the Java API
+    for Javabean validation in Java EE and Java SE.
 
-The technical objective is to provide a class level constraint declaration and validation facility for the Java application developer, as well as a constraint metadata repository and query API.
+    The technical objective is to provide a class level constraint declaration and validation
+    facility for the Java application developer, as well as a constraint metadata repository and
+    query API.
 
-This implementation is based on the validation framework of agimatec GmbH, that is in production for more than a year and offers additional features, like XML-based extensible metadata, code generation (JSON for AJAX applications), JSR303 annotation support.
-</description>
+    This implementation is based on the validation framework of agimatec GmbH, that is in production
+    for more than a year and offers additional features, like XML-based extensible metadata, code
+    generation (JSON for AJAX applications), JSR303 annotation support.
+  </description>
   <url>http://code.google.com/p/agimatec-validation/</url>
   <prerequisites>
     <maven>2.0</maven>
@@ -49,7 +55,7 @@ This implementation is based on the validation framework of agimatec GmbH, that 
       </plugin>
     </plugins>
   </reporting>
- <!-- <mailingLists>
+  <!-- <mailingLists>
     <mailingList>
       <name>Mailing List</name>
       <subscribe>insert@mail.address.here</subscribe>
@@ -129,7 +135,7 @@ This implementation is based on the validation framework of agimatec GmbH, that 
       <version>2.3.10</version>
     </dependency>
   </dependencies>
-  
+
   <build>
     <plugins>
       <plugin>

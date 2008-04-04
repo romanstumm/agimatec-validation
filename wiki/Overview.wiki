@@ -25,3 +25,6 @@ The Wiki of "agimatec-validation" is open for community contribution. Useful inf
 
 = Getting started =
 [GettingStarted getting started]
+
+= Building the project with Maven2 =
+[BuildAgimatecValidation How to build agimatec-validation]

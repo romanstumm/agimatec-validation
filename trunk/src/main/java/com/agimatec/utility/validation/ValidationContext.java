@@ -33,7 +33,17 @@ public class ValidationContext {
      */
     private Object propertyValue = UNKNOWN;
 
+    private AnnotatedElement valueOrigin;
+
     private IdentityHashMap validatedObjects = new IdentityHashMap();
+
+    /**
+     * true when value is fixed, so that it will NOT be dynamically
+     * determined from the annotated element or the metaProperty.
+     * <b><br>Note: When value is UNKNOWN, it will be determined THE FIRST TIME
+     * IT IS ACCESSED.</b>
+     */
+    private boolean fixed;
 
     public ValidationContext() {
     }
@@ -72,19 +82,27 @@ public class ValidationContext {
 
     /** get the value from the given reflection element */
     public Object getPropertyValue(AnnotatedElement element) {
-        if (metaProperty == null) throw new IllegalStateException();
-        try {
-            if (element instanceof Field) {
-                Field f = (Field)element;
-                if(!f.isAccessible()) { f.setAccessible(true); }
-                propertyValue = f.get(bean);
-            } else if (element instanceof Method) {
-                propertyValue = ((Method) element).invoke(bean);
-            } else {
-                return getPropertyValue();
+        if (propertyValue == UNKNOWN || (valueOrigin != element && !fixed)) {
+            if (metaProperty == null) throw new IllegalStateException();
+            try {
+                if (element instanceof Field) {
+                    Field f = (Field) element;
+                    if (!f.isAccessible()) {
+                        f.setAccessible(true);
+                    }
+                    propertyValue = f.get(bean);
+                    valueOrigin = element;
+                } else if (element instanceof Method) {
+                    propertyValue = ((Method) element).invoke(bean);
+                    valueOrigin = element;
+                } else {
+                    getPropertyValue();
+                    valueOrigin = element;
+                }
+            } catch (Exception e) {
+                throw new IllegalArgumentException("cannot access " + metaProperty + " on " + bean,
+                        e);
             }
-        } catch (Exception e) {
-            throw new IllegalArgumentException("cannot access " + metaProperty, e);
         }
         return propertyValue;
     }
@@ -97,8 +115,9 @@ public class ValidationContext {
      * @throws IllegalStateException    - when no property is currently set in the context (application logic bug)
      */
     public Object getPropertyValue() throws IllegalArgumentException, IllegalStateException {
-        if (metaProperty == null) throw new IllegalStateException();
-        if (propertyValue == UNKNOWN) {
+        if (propertyValue == UNKNOWN || (valueOrigin != null && !fixed)) {
+            if (metaProperty == null) throw new IllegalStateException();
+            valueOrigin = null;
             try {
                 try {   // try public method
                     propertyValue = PropertyUtils.getSimpleProperty(bean, metaProperty.getName());
@@ -111,8 +130,10 @@ public class ValidationContext {
                         while (theClass != null) {
                             try {
                                 Field f = theClass.getDeclaredField(metaProperty.getName());
-                                if(!f.isAccessible()) { f.setAccessible(true); }
-                                propertyValue =f.get(bean);                                
+                                if (!f.isAccessible()) {
+                                    f.setAccessible(true);
+                                }
+                                propertyValue = f.get(bean);
                                 break;
                             } catch (NoSuchFieldException ex3) {
                                 // do nothing
@@ -139,6 +160,27 @@ public class ValidationContext {
 
     public void setPropertyValue(Object propertyValue) {
         this.propertyValue = propertyValue;
+    }
+
+    public void setFixedValue(Object value) {
+        setPropertyValue(value);
+        fixed = true;
+    }
+
+    public boolean isFixed() {
+        return fixed;
+    }
+
+    public void setFixed(boolean fixed) {
+        this.fixed = fixed;
+    }
+
+    /**
+     * object from where the propertyValue came from.
+     * @param valueOrigin
+     */
+    public void setValueOrigin(AnnotatedElement valueOrigin) {
+        this.valueOrigin = valueOrigin;
     }
 
     /**

@@ -1,6 +1,5 @@
 package com.agimatec.utility.validation.jsr303;
 
-import com.agimatec.utility.validation.BeanValidator;
 import com.agimatec.utility.validation.MetaBeanManager;
 
 import javax.validation.*;
@@ -16,7 +15,6 @@ import javax.validation.*;
 public class Provider implements ValidationProvider {
     private static Provider instance;
 
-    protected BeanValidator beanValidator;
     protected MetaBeanManager metaBeanManager;
     protected ConstraintFactory constraintFactory;
     private MessageResolver defaultMessageResolver;
@@ -25,9 +23,8 @@ public class Provider implements ValidationProvider {
         initializeDefaults();
     }
 
-    public Provider(BeanValidator beanValidator, ConstraintFactory constraintFactory,
+    public Provider(ConstraintFactory constraintFactory,
                     MetaBeanManager metaBeanManager) {
-        this.beanValidator = beanValidator;
         this.constraintFactory = constraintFactory;
         this.metaBeanManager = metaBeanManager;
     }
@@ -38,14 +35,6 @@ public class Provider implements ValidationProvider {
 
     public void setDefaultMessageResolver(MessageResolver defaultMessageResolver) {
         this.defaultMessageResolver = defaultMessageResolver;
-    }
-
-    public BeanValidator getBeanValidator() {
-        return beanValidator;
-    }
-
-    public void setBeanValidator(BeanValidator beanValidator) {
-        this.beanValidator = beanValidator;
     }
 
     public MetaBeanManager getMetaBeanManager() {
@@ -100,7 +89,6 @@ public class Provider implements ValidationProvider {
     }
 
     private void initializeDefaults() {
-        setBeanValidator(new BeanValidator());
         setMetaBeanManager(new MetaBeanManager(new AnnotationMetaBeanBuilder(this)));
         setConstraintFactory(new DefaultConstraintFactory());
         setDefaultMessageResolver(new MessageResolverImpl());

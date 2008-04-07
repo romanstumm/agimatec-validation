@@ -25,5 +25,10 @@ interface Jsr303Features {
          * INFO: Map with String->String[] for {@link javax.validation.GroupSequences}
          */
         String GROUP_SEQ = "GroupSequences";
+
+        /**
+         * INFO: cached sortied Array with ValidationEntries
+         */
+        String ValidationSequence = "ValidationSequence";
     }
 }

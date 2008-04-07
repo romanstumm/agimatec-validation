@@ -1,15 +1,16 @@
 package com.agimatec.utility.validation.jsr303;
 
+import com.agimatec.utility.validation.BeanValidator;
 import com.agimatec.utility.validation.Validation;
+import com.agimatec.utility.validation.ValidationContext;
+import com.agimatec.utility.validation.ValidationListener;
 import com.agimatec.utility.validation.model.Features;
 import com.agimatec.utility.validation.model.MetaBean;
 import com.agimatec.utility.validation.model.MetaProperty;
 
 import javax.validation.*;
 import java.lang.annotation.ElementType;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * API class -
@@ -23,7 +24,7 @@ import java.util.Set;
  * Time: 13:36:33 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-public class ClassValidator<T> implements Validator<T> {
+public class ClassValidator<T> extends BeanValidator implements Validator<T> {
     protected final MetaBean metaBean;
     protected final Provider provider;
     private ElementDescriptorImpl elementDescriptor;
@@ -48,11 +49,13 @@ public class ClassValidator<T> implements Validator<T> {
     public ClassValidator(String metaBeanId) {
         provider = Provider.getInstance();
         metaBean = provider.getMetaBeanManager().findForId(metaBeanId);
+        this.messageResolver = provider.getDefaultMessageResolver();
     }
 
     protected ClassValidator(Provider provider, MetaBean metaBean) {
         this.provider = provider;
         this.metaBean = metaBean;
+        this.messageResolver = this.provider.getDefaultMessageResolver();
     }
 
     /** validate all constraints on object */
@@ -63,7 +66,7 @@ public class ClassValidator<T> implements Validator<T> {
         for (String currentGroup : sequence) {
             context.resetValidated();
             context.setCurrentGroup(currentGroup);
-            provider.getBeanValidator().validate(context, result);
+            validate(context, result);
             /**
              * if one of the group process in the sequence leads to one or more validation failure,
              * the groups following in the sequence must not be processed
@@ -75,9 +78,10 @@ public class ClassValidator<T> implements Validator<T> {
 
     /**
      * validate all constraints on <code>propertyName</code> property of object
-     * @param propertyName - the attribute name 
-     * TODO RSt - are nested property with dot-notation supported, private fields etc.?
-     **/
+     *
+     * @param propertyName - the attribute name
+     *                     TODO RSt - are nested property with dot-notation supported, private fields etc.?
+     */
     public Set<InvalidConstraint<T>> validateProperty(T object, String propertyName,
                                                       String... groups) {
         GroupValidationContext context = createContext(object, groups);
@@ -89,7 +93,31 @@ public class ClassValidator<T> implements Validator<T> {
         for (String currentGroup : sequence) {
             context.resetValidated();
             context.setCurrentGroup(currentGroup);
-            provider.getBeanValidator().validateProperty(context, result);
+            validateProperty(context, result);
+            /**
+             * if one of the group process in the sequence leads to one or more validation failure,
+             * the groups following in the sequence must not be processed
+             */
+            if (!result.isEmpty()) break;
+        }
+        return result.getInvalidConstraints();
+    }
+
+    /**
+     * validate all constraints on <code>propertyName</code> property
+     * if the property value is <code>value</code>
+     */
+    public Set<InvalidConstraint<T>> validateValue(String propertyName, Object value,
+                                                   String... groups) {
+        GroupValidationContext context = createContext(null, groups);
+        context.setMetaProperty(metaBean.getProperty(propertyName));
+        context.setFixedValue(value);
+        ConstraintValidationListener<T> result = new ConstraintValidationListener<T>(null);
+        List<String> sequence = context.getSequencedGroups();
+        for (String currentGroup : sequence) {
+            context.resetValidated();
+            context.setCurrentGroup(currentGroup);
+            validateProperty(context, result);            
             /**
              * if one of the group process in the sequence leads to one or more validation failure,
              * the groups following in the sequence must not be processed
@@ -105,17 +133,6 @@ public class ClassValidator<T> implements Validator<T> {
         context.setRequestedGroups(groups);
         context.setBean(object, metaBean);
         return context;
-    }
-
-    /**
-     * validate all constraints on <code>propertyName</code> property
-     * if the property value is <code>value</code>
-     *
-     * @throws UnsupportedOperationException - object missing in API?
-     */
-    public Set<InvalidConstraint<T>> validateValue(String propertyName, Object value,
-                                                   String... groups) {
-        throw new UnsupportedOperationException("object missing in API?");
     }
 
     /**
@@ -171,8 +188,8 @@ public class ClassValidator<T> implements Validator<T> {
             createConstraintDescriptors(edesc, prop.getValidations());
             // hack try to find if elementType is FIELD
             edesc.setElementType(ElementType.FIELD);
-            for(ConstraintDescriptor each : edesc.getConstraintDescriptors()) {
-                if(!((ConstraintDescriptorImpl)each).isFieldAccess()) {
+            for (ConstraintDescriptor each : edesc.getConstraintDescriptors()) {
+                if (!((ConstraintDescriptorImpl) each).isFieldAccess()) {
                     edesc.setElementType(ElementType.METHOD);
                     break;
                 }
@@ -202,4 +219,64 @@ public class ClassValidator<T> implements Validator<T> {
     public void setMessageResolver(MessageResolver messageResolver) {
         this.messageResolver = messageResolver;
     }
+
+    /**
+     * validate a single property only. performs all validations
+     * for this property.
+     */
+    @Override
+    public void validateProperty(ValidationContext context, ValidationListener listener) {
+        /**
+         * execute all field level validations than all method level validations
+         */
+        for (Validation validation : context.getMetaProperty().getValidations()) {
+            if (validation.isFieldAccess()) {
+                validation.validate(context, listener);
+            }
+        }
+        for (Validation validation : context.getMetaProperty().getValidations()) {
+            if (!validation.isFieldAccess()) {
+                validation.validate(context, listener);
+            }
+        }
+    }
+
+    /** validate a single bean only. no related beans will be validated */
+    @Override
+    public void validateBean(ValidationContext context, ValidationListener listener) {
+        /**
+         * execute all field level validations than all method level validations
+         */
+        for (ValidationEntry entry : sortValidations(context.getMetaBean())) {
+            if (!entry.metaProperty.equals(context.getMetaProperty())) {
+                context.setMetaProperty(entry.metaProperty);
+            }
+            entry.validation.validate(context, listener);
+        }
+        /**
+         * execute all bean level validations
+         */
+        context.setMetaProperty(null);
+        for (Validation validation : context.getMetaBean().getValidations()) {
+            validation.validate(context, listener);
+        }
+    }
+
+    private ValidationEntry[] sortValidations(MetaBean metaBean) {
+        // sorted list (field-validations, method-validations)
+        ValidationEntry[] propertyValidations =
+                metaBean.getFeature(Jsr303Features.Bean.ValidationSequence);
+        if (propertyValidations != null) return propertyValidations;
+        List<ValidationEntry> entries = new ArrayList();
+        for (MetaProperty prop : metaBean.getProperties()) {
+            for (Validation validation : prop.getValidations()) {
+                entries.add(new ValidationEntry(prop, validation));
+            }
+        }
+        Collections.sort(entries);
+        propertyValidations = entries.toArray(new ValidationEntry[entries.size()]);
+        metaBean.putFeature(Jsr303Features.Bean.ValidationSequence, propertyValidations);
+        return propertyValidations;
+    }
+
 }

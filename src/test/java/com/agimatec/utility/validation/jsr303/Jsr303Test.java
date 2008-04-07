@@ -4,8 +4,8 @@ import com.agimatec.utility.validation.example.BusinessObject;
 import junit.framework.TestCase;
 
 import javax.validation.*;
-import java.util.Set;
 import java.lang.annotation.ElementType;
+import java.util.Set;
 
 /**
  * Description: <br/>
@@ -30,6 +30,13 @@ public class Jsr303Test extends TestCase {
         assertTrue(!violations.isEmpty());
 
         assertTrue(!validator.validateProperty(object, "title").isEmpty());
+    }
+
+    public void testValidateValue() {
+        assertTrue(getValidator(Book.class)
+                .validateValue("subtitle", "123456789098765432").isEmpty());
+        assertFalse(getValidator(Book.class)
+                .validateValue("subtitle", "123456789098765432123456789098765432123456789098765432").isEmpty());
     }
 
     public void testMetadataAPI_Book() {
@@ -67,8 +74,8 @@ public class Jsr303Test extends TestCase {
         ElementDescriptor desc = validator.getConstraintsForProperty("addressline1");
         assertNotNull(desc);
         boolean found = false;
-        for(ConstraintDescriptor each : desc.getConstraintDescriptors()) {
-            if(each.getConstraintImplementation() instanceof LengthConstraint) {
+        for (ConstraintDescriptor each : desc.getConstraintDescriptors()) {
+            if (each.getConstraintImplementation() instanceof LengthConstraint) {
                 assertTrue(each.getParameters().containsKey("max"));
                 assertEquals(30, each.getParameters().get("max"));
                 found = true;

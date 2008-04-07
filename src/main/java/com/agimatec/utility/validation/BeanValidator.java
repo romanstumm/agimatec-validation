@@ -47,14 +47,14 @@ public class BeanValidator {
         return result;
     }
 
-
     /**
      * validate a single property only. performs all validations
      * for this property.
      */
     public void validateProperty(ValidationContext context, ValidationListener listener) {
-        validateFields(context, listener);
-        validateMethods(context, listener);
+         for (Validation validation : context.getMetaProperty().getValidations()) {
+            validation.validate(context, listener);
+        }
     }
 
     /**
@@ -101,18 +101,11 @@ public class BeanValidator {
     /** validate a single bean only. no related beans will be validated */
     public void validateBean(ValidationContext context, ValidationListener listener) {
         /**
-         * execute all field level validations
+         * execute all property level validations
          */
         for (MetaProperty prop : context.getMetaBean().getProperties()) {
             context.setMetaProperty(prop);
-            validateFields(context, listener);
-        }
-        /**
-         * execute all method level validations
-         */
-        for (MetaProperty prop : context.getMetaBean().getProperties()) {
-            context.setMetaProperty(prop);
-            validateMethods(context, listener);
+            validateProperty(context, listener);
         }
         /**
          * execute all bean level validations
@@ -122,25 +115,4 @@ public class BeanValidator {
             validation.validate(context, listener);
         }
     }
-
-    /**
-     * validate a single property only. performs all field-access validations
-     * for this property.
-     */
-    protected void validateFields(ValidationContext context, ValidationListener listener) {
-        for (Validation validation : context.getMetaProperty().getValidations()) {
-            if (validation.isFieldAccess()) validation.validate(context, listener);
-        }
-    }
-
-    /**
-     * validate a single property only. performs all method-access validations
-     * for this property.
-     */
-    protected void validateMethods(ValidationContext context, ValidationListener listener) {
-        for (Validation validation : context.getMetaProperty().getValidations()) {
-            if (!validation.isFieldAccess()) validation.validate(context, listener);
-        }
-    }
-
 }

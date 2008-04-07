@@ -1,5 +1,8 @@
 #summary Project status and history
 
+= News = 
+The sources in svn are newer than the files of the release 0.3-SNAPSHOT in the Downloads section and contain bugfixes and enhancements (more complete API implementation, performance improvements. 
+
 = Project status and history =
 
   * The agimatec-validation framework is older than the JSR 303 specification, but the similarities were striking so that the adaption to the standard was possible withing a short time.  There are still things to be done...

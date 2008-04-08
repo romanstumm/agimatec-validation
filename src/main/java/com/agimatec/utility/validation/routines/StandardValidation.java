@@ -30,10 +30,6 @@ public class StandardValidation implements Validation {
         return "standard";
     }
 
-    public boolean isFieldAccess() {
-        return false;
-    }
-
     public void validate(ValidationContext context, ValidationListener listener) {
         validateMandatory(context, listener);
         validateMaxLength(context, listener);

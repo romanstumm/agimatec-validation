@@ -20,7 +20,7 @@ class ElementDescriptorImpl implements ElementDescriptor {
     private String propertyPath;
 
     /**
-     * TODO RSt - what if the constraint is NOT based on annotations?
+     * TODO RSt - generate annotation when descriptor is based on XML
      * TODO RSt - what when both field and method of property are annotated? - elementType can vary for each constraintdescriptor?
      */
     public ElementType getElementType() {

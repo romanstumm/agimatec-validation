@@ -7,7 +7,6 @@ import org.apache.commons.beanutils.PropertyUtils;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.IdentityHashMap;
 
 /**
@@ -81,23 +80,24 @@ public class ValidationContext {
     }
 
     /** get the value from the given reflection element */
-    public Object getPropertyValue(AnnotatedElement element) {
-        if (propertyValue == UNKNOWN || (valueOrigin != element && !fixed)) {
+    public Object getPropertyValue(Field field) {
+        if (propertyValue == UNKNOWN || (valueOrigin != field && !fixed)) {
             if (metaProperty == null) throw new IllegalStateException();
             try {
-                if (element instanceof Field) {
-                    Field f = (Field) element;
-                    if (!f.isAccessible()) {
-                        f.setAccessible(true);
+                //if (element instanceof Field) {
+                if (field != null) {
+                  //  Field f = (Field) element;
+                    if (!field.isAccessible()) {
+                        field.setAccessible(true); // enable access of private/protected field
                     }
-                    propertyValue = f.get(bean);
-                    valueOrigin = element;
-                } else if (element instanceof Method) {
+                    propertyValue = field.get(bean);
+                    valueOrigin = field;
+                } /*else if (element instanceof Method) {
                     propertyValue = ((Method) element).invoke(bean);
                     valueOrigin = element;
-                } else {
+                } */else {
                     getPropertyValue();
-                    valueOrigin = element;
+                    valueOrigin = field;
                 }
             } catch (Exception e) {
                 throw new IllegalArgumentException("cannot access " + metaProperty + " on " + bean,

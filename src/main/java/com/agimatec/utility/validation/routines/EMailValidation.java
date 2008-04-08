@@ -22,10 +22,6 @@ public class EMailValidation implements Validation {
                     "?@(([a-zA-Z]|(\\w(\\w|-(?!-))*\\w))\\.)+[a-zA-Z]{2,}>)";
     private static final Pattern pattern = Pattern.compile(EMail_RegExp);
 
-    public boolean isFieldAccess() {
-        return false; 
-    }
-
     public void validate(ValidationContext context, ValidationListener listener) {
         if (context.getPropertyValue() == null) return;
         try {

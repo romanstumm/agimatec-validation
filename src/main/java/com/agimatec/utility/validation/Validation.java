@@ -8,8 +8,6 @@ package com.agimatec.utility.validation;
  * Copyright: Agimatec GmbH 2008
  */
 public interface Validation {
-  boolean isFieldAccess();
-    
   /**
    * Perform a single validation routine
    * Validate the object or property according to the current ValidationContext.

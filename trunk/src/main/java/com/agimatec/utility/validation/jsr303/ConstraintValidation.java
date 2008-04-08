@@ -23,7 +23,7 @@ class ConstraintValidation implements Validation {
     private final String messageKey;
     private final Annotation annotation; // for metadata request API
     private ConstraintDescriptorImpl descriptor;
-    private final AnnotatedElement element;
+    private final Field field;
 
     protected ConstraintValidation(Constraint constraint, String messageKey, String[] groups,
                                 Annotation annotation, AnnotatedElement element) {
@@ -32,7 +32,7 @@ class ConstraintValidation implements Validation {
         this.groups = (groups == null || groups.length == 0) ?
                 GroupValidationContext.DEFAULT_GROUPS : groups;
         this.annotation = annotation;
-        this.element= element;
+        this.field = element instanceof Field ? (Field)element : null;
     }
 
     public ConstraintDescriptorImpl getConstraintDescriptor() {
@@ -40,10 +40,6 @@ class ConstraintValidation implements Validation {
             descriptor = new ConstraintDescriptorImpl(this);
         }
         return descriptor;
-    }
-
-    public boolean isFieldAccess() {
-        return element instanceof Field;
     }
 
     public void validate(ValidationContext context, ValidationListener listener) {
@@ -64,7 +60,7 @@ class ConstraintValidation implements Validation {
         }
         Object value;
         if (context.getMetaProperty() != null) {
-            value = context.getPropertyValue(element);
+            value = context.getPropertyValue(field);
         } else {
             value = context.getBean();
         }
@@ -102,7 +98,7 @@ class ConstraintValidation implements Validation {
         return annotation;
     }
 
-    public AnnotatedElement getElement() {
-        return element;
+    public AnnotatedElement getField() {
+        return field;
     }
 }

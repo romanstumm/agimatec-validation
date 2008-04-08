@@ -104,10 +104,11 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
             } else
             if (method.getName().startsWith("is") && method.getParameterTypes().length == 0) {
                 propName = Introspector.decapitalize(method.getName().substring(2));
-            } else
-            if (method.getName().startsWith("set") && method.getParameterTypes().length == 1) {
-                propName = Introspector.decapitalize(method.getName().substring(3));
             }
+            // setter annotation is NOT supported in the spec
+            /*  else if (method.getName().startsWith("set") && method.getParameterTypes().length == 1) {
+                propName = Introspector.decapitalize(method.getName().substring(3));
+            } */
             if (propName != null) {
                 MetaProperty metaProperty = metabean.getProperty(propName);
                 // only those methods, for which we have a MetaProperty

@@ -31,13 +31,13 @@ class ConstraintDescriptorImpl implements ConstraintDescriptor {
         }
     }
 
-    /** TODO RSt - what if the constraint is NOT based on a annotation? */
+    /** TODO RSt - generate annotation when descriptor is based on XML */
     public Annotation getAnnotation() {
         return constraintValidation.getAnnotation();
     }
 
     public boolean isFieldAccess() {
-        return constraintValidation.getElement() instanceof Field;
+        return constraintValidation.getField() instanceof Field;
     }
 
     public Map<String, Object> getParameters() {

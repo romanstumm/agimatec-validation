@@ -2,15 +2,15 @@ package com.agimatec.utility.validation.jsr303;
 
 import com.agimatec.utility.validation.BeanValidator;
 import com.agimatec.utility.validation.Validation;
-import com.agimatec.utility.validation.ValidationContext;
-import com.agimatec.utility.validation.ValidationListener;
 import com.agimatec.utility.validation.model.Features;
 import com.agimatec.utility.validation.model.MetaBean;
 import com.agimatec.utility.validation.model.MetaProperty;
 
 import javax.validation.*;
 import java.lang.annotation.ElementType;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * API class -
@@ -218,65 +218,6 @@ public class ClassValidator<T> extends BeanValidator implements Validator<T> {
 
     public void setMessageResolver(MessageResolver messageResolver) {
         this.messageResolver = messageResolver;
-    }
-
-    /**
-     * validate a single property only. performs all validations
-     * for this property.
-     */
-    @Override
-    public void validateProperty(ValidationContext context, ValidationListener listener) {
-        /**
-         * execute all field level validations than all method level validations
-         */
-        for (Validation validation : context.getMetaProperty().getValidations()) {
-            if (validation.isFieldAccess()) {
-                validation.validate(context, listener);
-            }
-        }
-        for (Validation validation : context.getMetaProperty().getValidations()) {
-            if (!validation.isFieldAccess()) {
-                validation.validate(context, listener);
-            }
-        }
-    }
-
-    /** validate a single bean only. no related beans will be validated */
-    @Override
-    public void validateBean(ValidationContext context, ValidationListener listener) {
-        /**
-         * execute all field level validations than all method level validations
-         */
-        for (ValidationEntry entry : sortValidations(context.getMetaBean())) {
-            if (!entry.metaProperty.equals(context.getMetaProperty())) {
-                context.setMetaProperty(entry.metaProperty);
-            }
-            entry.validation.validate(context, listener);
-        }
-        /**
-         * execute all bean level validations
-         */
-        context.setMetaProperty(null);
-        for (Validation validation : context.getMetaBean().getValidations()) {
-            validation.validate(context, listener);
-        }
-    }
-
-    private ValidationEntry[] sortValidations(MetaBean metaBean) {
-        // sorted list (field-validations, method-validations)
-        ValidationEntry[] propertyValidations =
-                metaBean.getFeature(Jsr303Features.Bean.ValidationSequence);
-        if (propertyValidations != null) return propertyValidations;
-        List<ValidationEntry> entries = new ArrayList();
-        for (MetaProperty prop : metaBean.getProperties()) {
-            for (Validation validation : prop.getValidations()) {
-                entries.add(new ValidationEntry(prop, validation));
-            }
-        }
-        Collections.sort(entries);
-        propertyValidations = entries.toArray(new ValidationEntry[entries.size()]);
-        metaBean.putFeature(Jsr303Features.Bean.ValidationSequence, propertyValidations);
-        return propertyValidations;
     }
 
 }

@@ -2,7 +2,6 @@ package com.agimatec.utility.validation.routines;
 
 import com.agimatec.utility.validation.Validation;
 import com.agimatec.utility.validation.ValidationContext;
-import com.agimatec.utility.validation.ValidationListener;
 import com.agimatec.utility.validation.model.Features;
 import com.agimatec.utility.validation.model.MetaProperty;
 import static com.agimatec.utility.validation.routines.Reasons.*;
@@ -23,25 +22,22 @@ import java.util.regex.PatternSyntaxException;
  * Copyright: Agimatec GmbH 2008
  */
 public class StandardValidation implements Validation {
-    /**
-     * key for this validation in the validation list of the beanInfos
-     */
+    /** key for this validation in the validation list of the beanInfos */
     public String getValidationId() {
         return "standard";
     }
 
-    public void validate(ValidationContext context, ValidationListener listener) {
-        validateMandatory(context, listener);
-        validateMaxLength(context, listener);
-        validateMinLength(context, listener);
-        validateMaxValue(context, listener);
-        validateMinValue(context, listener);
-        validateRegExp(context, listener);
-        validateTimeLag(context, listener);
+    public void validate(ValidationContext context) {
+        validateMandatory(context);
+        validateMaxLength(context);
+        validateMinLength(context);
+        validateMaxValue(context);
+        validateMinValue(context);
+        validateRegExp(context);
+        validateTimeLag(context);
     }
 
-    protected void validateTimeLag(ValidationContext context,
-                                   ValidationListener listener) {
+    protected void validateTimeLag(ValidationContext context) {
         if (context.getPropertyValue() == null) return;
 
         String lag = (String) context.getMetaProperty().getFeature(TIME_LAG);
@@ -50,22 +46,20 @@ public class StandardValidation implements Validation {
         long now = System.currentTimeMillis();
         if (XMLMetaValue.TIMELAG_Future.equals(lag)) {
             if (date < now) {
-                listener.addError(TIME_LAG, context);
+                context.getListener().addError(TIME_LAG, context);
             }
         } else if (XMLMetaValue.TIMELAG_Past.equals(lag)) {
             if (date > now) {
-                listener.addError(TIME_LAG, context);
+                context.getListener().addError(TIME_LAG, context);
             }
         } else {
-            throw new IllegalArgumentException(
-                    "unknown timelag " + lag + " at " + context);
+            throw new IllegalArgumentException("unknown timelag " + lag + " at " + context);
         }
     }
 
     private static final String REG_EXP_PATTERN = "cachedRegExpPattern";
 
-    protected void validateRegExp(ValidationContext context,
-                                  ValidationListener listener) {
+    protected void validateRegExp(ValidationContext context) {
         if (context.getPropertyValue() == null) return;
 
         final MetaProperty meta = context.getMetaProperty();
@@ -80,41 +74,35 @@ public class StandardValidation implements Validation {
                 meta.putFeature(REG_EXP_PATTERN, pattern);
             }
             if (!pattern.matcher(value).matches()) {
-                listener.addError(REG_EXP, context);
+                context.getListener().addError(REG_EXP, context);
             }
         } catch (PatternSyntaxException e) {
             throw new IllegalArgumentException(
-                    "regular expression malformed. regexp " + regExp + " at " + context,
-                    e);
+                    "regular expression malformed. regexp " + regExp + " at " + context, e);
         }
     }
 
-    protected void validateMinValue(ValidationContext context,
-                                    ValidationListener listener) {
+    protected void validateMinValue(ValidationContext context) {
         if (context.getPropertyValue() == null) return;
-        Comparable minValue =
-                (Comparable) context.getMetaProperty().getFeature(MIN_VALUE);
+        Comparable minValue = (Comparable) context.getMetaProperty().getFeature(MIN_VALUE);
         if (minValue == null) return;
         int r = minValue.compareTo(context.getPropertyValue());
         if (r > 0) {
-            listener.addError(MIN_VALUE, context);
+            context.getListener().addError(MIN_VALUE, context);
         }
     }
 
-    protected void validateMaxValue(ValidationContext context,
-                                    ValidationListener listener) {
+    protected void validateMaxValue(ValidationContext context) {
         if (context.getPropertyValue() == null) return;
-        Comparable maxValue =
-                (Comparable) context.getMetaProperty().getFeature(MAX_VALUE);
+        Comparable maxValue = (Comparable) context.getMetaProperty().getFeature(MAX_VALUE);
         if (maxValue == null) return;
         int r = maxValue.compareTo(context.getPropertyValue());
         if (r < 0) {
-            listener.addError(MAX_VALUE, context);
+            context.getListener().addError(MAX_VALUE, context);
         }
     }
 
-    protected void validateMaxLength(ValidationContext context,
-                                     ValidationListener listener) {
+    protected void validateMaxLength(ValidationContext context) {
         if (context.getPropertyValue() == null) return;
         Integer maxLength = (Integer) context.getMetaProperty()
                 .getFeature(Features.Property.MAX_LENGTH);
@@ -128,12 +116,11 @@ public class StandardValidation implements Validation {
             length = ((Collection) value).size();
         }
         if (length > maxLength) {
-            listener.addError(MAX_LENGTH, context);
+            context.getListener().addError(MAX_LENGTH, context);
         }
     }
 
-    protected void validateMinLength(ValidationContext context,
-                                     ValidationListener listener) {
+    protected void validateMinLength(ValidationContext context) {
         if (context.getPropertyValue() == null) return;
         Integer maxLength = (Integer) context.getMetaProperty()
                 .getFeature(Features.Property.MIN_LENGTH);
@@ -147,15 +134,14 @@ public class StandardValidation implements Validation {
             length = ((Collection) value).size();
         }
         if (length < maxLength) {
-            listener.addError(MIN_LENGTH, context);
+            context.getListener().addError(MIN_LENGTH, context);
         }
     }
 
-    protected void validateMandatory(ValidationContext context,
-                                     ValidationListener listener) {
+    protected void validateMandatory(ValidationContext context) {
         if (context.getMetaProperty().isMandatory()) {
             if (context.getPropertyValue() == null) {
-                listener.addError(MANDATORY, context);
+                context.getListener().addError(MANDATORY, context);
             }
         }
     }

@@ -1,9 +1,9 @@
 package com.agimatec.utility.validation;
 
+import com.agimatec.utility.validation.model.MetaProperty;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import com.agimatec.utility.validation.model.MetaProperty;
 
 /**
  * ValidationResults Tester.
@@ -31,7 +31,7 @@ public class ValidationResultsTest extends TestCase {
 
     public void testValidationResults() throws Exception {
         assertTrue(results.isEmpty());
-        ValidationContext ctx = new ValidationContext();
+        ValidationContext ctx = new ValidationContext(results);
         ctx.setBean(this);
         ctx.setMetaProperty(new MetaProperty());
         ctx.getMetaProperty().setName("prop");

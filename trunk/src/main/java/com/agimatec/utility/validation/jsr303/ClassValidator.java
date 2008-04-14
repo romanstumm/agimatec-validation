@@ -1,6 +1,5 @@
 package com.agimatec.utility.validation.jsr303;
 
-import com.agimatec.utility.validation.BeanValidator;
 import com.agimatec.utility.validation.Validation;
 import com.agimatec.utility.validation.model.Features;
 import com.agimatec.utility.validation.model.MetaBean;
@@ -24,7 +23,7 @@ import java.util.Set;
  * Time: 13:36:33 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-public class ClassValidator<T> extends BeanValidator implements Validator<T> {
+public class ClassValidator<T> implements Validator<T> {
     protected final MetaBean metaBean;
     protected final Provider provider;
     private ElementDescriptorImpl elementDescriptor;
@@ -60,13 +59,13 @@ public class ClassValidator<T> extends BeanValidator implements Validator<T> {
 
     /** validate all constraints on object */
     public Set<InvalidConstraint<T>> validate(T object, String... groups) {
-        ConstraintValidationListener<T> result = new ConstraintValidationListener<T>(object);
         GroupValidationContext context = createContext(object, groups);
+        ConstraintValidationListener result = (ConstraintValidationListener) context.getListener();
         List<String> sequence = context.getSequencedGroups();
         for (String currentGroup : sequence) {
             context.resetValidated();
             context.setCurrentGroup(currentGroup);
-            validate(context, result);
+            provider.getBeanValidator().validateContext(context);
             /**
              * if one of the group process in the sequence leads to one or more validation failure,
              * the groups following in the sequence must not be processed
@@ -85,15 +84,15 @@ public class ClassValidator<T> extends BeanValidator implements Validator<T> {
     public Set<InvalidConstraint<T>> validateProperty(T object, String propertyName,
                                                       String... groups) {
         GroupValidationContext context = createContext(object, groups);
+        ConstraintValidationListener result = (ConstraintValidationListener) context.getListener();
         context.setMetaProperty(metaBean.getProperty(propertyName));
         if (context.getMetaProperty() == null) throw new IllegalArgumentException(
                 "Unknown property " + object.getClass().getName() + "." + propertyName);
-        ConstraintValidationListener<T> result = new ConstraintValidationListener<T>(object);
         List<String> sequence = context.getSequencedGroups();
         for (String currentGroup : sequence) {
             context.resetValidated();
             context.setCurrentGroup(currentGroup);
-            validateProperty(context, result);
+            provider.getBeanValidator().validateProperty(context);
             /**
              * if one of the group process in the sequence leads to one or more validation failure,
              * the groups following in the sequence must not be processed
@@ -110,14 +109,14 @@ public class ClassValidator<T> extends BeanValidator implements Validator<T> {
     public Set<InvalidConstraint<T>> validateValue(String propertyName, Object value,
                                                    String... groups) {
         GroupValidationContext context = createContext(null, groups);
+        ConstraintValidationListener result = (ConstraintValidationListener) context.getListener();
         context.setMetaProperty(metaBean.getProperty(propertyName));
         context.setFixedValue(value);
-        ConstraintValidationListener<T> result = new ConstraintValidationListener<T>(null);
         List<String> sequence = context.getSequencedGroups();
         for (String currentGroup : sequence) {
             context.resetValidated();
             context.setCurrentGroup(currentGroup);
-            validateProperty(context, result);            
+            provider.getBeanValidator().validateProperty(context);
             /**
              * if one of the group process in the sequence leads to one or more validation failure,
              * the groups following in the sequence must not be processed
@@ -127,8 +126,10 @@ public class ClassValidator<T> extends BeanValidator implements Validator<T> {
         return result.getInvalidConstraints();
     }
 
-    protected GroupValidationContext createContext(T object, String[] groups) {
-        GroupValidationContext context = new GroupValidationContext(getMessageResolver());
+    protected GroupValidationContext createContext(T object,
+                                                   String[] groups) {
+        ConstraintValidationListener<T> listener = new ConstraintValidationListener<T>(object);
+        GroupValidationContext context = new GroupValidationContext(listener, getMessageResolver());
         if (groups == null || groups.length == 0) groups = GroupValidationContext.DEFAULT_GROUPS;
         context.setRequestedGroups(groups);
         context.setBean(object, metaBean);

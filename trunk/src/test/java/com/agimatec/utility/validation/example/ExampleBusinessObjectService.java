@@ -13,25 +13,17 @@ import java.util.List;
  * Copyright: Agimatec GmbH 2008
  */
 public interface ExampleBusinessObjectService {
-    /**
-     * validated method example
-     * @param object
-     * @param other
-     */
+    /** validated method example */
     @Validate
     public void saveBusinessObject(@Validate BusinessObject object, Object other);
 
-    /**
-     * explicit validation example
-     * @param object
-     * @return
-     */
-    public ValidationResults validateBusinessObject(@Validate("BusinessObject") BusinessObject object);
+    @Validate
+    public void saveBusinessObjects(@Validate BusinessObject[] object);
 
-    /**
-     * query by example - example
-     * @param example
-     * @return
-     */
+    /** explicit validation example */
+    public ValidationResults validateBusinessObject(
+            @Validate("BusinessObject")BusinessObject object);
+
+    /** query by example - example */
     public List<BusinessObject> findBusinessObjects(BusinessObject example);
 }

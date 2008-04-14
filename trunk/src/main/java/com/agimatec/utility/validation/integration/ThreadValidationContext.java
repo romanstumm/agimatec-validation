@@ -1,11 +1,10 @@
 package com.agimatec.utility.validation.integration;
 
 import com.agimatec.utility.validation.ValidationContext;
-import com.agimatec.utility.validation.ValidationResults;
+import com.agimatec.utility.validation.ValidationListener;
 
 /**
- * Description: Used to bundle {@link ValidationContext} and {@link ValidationResults}
- * together and bind them to the current thread.
+ * Description: Used to bind the current validation context to the current thread.
  * Use this class when you need to append validation errors in service layers
  * without handing a ValidationContext and/or ValidationResults instance
  * through your method signatures.<br/>
@@ -18,7 +17,9 @@ public class ThreadValidationContext extends ValidationContext {
     protected static final ThreadLocal<ThreadValidationContext> current =
             new ThreadLocal<ThreadValidationContext>();
 
-    private ValidationResults validationResults;
+    public ThreadValidationContext(ValidationListener listener) {
+        super(listener);
+    }
 
     public static ThreadValidationContext getCurrent() {
         return current.get();
@@ -30,13 +31,5 @@ public class ThreadValidationContext extends ValidationContext {
         } else {
             current.set(aValidationContext);
         }
-    }
-
-    public ValidationResults getValidationResults() {
-        return validationResults;
-    }
-
-    public void setValidationResults(ValidationResults validationResults) {
-        this.validationResults = validationResults;
     }
 }

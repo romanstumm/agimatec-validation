@@ -18,7 +18,6 @@ class ConstraintValidationListener<T> implements ValidationListener {
     private final Set<InvalidConstraint<T>> invalidConstraints = new HashSet();
     private final T rootBean;
 
-
     public ConstraintValidationListener(T aRootBean) {
         this.rootBean = aRootBean;
     }

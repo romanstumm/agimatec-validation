@@ -2,7 +2,6 @@ package com.agimatec.utility.validation.jsr303;
 
 import com.agimatec.utility.validation.Validation;
 import com.agimatec.utility.validation.ValidationContext;
-import com.agimatec.utility.validation.ValidationListener;
 
 import javax.validation.Constraint;
 import javax.validation.MessageResolver;
@@ -42,7 +41,7 @@ class ConstraintValidation implements Validation {
         return descriptor;
     }
 
-    public void validate(ValidationContext context, ValidationListener listener) {
+    public void validate(ValidationContext context) {
         MessageResolver messageResolver = null;
         /**
          * execute unless the given validation constraint has already been processed
@@ -66,11 +65,11 @@ class ConstraintValidation implements Validation {
         }
         if (!constraint.isValid(value)) {
             if (messageResolver != null) {
-                listener.addError(
+                context.getListener().addError(
                         messageResolver.interpolate(messageKey, getConstraintDescriptor(), value),
                         context);
             } else {
-                listener.addError(messageKey, context);
+                context.getListener().addError(messageKey, context);
             }
         }
     }

@@ -8,6 +8,9 @@ import com.agimatec.utility.validation.model.MetaBean;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Arrays;
+
+import org.apache.commons.lang.ArrayUtils;
 
 /**
  * Description: Validatator used for annotated methods. The current validation
@@ -71,6 +74,8 @@ public class ThreadBeanValidator extends BeanValidator {
                 Collection coll = ((Collection) parameter);
                 if (coll.isEmpty()) return false;
                 beanClass = coll.iterator().next().getClass(); // get first object
+            } else if(parameter.getClass().isArray()) {
+                beanClass = parameter.getClass().getComponentType();
             } else {
                 beanClass = parameter.getClass();
             }

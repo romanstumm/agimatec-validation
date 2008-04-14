@@ -2,7 +2,6 @@ package com.agimatec.utility.validation.routines;
 
 import com.agimatec.utility.validation.Validation;
 import com.agimatec.utility.validation.ValidationContext;
-import com.agimatec.utility.validation.ValidationListener;
 
 /**
  * Description: DO NOTHING VALIDATION (can be used to turn off standard validation)<br/>
@@ -13,7 +12,7 @@ import com.agimatec.utility.validation.ValidationListener;
  */
 public class NOPValidation implements Validation {
 
-    public void validate(ValidationContext context, ValidationListener listener) {
+    public void validate(ValidationContext context) {
         // do nothing
     }
 }

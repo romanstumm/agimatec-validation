@@ -11,7 +11,11 @@ import java.util.IdentityHashMap;
 
 /**
  * Description: Context during validation to help the {@link Validation}
- * and the {@link BeanValidator} do their jobs <br/>
+ * and the {@link BeanValidator} do their jobs.
+ * Used to bundle {@link ValidationContext} and {@link ValidationListener} together <br/>
+ * <b>This class is NOT thread-safe: a new instance will be created for each validation
+ * processing per thread.<br/></b>
+ * <br/>
  * User: roman.stumm <br/>
  * Date: 06.07.2007 <br/>
  * Time: 12:30:01 <br/>
@@ -44,7 +48,18 @@ public class ValidationContext {
      */
     private boolean fixed;
 
-    public ValidationContext() {
+    private ValidationListener listener;
+
+    public ValidationContext(ValidationListener listener) {
+        this.listener = listener;
+    }
+
+    public ValidationListener getListener() {
+        return listener;
+    }
+
+    public void setListener(ValidationListener listener) {
+        this.listener = listener;
     }
 
     /**

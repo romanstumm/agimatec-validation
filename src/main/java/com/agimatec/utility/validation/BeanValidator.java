@@ -1,9 +1,12 @@
 package com.agimatec.utility.validation;
 
+import com.agimatec.utility.validation.integration.Validate;
 import com.agimatec.utility.validation.model.Features;
 import com.agimatec.utility.validation.model.MetaBean;
 import com.agimatec.utility.validation.model.MetaProperty;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.Collection;
 
 /**
@@ -21,14 +24,97 @@ import java.util.Collection;
 public class BeanValidator {
     /**
      * convenience API. validate a root object with all related objects
+     * with its default metaBean definition.
+     *
+     * @return results - validation results found
+     */
+    public ValidationResults validate(Object bean) {
+        MetaBean metaBean = MetaBeanManagerFactory.getFinder().findForClass(bean.getClass());
+        return validate(bean, metaBean);
+    }
+
+    /**
+     * convenience API. validate a root object with all related objects
      * according to the metaBean.
      *
      * @param bean - a single bean or a collection of beans (that share the same metaBean!)
+     * @return results - validation results found
      */
     public ValidationResults validate(Object bean, MetaBean metaBean) {
-        ValidationResults result = new ValidationResults();
-        validate(new ValidationContext().setBean(bean, metaBean), result);
-        return result;
+        ValidationContext context = createContext();
+        validateContext(context.setBean(bean, metaBean));
+        return (ValidationResults) context.getListener();
+    }
+
+    /**
+     * validate the method parameters based on @Validate annotations.
+     * Requirements:
+     * 1. Method must be annotated with @Valiadate
+     * (otherwise this method returns and no current validation context is created)
+     * 2. Parameter, that are to be validated must also be annotated with @Validate
+     *
+     * @see Validate
+     * @param method     -  a method
+     * @param parameters - the parameters suitable to the method
+     * @return a validation result
+     */
+    public ValidationResults validateCall(Method method, Object[] parameters) {
+        if (parameters.length > 0) {
+            // shortcut (for performance!)
+            if (method.getAnnotation(Validate.class) == null) return null;
+            ValidationContext context = createContext();
+            Annotation[][] annotations = method.getParameterAnnotations();
+            for (int i = 0; i < parameters.length; i++) {
+                for (Annotation anno : annotations[i]) {
+                    if (anno instanceof Validate) {
+                        if (determineMetaBean((Validate) anno, parameters[i], context)) {
+                            validateContext(context);
+                        }
+                    }
+                }
+            }
+            return (ValidationResults) context.getListener();
+        }
+        return null;
+    }
+
+    /** @return true when validation should happen, false to skip it */
+    protected boolean determineMetaBean(Validate validate, Object parameter,
+                                        ValidationContext context) {
+        if (validate.value().length() == 0) {
+            if (parameter == null) return false;
+            Class beanClass;
+            if (parameter instanceof Collection) {   // do not validate empty collection
+                Collection coll = ((Collection) parameter);
+                if (coll.isEmpty()) return false;
+                beanClass = coll.iterator().next().getClass(); // get first object
+            } else if (parameter.getClass().isArray()) {
+                beanClass = parameter.getClass().getComponentType();
+            } else {
+                beanClass = parameter.getClass();
+            }
+            context.setBean(parameter, MetaBeanManagerFactory.getFinder().findForClass(beanClass));
+        } else {
+            context.setBean(parameter,
+                    MetaBeanManagerFactory.getFinder().findForId(validate.value()));
+        }
+        return true;
+    }
+
+    /**
+     * factory method -
+     * overwrite in subclasses
+     */
+    protected ValidationResults createResults() {
+        return new ValidationResults();
+    }
+
+    /**
+     * factory method -
+     * overwrite in subclasses
+     */
+    protected ValidationContext createContext() {
+        return new ValidationContext(createResults());
     }
 
     /**
@@ -39,21 +125,20 @@ public class BeanValidator {
      * @return validation results
      */
     public ValidationResults validateProperty(Object bean, MetaProperty metaProperty) {
-        ValidationResults result = new ValidationResults();
-        ValidationContext context = new ValidationContext();
+        ValidationContext context = createContext();
         context.setBean(bean);
         context.setMetaProperty(metaProperty);
-        validateProperty(context, result);
-        return result;
+        validateProperty(context);
+        return (ValidationResults) context.getListener();
     }
 
     /**
      * validate a single property only. performs all validations
      * for this property.
      */
-    public void validateProperty(ValidationContext context, ValidationListener listener) {
-         for (Validation validation : context.getMetaProperty().getValidations()) {
-            validation.validate(context, listener);
+    public void validateProperty(ValidationContext context) {
+        for (Validation validation : context.getMetaProperty().getValidations()) {
+            validation.validate(context);
         }
     }
 
@@ -67,23 +152,28 @@ public class BeanValidator {
      *                <br>&nbsp;&nbsp;metaBean - the meta information for the root object(s)
      * @return a new instance of validation results
      */
-    public void validate(ValidationContext context, ValidationListener listener) {
+    public void validateContext(ValidationContext context) {
         if (context.getBean() != null) {
             if (context.getBean() instanceof Collection) { // to Many
                 for (Object each : ((Collection) context.getBean())) {
                     context.setBean(each);
-                    validateBeanNet(context, listener);
+                    validateBeanNet(context);
+                }
+            } else if (context.getBean() instanceof Object[]) {
+                for (Object each : ((Object[]) context.getBean())) {
+                    context.setBean(each);
+                    validateBeanNet(context);
                 }
             } else { // to One
-                validateBeanNet(context, listener);
+                validateBeanNet(context);
             }
         }
     }
 
     /** internal  validate a bean (=not a collection of beans) and its related beans */
-    protected void validateBeanNet(ValidationContext context, ValidationListener listener) {
+    protected void validateBeanNet(ValidationContext context) {
         if (context.collectValidated(context.getBean())) {
-            validateBean(context, listener);
+            validateBean(context);
             final Object bean = context.getBean();
             final MetaBean mbean = context.getMetaBean();
             for (MetaProperty prop : context.getMetaBean().getProperties()) {
@@ -91,7 +181,7 @@ public class BeanValidator {
                         prop.getFeature(Features.Property.REF_CASCADE, true)) {
                     // modify context state for relationship-target bean
                     context.moveDown(prop);
-                    validate(context, listener);
+                    validateContext(context);
                     context.moveUp(bean, mbean); // reset context state
                 }
             }
@@ -99,20 +189,20 @@ public class BeanValidator {
     }
 
     /** validate a single bean only. no related beans will be validated */
-    public void validateBean(ValidationContext context, ValidationListener listener) {
+    public void validateBean(ValidationContext context) {
         /**
          * execute all property level validations
          */
         for (MetaProperty prop : context.getMetaBean().getProperties()) {
             context.setMetaProperty(prop);
-            validateProperty(context, listener);
+            validateProperty(context);
         }
         /**
          * execute all bean level validations
          */
         context.setMetaProperty(null);
         for (Validation validation : context.getMetaBean().getValidations()) {
-            validation.validate(context, listener);
+            validation.validate(context);
         }
     }
 }

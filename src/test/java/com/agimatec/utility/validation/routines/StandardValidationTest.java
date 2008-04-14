@@ -36,7 +36,7 @@ public class StandardValidationTest extends TestCase implements ValidationListen
     public void setUp() throws Exception {
         super.setUp();
         validation = new StandardValidation();
-        context = new ValidationContext();
+        context = new ValidationContext(this);
         metaProperty = new MetaProperty();
         context.setBean(this, null);
         context.setMetaProperty(metaProperty);
@@ -56,20 +56,20 @@ public class StandardValidationTest extends TestCase implements ValidationListen
         // test not-null value that is mandatory
         metaProperty.setMandatory(true);
         stringValue = "some value";
-        validation.validateMandatory(context, this);
+        validation.validateMandatory(context);
         assertTrue(reasons.isEmpty());
 
         // test null value that is mandatory
         context.unknownValue();
         stringValue = null;
-        validation.validateMandatory(context, this);
+        validation.validateMandatory(context);
         assertTrue(reasons.contains(Reasons.MANDATORY));
 
         // test null value that is NOT mandatory
         context.unknownValue();
         metaProperty.setMandatory(false);
         reasons.clear();
-        validation.validateMandatory(context, this);
+        validation.validateMandatory(context);
         assertTrue(reasons.isEmpty());
     }
 
@@ -77,11 +77,11 @@ public class StandardValidationTest extends TestCase implements ValidationListen
         metaProperty.setName("stringValue");
         metaProperty.putFeature(Features.Property.MAX_LENGTH, 5);
         stringValue = "1234";
-        validation.validateMaxLength(context, this);
+        validation.validateMaxLength(context);
         assertTrue(reasons.isEmpty());
         context.unknownValue();
         stringValue = "much too long";
-        validation.validateMaxLength(context, this);
+        validation.validateMaxLength(context);
         assertTrue(reasons.contains(Reasons.MAX_LENGTH));
     }
 
@@ -89,11 +89,11 @@ public class StandardValidationTest extends TestCase implements ValidationListen
         metaProperty.setName("stringValue");
         metaProperty.putFeature(Features.Property.MIN_LENGTH, 5);
         stringValue = "123456";
-        validation.validateMinLength(context, this);
+        validation.validateMinLength(context);
         assertTrue(reasons.isEmpty());
         context.unknownValue();
         stringValue = "123";
-        validation.validateMinLength(context, this);
+        validation.validateMinLength(context);
         assertTrue(reasons.contains(Reasons.MIN_LENGTH));
     }
 
@@ -101,11 +101,11 @@ public class StandardValidationTest extends TestCase implements ValidationListen
         metaProperty.setName("stringValue");
         metaProperty.putFeature(Features.Property.MAX_VALUE, "9999");
         stringValue = "1111";
-        validation.validateMaxValue(context, this);
+        validation.validateMaxValue(context);
         assertTrue(reasons.isEmpty());
         context.unknownValue();
         stringValue = "99999";
-        validation.validateMaxValue(context, this);
+        validation.validateMaxValue(context);
         assertTrue(reasons.contains(Reasons.MAX_VALUE));
     }
 
@@ -113,11 +113,11 @@ public class StandardValidationTest extends TestCase implements ValidationListen
         metaProperty.setName("stringValue");
         metaProperty.putFeature(Features.Property.MIN_VALUE, "5555");
         stringValue = "8888";
-        validation.validateMinValue(context, this);
+        validation.validateMinValue(context);
         assertTrue(reasons.isEmpty());
         context.unknownValue();
         stringValue = "3333";
-        validation.validateMinValue(context, this);
+        validation.validateMinValue(context);
         assertTrue(reasons.contains(Reasons.MIN_VALUE));
     }
 
@@ -127,11 +127,11 @@ public class StandardValidationTest extends TestCase implements ValidationListen
         metaProperty.setName("stringValue");
         metaProperty.putFeature(Features.Property.REG_EXP, regexp);
         stringValue = "53773";
-        validation.validateRegExp(context, this);
+        validation.validateRegExp(context);
         assertTrue(reasons.isEmpty());
         context.unknownValue();
         stringValue = "5355/7"; // invalid zip value
-        validation.validateRegExp(context, this);
+        validation.validateRegExp(context);
         assertTrue(reasons.contains(Reasons.REG_EXP));
     }
 
@@ -144,11 +144,11 @@ public class StandardValidationTest extends TestCase implements ValidationListen
         metaProperty.putFeature(Features.Property.TIME_LAG, XMLMetaValue.TIMELAG_Past);
 
         dateValue = new Date(System.currentTimeMillis()-10000);
-        validation.validateTimeLag(context, this);
+        validation.validateTimeLag(context);
         assertTrue(reasons.isEmpty());
 
         metaProperty.putFeature(Features.Property.TIME_LAG, XMLMetaValue.TIMELAG_Future);
-        validation.validateTimeLag(context, this);
+        validation.validateTimeLag(context);
         assertTrue(reasons.contains(Reasons.TIME_LAG));
 
     }

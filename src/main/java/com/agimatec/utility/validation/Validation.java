@@ -12,7 +12,6 @@ public interface Validation {
    * Perform a single validation routine
    * Validate the object or property according to the current ValidationContext.
    * @param context - to access the property, value, constraints
-   * @param listener  - to write results to
    */
-  void validate(ValidationContext context, ValidationListener listener);
+  void validate(ValidationContext context);
 }

@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
  * @author ${USER}
  * @version 1.0
  * @since <pre>07/09/2007</pre>
- * Copyright: Agimatec GmbH 2008
+ *        Copyright: Agimatec GmbH 2008
  */
 public class ThreadBeanValidatorTest extends TestCase {
     private ThreadBeanValidator validator;
@@ -29,8 +29,8 @@ public class ThreadBeanValidatorTest extends TestCase {
     public void setUp() throws Exception {
         super.setUp();
         validator = new ThreadBeanValidator();
-        MetaBeanManagerFactory.getRegistry().addLoader(new XMLMetaBeanURLLoader(
-                BusinessObject.class.getResource("test-beanInfos.xml")));
+        MetaBeanManagerFactory.getRegistry().addLoader(
+                new XMLMetaBeanURLLoader(BusinessObject.class.getResource("test-beanInfos.xml")));
     }
 
     public static Test suite() {
@@ -41,18 +41,26 @@ public class ThreadBeanValidatorTest extends TestCase {
         BusinessObject object = createExampleObject();
         ValidationResults results = validator.validate(object);
         assertTrue(!results.isEmpty());
-        assertTrue(!ThreadValidationContext.getCurrent().getValidationResults()
-                .isEmpty());
+        results = (ValidationResults) ThreadValidationContext.getCurrent().getListener();
+        assertTrue(!results.isEmpty());
     }
 
-    public void testValidateAnnotation()
-            throws NoSuchMethodException {
+    public void testValidateAnnotation() throws NoSuchMethodException {
         Class serviceClass = ExampleBusinessObjectService.class;
         Method method = serviceClass
                 .getMethod("saveBusinessObject", BusinessObject.class, Object.class);
         assertNotNull(method);
         Object[] params = {createExampleObject(), null};
-        assertTrue(!validator.validateCall(method, params).isEmpty());        
+        assertTrue(!validator.validateCall(method, params).isEmpty());
+    }
+
+    public void testValidateArrayParameter() throws NoSuchMethodException {
+        Class serviceClass = ExampleBusinessObjectService.class;
+        Method method = serviceClass
+                .getMethod("saveBusinessObjects", BusinessObject[].class);
+        assertNotNull(method);
+        Object[] params = {new BusinessObject[]{createExampleObject(), createExampleObject()}};
+        assertTrue(!validator.validateCall(method, params).isEmpty());
     }
 
     private BusinessObject createExampleObject() {

@@ -1,5 +1,6 @@
 package com.agimatec.utility.validation.jsr303;
 
+import com.agimatec.utility.validation.BeanValidator;
 import com.agimatec.utility.validation.MetaBeanManager;
 
 import javax.validation.*;
@@ -18,6 +19,7 @@ public class Provider implements ValidationProvider {
     protected MetaBeanManager metaBeanManager;
     protected ConstraintFactory constraintFactory;
     private MessageResolver defaultMessageResolver;
+    private BeanValidator beanValidator;
 
     public Provider() {
         initializeDefaults();
@@ -72,6 +74,14 @@ public class Provider implements ValidationProvider {
         return new ClassValidator(this, getMetaBeanManager().findForId(metaBeanId));
     }
 
+    public BeanValidator getBeanValidator() {
+        return beanValidator;
+    }
+
+    public void setBeanValidator(BeanValidator beanValidator) {
+        this.beanValidator = beanValidator;
+    }
+
     public static Provider getInstance() {
         if(instance == null) {
             ValidationProvider provider = ValidationProviderFactory.getProvider();
@@ -92,6 +102,6 @@ public class Provider implements ValidationProvider {
         setMetaBeanManager(new MetaBeanManager(new AnnotationMetaBeanBuilder(this)));
         setConstraintFactory(new DefaultConstraintFactory());
         setDefaultMessageResolver(new MessageResolverImpl());
-    }
-
+        setBeanValidator(new BeanValidator());
+    }    
 }

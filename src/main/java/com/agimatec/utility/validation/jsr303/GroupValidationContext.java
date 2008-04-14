@@ -1,6 +1,7 @@
 package com.agimatec.utility.validation.jsr303;
 
 import com.agimatec.utility.validation.ValidationContext;
+import com.agimatec.utility.validation.ValidationListener;
 import com.agimatec.utility.validation.model.MetaBean;
 import com.agimatec.utility.validation.model.MetaProperty;
 
@@ -39,8 +40,9 @@ class GroupValidationContext extends ValidationContext {
             new IdentityHashMap();
 
 
-    public GroupValidationContext(MessageResolver aMessageResolver) {
-         this.messageResolver = aMessageResolver;
+    public GroupValidationContext(ValidationListener listener, MessageResolver aMessageResolver) {
+        super(listener);
+        this.messageResolver = aMessageResolver;
     }
 
     @Override
@@ -58,7 +60,7 @@ class GroupValidationContext extends ValidationContext {
     /** @return true when the constraint for this object was not already validated in this context */
     public boolean collectValidated(Object bean, Constraint constraint) {
         IdentityHashMap<Constraint, Object> beanConstraints = validatedConstraints.get(bean);
-        if(beanConstraints == null) {
+        if (beanConstraints == null) {
             beanConstraints = new IdentityHashMap();
             validatedConstraints.put(bean, beanConstraints);
         }

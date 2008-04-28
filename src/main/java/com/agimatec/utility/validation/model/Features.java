@@ -14,7 +14,7 @@ package com.agimatec.utility.validation.model;
 public interface Features {
     /** Features of {@link MetaBean} */
     public interface Bean {
-        /** INFO: String, Name der Property, die Primary Key ist */
+        /** INFO: String, name of the Property, that is the Primary Key */
         String MAIN_KEY = "mainKey";
         /** INFO: category/domain to which the metaBean belongs to */
 //        String DOMAIN = "domain";
@@ -27,39 +27,39 @@ public interface Features {
     public interface Property {
         /** INFO: possible Enum values */
         String ENUM = "enum";
-        /** INFO: Boolean, TRUE falls Property ein Unique Key ist */
+        /** INFO: Boolean, TRUE if Property is a Unique Key */
         String UNIQUE_KEY = "uniqueKey";
-        /** VALIDATION: Boolean, Pflichtfeld? */
+        /** VALIDATION: Boolean, mandatory field? */
         String MANDATORY = "mandatory";
-        /** VALIDATION: Integer, max. Anzahl Zeichen / Max. Kardinalitaet der Relation */
+        /** VALIDATION: Integer, max. number of chars/digits / max. cardinality of a to-many relationship*/
         String MAX_LENGTH = "maxLen";
-        /** VALIDATION: Comparable (e.g. a subclass of Number), max Wert */
+        /** VALIDATION: Comparable (e.g. a subclass of Number), max value */
         String MAX_VALUE = "maxValue";
-        /** VALIDATION: Integer, min. Anzahl Zeichen / Min. Kardinalitaet der Relation */
+        /** VALIDATION: Integer, min. number of chars/digits / min. cardinality of a to-many relationship*/
         String MIN_LENGTH = "minLen";
-        /** VALIDATION: Comparable (e.g. a subclass of Number), min Wert */
+        /** VALIDATION: Comparable (e.g. a subclass of Number), min value */
         String MIN_VALUE = "minValue";
-        /** INFO: String-Darstellung des Defaultvalues */
+        /** INFO: String-representation of a default value */
         String DEFAULT_VALUE = "defValue";
-        /** SECURITY, INFO: Boolean, Wert oder Relation readonly? */
+        /** SECURITY, INFO: Boolean, is value or relationship unmodifiable */
         String READONLY = "readonly";
         /**
-         * SECURITY, INFO: Boolean, Feld erreichbar/erlaubt?
-         * Wenn nein, dann darf das Feld weder angezeigt, abgefragt noch geaendert werden.
+         * SECURITY, INFO: Boolean, Feld accessible?
+         * If false, the field must not be displayed, queried, changed.
          */
         String DENIED = "denied";
-        /** VALIDATION: String, Regulaerer Ausdruck zur Formatpruefung */
+        /** VALIDATION: String, regular expression to validate the format of input data */
         String REG_EXP = "regExp";
         /**
-         * VALIDATION: String, Constraint fuer Zeitangabe bei Date-feld:
+         * VALIDATION: String, Constraint for time-information of a Date-field:
          * {@link com.agimatec.utility.validation.xml.XMLMetaValue#TIMELAG_Past}
-         * oder
+         * or
          * {@link com.agimatec.utility.validation.xml.XMLMetaValue#TIMELAG_Future}
          */
         String TIME_LAG = "timeLag";
 
         /**
-         * INFO: Boolean, Feld sichtbar?
+         * INFO: Boolean, Feld visible?
          *
          * @see java.beans.PropertyDescriptor#isHidden()
          */

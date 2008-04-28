@@ -43,7 +43,8 @@ public class BeanValidator {
      */
     public ValidationResults validate(Object bean, MetaBean metaBean) {
         ValidationContext context = createContext();
-        validateContext(context.setBean(bean, metaBean));
+        context.setBean(bean, metaBean);
+        validateContext(context);
         return (ValidationResults) context.getListener();
     }
 

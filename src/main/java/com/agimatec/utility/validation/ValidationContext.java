@@ -33,7 +33,12 @@ public interface ValidationContext {
 
     boolean collectValidated(Object object);
 
-    BeanValidationContext setBean(Object aBean, MetaBean aMetaBean);
+    /**
+     * @param aBean
+     * @param aMetaBean
+     * @return this
+     */
+    void setBean(Object aBean, MetaBean aMetaBean);
 
     void setMetaProperty(MetaProperty metaProperty);
 

@@ -85,13 +85,11 @@ public class BeanValidationContext implements ValidationContext {
         validatedObjects.clear();
     }
 
-    /** @return this */
-    public BeanValidationContext setBean(Object aBean, MetaBean aMetaBean) {
+    public void setBean(Object aBean, MetaBean aMetaBean) {
         bean = aBean;
         metaBean = aMetaBean;
         metaProperty = null;
         unknownValue();
-        return this;
     }
 
     /** get the value from the given reflection element */

@@ -1,11 +1,11 @@
 #summary Project status and history
 
 = News = 
-The sources in svn are newer than the files of the release 0.3-SNAPSHOT in the Downloads section and contain bugfixes and enhancements (complete JSR 303 implementation, performance improvements). 
+The sources in svn are newer than the files of the release 0.5 in the Downloads section and contain bugfixes and enhancements (complete JSR 303 implementation, performance improvements). 
 
 = Project status and history =
 
-  * The agimatec-validation framework is older than the JSR 303 specification, but the similarities were striking so that the adaption to the standard was possible withing a short time.  There are still things to be done...
+  * The agimatec-validation framework is older than the JSR 303 specification, but the similarities were striking so that the adaption to the standard was possible withing a short time.
 
   * The specification is still in a early draft state and subject to change. This implementation will change as soon as the specification is stable.
 
@@ -15,4 +15,4 @@ The sources in svn are newer than the files of the release 0.3-SNAPSHOT in the D
   Refer to classes in packages javax.validation and com.agimatec.utility.validation.jsr303
   
   or you can access the propriatary APIs of agimatec-validation for additional features.
-  Refer to classes !MetaBeanManagerFactory, !BeanValidator and !ThreadBeanValidator.
+  Refer to classes !MetaBeanManagerFactory and !BeanValidator

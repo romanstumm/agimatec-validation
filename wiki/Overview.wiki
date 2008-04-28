@@ -5,6 +5,12 @@
 The Wiki of "agimatec-validation" is open for community contribution. Useful information will be eventually incorporated into other parts of this site. Please be careful not to overwrite content from other people! 
 
 = Supported features =
+V0.5:
+  * support for resolution of association types during runtime. (required by JSR303)
+    consequences: relationship targets can have different types, generics on collection types not required anymore
+  * ValidationContext and GroupValidationContext are interfaces
+  * new testcase ValidationTest.testValidAnnotation() tests nested, polimorphic relationships  
+V0.4:
   * implementation of [http://jcp.org/aboutJava/communityprocess/edr/jsr303/ JSR 303: bean-validation]
   * Define constraints with predefined annotations
   * Create own validators and annotations to define custom constraints

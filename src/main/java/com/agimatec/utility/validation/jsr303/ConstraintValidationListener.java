@@ -29,12 +29,12 @@ class ConstraintValidationListener<T> implements ValidationListener {
 
         final String propPath;
         final String[] groups;
-        if(context instanceof GroupValidationContext) {
-            propPath = ((GroupValidationContext)context).getPropertyPath();
-            groups = new String[] { ((GroupValidationContext)context).getCurrentGroup()};
+        if(context instanceof GroupBeanValidationContext) {
+            propPath = ((GroupBeanValidationContext)context).getPropertyPath();
+            groups = new String[] { ((GroupBeanValidationContext)context).getCurrentGroup()};
         } else {
             propPath = context.getPropertyName();
-            groups = GroupValidationContext.DEFAULT_GROUPS;
+            groups = GroupBeanValidationContext.DEFAULT_GROUPS;
         }
 
         InvalidConstraintImpl ic = new InvalidConstraintImpl(reason, rootBean,

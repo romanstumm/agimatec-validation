@@ -29,7 +29,7 @@ class ConstraintValidation implements Validation {
         this.constraint = constraint;
         this.messageKey = messageKey;
         this.groups = (groups == null || groups.length == 0) ?
-                GroupValidationContext.DEFAULT_GROUPS : groups;
+                GroupBeanValidationContext.DEFAULT_GROUPS : groups;
         this.annotation = annotation;
         this.field = element instanceof Field ? (Field)element : null;
     }
@@ -47,8 +47,8 @@ class ConstraintValidation implements Validation {
          * execute unless the given validation constraint has already been processed
          * during this validation routine (as part of a previous group match)
          */
-        if (context instanceof GroupValidationContext) {
-            GroupValidationContext groupContext = (GroupValidationContext) context;
+        if (context instanceof GroupBeanValidationContext) {
+            GroupBeanValidationContext groupContext = (GroupBeanValidationContext) context;
             if (!isMemberOf(groupContext.getCurrentGroup())) {
                 return; // do not validate in the current group
             }

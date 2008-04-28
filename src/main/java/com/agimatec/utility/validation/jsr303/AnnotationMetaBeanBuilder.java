@@ -1,6 +1,5 @@
 package com.agimatec.utility.validation.jsr303;
 
-import com.agimatec.utility.ReflectUtils;
 import com.agimatec.utility.validation.MetaBeanBuilder;
 import com.agimatec.utility.validation.model.Features;
 import com.agimatec.utility.validation.model.MetaBean;
@@ -14,7 +13,10 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Description: process the class annotations for constraint validations
@@ -133,7 +135,7 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
                                       AnnotatedElement element)
             throws IllegalAccessException, InvocationTargetException {
         if (annotation instanceof Valid) {
-            return processValid(element, metabean, prop);
+            return processValid(/*element, metabean, */prop);
         } else if (annotation instanceof GroupSequence) {
             processGroupSequence((GroupSequence) annotation, metabean);
             return true;
@@ -176,16 +178,17 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
         return false;
     }
 
-    private boolean processValid(AnnotatedElement element, MetaBean metabean, MetaProperty prop) {
-        if (prop != null && prop.getMetaBean() == null && prop.getType() != null) {
+    private boolean processValid(/*AnnotatedElement element, MetaBean metabean, */MetaProperty prop) {
+        if (prop != null && prop.getMetaBean() == null) {
             prop.putFeature(Features.Property.REF_CASCADE, Boolean.TRUE);
-            if (Collection.class.isAssignableFrom(prop.getType())) { // determine beanType
+            // support for runtime type determination: therefore here no action to find the bean type
+         /*   if (Collection.class.isAssignableFrom(prop.getType())) { // determine beanType
                 Class clazz;
                 clazz = findBeanType(element, metabean, prop);
                 if (clazz != null) {
                     prop.putFeature(Features.Property.REF_BEAN_TYPE, clazz);
                 }
-            }
+            }       */
             return true;
         }
         return false;
@@ -200,7 +203,7 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
         groupSeqMap.put(each.name(), each.sequence());
     }
 
-    private Class findBeanType(AnnotatedElement element, MetaBean metabean, MetaProperty prop) {
+  /*  private Class findBeanType(AnnotatedElement element, MetaBean metabean, MetaProperty prop) {
         Class clazz;
         if (element instanceof Field) {
             clazz = ReflectUtils.getBeanTypeFromField((Field) element);
@@ -215,7 +218,7 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
             clazz = ReflectUtils.getBeanType(metabean.getBeanClass(), prop.getName());
         }
         return clazz;
-    }
+    }      */
 
     private Object getAnnotationValue(Annotation annotation, String name)
             throws IllegalAccessException, InvocationTargetException {

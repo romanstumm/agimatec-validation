@@ -1,5 +1,6 @@
 package com.agimatec.utility.validation.routines;
 
+import com.agimatec.utility.validation.BeanValidationContext;
 import com.agimatec.utility.validation.ValidationContext;
 import com.agimatec.utility.validation.ValidationListener;
 import com.agimatec.utility.validation.model.Features;
@@ -23,7 +24,7 @@ import java.util.List;
  */
 public class StandardValidationTest extends TestCase implements ValidationListener {
     private StandardValidation validation;
-    private ValidationContext context;
+    private BeanValidationContext context;
     private List<String> reasons = new ArrayList<String>();
     private MetaProperty metaProperty;
     private String stringValue;
@@ -36,7 +37,7 @@ public class StandardValidationTest extends TestCase implements ValidationListen
     public void setUp() throws Exception {
         super.setUp();
         validation = new StandardValidation();
-        context = new ValidationContext(this);
+        context = new BeanValidationContext(this);
         metaProperty = new MetaProperty();
         context.setBean(this, null);
         context.setMetaProperty(metaProperty);

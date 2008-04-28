@@ -129,8 +129,8 @@ public class ClassValidator<T> implements Validator<T> {
     protected GroupValidationContext createContext(T object,
                                                    String[] groups) {
         ConstraintValidationListener<T> listener = new ConstraintValidationListener<T>(object);
-        GroupValidationContext context = new GroupValidationContext(listener, getMessageResolver());
-        if (groups == null || groups.length == 0) groups = GroupValidationContext.DEFAULT_GROUPS;
+        GroupBeanValidationContext context = new GroupBeanValidationContext(listener, getMessageResolver());
+        if (groups == null || groups.length == 0) groups = GroupBeanValidationContext.DEFAULT_GROUPS;
         context.setRequestedGroups(groups);
         context.setBean(object, metaBean);
         return context;

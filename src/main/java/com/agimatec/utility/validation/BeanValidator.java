@@ -1,6 +1,7 @@
 package com.agimatec.utility.validation;
 
 import com.agimatec.utility.validation.integration.Validate;
+import com.agimatec.utility.validation.model.DynamicMetaBean;
 import com.agimatec.utility.validation.model.Features;
 import com.agimatec.utility.validation.model.MetaBean;
 import com.agimatec.utility.validation.model.MetaProperty;
@@ -53,10 +54,10 @@ public class BeanValidator {
      * (otherwise this method returns and no current validation context is created)
      * 2. Parameter, that are to be validated must also be annotated with @Validate
      *
-     * @see Validate
      * @param method     -  a method
      * @param parameters - the parameters suitable to the method
      * @return a validation result
+     * @see Validate
      */
     public ValidationResults validateCall(Method method, Object[] parameters) {
         if (parameters.length > 0) {
@@ -114,7 +115,7 @@ public class BeanValidator {
      * overwrite in subclasses
      */
     protected ValidationContext createContext() {
-        return new ValidationContext(createResults());
+        return new BeanValidationContext(createResults());
     }
 
     /**
@@ -154,17 +155,30 @@ public class BeanValidator {
      */
     public void validateContext(ValidationContext context) {
         if (context.getBean() != null) {
+            DynamicMetaBean dynamic = context.getMetaBean() instanceof DynamicMetaBean ?
+                    (DynamicMetaBean) context.getMetaBean() : null;
             if (context.getBean() instanceof Collection) { // to Many
                 for (Object each : ((Collection) context.getBean())) {
-                    context.setBean(each);
+                    if (dynamic != null) {
+                        context.setBean(each, dynamic.resolveMetaBean(each));
+                    } else {
+                        context.setBean(each);
+                    }
                     validateBeanNet(context);
                 }
             } else if (context.getBean() instanceof Object[]) {
                 for (Object each : ((Object[]) context.getBean())) {
-                    context.setBean(each);
+                    if (dynamic != null) {
+                        context.setBean(each, dynamic.resolveMetaBean(each));
+                    } else {
+                        context.setBean(each);
+                    }
                     validateBeanNet(context);
                 }
             } else { // to One
+                if (dynamic != null) {
+                    context.setMetaBean(dynamic.resolveMetaBean(context.getBean()));
+                }
                 validateBeanNet(context);
             }
         }
@@ -177,8 +191,8 @@ public class BeanValidator {
             final Object bean = context.getBean();
             final MetaBean mbean = context.getMetaBean();
             for (MetaProperty prop : context.getMetaBean().getProperties()) {
-                if (prop.getMetaBean() != null &&
-                        prop.getFeature(Features.Property.REF_CASCADE, true)) {
+                if (prop.getMetaBean() != null ||
+                        prop.getFeature(Features.Property.REF_CASCADE, false)) {
                     // modify context state for relationship-target bean
                     context.moveDown(prop);
                     validateContext(context);

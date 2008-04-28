@@ -1,5 +1,6 @@
 package com.agimatec.utility.validation;
 
+import com.agimatec.utility.validation.model.DynamicMetaBean;
 import static com.agimatec.utility.validation.model.Features.Property.*;
 import com.agimatec.utility.validation.model.MetaBean;
 import com.agimatec.utility.validation.model.MetaProperty;
@@ -146,8 +147,10 @@ public class MetaBeanManager implements MetaBeanFinder, XMLMetaBeanRegistry, Met
                 Class beanType = prop.getFeature(REF_BEAN_TYPE);
                 if (beanType != null) {
                     prop.setMetaBean(findForClass(beanType));
-                } else if (prop.getFeature(REF_CASCADE, false)) {
-                    prop.setMetaBean(findForClass(prop.getType()));
+                } // dynamic type resolution:
+                else if (prop.getFeature(REF_CASCADE, false)) {
+                    prop.setMetaBean(new DynamicMetaBean(this));
+//                            findForClass(prop.getType()));
                 }
             }
         }

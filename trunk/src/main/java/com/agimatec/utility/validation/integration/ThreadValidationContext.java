@@ -1,6 +1,6 @@
 package com.agimatec.utility.validation.integration;
 
-import com.agimatec.utility.validation.ValidationContext;
+import com.agimatec.utility.validation.BeanValidationContext;
 import com.agimatec.utility.validation.ValidationListener;
 
 /**
@@ -13,7 +13,7 @@ import com.agimatec.utility.validation.ValidationListener;
  * Time: 13:41:10 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-public class ThreadValidationContext extends ValidationContext {
+public class ThreadValidationContext extends BeanValidationContext {
     protected static final ThreadLocal<ThreadValidationContext> current =
             new ThreadLocal<ThreadValidationContext>();
 

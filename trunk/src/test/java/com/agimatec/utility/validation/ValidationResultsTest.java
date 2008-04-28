@@ -31,7 +31,7 @@ public class ValidationResultsTest extends TestCase {
 
     public void testValidationResults() throws Exception {
         assertTrue(results.isEmpty());
-        ValidationContext ctx = new ValidationContext(results);
+        BeanValidationContext ctx = new BeanValidationContext(results);
         ctx.setBean(this);
         ctx.setMetaProperty(new MetaProperty());
         ctx.getMetaProperty().setName("prop");

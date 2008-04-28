@@ -37,11 +37,45 @@ public class ValidationTest extends TestCase {
         //  author.company fails to pass the Length constraint
     }
 
+    /**
+     * test:
+     * - dynamic resolution of associated object types.
+     * - inheritance of validation constraints
+     * - complex valiation, different groups, nested object net
+     */
+    public void testValidAnnotation() {
+        Author a = new Author();
+        a.setAddresses(new ArrayList());
+        BusinessAddress adr = new BusinessAddress();
+        adr.setCountry(new Country());
+        adr.setAddressline1("line1");
+        adr.setAddressline2("line2");
+
+        adr.setZipCode("1234567890123456789");
+        a.getAddresses().add(adr);
+
+        a.setFirstName("Karl");
+        a.setLastName("May");
+
+        Validator v = getValidator(a.getClass());
+        Set found = v.validate(a, "default", "first", "last");
+        assertTrue(!found.isEmpty());
+        assertEquals(4, found.size());
+
+        adr.setCity("Berlin");
+        adr.setZipCode("12345");
+        adr.setCompany("agimatec GmbH");
+        found = v.validate(a, "default", "first", "last");
+        assertEquals(1, found.size());
+        InvalidConstraint ic = (InvalidConstraint) found.iterator().next();
+        assertEquals("addresses.country.name", ic.getPropertyPath());
+    }
+
     private Validator getValidator(Class clazz) {
         return new ClassValidator(clazz);
     }
 
-    public void test2() {
+    public void testGroups() {
         Validator validator = getValidator(Book.class);
         Author author = new Author();
         author.setCompany("ACME");
@@ -80,7 +114,7 @@ public class ValidationTest extends TestCase {
         }
     }
 
-    public void test3() {
+    public void testMetadataAPI() {
         Validator bookValidator = getValidator(Book.class);
 
         assertTrue( bookValidator.hasConstraints());

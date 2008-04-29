@@ -15,10 +15,20 @@ public class ValidationResults implements ValidationListener, Serializable {
     private Map<Object, Map<String, List<Error>>> errorsByOwner;
 
     public void addError(String reason, ValidationContext context) {
+        addError(reason, context.getBean(), context.getPropertyName());
+    }
+
+    /**
+     * API to add an error to the validation results.
+     * @param reason    - Features from {@link Reasons} or custom validation reason
+     * @param bean      - (optional) owner bean or null
+     * @param propertyName - (optional) propertyName where valiation error occurred or null
+     */
+    public void addError(String reason, Object bean, String propertyName) {
         if (errorsByReason == null) {
             initialize();
         }
-        Error error = createError(reason, context.getBean(), context.getPropertyName());
+        Error error = createError(reason, bean, propertyName);
 
         addToReasonBucket(error);
         addToOwnerBucket(error);

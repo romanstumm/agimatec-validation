@@ -17,8 +17,11 @@ public class ThreadBeanValidator extends BeanValidator {
 
     @Override
     protected ValidationContext createContext() {
-        ThreadValidationContext context = new ThreadValidationContext(createResults());
-        ThreadValidationContext.setCurrent(context);
+        ThreadValidationContext context = ThreadValidationContext.getCurrent();
+        if (context == null) {
+            context = new ThreadValidationContext(createResults());
+            ThreadValidationContext.setCurrent(context);
+        }
         return context;
     }
 }

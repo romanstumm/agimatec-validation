@@ -34,3 +34,9 @@ V0.4:
 
 = Building the project with Maven2 =
 [BuildAgimatecValidation How to build agimatec-validation]
+
+= More =
+You need to know more? Ask for more documentation. Tell us what you want to know, we document it here.
+
+We want to know your option and are curious to know your use cases for the validation framework (many different are possible, e.g. validation in an EJB container, validation for a Swing app, webapp or AJAX app. Code generation, GUI generation, scaffolding, etc.)
+Write us! We appreciate your comments.

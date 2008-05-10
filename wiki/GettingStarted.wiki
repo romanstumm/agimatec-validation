@@ -111,7 +111,7 @@ You can also add custom validators or exchange the default validators:
 
 2. create a !BeanValidator
 
-You need to register the xml-files at a !XMLMetaBeanRegistry, so that the framework finds them. You can register multiple xml-files. When the same bean-id occurs in more than one file, the descriptions are merged into a single !MetaBean. Thus you can "decorate" and extend the meta data on different layers. (e.g. one xml file comes from the server, the other xml file describes features for the GUI layer).
+You need to register the xml-files at a XMLMetaBeanRegistry, so that the framework finds them. You can register multiple xml-files. When the same bean-id occurs in more than one file, the descriptions are merged into a single !MetaBean. Thus you can "decorate" and extend the meta data on different layers. (e.g. one xml file comes from the server, the other xml file describes features for the GUI layer).
 
 {{{
 // initialize code (once, e.g. as a static initializer):

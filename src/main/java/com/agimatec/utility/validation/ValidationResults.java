@@ -144,7 +144,7 @@ public class ValidationResults implements ValidationListener, Serializable {
     }
 
     public String toString() {
-        return "ValidationResults{" + errorsByReason + "}";
+        return "ValidationResults{" + errorsByOwner + "}";
     }
 
     public static class Error implements Serializable {

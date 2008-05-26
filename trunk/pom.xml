@@ -7,8 +7,8 @@
 
   <distributionManagement>
     <site>
-      <id>${agimatec-validation-site-id}</id>
-      <url>${agimatec-validation-site-url}</url>
+      <id>${agimatec-site-id}</id>
+      <url>${agimatec-site-url}/agimatec-validation/site</url>
     </site>
     <snapshotRepository>
       <id>deployment.dav</id>

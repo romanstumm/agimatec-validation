@@ -5,7 +5,7 @@ The sources in svn are newer than the files of the release 0.5 in the Downloads 
 
 = Project status and history =
 
-  * The agimatec-validation framework is older than the JSR 303 specification, but the similarities were striking so that the adaption to the standard was possible withing a short time.
+  * The agimatec-validation framework is older than the JSR 303 specification, but the similarities were striking so that the adaption to the standard was possible within a short time.
 
   * The specification is still in a early draft state and subject to change. This implementation will change as soon as the specification is stable.
 

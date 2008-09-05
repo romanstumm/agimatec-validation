@@ -257,4 +257,8 @@ public class BeanValidationContext implements ValidationContext {
         setBean(bean, metaBean); // reset context state
     }
 
+    public void setCurrentIndex(int index) {
+        // do nothing
+    }
+
 }

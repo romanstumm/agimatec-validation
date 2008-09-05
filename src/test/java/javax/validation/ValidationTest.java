@@ -1,6 +1,7 @@
 package javax.validation;
 
 import com.agimatec.utility.validation.jsr303.ClassValidator;
+import com.agimatec.utility.validation.jsr303.GroupBeanValidationContext;
 import junit.framework.TestCase;
 
 import java.lang.annotation.ElementType;
@@ -17,6 +18,12 @@ import java.util.Set;
  * Copyright: Agimatec GmbH 2008
  */
 public class ValidationTest extends TestCase {
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();   // call super!
+        GroupBeanValidationContext.INCLUDE_INDEX_IN_PROPERTY_PATH = false;
+    }
+
     public void testBook() {
         Validator validator = getValidator(Book.class);
         Author author = new Author();
@@ -68,7 +75,64 @@ public class ValidationTest extends TestCase {
         found = v.validate(a, "default", "first", "last");
         assertEquals(1, found.size());
         InvalidConstraint ic = (InvalidConstraint) found.iterator().next();
-        assertEquals("addresses.country.name", ic.getPropertyPath());
+        if (GroupBeanValidationContext.INCLUDE_INDEX_IN_PROPERTY_PATH) {
+            assertEquals("addresses[0].country.name", ic.getPropertyPath());
+        } else {
+            assertEquals("addresses.country.name", ic.getPropertyPath());
+        }
+    }
+
+    public void testPropertyPathWithIndex() {
+        GroupBeanValidationContext.INCLUDE_INDEX_IN_PROPERTY_PATH = true;
+        Author a = new Author();
+        a.setAddresses(new ArrayList());
+        Address adr = new Address();
+        adr.setAddressline1("adr1");
+        adr.setCity("Santiago");
+        a.getAddresses().add(adr);
+        adr = new Address();
+        adr.setAddressline1("adr2");
+        adr.setCity("Havanna");
+        a.getAddresses().add(adr);
+        adr = new Address();
+        adr.setAddressline1("adr3");
+        adr.setCity("Trinidad");
+        a.getAddresses().add(adr);
+
+        Set<InvalidConstraint> constraints = getValidator(Author.class).validate(a);
+        assertTrue(!constraints.isEmpty());
+
+        assertPropertyPath("addresses[0].country", constraints);
+        assertPropertyPath("addresses[1].country", constraints);
+        assertPropertyPath("addresses[2].country", constraints);
+    }
+
+    private void assertPropertyPath(String propertyPath, Set<InvalidConstraint> constraints) {
+        for (InvalidConstraint each : constraints) {
+            if (each.getPropertyPath().equals(propertyPath)) return;
+        }
+        fail(propertyPath + " not found in " + constraints);
+    }
+
+    public void testPropertyPathRecursive() {
+        GroupBeanValidationContext.INCLUDE_INDEX_IN_PROPERTY_PATH = true;
+        RecursiveFoo foo1 = new RecursiveFoo();
+        RecursiveFoo foo11 = new RecursiveFoo();
+        foo1.getFoos().add(foo11);
+        RecursiveFoo foo12 = new RecursiveFoo();
+        foo1.getFoos().add(foo12);
+        RecursiveFoo foo2 = new RecursiveFoo();
+        foo11.getFoos().add(foo2);
+
+        Set<InvalidConstraint> constraints = getValidator(RecursiveFoo.class).validate(foo1);
+        // TODO RSt - clarify behavior!
+        // not deterministic: both could be true sometimes...
+//        assertPropertyPath("foos[0].foos[0].foos", constraints);
+//        assertPropertyPath("foos[1].foos[0].foos", constraints);
+
+        // not deterministic: both could be true sometimes...
+//        assertPropertyPath("foos[1].foos", constraints);
+//        assertPropertyPath("foos[0].foos", constraints);
     }
 
     private Validator getValidator(Class clazz) {
@@ -103,13 +167,13 @@ public class ValidationTest extends TestCase {
 
             if (invalidConstraint.getBeanClass() == Author.class) {
                 // The second failure, NotEmpty on the author's lastname, will produce the following InvalidConstraint object:
-                assertTrue( "may not be null or empty".equals(invalidConstraint.getMessage()));
-                assertTrue( book == invalidConstraint.getRootBean());
-                assertTrue( Author.class == invalidConstraint.getBeanClass());
+                assertTrue("may not be null or empty".equals(invalidConstraint.getMessage()));
+                assertTrue(book == invalidConstraint.getRootBean());
+                assertTrue(Author.class == invalidConstraint.getBeanClass());
                 //the offending value
-                assertTrue( book.getAuthor().getLastName() == invalidConstraint.getValue());
+                assertTrue(book.getAuthor().getLastName() == invalidConstraint.getValue());
                 //the offending property
-                assertTrue( "author.lastName".equals(invalidConstraint.getPropertyPath()));
+                assertTrue("author.lastName".equals(invalidConstraint.getPropertyPath()));
             }
         }
     }
@@ -117,13 +181,13 @@ public class ValidationTest extends TestCase {
     public void testMetadataAPI() {
         Validator bookValidator = getValidator(Book.class);
 
-        assertTrue( bookValidator.hasConstraints());
+        assertTrue(bookValidator.hasConstraints());
         ElementDescriptor bookBeanDescriptor = bookValidator.getBeanConstraints();
-        assertTrue( bookBeanDescriptor.getElementType() == ElementType.TYPE);
-        assertTrue( bookBeanDescriptor.getConstraintDescriptors().size() == 0); //no constraint
-        assertTrue( "".equals(bookBeanDescriptor.getPropertyPath())); //root element
+        assertTrue(bookBeanDescriptor.getElementType() == ElementType.TYPE);
+        assertTrue(bookBeanDescriptor.getConstraintDescriptors().size() == 0); //no constraint
+        assertTrue("".equals(bookBeanDescriptor.getPropertyPath())); //root element
         //more specifically "author" and "title"
-        assertTrue( bookValidator.getValidatedProperties().size() == 3);
+        assertTrue(bookValidator.getValidatedProperties().size() == 3);
         //not a property
         assertTrue(bookValidator.getConstraintsForProperty("doesNotExist") == null);
         //property with no constraint
@@ -137,7 +201,8 @@ public class ValidationTest extends TestCase {
                 .iterator().next();
         assertTrue(constraintDescriptor.getAnnotation().annotationType().equals(NotEmpty.class));
         assertTrue(constraintDescriptor.getGroups().size() == 1); //"first"
-        assertTrue(constraintDescriptor.getConstraintImplementation() instanceof StandardConstraint);
+        assertTrue(
+                constraintDescriptor.getConstraintImplementation() instanceof StandardConstraint);
         StandardConstraint standardConstraint =
                 (StandardConstraint) constraintDescriptor.getConstraintImplementation();
         //@NotEmpty cannot be null

@@ -105,8 +105,7 @@ public class GroupBeanValidationContext extends BeanValidationContext
                 sb.append('[');
                 sb.append(prop);
                 sb.append(']');
-                sb.append('.');
-                dot = false;
+                dot = true;
             }
         }
         if (getMetaProperty() != null) {

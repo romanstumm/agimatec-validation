@@ -16,10 +16,13 @@ import java.util.*;
  * Time: 16:32:35 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-class GroupBeanValidationContext extends BeanValidationContext
+public class GroupBeanValidationContext extends BeanValidationContext
         implements GroupValidationContext {
+    // TODO RSt - configure behavior - temporary, will be removed when behavior is finally specified
+    public static boolean INCLUDE_INDEX_IN_PROPERTY_PATH = false;
+
     private final MessageResolver messageResolver;
-    private final LinkedList<String> propertyStack = new LinkedList();
+    private final LinkedList propertyStack = new LinkedList();
     private String[] requestedGroups;
     private List<String> sequencedGroups;
     private String currentGroup;
@@ -32,9 +35,22 @@ class GroupBeanValidationContext extends BeanValidationContext
             new IdentityHashMap();
 
 
-    public GroupBeanValidationContext(ValidationListener listener, MessageResolver aMessageResolver) {
+    public GroupBeanValidationContext(ValidationListener listener,
+                                      MessageResolver aMessageResolver) {
         super(listener);
         this.messageResolver = aMessageResolver;
+    }
+
+    @Override
+    public void setCurrentIndex(int index) {
+        super.setCurrentIndex(index);   // call super!
+        if (INCLUDE_INDEX_IN_PROPERTY_PATH) {
+            Object last = propertyStack.getLast();
+            if (last instanceof Integer) {
+                propertyStack.removeLast();
+            }
+            propertyStack.addLast(index);
+        }
     }
 
     @Override
@@ -45,7 +61,9 @@ class GroupBeanValidationContext extends BeanValidationContext
 
     @Override
     public void moveUp(Object bean, MetaBean metaBean) {
-        propertyStack.removeLast();
+        if (propertyStack.removeLast() instanceof Integer) {
+            propertyStack.removeLast();
+        }
         super.moveUp(bean, metaBean); // call super!
     }
 
@@ -77,11 +95,22 @@ class GroupBeanValidationContext extends BeanValidationContext
      */
     public String getPropertyPath() {
         StringBuilder sb = new StringBuilder();
-        for (String prop : propertyStack) {
-            sb.append(prop);
-            sb.append('.');
+        boolean dot = false;
+        for (Object prop : propertyStack) {
+            if (prop instanceof String) {
+                if (dot) sb.append('.');
+                sb.append(prop);
+                dot = true;
+            } else if (prop instanceof Integer) {
+                sb.append('[');
+                sb.append(prop);
+                sb.append(']');
+                sb.append('.');
+                dot = false;
+            }
         }
         if (getMetaProperty() != null) {
+            if (dot) sb.append('.');
             sb.append(getMetaProperty().getName());
         }
         return sb.toString();

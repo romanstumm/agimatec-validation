@@ -159,21 +159,25 @@ public class BeanValidator {
             DynamicMetaBean dynamic = context.getMetaBean() instanceof DynamicMetaBean ?
                     (DynamicMetaBean) context.getMetaBean() : null;
             if (context.getBean() instanceof Collection) { // to Many
+                int index = 0;
                 for (Object each : ((Collection) context.getBean())) {
                     if (dynamic != null) {
                         context.setBean(each, dynamic.resolveMetaBean(each));
                     } else {
                         context.setBean(each);
                     }
+                    context.setCurrentIndex(index++);
                     validateBeanNet(context);
                 }
             } else if (context.getBean() instanceof Object[]) {
+                int index = 0;
                 for (Object each : ((Object[]) context.getBean())) {
                     if (dynamic != null) {
                         context.setBean(each, dynamic.resolveMetaBean(each));
                     } else {
                         context.setBean(each);
                     }
+                    context.setCurrentIndex(index++);
                     validateBeanNet(context);
                 }
             } else { // to One

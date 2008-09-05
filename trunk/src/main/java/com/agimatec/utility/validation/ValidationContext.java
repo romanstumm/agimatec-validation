@@ -54,4 +54,11 @@ public interface ValidationContext {
      * @param metaBean
      */
     void moveUp(Object bean, MetaBean metaBean);
+
+    /**
+     * set the index of the object currently validated into the context.
+     * used to create the propertyPath with [index] information for collections.
+     * @param index
+     */
+    void setCurrentIndex(int index);
 }

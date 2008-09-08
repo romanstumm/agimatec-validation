@@ -59,6 +59,7 @@ public class ClassValidator<T> implements Validator<T> {
 
     /** validate all constraints on object */
     public Set<InvalidConstraint<T>> validate(T object, String... groups) {
+        if(object==null) throw new IllegalArgumentException("cannot validate null");
         GroupValidationContext context = createContext(object, groups);
         ConstraintValidationListener result = (ConstraintValidationListener) context.getListener();
         List<String> sequence = context.getSequencedGroups();
@@ -83,6 +84,7 @@ public class ClassValidator<T> implements Validator<T> {
      */
     public Set<InvalidConstraint<T>> validateProperty(T object, String propertyName,
                                                       String... groups) {
+        if(object==null) throw new IllegalArgumentException("cannot validate null");
         GroupValidationContext context = createContext(object, groups);
         ConstraintValidationListener result = (ConstraintValidationListener) context.getListener();
         context.setMetaProperty(metaBean.getProperty(propertyName));
@@ -128,7 +130,6 @@ public class ClassValidator<T> implements Validator<T> {
 
     protected GroupValidationContext createContext(T object,
                                                    String[] groups) {
-        if(object==null) throw new IllegalArgumentException("cannot validate null");
         ConstraintValidationListener<T> listener = new ConstraintValidationListener<T>(object);
         GroupBeanValidationContext context = new GroupBeanValidationContext(listener, getMessageResolver());
         if (groups == null || groups.length == 0) groups = GroupBeanValidationContext.DEFAULT_GROUPS;

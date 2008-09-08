@@ -161,25 +161,25 @@ public class BeanValidator {
             if (context.getBean() instanceof Collection) { // to Many
                 int index = 0;
                 for (Object each : ((Collection) context.getBean())) {
+                    context.setCurrentIndex(index++);
                     if(each == null) continue; // or throw IllegalArgumentException? (=> spec)
                     if (dynamic != null) {
                         context.setBean(each, dynamic.resolveMetaBean(each));
                     } else {
                         context.setBean(each);
                     }
-                    context.setCurrentIndex(index++);
                     validateBeanNet(context);
                 }
             } else if (context.getBean() instanceof Object[]) {
                 int index = 0;
                 for (Object each : ((Object[]) context.getBean())) {
+                    context.setCurrentIndex(index++);
                     if(each == null) continue; // or throw IllegalArgumentException? (=> spec)
                     if (dynamic != null) {
                         context.setBean(each, dynamic.resolveMetaBean(each));
                     } else {
                         context.setBean(each);
                     }
-                    context.setCurrentIndex(index++);
                     validateBeanNet(context);
                 }
             } else { // to One

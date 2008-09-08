@@ -128,6 +128,7 @@ public class ClassValidator<T> implements Validator<T> {
 
     protected GroupValidationContext createContext(T object,
                                                    String[] groups) {
+        if(object==null) throw new IllegalArgumentException("cannot validate null");
         ConstraintValidationListener<T> listener = new ConstraintValidationListener<T>(object);
         GroupBeanValidationContext context = new GroupBeanValidationContext(listener, getMessageResolver());
         if (groups == null || groups.length == 0) groups = GroupBeanValidationContext.DEFAULT_GROUPS;

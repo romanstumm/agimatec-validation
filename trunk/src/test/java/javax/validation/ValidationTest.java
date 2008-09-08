@@ -135,6 +135,19 @@ public class ValidationTest extends TestCase {
 //        assertPropertyPath("foos[0].foos", constraints);
     }
 
+    public void testNullElementInCollection() {
+        try {
+            getValidator(RecursiveFoo.class).validate(null);
+            fail();
+        } catch (IllegalArgumentException ex) {
+        }
+        RecursiveFoo foo = new RecursiveFoo();
+        foo.getFoos().add(new RecursiveFoo());
+        foo.getFoos().add(null);
+        assertTrue(!getValidator(RecursiveFoo.class).validate(foo).isEmpty());
+        // check that no nullpointer exception gets thrown
+    }
+
     private Validator getValidator(Class clazz) {
         return new ClassValidator(clazz);
     }

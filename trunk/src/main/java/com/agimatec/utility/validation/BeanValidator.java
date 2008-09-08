@@ -161,6 +161,7 @@ public class BeanValidator {
             if (context.getBean() instanceof Collection) { // to Many
                 int index = 0;
                 for (Object each : ((Collection) context.getBean())) {
+                    if(each == null) continue; // or throw IllegalArgumentException? (=> spec)
                     if (dynamic != null) {
                         context.setBean(each, dynamic.resolveMetaBean(each));
                     } else {
@@ -172,6 +173,7 @@ public class BeanValidator {
             } else if (context.getBean() instanceof Object[]) {
                 int index = 0;
                 for (Object each : ((Object[]) context.getBean())) {
+                    if(each == null) continue; // or throw IllegalArgumentException? (=> spec)
                     if (dynamic != null) {
                         context.setBean(each, dynamic.resolveMetaBean(each));
                     } else {

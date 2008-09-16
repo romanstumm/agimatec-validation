@@ -38,6 +38,13 @@ public class XMLFeaturesCapable implements Serializable {
         }
     }
 
+    public void removeFeature(String key) {
+        XMLMetaFeature anno = findFeature(key);
+        if(anno != null) {
+            getFeatures().remove(anno);
+        }
+    }
+
     public Object getFeature(String key) {
         XMLMetaFeature anno = findFeature(key);
         return anno == null ? null : anno.getValue();

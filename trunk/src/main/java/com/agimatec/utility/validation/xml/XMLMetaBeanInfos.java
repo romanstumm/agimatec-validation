@@ -23,6 +23,8 @@ import java.util.Map;
 public class XMLMetaBeanInfos {
     @XStreamAsAttribute
     private String id;
+    @XStreamAsAttribute
+    private String version;
     @XStreamImplicit
     private List<XMLMetaValidator> validators;
     @XStreamImplicit
@@ -33,8 +35,8 @@ public class XMLMetaBeanInfos {
     private Map<String, XMLMetaValidator> validationLookup;
 
     /**
-     * dient zur Kennung, kann aber leer sein, wenn es nicht aus einer Datenbank stammt.
-     * Koennte z.B. auch den Dateinamen enthalten - frei verwendbar.
+     * used for identification, may be empty, if there is no database origin for this object.
+     * could also contain a file-name - can be used flexible...
      */
     public String getId() {
         return id;
@@ -42,6 +44,19 @@ public class XMLMetaBeanInfos {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    /**
+     * used for change-detection, when some other component caches MetaBeans based on this
+     * object. when the version changes, the cache could compare to its version state and recompute.
+     * can be used flexible...
+     */
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     public List<XMLMetaValidator> getValidators() {

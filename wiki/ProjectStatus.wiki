@@ -1,6 +1,20 @@
 #summary Project status and history
 
 = News = 
+
+26.09.2008
+----------
+release 0.6 available for download. contains minor changes and one additional, experimental feature:
+
+to make InvalidConstraint.getPropertyPath contain index in case of a collection, 
+set 
+GroupBeanValidationContext.INCLUDE_INDEX_IN_PROPERTY_PATH = true;
+
+I hope, this will be clarified as soon as the next version of the JSR303 spec will be available.
+
+
+26.04.2008
+----------
 The sources in svn are newer than the files of the release 0.5 in the Downloads section and contain bugfixes and enhancements (complete JSR 303 implementation, performance improvements). 
 
 = Project status and history =

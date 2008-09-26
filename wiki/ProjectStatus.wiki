@@ -6,9 +6,9 @@
 ----------
 release 0.6 available for download. contains minor changes and one additional, experimental feature:
 
-to make InvalidConstraint.getPropertyPath contain index in case of a collection, 
+to make !InvalidConstraint.getPropertyPath contain index in case of a collection, 
 set 
-GroupBeanValidationContext.INCLUDE_INDEX_IN_PROPERTY_PATH = true;
+!GroupBeanValidationContext.INCLUDE_INDEX_IN_PROPERTY_PATH = true;
 
 I hope, this will be clarified as soon as the next version of the JSR303 spec will be available.
 

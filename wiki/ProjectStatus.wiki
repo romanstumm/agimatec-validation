@@ -13,7 +13,7 @@ set
 I hope, this will be clarified as soon as the next version of the JSR303 spec will be available.
 
 
-26.04.2008
+11.04.2008
 ----------
 The sources in svn are newer than the files of the release 0.5 in the Downloads section and contain bugfixes and enhancements (complete JSR 303 implementation, performance improvements). 
 

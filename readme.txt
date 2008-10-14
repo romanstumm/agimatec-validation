@@ -14,7 +14,8 @@ How to compile the project
 ==========================
 Requirements:
 0. Sources require java1.5 or higher. (Tested with JDK 1.5.0._12)
-1. The project is built with maven2. You need to download and install maven2 from: http://maven.apache.org/
+1. The project is built with maven2 (2.0.9). 
+   You need to download and install maven2 from: http://maven.apache.org/
 2. Invoke maven2 from within the directory of the pom.xml file
 
 compile project:

@@ -2,37 +2,58 @@ package com.agimatec.utility.validation.routines;
 
 import com.agimatec.utility.validation.Validation;
 import com.agimatec.utility.validation.ValidationContext;
-import org.apache.commons.lang.StringUtils;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 /**
- * Description: example validation for email addresses using a regular expression<br/>
+ * Description: example validation for email addresses using a regular expression
+ * (taken from hibernate EmailValidator)<br/>
  * User: roman.stumm <br/>
  * Date: 06.07.2007 <br/>
  * Time: 16:51:16 <br/>
  * Copyright: Agimatec GmbH 2008
  */
 public class EMailValidation implements Validation {
-    private static final String EMail_RegExp =
-            "([a-zA-Z\\d]((\\w|-|\\.(?!\\.))*\\w)?@(([a-zA-Z]|(\\w(\\w|-(?!-))*\\w))\\.)" +
-                    "+[a-zA-Z]{2,})|([a-zA-Z\\d][a-zA-Z\\d ]* <[a-zA-Z\\d]((\\w|-|\\.(?!\\.))*\\w)" +
-                    "?@(([a-zA-Z]|(\\w(\\w|-(?!-))*\\w))\\.)+[a-zA-Z]{2,}>)";
-    private static final Pattern pattern = Pattern.compile(EMail_RegExp);
+    private static String ATOM =
+            "[^\\x00-\\x1F^\\(^\\)^\\<^\\>^\\@^\\,^\\;^\\:^\\\\^\\\"^\\.^\\[^\\]^\\s]";
+    private static String DOMAIN = "(" + ATOM + "+(\\." + ATOM + "+)*";
+    private static String IP_DOMAIN = "\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\]";
+    private java.util.regex.Pattern pattern;
 
     public void validate(ValidationContext context) {
         if (context.getPropertyValue() == null) return;
-        try {
-            if (!pattern.matcher((String) context.getPropertyValue()).matches()) {
-                context.getListener().addError(Reasons.EMAIL_ADDRESS, context);
-            }
-        } catch (PatternSyntaxException e) {
-            throw new IllegalArgumentException("email expression malformed at " + context, e);
+        if (!isValid(context.getPropertyValue())) {
+            context.getListener().addError(Reasons.EMAIL_ADDRESS, context);
         }
     }
 
-    public static boolean isValid(String emailaddress) {
-        return !StringUtils.isEmpty(emailaddress) && pattern.matcher(emailaddress).matches();
+    public Pattern getPattern() {
+        return pattern;
+    }
+
+    public void setPattern(Pattern pattern) {
+        this.pattern = pattern;
+    }
+
+    public boolean isValid(Object value) {
+        if (value == null) return true;
+        if (!(value instanceof String)) return false;
+        String string = (String) value;
+        if (string.length() == 0) return true;
+
+        if (pattern == null) {
+            pattern = java.util.regex.Pattern.compile(
+                    "^" + ATOM + "+(\\." + ATOM + "+)*@"
+                            + DOMAIN
+                            + "|"
+                            + IP_DOMAIN
+                            + ")$",
+                    java.util.regex.Pattern.CASE_INSENSITIVE
+            );
+        }
+
+        Matcher m = pattern.matcher(string);
+        return m.matches();
     }
 }

@@ -1,5 +1,7 @@
 package javax.validation;
 
+import com.agimatec.utility.validation.jsr303.Email;
+
 public class Customer implements Person {
     private String firstName;
     private String middleName;
@@ -8,6 +10,17 @@ public class Customer implements Person {
     private String customerId;
     @Password(robustness = 5)
     private String password;
+
+    @Email
+    private String emailAddress;
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
 
     public String getFirstName() {
         return firstName;

@@ -1,5 +1,6 @@
-package javax.validation;
+package com.agimatec.utility.validation.jsr303;
 
+import javax.validation.ConstraintValidator;
 import java.lang.annotation.Documented;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
@@ -10,8 +11,8 @@ import java.lang.annotation.Target;
 /**
  * <p>
  * --
- * This class is NOT part of the bean_validation spec and might change
- * as soon as a final version of the specification is available.
+ * This class is NOT part of the bean_validation spec and might disappear
+ * as soon as a final version of the specification contains a similar functionality.
  * --
  * </p>
  * Description: annotation to validate an email address (by pattern)<br/>

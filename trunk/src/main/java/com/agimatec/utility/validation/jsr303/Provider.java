@@ -4,6 +4,7 @@ import com.agimatec.utility.validation.BeanValidator;
 import com.agimatec.utility.validation.MetaBeanManager;
 
 import javax.validation.*;
+import java.util.Locale;
 
 /**
  * Description: This is the main configuration class to customize this
@@ -65,6 +66,22 @@ public class Provider implements ValidationProvider {
     }
 
     /**
+     * Validator factory method - with specific Locale.<br/>
+     * Alternatively you can change the default message resolver (and its locale)
+     * by calling com.agimatec.utility.validation.jsr303.Provider.setDefaultMessageResolver()
+     * @param aBeanClass
+     * @param locale
+     * @return
+     */
+    public Validator createValidator(Class aBeanClass, Locale locale) {
+        Validator validator = createValidator(aBeanClass);
+        MessageResolverImpl messageResolver = new MessageResolverImpl();
+        messageResolver.setLocale(locale);
+        validator.setMessageResolver(messageResolver);
+        return validator;
+    }
+
+    /**
      * factory method -
      * @param metaBeanId
      * @see javax.validation.ValidationProviderFactory#createValidator(Class)
@@ -103,5 +120,6 @@ public class Provider implements ValidationProvider {
         setConstraintFactory(new DefaultConstraintFactory());
         setDefaultMessageResolver(new MessageResolverImpl());
         setBeanValidator(new BeanValidator());
-    }    
+    }
+
 }

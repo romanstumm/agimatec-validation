@@ -2,6 +2,12 @@
 
 = News = 
 
+02.10.2008
+----------
+Reference Implementation and bootstrap proposal are out!
+http://forum.hibernate.org/viewtopic.php?t=991154
+The agimatec-validation framework does not yet implement them... (but soon)
+
 26.09.2008
 ----------
 release 0.6 available for download. contains minor changes and one additional, experimental feature:

@@ -4,6 +4,13 @@
 
 The Wiki of "agimatec-validation" is open for community contribution. Useful information will be eventually incorporated into other parts of this site. Please be careful not to overwrite content from other people! 
 
+== 02.10.2008: Reference implementation and bootstrap proposal are out ==
+  * see http://forum.hibernate.org/viewtopic.php?t=991154 
+The agimatec-validation framework does not yet implement them... (but soon) 
+  * The upcoming version 0.7 will not contain the javax.validation classes anymore but  instead use them from the official reference implementation.
+  * The upcoming version 0.7 will implement the bootstrap API and thus will deprecate the use of ValidationProvider and ValidationProviderFactory 
+
+
 = Supported features =
 
 V0.6.1:

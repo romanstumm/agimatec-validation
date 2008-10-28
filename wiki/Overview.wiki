@@ -9,7 +9,7 @@ The Wiki of "agimatec-validation" is open for community contribution. Useful inf
 The agimatec-validation framework does not yet implement them... (but soon) 
   * The upcoming version 0.7 will not contain the javax.validation classes anymore but  instead use them from the official reference implementation.
   * The upcoming version 0.7 will implement the bootstrap API and thus will deprecate the use of ValidationProvider and ValidationProviderFactory 
-  * version 0.7 will have packages renamed from com.agimatec.utility.validation to com.agimatec.validation
+  * The version 0.7 will have packages renamed from com.agimatec.utility.validation to com.agimatec.validation
 
 
 = Supported features =

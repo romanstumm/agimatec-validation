@@ -16,6 +16,7 @@ import java.util.Iterator;
  * User: roman.stumm <br/>
  * Date: 02.04.2008 <br/>
  * Time: 09:44:12 <br/>
+ * @deprecated use official bootstrap api instead
  *
  */
 public class ValidationProviderFactory {

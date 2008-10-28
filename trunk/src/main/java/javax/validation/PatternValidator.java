@@ -13,7 +13,7 @@ public class PatternValidator implements Constraint<Pattern> {
         pattern = java.util.regex.Pattern.compile(params.regex(), params.flags());
     }
 
-    public boolean isValid(Object ovalue) {
+    public boolean isValid(Object ovalue, Context context) {
         if (ovalue == null) return true;
         if (!(ovalue instanceof String)) return false;
         final String value = (String) ovalue;

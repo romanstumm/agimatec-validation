@@ -1,6 +1,6 @@
 package javax.validation;
 
-import com.agimatec.utility.validation.jsr303.Email;
+import com.agimatec.validation.jsr303.Email;
 
 public class Customer implements Person {
     private String firstName;

@@ -16,7 +16,7 @@ public class NotEmptyConstraint implements Constraint<NotEmpty>, StandardConstra
         // do nothing
     }
 
-    public boolean isValid(Object value) {
+    public boolean isValid(Object value, Context context) {
         if (value == null) return false;
         if (value.getClass().isArray()) {
             return Array.getLength(value) > 0;
@@ -29,7 +29,7 @@ public class NotEmptyConstraint implements Constraint<NotEmpty>, StandardConstra
         }
     }
 
-    public StandardConstraintDescriptor getStandardConstraintDescriptor() {
+    public StandardConstraintDescriptor getStandardConstraints() {
         return new StandardConstraintDescriptor() {
             @Override
             public Boolean getNullability() {

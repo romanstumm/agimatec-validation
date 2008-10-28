@@ -12,7 +12,7 @@ public class ZipCodeCityCoherenceConstraint implements Constraint<ZipCodeCityCoh
         // TODO RSt - nyi
     }
 
-    public boolean isValid(Object value) {
+    public boolean isValid(Object value, Context context) {
         return true;  // TODO RSt - nyi
     }
 }

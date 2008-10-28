@@ -1,10 +1,10 @@
 package javax.validation;
 
-import com.agimatec.utility.validation.jsr303.ClassValidator;
-import com.agimatec.utility.validation.jsr303.GroupBeanValidationContext;
+import com.agimatec.validation.jsr303.ClassValidator;
+import com.agimatec.validation.jsr303.ConstraintDescriptorImpl;
+import com.agimatec.validation.jsr303.GroupBeanValidationContext;
 import junit.framework.TestCase;
 
-import java.lang.annotation.ElementType;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -170,10 +170,12 @@ public class ValidationTest extends TestCase {
                 assertTrue(book.getTitle().equals(invalidConstraint.getValue()));
                 //the offending property
                 assertTrue("title".equals(invalidConstraint.getPropertyPath()));
-                assertTrue(invalidConstraint.getGroups().length == 1);
+                assertTrue(invalidConstraint.getGroups().size() == 1);
                 List expectedGroups = new ArrayList(1);
                 expectedGroups.add("first");
-                for (String group : invalidConstraint.getGroups()) {
+
+                Set<String> gs = invalidConstraint.getGroups();
+                for (String group : gs) {
                     assertTrue(expectedGroups.contains(group));
                 }
             }
@@ -195,18 +197,18 @@ public class ValidationTest extends TestCase {
         Validator bookValidator = getValidator(Book.class);
 
         assertTrue(bookValidator.hasConstraints());
-        ElementDescriptor bookBeanDescriptor = bookValidator.getBeanConstraints();
-        assertTrue(bookBeanDescriptor.getElementType() == ElementType.TYPE);
+        ElementDescriptor bookBeanDescriptor = bookValidator.getConstraintsForBean();
+//        assertTrue(bookBeanDescriptor.getElementType() == ElementType.TYPE);
         assertTrue(bookBeanDescriptor.getConstraintDescriptors().size() == 0); //no constraint
         assertTrue("".equals(bookBeanDescriptor.getPropertyPath())); //root element
         //more specifically "author" and "title"
-        assertTrue(bookValidator.getValidatedProperties().size() == 3);
+        assertTrue(bookValidator.getValidatedProperties().length == 3);
         //not a property
         assertTrue(bookValidator.getConstraintsForProperty("doesNotExist") == null);
         //property with no constraint
         assertTrue(bookValidator.getConstraintsForProperty("description") == null);
         ElementDescriptor propertyDescriptor = bookValidator.getConstraintsForProperty("title");
-        assertTrue(propertyDescriptor.getElementType() == ElementType.METHOD);
+//        assertTrue(propertyDescriptor.getElementType() == ElementType.METHOD);
         assertTrue(propertyDescriptor.getConstraintDescriptors().size() == 1);
         assertTrue("title".equals(propertyDescriptor.getPropertyPath()));
         //assuming the implementation returns the NotEmpty constraint first
@@ -215,11 +217,12 @@ public class ValidationTest extends TestCase {
         assertTrue(constraintDescriptor.getAnnotation().annotationType().equals(NotEmpty.class));
         assertTrue(constraintDescriptor.getGroups().size() == 1); //"first"
         assertTrue(
-                constraintDescriptor.getConstraintImplementation() instanceof StandardConstraint);
+                constraintDescriptor.getContstraintClass().equals(NotEmptyConstraint.class));
         StandardConstraint standardConstraint =
-                (StandardConstraint) constraintDescriptor.getConstraintImplementation();
+                (StandardConstraint) ((ConstraintDescriptorImpl)constraintDescriptor).
+                        getConstraintImplementation();
         //@NotEmpty cannot be null
-        assertTrue(!standardConstraint.getStandardConstraintDescriptor().getNullability());
+        assertTrue(!standardConstraint.getStandardConstraints().getNullability());
         //assuming the implementation returns the Length constraint first
         bookBeanDescriptor = bookValidator.getConstraintsForProperty("subtitle");
         Iterator<ConstraintDescriptor> iterator =
@@ -229,7 +232,7 @@ public class ValidationTest extends TestCase {
         assertTrue(((Integer) constraintDescriptor.getParameters().get("max")) == 30);
         assertTrue(constraintDescriptor.getGroups().size() == 1);
         propertyDescriptor = bookValidator.getConstraintsForProperty("author");
-        assertEquals(ElementType.FIELD, propertyDescriptor.getElementType());
+//        assertEquals(ElementType.FIELD, propertyDescriptor.getElementType());
         assertTrue(propertyDescriptor.getConstraintDescriptors().size() == 1);
         assertTrue(propertyDescriptor.isCascaded());
     }

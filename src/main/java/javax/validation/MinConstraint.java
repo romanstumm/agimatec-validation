@@ -13,7 +13,7 @@ public class MinConstraint implements Constraint<Min>{
         min = constraintAnnotation.value();
     }
 
-    public boolean isValid(Object value) {
+    public boolean isValid(Object value, Context context) {
         return ((Number)value).intValue() >= min;
     }
 }

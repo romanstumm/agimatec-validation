@@ -12,7 +12,7 @@ import java.util.Locale;
  * User: roman.stumm <br/>
  * Date: 02.04.2008 <br/>
  * Time: 09:39:36 <br/>
- *
+ * @deprecated use official bootstrap api instead
  */
 public interface ValidationProvider {
     /**

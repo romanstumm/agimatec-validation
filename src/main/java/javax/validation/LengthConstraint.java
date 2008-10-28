@@ -29,7 +29,7 @@ public class LengthConstraint implements Constraint<Length>, StandardConstraint 
      *
      * @throws IllegalArgumentException if the object is not of type String
      */
-    public boolean isValid(Object value) {
+    public boolean isValid(Object value, Context context) {
         if (value == null) return true;
         if (!(value instanceof String)) {
             throw new IllegalArgumentException("Expected String type");
@@ -40,7 +40,7 @@ public class LengthConstraint implements Constraint<Length>, StandardConstraint 
     }
 
     /** Returns the standard constraint descriptor in accordance with the max constraint */
-    public StandardConstraintDescriptor getStandardConstraintDescriptor() {
+    public StandardConstraintDescriptor getStandardConstraints() {
         return new StandardConstraintDescriptor() {
             public Integer getLength() {
                 if (max == Integer.MAX_VALUE) {

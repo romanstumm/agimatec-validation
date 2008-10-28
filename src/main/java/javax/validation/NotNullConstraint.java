@@ -11,7 +11,7 @@ public class NotNullConstraint implements Constraint<NotNull>{
         // do nothing
     }
 
-    public boolean isValid(Object value) {
+    public boolean isValid(Object value, Context context) {
         return value != null;
     }
 }

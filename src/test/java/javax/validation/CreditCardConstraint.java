@@ -12,7 +12,7 @@ public class CreditCardConstraint implements Constraint<CreditCard>{
         // do nothing
     }
 
-    public boolean isValid(Object value) {
+    public boolean isValid(Object value, Context context) {
         // TODO RSt - not implemented, just an example
         return true;
     }

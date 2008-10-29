@@ -2,7 +2,6 @@ package javax.validation;
 
 import com.agimatec.validation.jsr303.ClassValidator;
 import com.agimatec.validation.jsr303.ConstraintDescriptorImpl;
-import com.agimatec.validation.jsr303.GroupBeanValidationContext;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ public class ValidationTest extends TestCase {
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();   // call super!
-        GroupBeanValidationContext.INCLUDE_INDEX_IN_PROPERTY_PATH = false;
     }
 
     public void testBook() {
@@ -75,15 +73,10 @@ public class ValidationTest extends TestCase {
         found = v.validate(a, "default", "first", "last");
         assertEquals(1, found.size());
         InvalidConstraint ic = (InvalidConstraint) found.iterator().next();
-        if (GroupBeanValidationContext.INCLUDE_INDEX_IN_PROPERTY_PATH) {
-            assertEquals("addresses[0].country.name", ic.getPropertyPath());
-        } else {
-            assertEquals("addresses.country.name", ic.getPropertyPath());
-        }
+        assertEquals("addresses[0].country.name", ic.getPropertyPath());
     }
 
     public void testPropertyPathWithIndex() {
-        GroupBeanValidationContext.INCLUDE_INDEX_IN_PROPERTY_PATH = true;
         Author a = new Author();
         a.setAddresses(new ArrayList());
         Address adr = new Address();
@@ -115,7 +108,6 @@ public class ValidationTest extends TestCase {
     }
 
     public void testPropertyPathRecursive() {
-        GroupBeanValidationContext.INCLUDE_INDEX_IN_PROPERTY_PATH = true;
         RecursiveFoo foo1 = new RecursiveFoo();
         RecursiveFoo foo11 = new RecursiveFoo();
         foo1.getFoos().add(foo11);
@@ -125,14 +117,8 @@ public class ValidationTest extends TestCase {
         foo11.getFoos().add(foo2);
 
         Set<InvalidConstraint> constraints = getValidator(RecursiveFoo.class).validate(foo1);
-        // TODO RSt - clarify behavior!
-        // not deterministic: both could be true sometimes...
-//        assertPropertyPath("foos[0].foos[0].foos", constraints);
-//        assertPropertyPath("foos[1].foos[0].foos", constraints);
-
-        // not deterministic: both could be true sometimes...
-//        assertPropertyPath("foos[1].foos", constraints);
-//        assertPropertyPath("foos[0].foos", constraints);
+        assertPropertyPath("foos[0].foos[0].foos", constraints);
+        assertPropertyPath("foos[1].foos", constraints);
     }
 
     public void testNullElementInCollection() {
@@ -219,7 +205,7 @@ public class ValidationTest extends TestCase {
         assertTrue(
                 constraintDescriptor.getContstraintClass().equals(NotEmptyConstraint.class));
         StandardConstraint standardConstraint =
-                (StandardConstraint) ((ConstraintDescriptorImpl)constraintDescriptor).
+                (StandardConstraint) ((ConstraintDescriptorImpl) constraintDescriptor).
                         getConstraintImplementation();
         //@NotEmpty cannot be null
         assertTrue(!standardConstraint.getStandardConstraints().getNullability());

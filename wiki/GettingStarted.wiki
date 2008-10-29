@@ -18,7 +18,7 @@
 == Using the JSR 303 API ==
 If you want to use the standard JSR APIs, your code 
   * references classes in package javax.validation  
-  * and directly uses classes in package com.agimatec.utility.validation.jsr303
+  * and directly uses classes in package com.agimatec.validation.jsr303
 
 1. create a validator for one of your business classes (e.g. Customer.java)
 

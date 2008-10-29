@@ -1,5 +1,7 @@
 package com.agimatec.validation.jsr303;
 
+import com.agimatec.validation.BeanValidator;
+
 import javax.validation.ValidatorBuilder;
 
 /**
@@ -11,4 +13,11 @@ import javax.validation.ValidatorBuilder;
  * Copyright: Agimatec GmbH
  */
 public interface AgimatecValidatorBuilder extends ValidatorBuilder<AgimatecValidatorBuilder> {
+    /**
+     * set the implementation class for bean validation. the implementation
+     * is responsible to provide a validation context.
+     * @param beanValidator
+     * @return
+     */
+    AgimatecValidatorBuilder beanValidator(BeanValidator beanValidator);
 }

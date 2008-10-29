@@ -4,7 +4,7 @@
 
 The Wiki of "agimatec-validation" is open for community contribution. Useful information will be eventually incorporated into other parts of this site. Please be careful not to overwrite content from other people! 
 
-== 02.10.2008: Reference implementation and bootstrap proposal are out ==
+== 29.10.2008: Reference implementation and bootstrap proposal are out ==
   * see http://forum.hibernate.org/viewtopic.php?t=991154 
 The agimatec-validation framework supports them (check out source from SVN), but
 there is more work to be done...

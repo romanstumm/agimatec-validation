@@ -1,10 +1,17 @@
 package com.agimatec.validation.jsr303;
 
+import com.agimatec.validation.constraints.LengthConstraint;
 import com.agimatec.validation.example.BusinessObject;
+import com.agimatec.validation.jsr303.example.Address;
+import com.agimatec.validation.jsr303.example.Book;
+import com.agimatec.validation.jsr303.example.Engine;
 import junit.framework.TestCase;
 import org.apache.commons.lang.ArrayUtils;
 
-import javax.validation.*;
+import javax.validation.ConstraintDescriptor;
+import javax.validation.ElementDescriptor;
+import javax.validation.InvalidConstraint;
+import javax.validation.Validator;
 import java.util.Set;
 
 /**
@@ -16,7 +23,7 @@ import java.util.Set;
  */
 public class Jsr303Test extends TestCase {
     static {
-        Provider.getInstance().getMetaBeanManager()
+        AgimatecValidatorFactory.getDefault().getMetaBeanManager()
                 .addResourceLoader("com/agimatec/validation/example/test-beanInfos.xml");
     }
 
@@ -92,6 +99,6 @@ public class Jsr303Test extends TestCase {
     }
 
     private Validator getValidator(Class clazz) {
-        return ValidationProviderFactory.createValidator(clazz);
+        return AgimatecValidatorFactory.getDefault().getValidator(clazz);
     }
 }

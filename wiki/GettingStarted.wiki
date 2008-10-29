@@ -10,7 +10,7 @@
 || commons-collections || commons-collections || 3.1 || required ||
 || commons-lang || commons-lang || 2.3 || required ||
 || com.thoughtworks.xstream || xstream || 1.2.2 || optional, for XML processing  ||
-|| org.freemarker || freemarker || 2.3.10 || optional, for JSON code generator ||
+|| org.freemarker || freemarker || 2.3.14 || optional, for JSON code generator ||
 
 
 = Examples =

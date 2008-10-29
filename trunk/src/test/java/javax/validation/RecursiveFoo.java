@@ -1,7 +1,7 @@
 package javax.validation;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 
 /**
  * Description: <br/>
@@ -13,7 +13,7 @@ import java.util.HashSet;
 public class RecursiveFoo {
     @NotEmpty
     @Valid
-    Collection<RecursiveFoo> foos = new HashSet();
+    Collection<RecursiveFoo> foos = new ArrayList();
 
     public Collection<RecursiveFoo> getFoos() {
         return foos;

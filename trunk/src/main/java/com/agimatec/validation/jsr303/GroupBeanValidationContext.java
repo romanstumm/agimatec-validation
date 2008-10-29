@@ -18,8 +18,6 @@ import java.util.*;
  */
 public class GroupBeanValidationContext extends BeanValidationContext
         implements GroupValidationContext {
-    // TODO RSt - configure behavior - temporary, will be removed when behavior is finally specified
-    public static boolean INCLUDE_INDEX_IN_PROPERTY_PATH = false;
 
     private final MessageResolver messageResolver;
     private final LinkedList propertyStack = new LinkedList();
@@ -44,13 +42,11 @@ public class GroupBeanValidationContext extends BeanValidationContext
     @Override
     public void setCurrentIndex(int index) {
         super.setCurrentIndex(index);   // call super!
-        if (INCLUDE_INDEX_IN_PROPERTY_PATH) {
-            Object last = propertyStack.getLast();
-            if (last instanceof Integer) {
-                propertyStack.removeLast();
-            }
-            propertyStack.addLast(index);
+        Object last = propertyStack.getLast();
+        if (last instanceof Integer) {
+            propertyStack.removeLast();
         }
+        propertyStack.addLast(index);
     }
 
     @Override
@@ -89,7 +85,8 @@ public class GroupBeanValidationContext extends BeanValidationContext
     /**
      * if an associated object is validated,
      * add the association field or JavaBeans property name and a dot ('.') as a prefix
-     * to the previous rules
+     * to the previous rules.
+     * uses prop[index] in property path for elements in to-many-relationships.
      *
      * @return the path in dot notation
      */

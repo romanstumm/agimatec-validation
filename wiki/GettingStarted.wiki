@@ -22,13 +22,22 @@ If you want to use the standard JSR APIs, your code
 
 1. create a validator for one of your business classes (e.g. Customer.java)
 
+a) You can do this by using JSR303 bootstrapping APIs:
+
 {{{
-javax.validation.Validator customerValidator = new ClassValidator(Customer.class);
+// create a factory (call this once and hold the reference!)
+javax.valiation.ValidatorFactory factory = Validation.getValidatorBuilder().build()
+
+// create validators using the factory
+javax.valiation.Validator customerValidator = factory.getValidator(Customer.class);
 }}}
 
-or use the !ValidationProviderFactory 
+b) OR you can use agimetec-validation specific APIs:
 {{{
-javax.validation.Validator<Customer> customerValidator = ValidationProviderFactory.createValidator(Customer.class);
+// direct constructor invocation
+javax.validation.Validator customerValidator = new ClassValidator(Customer.class);
+// or using AgimatecValidatorFactory (you can configure the factory)
+javax.validation.Validator<Customer> customerValidator = AgimatecValidatorFactory.getDefault().getValidator(Customer.class);
 }}}
 
 2. validate an instance of your business class

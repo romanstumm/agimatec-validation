@@ -6,11 +6,11 @@
   * you might need some of the following jars in the classpath, that agimatec-validation depends upon (for a current list refer to the dependencies list of the project [http://www.agimatec.de/agimatec-validation/site/project-info.html Maven-site])
 
 || *!GroupId* || *!ArtifactId* || *Version* || *Optional* ||
-|| commons-beanutils || commons-beanutils || 1.7.0 || required ||
-|| commons-collections || commons-collections || 3.1 || required ||
-|| commons-lang || commons-lang || 2.3 || required ||
+|| commons-beanutils || [http://commons.apache.org/beanutils/ commons-beanutils] || 1.8.0 || required ||
+|| commons-collections || [http://commons.apache.org/collections/ commons-collections] || 3.2.1 || required ||
+|| commons-lang || [http://commons.apache.org/lang/ commons-lang] || 2.4 || required ||
 || com.thoughtworks.xstream || [http://xstream.codehaus.org/download.html xstream ] || 1.3 || optional, for XML processing  ||
-|| org.freemarker || freemarker || 2.3.14 || optional, for JSON code generator ||
+|| org.freemarker || [http://freemarker.org/ freemarker] || 2.3.14 || optional, for JSON code generator ||
 
 
 = Examples =

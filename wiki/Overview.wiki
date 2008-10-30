@@ -15,28 +15,7 @@ there is more work to be done...
 
 = Supported features =
 
-V0.6.1:
-  * Implemented issue-6: Provide a bootstrap method for Validator with specific Locale
-  * Implemented issue-7: Provide annotation @Email
-  * Implemented issue-8: Maven surefire 2.4.2 version in pom.xml
-
-V0.5:
-  * support for resolution of association types during runtime. (required by JSR303)
-    consequences: relationship targets can have different types, generics on collection types not required anymore
-  * ValidationContext and GroupValidationContext are interfaces
-  * new testcase ValidationTest.testValidAnnotation() tests nested, polimorphic relationships  
-V0.4:
-  * implementation of [http://jcp.org/aboutJava/communityprocess/edr/jsr303/ JSR 303: bean-validation]
-  * Define constraints with predefined annotations
-  * Create own validators and annotations to define custom constraints
-  * Use annotations on business objects (POJOs, value-object classes)
-  * Flexible meta data model can be used for various purposes (see class !MetaBean)
-  * Decorate classes and define validators with XML on multiple layers of your application
-  * Support for dynamic creation of !MetaBeans (e.g. role-specific validation rules for different users, administration/change of meta data during runtime)
-  * A class can have more than one definition of validations (multiple !MetaBeans per class identified by IDs)
-  * Load the XML descriptors from any resource (classpath, URL/webservice, database), create own loaders (see interface XMLMetaBeanLoader and XMLMetaBeanRegistry)
-  * Generate JSON code (based on a freemarker template) from the meta data (e.g. use meta data in AJAX GUIs to support validation or create a generic GUI for your beans - this framework provides the basis for such solutions) 
-  * parameter validation: validation of method-calls (e.g. tested with XFire, call the class !ThreadBeanValidator from within a custom org.codehaus.xfire.service.invoker.Invoker)
+[FeatureHistory feature history]
 
 = Project status =
 [ProjectStatus project status]

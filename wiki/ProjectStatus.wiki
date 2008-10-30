@@ -29,10 +29,10 @@ The sources in svn are newer than the files of the release 0.5 in the Downloads 
 
   * The specification is still in a early draft state and subject to change. This implementation will change as soon as the specification is stable.
 
-  * The classes in javax.validation will be removed as soon as they are available from official sites.
+  * The classes in javax.validation have been removed since release 0.7. (release 0.7++ depend on validation-api.jar)
 
   * You can use the framework with the JSR303 interfaces if you want to strictly use the standard.
-  Refer to classes in packages javax.validation and com.agimatec.utility.validation.jsr303
+  Refer to classes in packages javax.validation and com.agimatec.validation.jsr303
   
   or you can access the propriatary APIs of agimatec-validation for additional features.
   Refer to classes !MetaBeanManagerFactory and !BeanValidator

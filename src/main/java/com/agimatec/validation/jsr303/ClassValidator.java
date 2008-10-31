@@ -4,13 +4,14 @@ import com.agimatec.validation.model.Features;
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.MetaProperty;
 import com.agimatec.validation.model.Validation;
-import org.apache.commons.beanutils.PropertyUtils;
 
 import javax.validation.ElementDescriptor;
 import javax.validation.InvalidConstraint;
-import javax.validation.ValidationException;
 import javax.validation.Validator;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * API class -
@@ -112,46 +113,11 @@ public class ClassValidator<T> implements Validator<T> {
      * types at runtime from the instance
      */
     private NestedMetaProperty getNestedProperty(Object t, String propertyName) {
-        try {
-            StringTokenizer tokens = new StringTokenizer(propertyName, ".[]", true);
-            NestedMetaProperty nested = new NestedMetaProperty(propertyName, t);
-            nested.setMetaBean(metaBean);
-            while (tokens.hasMoreTokens()) {
-                String token = tokens.nextToken();
-                if ("[".equals(token)) {
-                    String sindex = tokens.nextToken();
-                    int idx = Integer.parseInt(sindex);
-                    token = tokens.nextToken();
-                    if (!"]".equals(token)) {
-                        throw new ValidationException(
-                                "invalid propertyName format at: " + propertyName);
-                    }
-                    nested.useIndexedValue(idx);
-                    nested.resolveMetaBean();
-                } else if (!".".equals(token)) { // it is a property name
-                    MetaProperty mp = nested.getMetaBean().getProperty(token);
-                    if (mp == null) {
-                        throw new ValidationException(
-                                "unknown property " + token + " in " + propertyName);
-                    }
-                    if (nested.getValue() != null) {
-                        nested.setValue(
-                                PropertyUtils.getSimpleProperty(nested.getValue(), token));
-                    }
-                    nested.setMetaProperty(mp);
-                    nested.resolveMetaBean();
-                }
-            }
-            return nested;
-        } catch (ValidationException ex) {
-            throw ex; // route exception
-        } catch (Exception ex) { // wrap exception
-            throw new ValidationException(
-                    "invalid propertyName: " + propertyName, ex);
-
-        }
+        NestedMetaProperty nested = new NestedMetaProperty(propertyName, t);
+        nested.setMetaBean(metaBean);
+        nested.parse();
+        return nested;
     }
-
 
     /**
      * validate all constraints on <code>propertyName</code> property

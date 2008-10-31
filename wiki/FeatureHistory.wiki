@@ -6,6 +6,9 @@ V0.7: (Nov. 2008)
   * dropped support for proprietary bootstrap classes 
   * implementing current functionality from jsr303-spec draft
   * package redesign
+  * javax.valiation.Context support implemented
+  * composed constraints implemented (currently without OverridesParameter!)
+  * support for nested properties (needs improvement!)
 
 V0.6.1:
   * Implemented issue-6: Provide a bootstrap method for Validator with specific Locale

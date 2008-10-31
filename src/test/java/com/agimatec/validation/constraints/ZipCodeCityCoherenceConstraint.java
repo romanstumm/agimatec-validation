@@ -1,5 +1,7 @@
 package com.agimatec.validation.constraints;
 
+import com.agimatec.validation.jsr303.example.Address;
+
 import javax.validation.Constraint;
 import javax.validation.Context;
 
@@ -11,10 +13,21 @@ import javax.validation.Context;
  */
 public class ZipCodeCityCoherenceConstraint implements Constraint<ZipCodeCityCoherenceChecker> {
     public void initialize(ZipCodeCityCoherenceChecker constraintAnnotation) {
-        // TODO RSt - nyi
     }
 
     public boolean isValid(Object value, Context context) {
-        return true;  // TODO RSt - nyi
+        boolean r = true;
+        Address adr = (Address) value;
+        if ("error".equals(adr.getZipCode())) {
+            context.disableDefaultError();
+            context.addError("zipcode not OK");
+            r = false;
+        }
+        if ("error".equals(adr.getCity())) {
+            context.disableDefaultError();
+            context.addError("city not OK", "city");
+            r = false;
+        }
+        return r;
     }
 }

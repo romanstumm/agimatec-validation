@@ -4,14 +4,13 @@ import com.agimatec.validation.model.Features;
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.MetaProperty;
 import com.agimatec.validation.model.Validation;
+import org.apache.commons.beanutils.PropertyUtils;
 
 import javax.validation.ElementDescriptor;
 import javax.validation.InvalidConstraint;
+import javax.validation.ValidationException;
 import javax.validation.Validator;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * API class -
@@ -77,15 +76,20 @@ public class ClassValidator<T> implements Validator<T> {
     /**
      * validate all constraints on <code>propertyName</code> property of object
      *
-     * @param propertyName - the attribute name
-     *                     TODO RSt - are nested property with dot-notation supported, private fields etc.?
+     * @param propertyName - the attribute name, or nested property name (e.g. prop[2].subpropA.subpropB)
      */
     public Set<InvalidConstraint<T>> validateProperty(T object, String propertyName,
                                                       String... groups) {
         if (object == null) throw new IllegalArgumentException("cannot validate null");
         GroupValidationContext context = createContext(object, groups);
         ConstraintValidationListener result = (ConstraintValidationListener) context.getListener();
-        context.setMetaProperty(metaBean.getProperty(propertyName));
+        NestedMetaProperty nestedProp = getNestedProperty(object, propertyName);
+        context.setMetaProperty(nestedProp.getMetaProperty());
+        if (nestedProp.isNested()) {
+            context.setFixedValue(nestedProp.getValue());
+        } else {
+            context.setMetaProperty(nestedProp.getMetaProperty());
+        }
         if (context.getMetaProperty() == null) throw new IllegalArgumentException(
                 "Unknown property " + object.getClass().getName() + "." + propertyName);
         List<String> sequence = context.getSequencedGroups();
@@ -103,6 +107,53 @@ public class ClassValidator<T> implements Validator<T> {
     }
 
     /**
+     * find the MetaProperty for the given propertyName,
+     * which could contain a path, following the path on a given object to resolve
+     * types at runtime from the instance
+     */
+    private NestedMetaProperty getNestedProperty(Object t, String propertyName) {
+        try {
+            StringTokenizer tokens = new StringTokenizer(propertyName, ".[]", true);
+            NestedMetaProperty nested = new NestedMetaProperty(propertyName, t);
+            nested.setMetaBean(metaBean);
+            while (tokens.hasMoreTokens()) {
+                String token = tokens.nextToken();
+                if ("[".equals(token)) {
+                    String sindex = tokens.nextToken();
+                    int idx = Integer.parseInt(sindex);
+                    token = tokens.nextToken();
+                    if (!"]".equals(token)) {
+                        throw new ValidationException(
+                                "invalid propertyName format at: " + propertyName);
+                    }
+                    nested.useIndexedValue(idx);
+                    nested.resolveMetaBean();
+                } else if (!".".equals(token)) { // it is a property name
+                    MetaProperty mp = nested.getMetaBean().getProperty(token);
+                    if (mp == null) {
+                        throw new ValidationException(
+                                "unknown property " + token + " in " + propertyName);
+                    }
+                    if (nested.getValue() != null) {
+                        nested.setValue(
+                                PropertyUtils.getSimpleProperty(nested.getValue(), token));
+                    }
+                    nested.setMetaProperty(mp);
+                    nested.resolveMetaBean();
+                }
+            }
+            return nested;
+        } catch (ValidationException ex) {
+            throw ex; // route exception
+        } catch (Exception ex) { // wrap exception
+            throw new ValidationException(
+                    "invalid propertyName: " + propertyName, ex);
+
+        }
+    }
+
+
+    /**
      * validate all constraints on <code>propertyName</code> property
      * if the property value is <code>value</code>
      */
@@ -110,7 +161,7 @@ public class ClassValidator<T> implements Validator<T> {
                                                    String... groups) {
         GroupValidationContext context = createContext(null, groups);
         ConstraintValidationListener result = (ConstraintValidationListener) context.getListener();
-        context.setMetaProperty(metaBean.getProperty(propertyName));
+        context.setMetaProperty(getNestedProperty(null, propertyName).getMetaProperty());
         context.setFixedValue(value);
         List<String> sequence = context.getSequencedGroups();
         for (String currentGroup : sequence) {
@@ -174,7 +225,7 @@ public class ClassValidator<T> implements Validator<T> {
         for (Validation validation : validations) {
             if (validation instanceof ConstraintValidation) {
                 ConstraintValidation cval = (ConstraintValidation) validation;
-                edesc.getConstraintDescriptors().add(cval.getConstraintDescriptor());
+                edesc.getConstraintDescriptors().add(cval);
             }
         }
     }

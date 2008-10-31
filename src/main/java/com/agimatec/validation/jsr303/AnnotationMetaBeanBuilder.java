@@ -25,6 +25,7 @@ import java.util.Map;
  * Date: 01.04.2008 <br/>
  * Time: 14:12:51 <br/>
  * Copyright: Agimatec GmbH 2008
+ * TODO RSt - overrides parameters not yet implemented
  */
 public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
     private final ConstraintFactory constraintFactory;
@@ -81,7 +82,7 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
      */
     private void processClass(Class<?> beanClass, MetaBean metabean)
             throws IllegalAccessException, InvocationTargetException {
-        processAnnotations(metabean, null, beanClass);
+        processAnnotations(metabean, null, beanClass, null);
 
         Field[] fields = beanClass.getDeclaredFields();
         for (Field field : fields) {
@@ -91,11 +92,11 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
                 metaProperty = new MetaProperty();
                 metaProperty.setName(field.getName());
                 metaProperty.setType(field.getType());
-                if (processAnnotations(metabean, metaProperty, field)) {
+                if (processAnnotations(metabean, metaProperty, field, null)) {
                     metabean.putProperty(metaProperty.getName(), metaProperty);
                 }
             } else {
-                processAnnotations(metabean, metaProperty, field);
+                processAnnotations(metabean, metaProperty, field, null);
             }
         }
         Method[] methods = beanClass.getDeclaredMethods();
@@ -115,24 +116,24 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
                 MetaProperty metaProperty = metabean.getProperty(propName);
                 // only those methods, for which we have a MetaProperty
                 if (metaProperty != null) {
-                    processAnnotations(metabean, metaProperty, method);
+                    processAnnotations(metabean, metaProperty, method, null);
                 }
             }
         }
     }
 
     private boolean processAnnotations(MetaBean metabean, MetaProperty prop,
-                                       AnnotatedElement element)
+                                       AnnotatedElement element, ConstraintValidation validation)
             throws IllegalAccessException, InvocationTargetException {
         boolean changed = false;
         for (Annotation annotation : element.getDeclaredAnnotations()) {
-            changed |= processAnnotation(annotation, prop, metabean, element);
+            changed |= processAnnotation(annotation, prop, metabean, element, validation);
         }
         return changed;
     }
 
     private boolean processAnnotation(Annotation annotation, MetaProperty prop, MetaBean metabean,
-                                      AnnotatedElement element)
+                                      AnnotatedElement element, ConstraintValidation validation)
             throws IllegalAccessException, InvocationTargetException {
         if (annotation instanceof Valid) {
             return processValid(/*element, metabean, */prop);
@@ -153,7 +154,7 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
             ConstraintValidator vcAnno =
                     annotation.annotationType().getAnnotation(ConstraintValidator.class);
             if (vcAnno != null) {
-                applyConstraint(annotation, vcAnno.value(), metabean, prop, element);
+                applyConstraint(annotation, vcAnno.value(), metabean, prop, element, validation);
                 return true;
             } else {
                 /**
@@ -169,7 +170,7 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
                 Object result = getAnnotationValue(annotation, "value");
                 if (result != null && result instanceof Annotation[]) {
                     for (Annotation each : (Annotation[]) result) {
-                        processAnnotation(each, prop, metabean, element);
+                        processAnnotation(each, prop, metabean, element, validation);
                     }
                     return ((Annotation[]) result).length > 0;
                 }
@@ -233,29 +234,38 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
         return null;
     }
 
+    /**
+     * @param parentValidation - null or the parent validation when it is a composed validation
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     */
     private void applyConstraint(Annotation annotation, Class<? extends Constraint> constraintClass,
-                                 MetaBean metabean, MetaProperty prop, AnnotatedElement element)
+                                 MetaBean metabean, MetaProperty prop, AnnotatedElement element,
+                                 ConstraintValidation parentValidation)
             throws IllegalAccessException, InvocationTargetException {
         // The lifetime of a constraint validation implementation instance is undefined.
         Constraint constraint = constraintFactory.getInstance(constraintClass);
         constraint.initialize(annotation);
-        Object msg = getAnnotationValue(annotation, "message");
         Object groups = getAnnotationValue(annotation, "groups");
-        if (!(msg instanceof String)) {
-            msg = null;
-        }
         if (groups instanceof String) {
             groups = new String[]{(String) groups};
         }
         if (!(groups instanceof String[])) {
             groups = null;
         }
-        ConstraintValidation validation = new ConstraintValidation(constraint, (String) msg,
+        ConstraintValidation validation = new ConstraintValidation(constraint,
                 (String[]) groups, annotation, element);
-        if (prop != null) {
-            prop.addValidation(validation);
+        if (parentValidation == null) {
+            if (prop != null) {
+                prop.addValidation(validation);
+            } else {
+                metabean.addValidation(validation);
+            }
         } else {
-            metabean.addValidation(validation);
+            parentValidation.addComposed(validation);
         }
+        // process composed constraints:
+        // here are not other superclasses possible, because annotations do not inherit!
+        processAnnotations(metabean, prop, annotation.annotationType(), validation); // recursion!
     }
 }

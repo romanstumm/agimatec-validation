@@ -13,13 +13,21 @@ import java.util.Set;
  */
 class InvalidConstraintImpl<T> implements InvalidConstraint {
     private String message;
+    /**
+     * root bean validation was invoked on.
+     */
     private T rootBean;
+    /**
+     * last bean validated.
+     */
+    private Object leafBean;
     private Object value;
     private String propertyPath;
     private Class beanClass;
     private Set<String> groups;
 
-    public InvalidConstraintImpl(String message, T rootBean, Class beanClass, String propertyPath,
+    public InvalidConstraintImpl(String message, T rootBean, Object leafBean,
+                                 Class beanClass, String propertyPath,
                                  Object value, Set<String> groups) {
         this.message = message;
         this.rootBean = rootBean;
@@ -39,9 +47,8 @@ class InvalidConstraintImpl<T> implements InvalidConstraint {
         return rootBean;
     }
 
-    // TODO RSt - nyi
     public Object getLeafBean() {
-        return rootBean;  // do nothing
+        return leafBean;
     }
 
     /** Bean type being validated */
@@ -66,14 +73,18 @@ class InvalidConstraintImpl<T> implements InvalidConstraint {
      * return the list of groups that the triggered constraint applies on and witch also are
      * within the list of groups requested for validation
      * (directly or through a group sequence)
-     * TODO: considering removal, if you think it's important, speak up
      */
     public Set<String> getGroups() {
         return groups;
     }
 
     public String toString() {
-        return "InvalidConstraintImpl{" + "rootBean=" + rootBean + ", propertyPath='" +
-                propertyPath + '\'' + ", message='" + message + '\'' + '}';
+        return "InvalidConstraintImpl{" +
+                "rootBean=" + rootBean +
+                ", propertyPath='" + propertyPath + '\'' +
+                ", message='" + message + '\'' +
+                ", leafBean=" + leafBean +
+                ", value=" + value +
+                '}';
     }
 }

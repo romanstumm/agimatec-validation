@@ -42,7 +42,7 @@ class ConstraintValidationListener<T> implements ValidationListener {
             }
         }
 
-        InvalidConstraintImpl ic = new InvalidConstraintImpl(reason, rootBean,
+        InvalidConstraintImpl<T> ic = new InvalidConstraintImpl<T>(reason, rootBean, context.getBean(),
                 context.getMetaBean().getBeanClass(), propPath, value, groups);
         invalidConstraints.add(ic);
     }

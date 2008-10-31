@@ -1,13 +1,19 @@
 package com.agimatec.validation.jsr303;
 
+import com.agimatec.validation.BeanValidationContext;
+import com.agimatec.validation.ValidationResults;
 import com.agimatec.validation.model.Validation;
 import com.agimatec.validation.model.ValidationContext;
 
 import javax.validation.Constraint;
+import javax.validation.ConstraintDescriptor;
 import javax.validation.MessageResolver;
+import javax.validation.ReportAsSingleInvalidConstraint;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * Description: Adapter between Constraint (JSR303) and Validation (Agimatec)<br/>
@@ -16,29 +22,40 @@ import java.lang.reflect.Field;
  * Time: 17:31:36 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-class ConstraintValidation implements Validation {
+class ConstraintValidation implements Validation, ConstraintDescriptor {
     private final Constraint constraint;
-    private final String[] groups;
-    private final String messageKey;
+    private final Set<String> groups;
     private final Annotation annotation; // for metadata request API
-    private ConstraintDescriptorImpl descriptor;
+    private Set<ConstraintValidation> composedConstraints;
     private final Field field;
+    private boolean reportAsSingleInvalidConstraint;
+    private Map<String, Object> parameters;
 
-    protected ConstraintValidation(Constraint constraint, String messageKey, String[] groups,
+    protected ConstraintValidation(Constraint constraint, String[] groupsArray,
                                    Annotation annotation, AnnotatedElement element) {
         this.constraint = constraint;
-        this.messageKey = messageKey;
-        this.groups = (groups == null || groups.length == 0) ?
-                GroupBeanValidationContext.DEFAULT_GROUPS : groups;
+
+        groupsArray = (groupsArray == null || groupsArray.length == 0) ?
+                GroupBeanValidationContext.DEFAULT_GROUPS : groupsArray;
+        this.groups = new HashSet(groupsArray.length);
+        this.groups.addAll(Arrays.asList(groupsArray));
+
         this.annotation = annotation;
         this.field = element instanceof Field ? (Field) element : null;
+        this.reportAsSingleInvalidConstraint =
+                annotation.annotationType().isAnnotationPresent(
+                        ReportAsSingleInvalidConstraint.class);
     }
 
-    public ConstraintDescriptorImpl getConstraintDescriptor() {
-        if (descriptor == null) {
-            descriptor = new ConstraintDescriptorImpl(this);
+    public boolean isReportAsSingleInvalidConstraint() {
+        return reportAsSingleInvalidConstraint;
+    }
+
+    public void addComposed(ConstraintValidation aConstraintValidation) {
+        if (composedConstraints == null) {
+            composedConstraints = new HashSet();
         }
-        return descriptor;
+        composedConstraints.add(aConstraintValidation);
     }
 
     public void validate(ValidationContext context) {
@@ -63,14 +80,52 @@ class ConstraintValidation implements Validation {
         } else {
             value = context.getBean();
         }
-        // TODO RSt - provide context
-        if (!constraint.isValid(value, null)) {
-            if (messageResolver != null) {
+
+        // process composed constraints
+        if (isReportAsSingleInvalidConstraint()) {
+            BeanValidationContext gctx = (BeanValidationContext) context;
+            ConstraintValidationListener oldListener =
+                    ((ConstraintValidationListener) gctx.getListener());
+            ConstraintValidationListener listener =
+                    new ConstraintValidationListener(oldListener.getRootBean());
+            gctx.setListener(listener);
+            try {
+                for (ConstraintValidation composed : getComposed()) {
+                    composed.validate(context);
+                }
+            } finally {
+                gctx.setListener(oldListener);
+            }
+            // stop validating when already failed and ReportAsSingleInvalidConstraint = true ?
+            if(!listener.getInvalidConstraints().isEmpty()) {
+                // enhancement: how should the composed constraint error report look like?
+                ContextImpl jsrContext = new ContextImpl(context, this);
+                addErrors(context, messageResolver, value, jsrContext); // add defaultErrorMessage only
+                return;
+            }
+        } else {
+            for (ConstraintValidation composed : getComposed()) {
+                composed.validate(context);
+            }
+        }
+
+        ContextImpl jsrContext = new ContextImpl(context, this);
+        if (!constraint.isValid(value, jsrContext)) {
+            addErrors(context, messageResolver, value, jsrContext);
+        }
+    }
+
+    private void addErrors(ValidationContext context, MessageResolver messageResolver, Object value,
+                           ContextImpl jsrContext) {
+        if (messageResolver != null) {
+            for (ValidationResults.Error each : jsrContext.getErrors()) {
                 context.getListener().addError(
-                        messageResolver.interpolate(messageKey, getConstraintDescriptor(), value),
+                        messageResolver.interpolate(each.getReason(), this, value),
                         context);
-            } else {
-                context.getListener().addError(messageKey, context);
+            }
+        } else {
+            for (ValidationResults.Error each : jsrContext.getErrors()) {
+                context.getListener().addError(each.getReason(), context);
             }
         }
     }
@@ -79,12 +134,8 @@ class ConstraintValidation implements Validation {
         return "ConstraintValidation{" + constraint + '}';
     }
 
-    public Constraint getConstraint() {
+    public Constraint getConstraintImplementation() {
         return constraint;
-    }
-
-    public String[] getGroups() {
-        return groups;
     }
 
     protected boolean isMemberOf(String reqGroup) {
@@ -94,11 +145,56 @@ class ConstraintValidation implements Validation {
         return false;
     }
 
+    /** TODO RSt - generate annotation when descriptor is based on XML */
     public Annotation getAnnotation() {
         return annotation;
     }
 
     public AnnotatedElement getField() {
         return field;
+    }
+
+    /////////////////////////// ConstraintDescriptor implementation
+
+    /*   public boolean isFieldAccess() {
+        return constraintValidation.getField() instanceof Field;
+    }*/
+
+    public Map<String, Object> getParameters() {
+        if (parameters == null) {
+            parameters = new HashMap();
+            if (getAnnotation() != null) {
+                for (Method method : getAnnotation().annotationType().getDeclaredMethods()) {
+                    if (method.getParameterTypes().length == 0) {
+                        try {
+                            parameters.put(method.getName(), method.invoke(getAnnotation()));
+                        } catch (Exception e) { // do nothing
+                        }
+                    }
+                }
+            }
+        }
+        return parameters;
+    }
+
+    public Set<ConstraintDescriptor> getComposingConstraints() {
+        return composedConstraints == null ? Collections.EMPTY_SET : composedConstraints;
+    }
+
+    public Set<ConstraintValidation> getComposed() {
+        return composedConstraints == null ? Collections.EMPTY_SET : composedConstraints;
+    }
+
+    public Set<String> getGroups() {
+        return groups;
+    }
+
+    /** @deprecated TODO RSt - remove when interface is fixed */
+    public Class<? extends Constraint> getContstraintClass() {
+        return getConstraintClass();
+    }
+
+    public Class<? extends Constraint> getConstraintClass() {
+        return getConstraintImplementation().getClass();
     }
 }

@@ -7,6 +7,7 @@ import com.agimatec.validation.jsr303.example.*;
 import junit.framework.TestCase;
 
 import javax.validation.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -95,7 +96,7 @@ public class ValidationTest extends TestCase {
         adr.setCity("Trinidad");
         a.getAddresses().add(adr);
 
-        Set<InvalidConstraint> constraints = getValidator(Author.class).validate(a);
+        Set<InvalidConstraint<Author>> constraints = getValidator(Author.class).validate(a);
         assertTrue(!constraints.isEmpty());
 
         assertPropertyPath("addresses[0].country", constraints);
@@ -103,7 +104,8 @@ public class ValidationTest extends TestCase {
         assertPropertyPath("addresses[2].country", constraints);
     }
 
-    private void assertPropertyPath(String propertyPath, Set<InvalidConstraint> constraints) {
+    private <T> void assertPropertyPath(String propertyPath,
+                                        Set<InvalidConstraint<T>> constraints) {
         for (InvalidConstraint each : constraints) {
             if (each.getPropertyPath().equals(propertyPath)) return;
         }
@@ -119,7 +121,8 @@ public class ValidationTest extends TestCase {
         RecursiveFoo foo2 = new RecursiveFoo();
         foo11.getFoos().add(foo2);
 
-        Set<InvalidConstraint> constraints = getValidator(RecursiveFoo.class).validate(foo1);
+        Set<InvalidConstraint<RecursiveFoo>> constraints =
+                getValidator(RecursiveFoo.class).validate(foo1);
         assertPropertyPath("foos[0].foos[0].foos", constraints);
         assertPropertyPath("foos[1].foos", constraints);
     }
@@ -137,7 +140,7 @@ public class ValidationTest extends TestCase {
         // check that no nullpointer exception gets thrown
     }
 
-    private Validator getValidator(Class clazz) {
+    private <T> Validator<T> getValidator(Class<T> clazz) {
         return new ClassValidator(clazz);
     }
 
@@ -182,6 +185,52 @@ public class ValidationTest extends TestCase {
         }
     }
 
+    /**
+     * test that:
+     * the {@link com.agimatec.validation.constraints.ZipCodeCityCoherenceConstraint} adds
+     * custom messages to the context and suppresses the default message
+     */
+    public void testContextMessages() {
+        Address ad = new Address();
+        ad.setCity("error");
+        ad.setZipCode("error");
+        ad.setAddressline1("something");
+        ad.setCountry(new Country());
+        ad.getCountry().setName("something");
+        Validator<Address> v = getValidator(Address.class);
+        Set<InvalidConstraint<Address>> violations = v.validate(ad);
+        assertEquals(2, violations.size());
+        for (InvalidConstraint each : violations) {
+            assertTrue(each.getMessage().endsWith(" not OK"));
+        }
+    }
+
+    public void testValidateNestedPropertyPath()
+            throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        final String propPath = "addresses[0].country.ISO2Code";
+
+        Validator<Author> v = getValidator(Author.class);
+        Author author = new Author();
+        author.setAddresses(new ArrayList());
+        Address adr = new Address();
+        author.getAddresses().add(adr);
+        Country country = new Country();
+        adr.setCountry(country);
+        country.setISO2Code("too_long");
+
+        Set<InvalidConstraint<Author>> iv =
+                v.validateProperty(author, propPath);
+        assertEquals(1, iv.size());
+        country.setISO2Code("23");
+        iv =
+                v.validateProperty(author, propPath);
+        assertEquals(0, iv.size());
+        iv = v.validateValue(propPath, "345");
+        assertEquals(1, iv.size());
+        iv = v.validateValue(propPath, "34");
+        assertEquals(0, iv.size());
+    }
+
     public void testMetadataAPI() {
         Validator bookValidator = getValidator(Book.class);
 
@@ -208,7 +257,7 @@ public class ValidationTest extends TestCase {
         assertTrue(
                 constraintDescriptor.getContstraintClass().equals(NotEmptyConstraint.class));
         StandardConstraint standardConstraint =
-                (StandardConstraint) ((ConstraintDescriptorImpl) constraintDescriptor).
+                (StandardConstraint) ((ConstraintValidation) constraintDescriptor).
                         getConstraintImplementation();
         //@NotEmpty cannot be null
         assertTrue(!standardConstraint.getStandardConstraints().getNullability());

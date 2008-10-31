@@ -20,7 +20,9 @@ final class DynamicMetaBean extends MetaBean {
      * different strategies with hints to find MetaBean of associated object can
      * be implemented here.
      */
+    @Override
     public MetaBean resolveMetaBean(Object bean) {
-        return finder.findForClass(bean.getClass());
+        return bean instanceof Class ?
+                finder.findForClass((Class) bean) : finder.findForClass(bean.getClass());
     }
 }

@@ -102,4 +102,9 @@ public class MetaBean extends FeaturesCapable implements Cloneable, Features.Bea
             }
         }
     }
+
+    public MetaBean resolveMetaBean(Object bean) {
+        return bean == null || bean == beanClass || beanClass.isInstance(bean) ? this : null;
+    }
+
 }

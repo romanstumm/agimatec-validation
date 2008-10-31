@@ -24,7 +24,7 @@ public class ValidationResults implements ValidationListener, Serializable {
     /**
      * API to add an error to the validation results.
      *
-     * @param reason       - Features from {@link Reasons} or custom validation reason
+     * @param reason       - Features from {@link com.agimatec.validation.routines.Reasons} or custom validation reason
      * @param bean         - (optional) owner bean or null
      * @param propertyName - (optional) propertyName where valiation error occurred or null
      */
@@ -39,11 +39,7 @@ public class ValidationResults implements ValidationListener, Serializable {
     }
 
     protected Error createError(String reason, Object owner, String propertyName) {
-        Error error = new Error();
-        error.reason = reason;
-        error.owner = owner;
-        error.propertyName = propertyName;
-        return error;
+        return new Error(reason, owner, propertyName);
     }
 
     /**
@@ -142,9 +138,15 @@ public class ValidationResults implements ValidationListener, Serializable {
     }
 
     public static class Error implements Serializable {
-        String reason;
-        Object owner;
-        String propertyName;
+        final String reason;
+        final Object owner;
+        final String propertyName;
+
+        public Error(String aReason, Object aOwner, String aPropertyName) {
+            this.reason = aReason;
+            this.owner = aOwner;
+            this.propertyName = aPropertyName;
+        }
 
         public String getReason() {
             return reason;

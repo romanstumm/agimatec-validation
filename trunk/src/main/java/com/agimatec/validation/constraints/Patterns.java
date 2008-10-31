@@ -1,8 +1,7 @@
 package com.agimatec.validation.constraints;
 
 import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.*;
 import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
@@ -14,7 +13,7 @@ import java.lang.annotation.Target;
  * </pre>
  */
 @Documented
-@Target({ElementType.METHOD, FIELD})
+@Target({METHOD, FIELD, ANNOTATION_TYPE})
 @Retention(RUNTIME)
 public @interface Patterns {
     Pattern[] value();

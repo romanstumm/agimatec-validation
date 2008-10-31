@@ -2,7 +2,8 @@
   <validator id="standard" java="com.agimatec.validation.routines.NOPValidation"
              jsFunction="noop"/>
   <validator id="email" java="com.agimatec.validation.routines.EMailValidation"/>
-  <bean id="com.agimatec.validation.example.BusinessObject" impl="com.agimatec.validation.example.BusinessObject">
+  <bean id="com.agimatec.validation.example.BusinessObject"
+        impl="com.agimatec.validation.example.BusinessObject">
     <feature key="mainKey">
       <value class="string">userId</value>
     </feature>
@@ -44,12 +45,14 @@
                   displayName="UserAddress"/>
     <relationship beanId="com.agimatec.validation.example.Address" name="addresses" maxLength="3"/>
   </bean>
-  <bean id="com.agimatec.validation.example.Address" impl="com.agimatec.validation.example.BusinessObjectAddress">
+  <bean id="com.agimatec.validation.example.Address"
+        impl="com.agimatec.validation.example.BusinessObjectAddress">
     <feature key="DOMAIN">
       <value class="string">TestObjects</value>
     </feature>
     <property name="city"/>
     <property name="country" mandatory="true" maxLength="10"/>
-    <relationship name="owner" beanId="com.agimatec.validation.example.BusinessObject" mandatory="true"/>
+    <relationship name="owner" beanId="com.agimatec.validation.example.BusinessObject"
+                  mandatory="true"/>
   </bean>
 </beanInfos>

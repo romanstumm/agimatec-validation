@@ -15,7 +15,7 @@ public class XMLMetaBeanURLLoader implements XMLMetaBeanLoader {
     private final URL url;
 
     public XMLMetaBeanURLLoader(URL url) {
-        if(url == null) throw new NullPointerException("URL required");
+        if (url == null) throw new NullPointerException("URL required");
         this.url = url;
     }
 

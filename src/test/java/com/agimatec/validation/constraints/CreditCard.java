@@ -9,7 +9,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * User: roman.stumm <br/>
  * Date: 01.04.2008 <br/>
  * Time: 12:02:37 <br/>
- *
  */
 @ConstraintValidator(CreditCardConstraint.class)
 @Retention(RUNTIME)

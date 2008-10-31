@@ -24,10 +24,7 @@ public class XMLMetaBeanReference extends XMLMetaElement {
     public XMLMetaBeanReference() {
     }
 
-    /**
-     * id of referenced target bean of the relationship
-     * @return
-     */
+    /** id of referenced target bean of the relationship */
     public String getBeanId() {
         return beanId;
     }
@@ -39,7 +36,7 @@ public class XMLMetaBeanReference extends XMLMetaElement {
     @Override
     public void mergeInto(MetaProperty prop) throws ClassNotFoundException {
         super.mergeInto(prop);   // call super!
-        if(getBeanId() != null) {
+        if (getBeanId() != null) {
             prop.putFeature(REF_BEAN_ID, getBeanId());
         }
     }

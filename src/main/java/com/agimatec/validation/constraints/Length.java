@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 
 /**
  * Validate that the string is between 'min' and 'max' (inclusive).
- * 
+ * <p/>
  * <pre>
  * This class is NOT part of the bean_validation spec and might disappear
  * as soon as a final version of the specification contains a similar functionality.

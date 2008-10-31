@@ -10,13 +10,13 @@ package com.agimatec.validation.xml;
 public interface XMLMetaBeanRegistry {
     /**
      * add a loader for xml bean infos.
-     * the registry should use the loader in the sequence they have been added. 
-     * @param loader
+     * the registry should use the loader in the sequence they have been added.
      */
     void addLoader(XMLMetaBeanLoader loader);
 
     /**
      * convenience method to add a loader for a xml file in the classpath
+     *
      * @param resource - path of xml file in classpath
      */
     void addResourceLoader(String resource);

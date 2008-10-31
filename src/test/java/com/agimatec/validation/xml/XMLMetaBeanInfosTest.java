@@ -14,9 +14,9 @@ import java.util.Map;
  * XMLMetaBean Tester.
  *
  * @author ${USER}
- * @since <pre>07/05/2007</pre>
  * @version 1.0
- * Copyright: Agimatec GmbH 2008
+ *          Copyright: Agimatec GmbH 2008
+ * @since <pre>07/05/2007</pre>
  */
 public class XMLMetaBeanInfosTest extends TestCase {
 
@@ -32,8 +32,7 @@ public class XMLMetaBeanInfosTest extends TestCase {
         super.tearDown();
     }
 
-    public void testBeanInfosToXML()
-    {
+    public void testBeanInfosToXML() {
         XMLMetaBeanInfos infos = new XMLMetaBeanInfos();
         infos.setBeans(new ArrayList());
         infos.setValidators(new ArrayList());
@@ -97,7 +96,7 @@ public class XMLMetaBeanInfosTest extends TestCase {
         property.putFeature(XMLMetaValue.ANNOKEY_TableColumn, true);
         Map formatterMap = new HashMap();
         formatterMap.put("locale", "DE");
-        formatterMap.put("style", "info");        
+        formatterMap.put("style", "info");
         property.putFeature("ajax-formatter", formatterMap);
         property.addValidator("email");
         bean.getProperties().add(property);
@@ -127,7 +126,8 @@ public class XMLMetaBeanInfosTest extends TestCase {
 
         String xml = XMLMapper.getInstance().getXStream().toXML(infos);
         System.out.println(xml);
-        XMLMetaBeanInfos infos2 = (XMLMetaBeanInfos) XMLMapper.getInstance().getXStream().fromXML(xml);
+        XMLMetaBeanInfos infos2 =
+                (XMLMetaBeanInfos) XMLMapper.getInstance().getXStream().fromXML(xml);
         assertEquals(2, infos2.getBeans().size());
     }
 

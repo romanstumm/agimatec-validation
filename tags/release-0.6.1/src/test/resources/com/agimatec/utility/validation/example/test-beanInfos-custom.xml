@@ -1,0 +1,12 @@
+<beanInfos>
+
+  <bean id="com.agimatec.utility.validation.example.BusinessObject"
+        impl="com.agimatec.utility.validation.example.BusinessObject">
+    <property name="lastName" mandatory="false"/>
+    <property name="unknownName" mandatory="true"/>
+  </bean>
+
+  <bean id="UnknownObject" impl="com.agimatec.UnknownClass">
+    <property name="fullName" mandatory="true"/>
+  </bean>
+</beanInfos>

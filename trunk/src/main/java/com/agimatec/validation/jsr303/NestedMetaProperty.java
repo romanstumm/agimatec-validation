@@ -2,14 +2,12 @@ package com.agimatec.validation.jsr303;
 
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.MetaProperty;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 
 import javax.validation.ValidationException;
 import java.lang.reflect.*;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Description: handle nested property paths <br/>
@@ -28,6 +26,44 @@ final class NestedMetaProperty {
     public NestedMetaProperty(String path, Object value) {
         this.propertyPath = path;
         this.value = value;
+    }
+
+     void parse() {
+        try {
+            StringTokenizer tokens = new StringTokenizer(propertyPath, ".[]", true);
+            while (tokens.hasMoreTokens()) {
+                String token = tokens.nextToken();
+                if ("[".equals(token)) {
+                    String sindex = tokens.nextToken();
+                    int idx = Integer.parseInt(sindex);
+                    token = tokens.nextToken();
+                    if (!"]".equals(token)) {
+                        throw new ValidationException(
+                                "invalid propertyName format at: " + propertyPath);
+                    }
+                    useIndexedValue(idx);
+                    resolveMetaBean();
+                } else if (!".".equals(token)) { // it is a property name
+                    MetaProperty mp = getMetaBean().getProperty(token);
+                    if (mp == null) {
+                        throw new ValidationException(
+                                "unknown property " + token + " in " + propertyPath);
+                    }
+                    if (getValue() != null) {
+                        setValue(
+                                PropertyUtils.getSimpleProperty(getValue(), token));
+                    }
+                    setMetaProperty(mp);
+                    resolveMetaBean();
+                }
+            }
+        } catch (ValidationException ex) {
+            throw ex; // route exception
+        } catch (Exception ex) { // wrap exception
+            throw new ValidationException(
+                    "invalid propertyName: " + propertyPath, ex);
+
+        }
     }
 
     public MetaProperty getMetaProperty() {
@@ -65,7 +101,7 @@ final class NestedMetaProperty {
         this.value = value;
     }
 
-    public void useIndexedValue(int idx) {
+    private void useIndexedValue(int idx) {
         setValue(getAtIndex(getValue(), idx));
     }
 
@@ -148,7 +184,7 @@ final class NestedMetaProperty {
     }
 
     // enhancement: HACK ALERT! improve support for nested property types, this is not correct in all cases
-    public void resolveMetaBean() {
+    private void resolveMetaBean() {
         if (metaProperty.getMetaBean() == null) {
             return;
         }

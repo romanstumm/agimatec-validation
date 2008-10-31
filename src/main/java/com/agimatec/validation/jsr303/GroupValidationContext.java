@@ -1,6 +1,6 @@
-package com.agimatec.validation.jsr303.impl;
+package com.agimatec.validation.jsr303;
 
-import com.agimatec.validation.ValidationContext;
+import com.agimatec.validation.model.ValidationContext;
 
 import java.util.List;
 

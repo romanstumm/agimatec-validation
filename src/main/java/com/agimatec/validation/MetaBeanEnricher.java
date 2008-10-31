@@ -22,5 +22,5 @@ public interface MetaBeanEnricher {
      *         also been returned by other loaders. The beans with patches for
      *         references to patched beans will be copied.
      */
-     Map<String, MetaBean> enrichCopies(XMLMetaBeanInfos... infos);
+    Map<String, MetaBean> enrichCopies(XMLMetaBeanInfos... infos);
 }

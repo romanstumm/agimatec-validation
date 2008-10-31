@@ -9,6 +9,7 @@ import org.apache.commons.lang.ArrayUtils;
  * Date: 06.07.2007 <br/>
  * Time: 09:44:31 <br/>
  * Copyright: Agimatec GmbH 2008
+ *
  * @see MetaProperty
  */
 public class MetaBean extends FeaturesCapable implements Cloneable, Features.Bean {
@@ -56,9 +57,7 @@ public class MetaBean extends FeaturesCapable implements Cloneable, Features.Bea
         return null;
     }
 
-    /**
-     * @return true when at least one of the properties is a relationship 
-     */
+    /** @return true when at least one of the properties is a relationship */
     public boolean hasRelationships() {
         for (MetaProperty p : properties) {
             if (p.isRelationship()) return true;

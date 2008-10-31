@@ -13,7 +13,6 @@ import java.util.Map;
  */
 public interface MetaBeanFinder {
     /**
-     *
      * @param beanInfoId - symbolic unique name of Meta Info
      * @return BeanInfo
      * @throws IllegalArgumentException - when MetaBean not found
@@ -21,7 +20,6 @@ public interface MetaBeanFinder {
     MetaBean findForId(String beanInfoId);
 
     /**
-     *
      * @param clazz - bean class
      * @return BeanInfo (never null)
      */

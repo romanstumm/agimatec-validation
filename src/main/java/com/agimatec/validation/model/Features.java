@@ -9,6 +9,7 @@ package com.agimatec.validation.model;
  * Date: 05.07.2007 <br/>
  * Time: 17:03:47 <br/>
  * Copyright: Agimatec GmbH 2008
+ *
  * @see FeaturesCapable
  */
 public interface Features {
@@ -31,11 +32,11 @@ public interface Features {
         String UNIQUE_KEY = "uniqueKey";
         /** VALIDATION: Boolean, mandatory field? */
         String MANDATORY = "mandatory";
-        /** VALIDATION: Integer, max. number of chars/digits / max. cardinality of a to-many relationship*/
+        /** VALIDATION: Integer, max. number of chars/digits / max. cardinality of a to-many relationship */
         String MAX_LENGTH = "maxLen";
         /** VALIDATION: Comparable (e.g. a subclass of Number), max value */
         String MAX_VALUE = "maxValue";
-        /** VALIDATION: Integer, min. number of chars/digits / min. cardinality of a to-many relationship*/
+        /** VALIDATION: Integer, min. number of chars/digits / min. cardinality of a to-many relationship */
         String MIN_LENGTH = "minLen";
         /** VALIDATION: Comparable (e.g. a subclass of Number), min value */
         String MIN_VALUE = "minValue";
@@ -73,7 +74,7 @@ public interface Features {
 
         /** INFO: relationship's target metaBean.id * */
         String REF_BEAN_ID = "refBeanId";
-        
+
         /**
          * INFO: Class<br>
          * Relationship's target metaBean.beanClass.
@@ -86,7 +87,7 @@ public interface Features {
          * INFO: Boolean<br>
          * true when validation should cascade into relationship target beans<br>
          * false when validation should NOT cascade into relationship target beans<br>
-         *
+         * <p/>
          * Default: true, when MetaProperty.metaBean is != null
          */
         String REF_CASCADE = "refCascade";

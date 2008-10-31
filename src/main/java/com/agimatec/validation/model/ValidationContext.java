@@ -1,7 +1,4 @@
-package com.agimatec.validation;
-
-import com.agimatec.validation.model.MetaBean;
-import com.agimatec.validation.model.MetaProperty;
+package com.agimatec.validation.model;
 
 import java.lang.reflect.Field;
 
@@ -26,39 +23,27 @@ public interface ValidationContext {
     MetaBean getMetaBean();
 
     void setMetaBean(MetaBean metaBean);
-    
+
     MetaProperty getMetaProperty();
 
     void setBean(Object bean);
 
     boolean collectValidated(Object object);
 
-    /**
-     * @param aBean
-     * @param aMetaBean
-     * @return this
-     */
+    /** @return this */
     void setBean(Object aBean, MetaBean aMetaBean);
 
     void setMetaProperty(MetaProperty metaProperty);
 
-    /**
-     * step deeper into association at 'prop'
-     * @param prop
-     */
+    /** step deeper into association at 'prop' */
     void moveDown(MetaProperty prop);
 
-    /**
-     * step out from a validation of associated objects.
-     * @param bean
-     * @param metaBean
-     */
+    /** step out from a validation of associated objects. */
     void moveUp(Object bean, MetaBean metaBean);
 
     /**
      * set the index of the object currently validated into the context.
      * used to create the propertyPath with [index] information for collections.
-     * @param index
      */
     void setCurrentIndex(int index);
 }

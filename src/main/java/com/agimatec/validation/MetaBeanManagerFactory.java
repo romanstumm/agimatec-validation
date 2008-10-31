@@ -9,6 +9,7 @@ import com.agimatec.validation.xml.XMLMetaBeanRegistry;
  * Date: 05.07.2007 <br/>
  * Time: 16:20:03 <br/>
  * Copyright: Agimatec GmbH 2008
+ *
  * @see com.agimatec.validation.model.MetaBean
  * @see MetaBeanManager
  */
@@ -19,8 +20,7 @@ public class MetaBeanManagerFactory {
         return manager;
     }
 
-    public static XMLMetaBeanRegistry getRegistry()
-    {
+    public static XMLMetaBeanRegistry getRegistry() {
         return manager;
     }
 

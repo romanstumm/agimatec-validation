@@ -1,8 +1,6 @@
-package com.agimatec.validation.jsr303.impl;
+package com.agimatec.validation.jsr303;
 
 import com.agimatec.validation.MetaBeanManager;
-import com.agimatec.validation.jsr303.AgimatecValidatorBuilder;
-import com.agimatec.validation.jsr303.AgimatecValidatorFactory;
 
 import javax.validation.ValidationException;
 import javax.validation.ValidatorBuilder;

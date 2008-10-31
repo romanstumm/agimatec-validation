@@ -4,8 +4,6 @@ import com.agimatec.validation.constraints.Length;
 import com.agimatec.validation.constraints.NotEmpty;
 import com.agimatec.validation.constraints.NotEmptyConstraint;
 import com.agimatec.validation.jsr303.example.*;
-import com.agimatec.validation.jsr303.impl.ClassValidator;
-import com.agimatec.validation.jsr303.impl.ConstraintDescriptorImpl;
 import junit.framework.TestCase;
 
 import javax.validation.*;

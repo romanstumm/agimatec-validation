@@ -1,6 +1,5 @@
 package com.agimatec.validation;
 
-import com.agimatec.validation.model.DynamicMetaBean;
 import static com.agimatec.validation.model.Features.Property.*;
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.MetaProperty;

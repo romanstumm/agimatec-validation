@@ -43,7 +43,8 @@ public class Jsr303Test extends TestCase {
         assertTrue(getValidator(Book.class)
                 .validateValue("subtitle", "123456789098765432").isEmpty());
         assertFalse(getValidator(Book.class)
-                .validateValue("subtitle", "123456789098765432123456789098765432123456789098765432").isEmpty());
+                .validateValue("subtitle",
+                        "123456789098765432123456789098765432123456789098765432").isEmpty());
     }
 
     public void testMetadataAPI_Book() {
@@ -71,11 +72,11 @@ public class Jsr303Test extends TestCase {
         assertFalse(validator.getConstraintsForBean().getConstraintDescriptors().isEmpty());
 
         String[] props = validator.getValidatedProperties();
-        assertTrue(ArrayUtils.contains(props,"addressline1")); // annotated at field level
-        assertTrue(ArrayUtils.contains(props,"addressline2"));
-        assertTrue(ArrayUtils.contains(props,"zipCode"));
-        assertTrue(ArrayUtils.contains(props,"country"));
-        assertTrue(ArrayUtils.contains(props,"city"));       // annotated at method level
+        assertTrue(ArrayUtils.contains(props, "addressline1")); // annotated at field level
+        assertTrue(ArrayUtils.contains(props, "addressline2"));
+        assertTrue(ArrayUtils.contains(props, "zipCode"));
+        assertTrue(ArrayUtils.contains(props, "country"));
+        assertTrue(ArrayUtils.contains(props, "city"));       // annotated at method level
         assertEquals(5, props.length);
 
         ElementDescriptor desc = validator.getConstraintsForProperty("addressline1");

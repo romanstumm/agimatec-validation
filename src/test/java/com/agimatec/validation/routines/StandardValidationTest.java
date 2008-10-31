@@ -1,10 +1,10 @@
 package com.agimatec.validation.routines;
 
 import com.agimatec.validation.BeanValidationContext;
-import com.agimatec.validation.ValidationContext;
-import com.agimatec.validation.ValidationListener;
 import com.agimatec.validation.model.Features;
 import com.agimatec.validation.model.MetaProperty;
+import com.agimatec.validation.model.ValidationContext;
+import com.agimatec.validation.model.ValidationListener;
 import com.agimatec.validation.xml.XMLMetaValue;
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -20,7 +20,7 @@ import java.util.List;
  * @author ${USER}
  * @version 1.0
  * @since <pre>07/06/2007</pre>
- * Copyright: Agimatec GmbH 2008
+ *        Copyright: Agimatec GmbH 2008
  */
 public class StandardValidationTest extends TestCase implements ValidationListener {
     private StandardValidation validation;
@@ -144,7 +144,7 @@ public class StandardValidationTest extends TestCase implements ValidationListen
         metaProperty.setName("dateValue");
         metaProperty.putFeature(Features.Property.TIME_LAG, XMLMetaValue.TIMELAG_Past);
 
-        dateValue = new Date(System.currentTimeMillis()-10000);
+        dateValue = new Date(System.currentTimeMillis() - 10000);
         validation.validateTimeLag(context);
         assertTrue(reasons.isEmpty());
 

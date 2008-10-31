@@ -1,7 +1,7 @@
 package com.agimatec.validation.routines;
 
-import com.agimatec.validation.Validation;
-import com.agimatec.validation.ValidationContext;
+import com.agimatec.validation.model.Validation;
+import com.agimatec.validation.model.ValidationContext;
 
 /**
  * Description: DO NOTHING VALIDATION (can be used to turn off standard validation)<br/>

@@ -1,7 +1,7 @@
 package com.agimatec.validation.example;
 
+import com.agimatec.validation.Validate;
 import com.agimatec.validation.ValidationResults;
-import com.agimatec.validation.integration.Validate;
 
 import java.util.List;
 

@@ -1,5 +1,8 @@
 package com.agimatec.validation;
 
+import com.agimatec.validation.model.ValidationContext;
+import com.agimatec.validation.model.ValidationListener;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -20,8 +23,9 @@ public class ValidationResults implements ValidationListener, Serializable {
 
     /**
      * API to add an error to the validation results.
-     * @param reason    - Features from {@link Reasons} or custom validation reason
-     * @param bean      - (optional) owner bean or null
+     *
+     * @param reason       - Features from {@link Reasons} or custom validation reason
+     * @param bean         - (optional) owner bean or null
      * @param propertyName - (optional) propertyName where valiation error occurred or null
      */
     public void addError(String reason, Object bean, String propertyName) {
@@ -78,11 +82,7 @@ public class ValidationResults implements ValidationListener, Serializable {
         list.add(error);
     }
 
-    /**
-     * key = reason, value = list of errors for this reason
-     *
-     * @return
-     */
+    /** key = reason, value = list of errors for this reason */
     public Map<String, List<Error>> getErrorsByReason() {
         if (errorsByReason == null) return Collections.emptyMap();
         return errorsByReason;
@@ -91,17 +91,13 @@ public class ValidationResults implements ValidationListener, Serializable {
     /**
      * key = owner, value = map with:<br>
      * &nbsp;&nbsp; key = propertyName, value = list of errors for this owner.propertyName
-     *
-     * @return
      */
     public Map<Object, Map<String, List<Error>>> getErrorsByOwner() {
         if (errorsByOwner == null) return Collections.emptyMap();
         return errorsByOwner;
     }
 
-    /**
-     * @return true when there are NO errors in this validation result
-     */
+    /** @return true when there are NO errors in this validation result */
     public boolean isEmpty() {
         if (errorsByReason == null ||
                 (errorsByReason.isEmpty() && errorsByOwner.isEmpty())) return true;
@@ -123,10 +119,8 @@ public class ValidationResults implements ValidationListener, Serializable {
     }
 
     /**
-     * @param bean
      * @param propertyName - may be null: any property is checked
      *                     OR the name of the property to check
-     * @return
      */
     public boolean hasError(Object bean, String propertyName) {
         if (errorsByOwner == null) return false;

@@ -8,7 +8,7 @@ import java.util.*;
 
 /**
  * Description: This message resolver shall resolve message descriptors
- * into human-readable messages. It uses ResourceBundles to find the messages. 
+ * into human-readable messages. It uses ResourceBundles to find the messages.
  * This class is threadsafe.<br/>
  * User: roman.stumm <br/>
  * Date: 02.04.2008 <br/>
@@ -33,7 +33,7 @@ public class DefaultMessageResolver implements MessageResolver {
     /** Generate a display the message based on the constraint and its parameters. */
     public String interpolate(String message, ConstraintDescriptor constraintDescriptor,
                               Object value) {
-        if(message == null || message.length() == 0) return message;
+        if (message == null || message.length() == 0) return message;
         /**
          * The default message resolver begins by retrieving the message descriptor from the constraint.
          * Message parameters are then replaced by repeatedly executing the steps listed below

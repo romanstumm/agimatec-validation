@@ -1,9 +1,9 @@
 package com.agimatec.validation.routines;
 
-import com.agimatec.validation.Validation;
-import com.agimatec.validation.ValidationContext;
 import com.agimatec.validation.model.Features;
 import com.agimatec.validation.model.MetaProperty;
+import com.agimatec.validation.model.Validation;
+import com.agimatec.validation.model.ValidationContext;
 import static com.agimatec.validation.routines.Reasons.*;
 import com.agimatec.validation.xml.XMLMetaValue;
 

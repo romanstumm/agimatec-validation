@@ -1,4 +1,4 @@
-package com.agimatec.validation.integration;
+package com.agimatec.validation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * Description: Annotate an element (parameter) to be validated.
- *<br>
+ * <br>
  * Wichtig:<br>
  * Die Methode muss ebenfalls mit Validate annotiert werden, damit
  * die Parameter-Annotations ueberhaupt untersucht und ein BeanValidationContext angelegt wird.
@@ -20,8 +20,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER, ElementType.METHOD})
 public @interface Validate {
-    /**
-     * (optional) the MetaBean.id to use 
-     */
+    /** (optional) the MetaBean.id to use */
     String value() default "";
 }

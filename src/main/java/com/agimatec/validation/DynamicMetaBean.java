@@ -1,6 +1,6 @@
-package com.agimatec.validation.model;
+package com.agimatec.validation;
 
-import com.agimatec.validation.MetaBeanFinder;
+import com.agimatec.validation.model.MetaBean;
 
 /**
  * Description: <br/>
@@ -9,7 +9,7 @@ import com.agimatec.validation.MetaBeanFinder;
  * Time: 11:04:21 <br/>
  * Copyright: Agimatec GmbH
  */
-public class DynamicMetaBean extends MetaBean {
+final class DynamicMetaBean extends MetaBean {
     private final MetaBeanFinder finder;
 
     public DynamicMetaBean(MetaBeanFinder finder) {
@@ -19,7 +19,6 @@ public class DynamicMetaBean extends MetaBean {
     /**
      * different strategies with hints to find MetaBean of associated object can
      * be implemented here.
-     * @param bean
      */
     public MetaBean resolveMetaBean(Object bean) {
         return finder.findForClass(bean.getClass());

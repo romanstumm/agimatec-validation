@@ -25,15 +25,20 @@
   <version>0.7-SNAPSHOT</version>
   <name>JSR 303: bean-validation by agimatec GmbH</name>
   <description>
-    This is an early implementation of JSR 303 (Bean Validation), a specification of the Java API
+    This is an early implementation of JSR 303 (Bean Validation), a
+    specification of the Java API
     for Javabean validation in Java EE and Java SE.
 
-    The technical objective is to provide a class level constraint declaration and validation
-    facility for the Java application developer, as well as a constraint metadata repository and
+    The technical objective is to provide a class level constraint declaration
+    and validation
+    facility for the Java application developer, as well as a constraint
+    metadata repository and
     query API.
 
-    This implementation is based on the validation framework of agimatec GmbH, that is in production
-    for more than a year and offers additional features, like XML-based extensible metadata, code
+    This implementation is based on the validation framework of agimatec GmbH,
+    that is in production
+    for more than a year and offers additional features, like XML-based
+    extensible metadata, code
     generation (JSON for AJAX applications), JSR303 annotation support.
   </description>
   <url>http://code.google.com/p/agimatec-validation/</url>
@@ -65,6 +70,10 @@
             </reports>
           </reportSet>
         </reportSets>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jdepend-maven-plugin</artifactId>
       </plugin>
     </plugins>
   </reporting>

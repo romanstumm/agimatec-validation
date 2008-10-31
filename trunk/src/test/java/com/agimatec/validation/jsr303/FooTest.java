@@ -1,7 +1,6 @@
 package com.agimatec.validation.jsr303;
 
 import com.agimatec.validation.constraints.NotNull;
-import com.agimatec.validation.jsr303.impl.ClassValidator;
 import junit.framework.TestCase;
 
 import javax.validation.InvalidConstraint;

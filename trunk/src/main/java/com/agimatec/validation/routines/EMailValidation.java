@@ -1,7 +1,7 @@
 package com.agimatec.validation.routines;
 
-import com.agimatec.validation.Validation;
-import com.agimatec.validation.ValidationContext;
+import com.agimatec.validation.model.Validation;
+import com.agimatec.validation.model.ValidationContext;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,11 +19,10 @@ public class EMailValidation implements Validation {
             "[^\\x00-\\x1F^\\(^\\)^\\<^\\>^\\@^\\,^\\;^\\:^\\\\^\\\"^\\.^\\[^\\]^\\s]";
     private static String DOMAIN = "(" + ATOM + "+(\\." + ATOM + "+)*";
     private static String IP_DOMAIN = "\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\]";
-    private static java.util.regex.Pattern pattern;
-    private java.util.regex.Pattern customPattern = pattern;
+    private static final java.util.regex.Pattern DEFAULT_PATTERN;
 
     static {
-        pattern = java.util.regex.Pattern.compile(
+        DEFAULT_PATTERN = java.util.regex.Pattern.compile(
                 "^" + ATOM + "+(\\." + ATOM + "+)*@"
                         + DOMAIN
                         + "|"
@@ -33,23 +32,25 @@ public class EMailValidation implements Validation {
         );
     }
 
+    private java.util.regex.Pattern pattern = DEFAULT_PATTERN;
+
     public void validate(ValidationContext context) {
         if (context.getPropertyValue() == null) return;
-        if (!isValid(context.getPropertyValue(), customPattern)) {
+        if (!isValid(context.getPropertyValue(), pattern)) {
             context.getListener().addError(Reasons.EMAIL_ADDRESS, context);
         }
     }
 
     public Pattern getPattern() {
-        return customPattern;
+        return pattern;
     }
 
     public void setPattern(Pattern pattern) {
-        this.customPattern = pattern;
+        this.pattern = pattern;
     }
 
     public static boolean isValid(Object value) {
-        return isValid(value, pattern);
+        return isValid(value, DEFAULT_PATTERN);
     }
 
     private static boolean isValid(Object value, Pattern aPattern) {

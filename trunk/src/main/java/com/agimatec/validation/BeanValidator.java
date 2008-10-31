@@ -1,10 +1,6 @@
 package com.agimatec.validation;
 
-import com.agimatec.validation.integration.Validate;
-import com.agimatec.validation.model.DynamicMetaBean;
-import com.agimatec.validation.model.Features;
-import com.agimatec.validation.model.MetaBean;
-import com.agimatec.validation.model.MetaProperty;
+import com.agimatec.validation.model.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -162,7 +158,7 @@ public class BeanValidator {
                 int index = 0;
                 for (Object each : ((Collection) context.getBean())) {
                     context.setCurrentIndex(index++);
-                    if(each == null) continue; // or throw IllegalArgumentException? (=> spec)
+                    if (each == null) continue; // or throw IllegalArgumentException? (=> spec)
                     if (dynamic != null) {
                         context.setBean(each, dynamic.resolveMetaBean(each));
                     } else {
@@ -174,7 +170,7 @@ public class BeanValidator {
                 int index = 0;
                 for (Object each : ((Object[]) context.getBean())) {
                     context.setCurrentIndex(index++);
-                    if(each == null) continue; // or throw IllegalArgumentException? (=> spec)
+                    if (each == null) continue; // or throw IllegalArgumentException? (=> spec)
                     if (dynamic != null) {
                         context.setBean(each, dynamic.resolveMetaBean(each));
                     } else {

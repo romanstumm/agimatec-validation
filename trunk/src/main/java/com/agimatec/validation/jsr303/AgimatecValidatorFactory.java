@@ -2,9 +2,6 @@ package com.agimatec.validation.jsr303;
 
 import com.agimatec.validation.BeanValidator;
 import com.agimatec.validation.MetaBeanManager;
-import com.agimatec.validation.jsr303.impl.AgimatecValidationProvider;
-import com.agimatec.validation.jsr303.impl.ClassValidator;
-import com.agimatec.validation.jsr303.impl.ValidatorBuilderImpl;
 
 import javax.validation.MessageResolver;
 import javax.validation.Validator;
@@ -18,7 +15,7 @@ import javax.validation.ValidatorFactory;
  * Copyright: Agimatec GmbH
  */
 public class AgimatecValidatorFactory implements ValidatorFactory {
-    private static AgimatecValidatorFactory defaultFactory;
+    private static AgimatecValidatorFactory DEFAULT_FACTORY;
 
     private MetaBeanManager metaBeanManager;
     private MessageResolver messageResolver;
@@ -26,12 +23,12 @@ public class AgimatecValidatorFactory implements ValidatorFactory {
 
     /** convenience to retrieve a default global ValidatorFactory */
     public static AgimatecValidatorFactory getDefault() {
-        if (defaultFactory == null) {
+        if (DEFAULT_FACTORY == null) {
             AgimatecValidationProvider provider = new AgimatecValidationProvider();
-            defaultFactory =
+            DEFAULT_FACTORY =
                     provider.buildValidatorFactory(new ValidatorBuilderImpl(null, provider));
         }
-        return defaultFactory;
+        return DEFAULT_FACTORY;
     }
 
     public AgimatecValidatorFactory() {

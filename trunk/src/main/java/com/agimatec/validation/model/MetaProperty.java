@@ -7,7 +7,8 @@ package com.agimatec.validation.model;
  * Date: 06.07.2007 <br/>
  * Time: 09:58:57 <br/>
  * Copyright: Agimatec GmbH 2008
- * @see com.agimatec.validation.Validation
+ *
+ * @see Validation
  * @see MetaBean
  */
 public class MetaProperty extends FeaturesCapable implements Cloneable, Features.Property {

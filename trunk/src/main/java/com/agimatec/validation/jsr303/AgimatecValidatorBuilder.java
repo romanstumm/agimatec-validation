@@ -16,8 +16,6 @@ public interface AgimatecValidatorBuilder extends ValidatorBuilder<AgimatecValid
     /**
      * set the implementation class for bean validation. the implementation
      * is responsible to provide a validation context.
-     * @param beanValidator
-     * @return
      */
     AgimatecValidatorBuilder beanValidator(BeanValidator beanValidator);
 }

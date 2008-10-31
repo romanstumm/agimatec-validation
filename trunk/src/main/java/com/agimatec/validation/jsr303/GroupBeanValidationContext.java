@@ -1,9 +1,9 @@
-package com.agimatec.validation.jsr303.impl;
+package com.agimatec.validation.jsr303;
 
 import com.agimatec.validation.BeanValidationContext;
-import com.agimatec.validation.ValidationListener;
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.MetaProperty;
+import com.agimatec.validation.model.ValidationListener;
 
 import javax.validation.Constraint;
 import javax.validation.MessageResolver;

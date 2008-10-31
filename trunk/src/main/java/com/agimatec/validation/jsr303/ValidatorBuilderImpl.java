@@ -1,9 +1,6 @@
-package com.agimatec.validation.jsr303.impl;
+package com.agimatec.validation.jsr303;
 
 import com.agimatec.validation.BeanValidator;
-import com.agimatec.validation.jsr303.AgimatecValidatorBuilder;
-import com.agimatec.validation.jsr303.DefaultConstraintFactory;
-import com.agimatec.validation.jsr303.DefaultMessageResolver;
 import com.agimatec.validation.xml.XMLMapper;
 
 import javax.validation.*;

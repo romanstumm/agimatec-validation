@@ -1,8 +1,6 @@
 package com.agimatec.validation;
 
-import com.agimatec.validation.model.FeaturesCapable;
-import com.agimatec.validation.model.MetaBean;
-import com.agimatec.validation.model.MetaProperty;
+import com.agimatec.validation.model.*;
 import org.apache.commons.beanutils.PropertyUtils;
 
 import java.lang.reflect.AnnotatedElement;
@@ -10,10 +8,12 @@ import java.lang.reflect.Field;
 import java.util.IdentityHashMap;
 
 /**
- * Description: Context during validation to help the {@link Validation}
+ * Description: Context during validation to help the {@link com.agimatec.validation.model.Validation}
  * and the {@link BeanValidator} do their jobs.
- * Used to bundle {@link BeanValidationContext} and {@link ValidationListener} together <br/>
- * <b>This class is NOT thread-safe: a new instance will be created for each validation
+ * Used to bundle {@link BeanValidationContext} and {@link ValidationListener}
+ * together <br/>
+ * <b>This class is NOT thread-safe: a new instance will be created for each
+ * validation
  * processing per thread.<br/></b>
  * <br/>
  * User: roman.stumm <br/>
@@ -22,13 +22,14 @@ import java.util.IdentityHashMap;
  * Copyright: Agimatec GmbH 2008
  */
 public class BeanValidationContext implements ValidationContext {
+    /** represent an unknown propertyValue. */
     private static final Object UNKNOWN = new Object();
 
-    /** metainfo of current object */
+    /** metainfo of current object. */
     private MetaBean metaBean;
-    /** current object */
+    /** current object. */
     private Object bean;
-    /** metainfo of current property */
+    /** metainfo of current property. */
     private MetaProperty metaProperty;
     /**
      * cached value of current property.
@@ -36,8 +37,10 @@ public class BeanValidationContext implements ValidationContext {
      */
     private Object propertyValue = UNKNOWN;
 
+    /** element to retrieve value from (field or method). */
     private AnnotatedElement valueOrigin;
 
+    /** set of objects already validated to avoid endless loops. */
     private IdentityHashMap validatedObjects = new IdentityHashMap();
 
     /**
@@ -48,6 +51,7 @@ public class BeanValidationContext implements ValidationContext {
      */
     private boolean fixed;
 
+    /** listener notified of validation constraint violations. */
     private ValidationListener listener;
 
     public BeanValidationContext(ValidationListener listener) {
@@ -101,7 +105,8 @@ public class BeanValidationContext implements ValidationContext {
                 if (field != null) {
                     //  Field f = (Field) element;
                     if (!field.isAccessible()) {
-                        field.setAccessible(true); // enable access of private/protected field
+                        field.setAccessible(
+                                true); // enable access of private/protected field
                     }
                     propertyValue = field.get(bean);
                     valueOrigin = field;
@@ -114,7 +119,8 @@ public class BeanValidationContext implements ValidationContext {
                     valueOrigin = field;
                 }
             } catch (Exception e) {
-                throw new IllegalArgumentException("cannot access " + metaProperty + " on " + bean,
+                throw new IllegalArgumentException(
+                        "cannot access " + metaProperty + " on " + bean,
                         e);
             }
         }
@@ -128,22 +134,26 @@ public class BeanValidationContext implements ValidationContext {
      * @throws IllegalArgumentException - error accessing attribute (config error, reflection problem)
      * @throws IllegalStateException    - when no property is currently set in the context (application logic bug)
      */
-    public Object getPropertyValue() throws IllegalArgumentException, IllegalStateException {
+    public Object getPropertyValue()
+            throws IllegalArgumentException, IllegalStateException {
         if (propertyValue == UNKNOWN || (valueOrigin != null && !fixed)) {
             if (metaProperty == null) throw new IllegalStateException();
             valueOrigin = null;
             try {
                 try {   // try public method
-                    propertyValue = PropertyUtils.getSimpleProperty(bean, metaProperty.getName());
+                    propertyValue = PropertyUtils
+                            .getSimpleProperty(bean, metaProperty.getName());
                 } catch (NoSuchMethodException ex) {
                     try { // try public field
-                        propertyValue = bean.getClass().getField(metaProperty.getName()).get(bean);
+                        propertyValue = bean.getClass()
+                                .getField(metaProperty.getName()).get(bean);
                     } catch (NoSuchFieldException ex2) {
                         // search for private/protected field up the hierarchy
                         Class theClass = bean.getClass();
                         while (theClass != null) {
                             try {
-                                Field f = theClass.getDeclaredField(metaProperty.getName());
+                                Field f = theClass.getDeclaredField(
+                                        metaProperty.getName());
                                 if (!f.isAccessible()) {
                                     f.setAccessible(true);
                                 }
@@ -157,7 +167,8 @@ public class BeanValidationContext implements ValidationContext {
                     }
                 }
             } catch (Exception e) {
-                throw new IllegalArgumentException("cannot access " + metaProperty, e);
+                throw new IllegalArgumentException(
+                        "cannot access " + metaProperty, e);
             }
         }
         return propertyValue;
@@ -244,7 +255,8 @@ public class BeanValidationContext implements ValidationContext {
     }
 
     public String toString() {
-        return "BeanValidationContext{ bean=" + bean + ", metaProperty=" + metaProperty +
+        return "BeanValidationContext{ bean=" + bean + ", metaProperty=" +
+                metaProperty +
                 ", propertyValue=" + propertyValue + '}';
     }
 
@@ -253,8 +265,8 @@ public class BeanValidationContext implements ValidationContext {
         setBean(getPropertyValue(), prop.getMetaBean());
     }
 
-    public void moveUp(Object bean, MetaBean metaBean) {
-        setBean(bean, metaBean); // reset context state
+    public void moveUp(Object bean, MetaBean aMetaBean) {
+        setBean(bean, aMetaBean); // reset context state
     }
 
     public void setCurrentIndex(int index) {

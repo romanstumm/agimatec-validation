@@ -1,7 +1,7 @@
 package com.agimatec.validation.integration;
 
 import com.agimatec.validation.BeanValidator;
-import com.agimatec.validation.ValidationContext;
+import com.agimatec.validation.model.ValidationContext;
 
 /**
  * Description: Validatator that puts the current validation

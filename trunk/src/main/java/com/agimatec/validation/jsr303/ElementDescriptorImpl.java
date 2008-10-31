@@ -1,4 +1,4 @@
-package com.agimatec.validation.jsr303.impl;
+package com.agimatec.validation.jsr303;
 
 import javax.validation.ConstraintDescriptor;
 import javax.validation.ElementDescriptor;
@@ -12,7 +12,7 @@ import java.util.List;
  * Copyright: Agimatec GmbH 2008
  */
 class ElementDescriptorImpl implements ElementDescriptor {
-//    private ElementType elementType;
+    //    private ElementType elementType;
     private Class returnType;
     private boolean cascaded;
     private List<ConstraintDescriptor> constraintDescriptors;
@@ -26,7 +26,7 @@ class ElementDescriptorImpl implements ElementDescriptor {
         return elementType;
     }
     */
-    
+
     public Class getType() {
         return returnType;
     }
@@ -51,7 +51,7 @@ class ElementDescriptorImpl implements ElementDescriptor {
         this.constraintDescriptors = constraintDescriptors;
     }
 
-   /* public void setElementType(ElementType elementType) {
+    /* public void setElementType(ElementType elementType) {
         this.elementType = elementType;
     }*/
 

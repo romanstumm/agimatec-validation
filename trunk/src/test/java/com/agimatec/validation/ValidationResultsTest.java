@@ -9,9 +9,9 @@ import junit.framework.TestSuite;
  * ValidationResults Tester.
  *
  * @author ${USER}
- * @since <pre>07/06/2007</pre>
  * @version 1.0
- * Copyright: Agimatec GmbH 2008
+ *          Copyright: Agimatec GmbH 2008
+ * @since <pre>07/06/2007</pre>
  */
 public class ValidationResultsTest extends TestCase {
     private ValidationResults results;

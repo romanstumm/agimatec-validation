@@ -1,6 +1,5 @@
 package com.agimatec.validation.model;
 
-import com.agimatec.validation.Validation;
 import org.apache.commons.collections.FastHashMap;
 
 import java.io.Serializable;

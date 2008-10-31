@@ -1,7 +1,7 @@
-package com.agimatec.validation.jsr303.impl;
+package com.agimatec.validation.jsr303;
 
-import com.agimatec.validation.ValidationContext;
-import com.agimatec.validation.ValidationListener;
+import com.agimatec.validation.model.ValidationContext;
+import com.agimatec.validation.model.ValidationListener;
 
 import javax.validation.InvalidConstraint;
 import java.util.HashSet;
@@ -30,14 +30,14 @@ class ConstraintValidationListener<T> implements ValidationListener {
 
         final String propPath;
         final Set<String> groups;
-        if(context instanceof GroupBeanValidationContext) {
-            propPath = ((GroupBeanValidationContext)context).getPropertyPath();
+        if (context instanceof GroupBeanValidationContext) {
+            propPath = ((GroupBeanValidationContext) context).getPropertyPath();
             groups = new HashSet(1);
-            groups.add(((GroupBeanValidationContext)context).getCurrentGroup());
+            groups.add(((GroupBeanValidationContext) context).getCurrentGroup());
         } else {
             propPath = context.getPropertyName();
             groups = new HashSet(GroupBeanValidationContext.DEFAULT_GROUPS.length);
-            for(String each : GroupBeanValidationContext.DEFAULT_GROUPS) {
+            for (String each : GroupBeanValidationContext.DEFAULT_GROUPS) {
                 groups.add(each);
             }
         }

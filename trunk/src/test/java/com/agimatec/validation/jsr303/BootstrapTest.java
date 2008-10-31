@@ -3,8 +3,6 @@ package com.agimatec.validation.jsr303;
 import com.agimatec.validation.constraints.NotNullConstraint;
 import com.agimatec.validation.jsr303.example.Address;
 import com.agimatec.validation.jsr303.example.Customer;
-import com.agimatec.validation.jsr303.impl.AgimatecValidationProvider;
-import com.agimatec.validation.jsr303.impl.ValidatorBuilderImpl;
 import junit.framework.TestCase;
 
 import javax.validation.*;

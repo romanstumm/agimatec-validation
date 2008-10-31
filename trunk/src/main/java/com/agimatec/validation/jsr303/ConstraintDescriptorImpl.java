@@ -1,4 +1,4 @@
-package com.agimatec.validation.jsr303.impl;
+package com.agimatec.validation.jsr303;
 
 import javax.validation.Constraint;
 import javax.validation.ConstraintDescriptor;
@@ -14,7 +14,7 @@ import java.util.*;
  * Time: 12:26:50 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-public class ConstraintDescriptorImpl implements ConstraintDescriptor {
+class ConstraintDescriptorImpl implements ConstraintDescriptor {
     private Map<String, Object> parameters;
     private final Set<String> groups;
     private final ConstraintValidation constraintValidation;

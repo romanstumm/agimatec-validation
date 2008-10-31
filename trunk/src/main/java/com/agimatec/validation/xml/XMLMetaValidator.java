@@ -1,6 +1,6 @@
 package com.agimatec.validation.xml;
 
-import com.agimatec.validation.Validation;
+import com.agimatec.validation.model.Validation;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;

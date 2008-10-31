@@ -1,4 +1,4 @@
-package com.agimatec.validation.jsr303.impl;
+package com.agimatec.validation.jsr303;
 
 import javax.validation.InvalidConstraint;
 import java.util.Set;

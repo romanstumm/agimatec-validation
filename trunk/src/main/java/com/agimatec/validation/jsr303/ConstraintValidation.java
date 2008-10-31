@@ -1,7 +1,7 @@
-package com.agimatec.validation.jsr303.impl;
+package com.agimatec.validation.jsr303;
 
-import com.agimatec.validation.Validation;
-import com.agimatec.validation.ValidationContext;
+import com.agimatec.validation.model.Validation;
+import com.agimatec.validation.model.ValidationContext;
 
 import javax.validation.Constraint;
 import javax.validation.MessageResolver;
@@ -25,13 +25,13 @@ class ConstraintValidation implements Validation {
     private final Field field;
 
     protected ConstraintValidation(Constraint constraint, String messageKey, String[] groups,
-                                Annotation annotation, AnnotatedElement element) {
+                                   Annotation annotation, AnnotatedElement element) {
         this.constraint = constraint;
         this.messageKey = messageKey;
         this.groups = (groups == null || groups.length == 0) ?
                 GroupBeanValidationContext.DEFAULT_GROUPS : groups;
         this.annotation = annotation;
-        this.field = element instanceof Field ? (Field)element : null;
+        this.field = element instanceof Field ? (Field) element : null;
     }
 
     public ConstraintDescriptorImpl getConstraintDescriptor() {

@@ -1,9 +1,9 @@
-package com.agimatec.validation.jsr303.impl;
+package com.agimatec.validation.jsr303;
 
-import com.agimatec.validation.jsr303.AgimatecValidatorFactory;
 import com.agimatec.validation.model.Features;
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.MetaProperty;
+import com.agimatec.validation.model.Validation;
 
 import javax.validation.ElementDescriptor;
 import javax.validation.InvalidConstraint;
@@ -32,8 +32,8 @@ public class ClassValidator<T> implements Validator<T> {
 
     /**
      * create an instance with the default provider for a bean class
-     *
-     * @deprecated use official bootstrap API
+     * <p/>
+     * <pre>compatibility: use official bootstrap API instead</pre>
      */
     public ClassValidator(Class<T> aClass) {
         factory = AgimatecValidatorFactory.getDefault();
@@ -42,8 +42,8 @@ public class ClassValidator<T> implements Validator<T> {
 
     /**
      * create an instance with the default provider for a bean id
-     *
-     * @deprecated use official bootstrap API
+     * <p/>
+     * <pre>compatibility: use official bootstrap API instead</pre>
      */
     public ClassValidator(String metaBeanId) {
         factory = AgimatecValidatorFactory.getDefault();
@@ -169,9 +169,9 @@ public class ClassValidator<T> implements Validator<T> {
     }
 
     private void createConstraintDescriptors(ElementDescriptorImpl edesc,
-                                             com.agimatec.validation.Validation[] validations) {
+                                             Validation[] validations) {
         edesc.setConstraintDescriptors(new ArrayList(validations.length));
-        for (com.agimatec.validation.Validation validation : validations) {
+        for (Validation validation : validations) {
             if (validation instanceof ConstraintValidation) {
                 ConstraintValidation cval = (ConstraintValidation) validation;
                 edesc.getConstraintDescriptors().add(cval.getConstraintDescriptor());

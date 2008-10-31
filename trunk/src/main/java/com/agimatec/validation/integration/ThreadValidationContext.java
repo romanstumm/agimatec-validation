@@ -1,7 +1,7 @@
 package com.agimatec.validation.integration;
 
 import com.agimatec.validation.BeanValidationContext;
-import com.agimatec.validation.ValidationListener;
+import com.agimatec.validation.model.ValidationListener;
 
 /**
  * Description: Used to bind the current validation context to the current thread.

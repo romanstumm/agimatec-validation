@@ -14,7 +14,7 @@ import java.util.Map;
  * This class is NOT part of the bean_validation spec and might disappear
  * as soon as a final version of the specification contains a similar functionality.
  * </pre>
- **/
+ */
 public class NotEmptyConstraint implements Constraint<NotEmpty>, StandardConstraint {
     public void initialize(NotEmpty constraintAnnotation) {
         // do nothing

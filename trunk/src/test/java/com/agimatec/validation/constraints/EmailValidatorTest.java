@@ -12,8 +12,8 @@ import javax.validation.Validator;
  * EmailValidator Tester.
  *
  * @author Roman Stumm
- * @since <pre>10/14/2008</pre>
  * @version 1.0
+ * @since <pre>10/14/2008</pre>
  */
 public class EmailValidatorTest extends TestCase {
     public EmailValidatorTest(String name) {

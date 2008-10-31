@@ -17,6 +17,6 @@ public class MinConstraint implements Constraint<Min> {
     }
 
     public boolean isValid(Object value, Context context) {
-        return ((Number)value).intValue() >= min;
+        return ((Number) value).intValue() >= min;
     }
 }

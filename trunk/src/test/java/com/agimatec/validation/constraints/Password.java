@@ -8,7 +8,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * User: roman.stumm <br/>
  * Date: 01.04.2008 <br/>
  * Time: 12:02:06 <br/>
- *
  */
 //TODO RSt - @ConstraintValidator(PasswordConstraint.class)
 @Retention(RUNTIME)

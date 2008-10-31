@@ -40,7 +40,7 @@ public class XMLFeaturesCapable implements Serializable {
 
     public void removeFeature(String key) {
         XMLMetaFeature anno = findFeature(key);
-        if(anno != null) {
+        if (anno != null) {
             getFeatures().remove(anno);
         }
     }
@@ -57,7 +57,7 @@ public class XMLFeaturesCapable implements Serializable {
         }
         return null;
     }
-    
+
     public List<XMLMetaValidatorReference> getValidators() {
         return validators;
     }

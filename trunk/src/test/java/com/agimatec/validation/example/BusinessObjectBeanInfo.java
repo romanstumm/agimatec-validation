@@ -7,9 +7,7 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.beans.SimpleBeanInfo;
 
-/**
- * Copyright: Agimatec GmbH 2008
- */
+/** Copyright: Agimatec GmbH 2008 */
 public class BusinessObjectBeanInfo extends SimpleBeanInfo {
     Class targetClass = BusinessObject.class;
 

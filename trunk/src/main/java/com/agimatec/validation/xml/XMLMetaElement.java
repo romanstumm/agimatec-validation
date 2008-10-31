@@ -12,8 +12,7 @@ import org.apache.commons.lang.ClassUtils;
  * Time: 14:48:36 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-public class XMLMetaElement extends XMLFeaturesCapable
-{
+public class XMLMetaElement extends XMLFeaturesCapable {
 
     @XStreamAsAttribute()
     private String name;
@@ -104,7 +103,7 @@ public class XMLMetaElement extends XMLFeaturesCapable
 
     public void mergeInto(MetaProperty prop) throws ClassNotFoundException {
         mergeFeaturesInto(prop);
-        if(getType() != null && getType().length() > 0) {
+        if (getType() != null && getType().length() > 0) {
             prop.setType(ClassUtils.getClass(getType()));
         }
         if (getHidden() != null) {
@@ -122,7 +121,7 @@ public class XMLMetaElement extends XMLFeaturesCapable
         if (getReadonly() != null) {
             prop.putFeature(READONLY, getReadonly());
         }
-        if(getDenied() != null) {
+        if (getDenied() != null) {
             prop.putFeature(DENIED, getDenied());
         }
     }

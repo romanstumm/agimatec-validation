@@ -13,12 +13,13 @@ import java.lang.annotation.Target;
  * This class is NOT part of the bean_validation spec and might disappear
  * as soon as a final version of the specification contains a similar functionality.
  * </pre>
- **/
+ */
 @Documented
 @ConstraintValidator(NotEmptyConstraint.class)
-@Target({METHOD,FIELD})
+@Target({METHOD, FIELD})
 @Retention(RUNTIME)
 public @interface NotEmpty {
     String[] groups() default {};
+
     String message() default "{validator.notEmpty}";
 }

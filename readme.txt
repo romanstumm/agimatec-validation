@@ -66,7 +66,7 @@ change as soon as the specification is stable.
 * The classes in javax.validation will be removed as soon as they are available from official sites.
 
 * You can use the framework with the JSR303 interfaces if you want to strictly use the standard.
-  Refer to classes in packages javax.validation and com.agimatec.validation.jsr303
+  Refer to classes in packages javax.validation and com.agimatec.utility.validation.jsr303
   
   or you can access the propriatary APIs of agimatec-validation for additional features.
   Refer to class MetaBeanManagerFactory, BeanValidator and ThreadBeanValidator.

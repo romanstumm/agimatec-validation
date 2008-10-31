@@ -22,23 +22,18 @@
     </repository>
   </distributionManagement>
   <packaging>jar</packaging>
-  <version>0.7-SNAPSHOT</version>
+  <version>0.6.1-SNAPSHOT</version>
   <name>JSR 303: bean-validation by agimatec GmbH</name>
   <description>
-    This is an early implementation of JSR 303 (Bean Validation), a
-    specification of the Java API
+    This is an early implementation of JSR 303 (Bean Validation), a specification of the Java API
     for Javabean validation in Java EE and Java SE.
 
-    The technical objective is to provide a class level constraint declaration
-    and validation
-    facility for the Java application developer, as well as a constraint
-    metadata repository and
+    The technical objective is to provide a class level constraint declaration and validation
+    facility for the Java application developer, as well as a constraint metadata repository and
     query API.
 
-    This implementation is based on the validation framework of agimatec GmbH,
-    that is in production
-    for more than a year and offers additional features, like XML-based
-    extensible metadata, code
+    This implementation is based on the validation framework of agimatec GmbH, that is in production
+    for more than a year and offers additional features, like XML-based extensible metadata, code
     generation (JSON for AJAX applications), JSR303 annotation support.
   </description>
   <url>http://code.google.com/p/agimatec-validation/</url>
@@ -70,10 +65,6 @@
             </reports>
           </reportSet>
         </reportSets>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>jdepend-maven-plugin</artifactId>
       </plugin>
     </plugins>
   </reporting>
@@ -115,7 +106,7 @@
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
-      <version>2.4</version>
+      <version>2.3</version>
     </dependency>
 
     <dependency>
@@ -134,20 +125,20 @@
     <dependency>
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
-      <version>1.8.0</version>
+      <version>1.7.0</version>
     </dependency>
 
     <dependency>
       <groupId>com.thoughtworks.xstream</groupId>
       <artifactId>xstream</artifactId>
-      <version>1.3</version>
+      <version>1.2.2</version>
       <optional>true</optional>
     </dependency>
 
     <dependency>
       <groupId>commons-collections</groupId>
       <artifactId>commons-collections</artifactId>
-      <version>3.2.1</version>
+      <version>3.1</version>
     </dependency>
 
     <dependency>
@@ -155,12 +146,6 @@
       <artifactId>freemarker</artifactId>
       <optional>true</optional>
       <version>2.3.14</version>
-    </dependency>
-
-    <dependency>
-      <groupId>javax.validation</groupId>
-      <artifactId>validation-api</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
@@ -181,6 +166,11 @@
           <target>1.5</target>
           <encoding>UTF-8</encoding>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.4.2</version>
       </plugin>
     </plugins>
   </build>

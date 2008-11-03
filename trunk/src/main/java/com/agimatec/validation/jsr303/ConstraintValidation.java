@@ -5,10 +5,7 @@ import com.agimatec.validation.ValidationResults;
 import com.agimatec.validation.model.Validation;
 import com.agimatec.validation.model.ValidationContext;
 
-import javax.validation.Constraint;
-import javax.validation.ConstraintDescriptor;
-import javax.validation.MessageResolver;
-import javax.validation.ReportAsSingleInvalidConstraint;
+import javax.validation.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
@@ -44,7 +41,9 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
         this.field = element instanceof Field ? (Field) element : null;
         this.reportAsSingleInvalidConstraint =
                 annotation.annotationType().isAnnotationPresent(
-                        ReportAsSingleInvalidConstraint.class);
+                        ReportAsSingleInvalidConstraint.class) ||
+                annotation.annotationType().isAnnotationPresent(
+                        ReportAsViolationFromComposingConstraint.class);
     }
 
     /**

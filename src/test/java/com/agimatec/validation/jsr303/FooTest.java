@@ -3,7 +3,7 @@ package com.agimatec.validation.jsr303;
 import com.agimatec.validation.constraints.NotNull;
 import junit.framework.TestCase;
 
-import javax.validation.InvalidConstraint;
+import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,9 +42,9 @@ public class FooTest extends TestCase {
         FooTest t = new FooTest();
 
         ClassValidator v = new ClassValidator(t.getClass());
-        Set<InvalidConstraint> errors = v.validate(t);
+        Set<ConstraintViolation> errors = v.validate(t);
         System.out.println("got errors:");
-        for (InvalidConstraint error : errors) {
+        for (ConstraintViolation error : errors) {
             System.out.println(error.getPropertyPath());
         }
     }

@@ -3,7 +3,7 @@ package com.agimatec.validation.jsr303;
 import com.agimatec.validation.model.ValidationContext;
 import com.agimatec.validation.model.ValidationListener;
 
-import javax.validation.InvalidConstraint;
+import javax.validation.ConstraintViolation;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,7 +15,7 @@ import java.util.Set;
  * Copyright: Agimatec GmbH 2008
  */
 class ConstraintValidationListener<T> implements ValidationListener {
-    private final Set<InvalidConstraint<T>> invalidConstraints = new HashSet();
+    private final Set<ConstraintViolation<T>> constaintViolations = new HashSet();
     private final T rootBean;
 
     public ConstraintValidationListener(T aRootBean) {
@@ -42,17 +42,17 @@ class ConstraintValidationListener<T> implements ValidationListener {
             }
         }
 
-        InvalidConstraintImpl<T> ic = new InvalidConstraintImpl<T>(reason, rootBean, context.getBean(),
+        ConstraintViolationImpl<T> ic = new ConstraintViolationImpl<T>(reason, rootBean, context.getBean(),
                 context.getMetaBean().getBeanClass(), propPath, value, groups);
-        invalidConstraints.add(ic);
+        constaintViolations.add(ic);
     }
 
-    public Set<InvalidConstraint<T>> getInvalidConstraints() {
-        return invalidConstraints;
+    public Set<ConstraintViolation<T>> getConstaintViolations() {
+        return constaintViolations;
     }
 
     public boolean isEmpty() {
-        return invalidConstraints.isEmpty();
+        return constaintViolations.isEmpty();
     }
 
     public T getRootBean() {

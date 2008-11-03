@@ -1,6 +1,6 @@
 package com.agimatec.validation.jsr303;
 
-import javax.validation.InvalidConstraint;
+import javax.validation.ConstraintViolation;
 import java.util.Set;
 
 /**
@@ -11,7 +11,7 @@ import java.util.Set;
  * Time: 14:50:12 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-class InvalidConstraintImpl<T> implements InvalidConstraint {
+class ConstraintViolationImpl<T> implements ConstraintViolation {
     private String message;
     /**
      * root bean validation was invoked on.
@@ -26,7 +26,7 @@ class InvalidConstraintImpl<T> implements InvalidConstraint {
     private Class beanClass;
     private Set<String> groups;
 
-    public InvalidConstraintImpl(String message, T rootBean, Object leafBean,
+    public ConstraintViolationImpl(String message, T rootBean, Object leafBean,
                                  Class beanClass, String propertyPath,
                                  Object value, Set<String> groups) {
         this.message = message;
@@ -79,7 +79,7 @@ class InvalidConstraintImpl<T> implements InvalidConstraint {
     }
 
     public String toString() {
-        return "InvalidConstraintImpl{" +
+        return "ConstraintViolationImpl{" +
                 "rootBean=" + rootBean +
                 ", propertyPath='" + propertyPath + '\'' +
                 ", message='" + message + '\'' +

@@ -36,7 +36,7 @@ public class ValidationTest extends TestCase {
         book.setSubtitle("12345678900125678901234578901234567890");
 
         // NotEmpty failure on the title field
-        Set<InvalidConstraint> errors = validator.validate(book);
+        Set<ConstraintViolation> errors = validator.validate(book);
         assertTrue(!errors.isEmpty());
 
         book.setTitle("Les fleurs du mal");
@@ -76,7 +76,7 @@ public class ValidationTest extends TestCase {
         adr.setCompany("agimatec GmbH");
         found = v.validate(a, "default", "first", "last");
         assertEquals(1, found.size());
-        InvalidConstraint ic = (InvalidConstraint) found.iterator().next();
+        ConstraintViolation ic = (ConstraintViolation) found.iterator().next();
         assertEquals("addresses[0].country.name", ic.getPropertyPath());
     }
 
@@ -96,7 +96,7 @@ public class ValidationTest extends TestCase {
         adr.setCity("Trinidad");
         a.getAddresses().add(adr);
 
-        Set<InvalidConstraint<Author>> constraints = getValidator(Author.class).validate(a);
+        Set<ConstraintViolation<Author>> constraints = getValidator(Author.class).validate(a);
         assertTrue(!constraints.isEmpty());
 
         assertPropertyPath("addresses[0].country", constraints);
@@ -105,8 +105,8 @@ public class ValidationTest extends TestCase {
     }
 
     private <T> void assertPropertyPath(String propertyPath,
-                                        Set<InvalidConstraint<T>> constraints) {
-        for (InvalidConstraint each : constraints) {
+                                        Set<ConstraintViolation<T>> constraints) {
+        for (ConstraintViolation each : constraints) {
             if (each.getPropertyPath().equals(propertyPath)) return;
         }
         fail(propertyPath + " not found in " + constraints);
@@ -121,7 +121,7 @@ public class ValidationTest extends TestCase {
         RecursiveFoo foo2 = new RecursiveFoo();
         foo11.getFoos().add(foo2);
 
-        Set<InvalidConstraint<RecursiveFoo>> constraints =
+        Set<ConstraintViolation<RecursiveFoo>> constraints =
                 getValidator(RecursiveFoo.class).validate(foo1);
         assertPropertyPath("foos[0].foos[0].foos", constraints);
         assertPropertyPath("foos[1].foos", constraints);
@@ -151,36 +151,36 @@ public class ValidationTest extends TestCase {
         Book book = new Book();
         book.setTitle("");
         book.setAuthor(author);
-        Set<InvalidConstraint> invalidConstraints = validator.validate(book);
+        Set<ConstraintViolation> ConstraintViolations = validator.validate(book);
         //assuming an english locale, the interpolated message is returned
-        for (InvalidConstraint invalidConstraint : invalidConstraints) {
-            if (invalidConstraint.getBeanClass() == Book.class) {
-                assertTrue("may not be null or empty".equals(invalidConstraint.getMessage()));
-                assertTrue(book == invalidConstraint.getRootBean());
-                assertTrue(Book.class.equals(invalidConstraint.getBeanClass()));
+        for (ConstraintViolation ConstraintViolation : ConstraintViolations) {
+            if (ConstraintViolation.getBeanClass() == Book.class) {
+                assertTrue("may not be null or empty".equals(ConstraintViolation.getMessage()));
+                assertTrue(book == ConstraintViolation.getRootBean());
+                assertTrue(Book.class.equals(ConstraintViolation.getBeanClass()));
                 //the offending value
-                assertTrue(book.getTitle().equals(invalidConstraint.getValue()));
+                assertTrue(book.getTitle().equals(ConstraintViolation.getValue()));
                 //the offending property
-                assertTrue("title".equals(invalidConstraint.getPropertyPath()));
-                assertTrue(invalidConstraint.getGroups().size() == 1);
+                assertTrue("title".equals(ConstraintViolation.getPropertyPath()));
+                assertTrue(ConstraintViolation.getGroups().size() == 1);
                 List expectedGroups = new ArrayList(1);
                 expectedGroups.add("first");
 
-                Set<String> gs = invalidConstraint.getGroups();
+                Set<String> gs = ConstraintViolation.getGroups();
                 for (String group : gs) {
                     assertTrue(expectedGroups.contains(group));
                 }
             }
 
-            if (invalidConstraint.getBeanClass() == Author.class) {
-                // The second failure, NotEmpty on the author's lastname, will produce the following InvalidConstraint object:
-                assertTrue("may not be null or empty".equals(invalidConstraint.getMessage()));
-                assertTrue(book == invalidConstraint.getRootBean());
-                assertTrue(Author.class == invalidConstraint.getBeanClass());
+            if (ConstraintViolation.getBeanClass() == Author.class) {
+                // The second failure, NotEmpty on the author's lastname, will produce the following ConstraintViolation object:
+                assertTrue("may not be null or empty".equals(ConstraintViolation.getMessage()));
+                assertTrue(book == ConstraintViolation.getRootBean());
+                assertTrue(Author.class == ConstraintViolation.getBeanClass());
                 //the offending value
-                assertTrue(book.getAuthor().getLastName() == invalidConstraint.getValue());
+                assertTrue(book.getAuthor().getLastName() == ConstraintViolation.getValue());
                 //the offending property
-                assertTrue("author.lastName".equals(invalidConstraint.getPropertyPath()));
+                assertTrue("author.lastName".equals(ConstraintViolation.getPropertyPath()));
             }
         }
     }
@@ -198,9 +198,9 @@ public class ValidationTest extends TestCase {
         ad.setCountry(new Country());
         ad.getCountry().setName("something");
         Validator<Address> v = getValidator(Address.class);
-        Set<InvalidConstraint<Address>> violations = v.validate(ad);
+        Set<ConstraintViolation<Address>> violations = v.validate(ad);
         assertEquals(2, violations.size());
-        for (InvalidConstraint each : violations) {
+        for (ConstraintViolation each : violations) {
             assertTrue(each.getMessage().endsWith(" not OK"));
         }
     }
@@ -218,7 +218,7 @@ public class ValidationTest extends TestCase {
         adr.setCountry(country);
         country.setISO2Code("too_long");
 
-        Set<InvalidConstraint<Author>> iv =
+        Set<ConstraintViolation<Author>> iv =
                 v.validateProperty(author, propPath);
         assertEquals(1, iv.size());
         country.setISO2Code("23");
@@ -235,36 +235,36 @@ public class ValidationTest extends TestCase {
         Validator bookValidator = getValidator(Book.class);
 
         assertTrue(bookValidator.hasConstraints());
-        ElementDescriptor bookBeanDescriptor = bookValidator.getConstraintsForBean();
+        BeanDescriptor bookBeanDescriptor = bookValidator.getConstraintsForBean();
 //        assertTrue(bookBeanDescriptor.getElementType() == ElementType.TYPE);
         assertTrue(bookBeanDescriptor.getConstraintDescriptors().size() == 0); //no constraint
-        assertTrue("".equals(bookBeanDescriptor.getPropertyPath())); //root element
+//        assertTrue("".equals(bookBeanDescriptor.getPropertyPath())); //root element
         //more specifically "author" and "title"
-        assertTrue(bookValidator.getValidatedProperties().length == 3);
+        assertTrue(bookValidator.getValidatedProperties().size()== 3);
         //not a property
         assertTrue(bookValidator.getConstraintsForProperty("doesNotExist") == null);
         //property with no constraint
         assertTrue(bookValidator.getConstraintsForProperty("description") == null);
-        ElementDescriptor propertyDescriptor = bookValidator.getConstraintsForProperty("title");
+        PropertyDescriptor propertyDescriptor = bookValidator.getConstraintsForProperty("title");
 //        assertTrue(propertyDescriptor.getElementType() == ElementType.METHOD);
         assertTrue(propertyDescriptor.getConstraintDescriptors().size() == 1);
-        assertTrue("title".equals(propertyDescriptor.getPropertyPath()));
+        assertTrue("title".equals(propertyDescriptor.getPropertyName()));
         //assuming the implementation returns the NotEmpty constraint first
         ConstraintDescriptor constraintDescriptor = propertyDescriptor.getConstraintDescriptors()
                 .iterator().next();
         assertTrue(constraintDescriptor.getAnnotation().annotationType().equals(NotEmpty.class));
         assertTrue(constraintDescriptor.getGroups().size() == 1); //"first"
         assertTrue(
-                constraintDescriptor.getContstraintClass().equals(NotEmptyConstraint.class));
+                constraintDescriptor.getConstraintClass().equals(NotEmptyConstraint.class));
         StandardConstraint standardConstraint =
                 (StandardConstraint) ((ConstraintValidation) constraintDescriptor).
                         getConstraintImplementation();
         //@NotEmpty cannot be null
         assertTrue(!standardConstraint.getStandardConstraints().getNullability());
         //assuming the implementation returns the Length constraint first
-        bookBeanDescriptor = bookValidator.getConstraintsForProperty("subtitle");
+        propertyDescriptor = bookValidator.getConstraintsForProperty("subtitle");
         Iterator<ConstraintDescriptor> iterator =
-                bookBeanDescriptor.getConstraintDescriptors().iterator();
+                propertyDescriptor.getConstraintDescriptors().iterator();
         constraintDescriptor = iterator.next();
         assertTrue(constraintDescriptor.getAnnotation().annotationType().equals(Length.class));
         assertTrue(((Integer) constraintDescriptor.getParameters().get("max")) == 30);

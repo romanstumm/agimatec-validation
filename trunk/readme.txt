@@ -18,8 +18,17 @@ Requirements:
    You need to download and install maven2 from: http://maven.apache.org/
 2. Invoke maven2 from within the directory of the pom.xml file
 
-compile project:
-----------------
+When building the project from source, you need the compatible version validation-api.jar:
+
+Check out the reference implementation and build it first:
+svn checkout http://anonsvn.jboss.org/repos/hibernate/validator/trunk ri
+cd ri
+mvn clean install -Dmaven.test.skip=true
+
+[There is not yet a public maven repository to get the artifact of validation-api from.]
+
+compile agimatec-validation project:
+------------------------------------
 mvn install
 
 (artifacts are generated into the target directory)

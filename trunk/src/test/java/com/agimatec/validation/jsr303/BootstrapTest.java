@@ -76,8 +76,8 @@ public class BootstrapTest extends TestCase {
         Customer customer = new Customer();
         customer.setFirstName("John");
 
-        Set<InvalidConstraint<Customer>> invalidConstraints = validator.validate(customer);
-        assertFalse(invalidConstraints.isEmpty());
+        Set<ConstraintViolation<Customer>> ConstraintViolations = validator.validate(customer);
+        assertFalse(ConstraintViolations.isEmpty());
 
         builder = Validation.getValidatorBuilder();
         builder.constraintFactory(
@@ -92,9 +92,9 @@ public class BootstrapTest extends TestCase {
         );
         factory = builder.build();
         validator = factory.getValidator(Customer.class);
-        Set<InvalidConstraint<Customer>> invalidConstraints2 = validator.validate(customer);
+        Set<ConstraintViolation<Customer>> ConstraintViolations2 = validator.validate(customer);
         assertTrue("Wrong number of constraints",
-                invalidConstraints.size() > invalidConstraints2.size());
+                ConstraintViolations.size() > ConstraintViolations2.size());
     }
 
     public void testCustomResolverAndType() {

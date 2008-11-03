@@ -5,8 +5,9 @@ import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.MetaProperty;
 import com.agimatec.validation.model.Validation;
 
-import javax.validation.ElementDescriptor;
-import javax.validation.InvalidConstraint;
+import javax.validation.BeanDescriptor;
+import javax.validation.ConstraintViolation;
+import javax.validation.PropertyDescriptor;
 import javax.validation.Validator;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -56,7 +57,7 @@ public class ClassValidator<T> implements Validator<T> {
     }
 
     /** validate all constraints on object */
-    public Set<InvalidConstraint<T>> validate(T object, String... groups) {
+    public Set<ConstraintViolation<T>> validate(T object, String... groups) {
         if (object == null) throw new IllegalArgumentException("cannot validate null");
         GroupValidationContext context = createContext(object, groups);
         ConstraintValidationListener result = (ConstraintValidationListener) context.getListener();
@@ -71,7 +72,7 @@ public class ClassValidator<T> implements Validator<T> {
              */
             if (!result.isEmpty()) break;
         }
-        return result.getInvalidConstraints();
+        return result.getConstaintViolations();
     }
 
     /**
@@ -79,7 +80,7 @@ public class ClassValidator<T> implements Validator<T> {
      *
      * @param propertyName - the attribute name, or nested property name (e.g. prop[2].subpropA.subpropB)
      */
-    public Set<InvalidConstraint<T>> validateProperty(T object, String propertyName,
+    public Set<ConstraintViolation<T>> validateProperty(T object, String propertyName,
                                                       String... groups) {
         if (object == null) throw new IllegalArgumentException("cannot validate null");
         GroupValidationContext context = createContext(object, groups);
@@ -104,7 +105,7 @@ public class ClassValidator<T> implements Validator<T> {
              */
             if (!result.isEmpty()) break;
         }
-        return result.getInvalidConstraints();
+        return result.getConstaintViolations();
     }
 
     /**
@@ -123,7 +124,7 @@ public class ClassValidator<T> implements Validator<T> {
      * validate all constraints on <code>propertyName</code> property
      * if the property value is <code>value</code>
      */
-    public Set<InvalidConstraint<T>> validateValue(String propertyName, Object value,
+    public Set<ConstraintViolation<T>> validateValue(String propertyName, Object value,
                                                    String... groups) {
         GroupValidationContext context = createContext(null, groups);
         ConstraintValidationListener result = (ConstraintValidationListener) context.getListener();
@@ -140,7 +141,7 @@ public class ClassValidator<T> implements Validator<T> {
              */
             if (!result.isEmpty()) break;
         }
-        return result.getInvalidConstraints();
+        return result.getConstaintViolations();
     }
 
     protected GroupValidationContext createContext(T object,
@@ -169,7 +170,7 @@ public class ClassValidator<T> implements Validator<T> {
         return false;
     }
 
-    public ElementDescriptor getConstraintsForBean() {
+    public BeanDescriptor getConstraintsForBean() {
         if (elementDescriptor == null) {
             ElementDescriptorImpl edesc = new ElementDescriptorImpl();
 //            edesc.setElementType(ElementType.TYPE);
@@ -196,7 +197,7 @@ public class ClassValidator<T> implements Validator<T> {
         }
     }
 
-    public ElementDescriptor getConstraintsForProperty(String propertyName) {
+    public PropertyDescriptor getConstraintsForProperty(String propertyName) {
         MetaProperty prop = metaBean.getProperty(propertyName);
         if (prop == null) return null;
         ElementDescriptorImpl edesc = prop.getFeature(Jsr303Features.Property.ElementDescriptor);
@@ -220,7 +221,7 @@ public class ClassValidator<T> implements Validator<T> {
     }
 
     /** @return return the property names having at least a constraint defined */
-    public String[] getValidatedProperties() {
+    public Set<String> getValidatedProperties() {
         Set<String> validatedProperties = new HashSet();
         for (MetaProperty prop : metaBean.getProperties()) {
             if (prop.getValidations().length > 0 || (prop.getMetaBean() != null &&
@@ -228,6 +229,6 @@ public class ClassValidator<T> implements Validator<T> {
                 validatedProperties.add(prop.getName());
             }
         }
-        return validatedProperties.toArray(new String[validatedProperties.size()]);
+        return validatedProperties; /*.toArray(new String[validatedProperties.size()]);*/
     }
 }

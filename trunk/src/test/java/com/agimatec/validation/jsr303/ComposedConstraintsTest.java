@@ -25,7 +25,7 @@ public class ComposedConstraintsTest extends TestCase {
         ElementDescriptor ed = addressValidator.getConstraintsForProperty("zipCode");
         assertEquals(1, ed.getConstraintDescriptors().size());
         for (ConstraintDescriptor cd : ed.getConstraintDescriptors()) {
-            assertTrue(cd.isReportAsSingleInvalidConstraint());
+            assertTrue(cd.ReportAsViolationFromComposingConstraint());
             assertEquals(3, cd.getComposingConstraints().size());
             System.out.println("params: " + cd.getParameters());
             assertTrue("no composing constraints found!!",
@@ -48,12 +48,12 @@ public class ComposedConstraintsTest extends TestCase {
     public void testValidateComposed() {
         FrenchAddress adr = new FrenchAddress();
         Validator<FrenchAddress> val = factory.getValidator(FrenchAddress.class);
-        Set<InvalidConstraint<FrenchAddress>> findings = val.validate(adr);
-        assertEquals(1, findings.size()); // with @ReportAsSingleInvalidConstraint
+        Set<ConstraintViolation<FrenchAddress>> findings = val.validate(adr);
+        assertEquals(1, findings.size()); // with @ReportAsSingleConstraintViolation
 
-//        assertEquals(3, findings.size()); // without @ReportAsSingleInvalidConstraint
+//        assertEquals(3, findings.size()); // without @ReportAsSingleConstraintViolation
         
-        InvalidConstraint<FrenchAddress> finding = findings.iterator().next();
+        ConstraintViolation<FrenchAddress> finding = findings.iterator().next();
         assertEquals("Wrong zipcode", finding.getMessage());
 
         adr.setZipCode("12345");

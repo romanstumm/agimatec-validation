@@ -47,7 +47,15 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
                         ReportAsSingleInvalidConstraint.class);
     }
 
+    /**
+     * @deprecated remove when spec is stable
+     * @return
+     */
     public boolean isReportAsSingleInvalidConstraint() {
+        return reportAsSingleInvalidConstraint;
+    }
+
+    public boolean ReportAsViolationFromComposingConstraint() {
         return reportAsSingleInvalidConstraint;
     }
 
@@ -97,7 +105,7 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
                 gctx.setListener(oldListener);
             }
             // stop validating when already failed and ReportAsSingleInvalidConstraint = true ?
-            if(!listener.getInvalidConstraints().isEmpty()) {
+            if(!listener.getConstaintViolations().isEmpty()) {
                 // enhancement: how should the composed constraint error report look like?
                 ContextImpl jsrContext = new ContextImpl(context, this);
                 addErrors(context, messageResolver, value, jsrContext); // add defaultErrorMessage only

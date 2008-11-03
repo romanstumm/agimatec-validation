@@ -6,12 +6,8 @@ import com.agimatec.validation.jsr303.example.Address;
 import com.agimatec.validation.jsr303.example.Book;
 import com.agimatec.validation.jsr303.example.Engine;
 import junit.framework.TestCase;
-import org.apache.commons.lang.ArrayUtils;
 
-import javax.validation.ConstraintDescriptor;
-import javax.validation.ElementDescriptor;
-import javax.validation.InvalidConstraint;
-import javax.validation.Validator;
+import javax.validation.*;
 import java.util.Set;
 
 /**
@@ -32,7 +28,7 @@ public class Jsr303Test extends TestCase {
 
         BusinessObject object = new BusinessObject();
         object.setTitle("1234567834567 too long title ");
-        Set<InvalidConstraint<BusinessObject>> violations = validator.validate(object);
+        Set<ConstraintViolation<BusinessObject>> violations = validator.validate(object);
         assertNotNull(violations);
         assertTrue(!violations.isEmpty());
 
@@ -51,17 +47,17 @@ public class Jsr303Test extends TestCase {
         Validator<Book> validator = getValidator(Book.class);
         assertNotNull(validator.getConstraintsForBean());
         assertTrue(validator.getConstraintsForBean() == validator.getConstraintsForBean());
-        ElementDescriptor bc = validator.getConstraintsForBean();
+        BeanDescriptor bc = validator.getConstraintsForBean();
 //        assertEquals(ElementType.TYPE, bc.getElementType());
         assertEquals(Book.class, bc.getType());
-        assertEquals(false, bc.isCascaded());
-        assertEquals("", bc.getPropertyPath());
+//        assertEquals(false, bc.isCascaded());
+//        assertEquals("", bc.getPropertyPath());
         assertTrue(bc.getConstraintDescriptors() != null);
     }
 
     public void testMetadataAPI_Engine() {
         Validator validator = getValidator(Engine.class);
-        assertTrue(ArrayUtils.contains(validator.getValidatedProperties(), "serialNumber"));
+        assertTrue(validator.getValidatedProperties().contains("serialNumber"));
         ElementDescriptor desc = validator.getConstraintsForProperty("serialNumber");
 //        assertEquals(ElementType.FIELD, desc.getElementType());
         assertEquals(String.class, desc.getType());
@@ -71,19 +67,19 @@ public class Jsr303Test extends TestCase {
         Validator validator = getValidator(Address.class);
         assertFalse(validator.getConstraintsForBean().getConstraintDescriptors().isEmpty());
 
-        String[] props = validator.getValidatedProperties();
-        assertTrue(ArrayUtils.contains(props, "addressline1")); // annotated at field level
-        assertTrue(ArrayUtils.contains(props, "addressline2"));
-        assertTrue(ArrayUtils.contains(props, "zipCode"));
-        assertTrue(ArrayUtils.contains(props, "country"));
-        assertTrue(ArrayUtils.contains(props, "city"));       // annotated at method level
-        assertEquals(5, props.length);
+        Set<String> props = validator.getValidatedProperties();
+        assertTrue(props.contains("addressline1")); // annotated at field level
+        assertTrue(props.contains("addressline2"));
+        assertTrue(props.contains("zipCode"));
+        assertTrue(props.contains("country"));
+        assertTrue(props.contains("city"));       // annotated at method level
+        assertEquals(5, props.size());
 
         ElementDescriptor desc = validator.getConstraintsForProperty("addressline1");
         assertNotNull(desc);
         boolean found = false;
         for (ConstraintDescriptor each : desc.getConstraintDescriptors()) {
-            if (each.getContstraintClass().equals(LengthConstraint.class)) {
+            if (each.getConstraintClass().equals(LengthConstraint.class)) {
                 assertTrue(each.getParameters().containsKey("max"));
                 assertEquals(30, each.getParameters().get("max"));
                 found = true;

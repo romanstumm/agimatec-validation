@@ -2,7 +2,6 @@ package com.agimatec.validation.jsr303;
 
 import javax.validation.BeanDescriptor;
 import javax.validation.ConstraintDescriptor;
-import javax.validation.ElementDescriptor;
 import javax.validation.PropertyDescriptor;
 import java.util.List;
 
@@ -13,7 +12,7 @@ import java.util.List;
  * Time: 12:23:45 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-class ElementDescriptorImpl implements ElementDescriptor, BeanDescriptor, PropertyDescriptor {
+class ElementDescriptorImpl implements BeanDescriptor, PropertyDescriptor {
     //    private ElementType elementType;
     private Class returnType;
     private boolean cascaded;

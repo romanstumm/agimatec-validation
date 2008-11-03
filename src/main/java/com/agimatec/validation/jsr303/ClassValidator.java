@@ -175,11 +175,14 @@ public class ClassValidator<T> implements Validator<T> {
             ElementDescriptorImpl edesc = new ElementDescriptorImpl();
 //            edesc.setElementType(ElementType.TYPE);
             edesc.setReturnType(metaBean.getBeanClass());
-            edesc.setCascaded(false);
+            ////////////// BEGIN: code to delete ///////////
             /**
+             * enhancement: this can most likely be deleted (also from the spec)
              * if the constraint is a class level constraint, then the empty string is used
              */
             edesc.setPropertyPath("");
+//            edesc.setCascaded(false);
+            /////////////// END: code to delete ////////////////
             createConstraintDescriptors(edesc, metaBean.getValidations());
             elementDescriptor = edesc;
         }

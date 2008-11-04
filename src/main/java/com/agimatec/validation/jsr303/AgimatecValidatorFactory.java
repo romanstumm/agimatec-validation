@@ -26,7 +26,7 @@ public class AgimatecValidatorFactory implements ValidatorFactory {
         if (DEFAULT_FACTORY == null) {
             AgimatecValidationProvider provider = new AgimatecValidationProvider();
             DEFAULT_FACTORY =
-                    provider.buildValidatorFactory(new ValidatorBuilderImpl(null, provider));
+                    provider.buildValidatorFactory(new FactoryBuilderImpl(null, provider));
         }
         return DEFAULT_FACTORY;
     }

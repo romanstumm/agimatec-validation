@@ -31,13 +31,13 @@ public class BootstrapTest extends TestCase {
 
     public void testEverydayBootstrap() {
         AgimatecValidatorFactory factory =
-                (AgimatecValidatorFactory) Validation.getValidatorBuilder().build();
+                (AgimatecValidatorFactory) Validation.getBuilder().build();
         Validator<Address> validator = factory.getValidator(Address.class);
         assertNotNull(validator);
 
         // each call to Validation.getValidationBuilder() returns a new builder with new state
         AgimatecValidatorFactory factory2 =
-                (AgimatecValidatorFactory) Validation.getValidatorBuilder().build();
+                (AgimatecValidatorFactory) Validation.getBuilder().build();
         assertTrue(factory2 != factory);
         assertTrue(factory2.getBeanValidator() != factory.getBeanValidator());
         assertTrue(factory2.getMetaBeanManager() != factory.getMetaBeanManager());
@@ -46,7 +46,7 @@ public class BootstrapTest extends TestCase {
     }
 
     public void testLocalizedMessageResolverFactory() {
-        ValidatorBuilder<?> builder = Validation.getValidatorBuilder();
+        ValidatorFactoryBuilder<?> builder = Validation.getBuilder();
         // changing the builder allows to create different factories
         DefaultMessageResolver messageResolverImpl = new DefaultMessageResolver();
         messageResolverImpl.setLocale(Locale.ENGLISH);
@@ -67,7 +67,7 @@ public class BootstrapTest extends TestCase {
 
     public void testCustomConstraintFactory() {
 
-        ValidatorBuilder<?> builder = Validation.getValidatorBuilder();
+        ValidatorFactoryBuilder<?> builder = Validation.getBuilder();
         assertDefaultBuilderAndFactory(builder);
 
         ValidatorFactory factory = builder.build();
@@ -79,7 +79,7 @@ public class BootstrapTest extends TestCase {
         Set<ConstraintViolation<Customer>> ConstraintViolations = validator.validate(customer);
         assertFalse(ConstraintViolations.isEmpty());
 
-        builder = Validation.getValidatorBuilder();
+        builder = Validation.getBuilder();
         builder.constraintFactory(
                 new ConstraintFactory() {
                     public <T extends Constraint> T getInstance(Class<T> key) {
@@ -107,10 +107,10 @@ public class BootstrapTest extends TestCase {
             }
         };
 
-        AgimatecValidatorBuilder builder = Validation
-                .builderType(AgimatecValidatorBuilder.class)
+        AgimatecValidatorFactoryBuilder builder = Validation
+                .builderType(AgimatecValidatorFactoryBuilder.class)
                 .providerResolver(resolver)
-                .getValidatorBuilder();
+                .getBuilder();
         assertDefaultBuilderAndFactory(builder);
     }
 
@@ -124,16 +124,16 @@ public class BootstrapTest extends TestCase {
             }
         };
 
-        ValidatorBuilder<?> builder = Validation
+        ValidatorFactoryBuilder<?> builder = Validation
                 .defineBootstrapState()
                 .providerResolver(resolver)
-                .getValidatorBuilder();
+                .getBuilder();
         assertDefaultBuilderAndFactory(builder);
     }
 
-    private void assertDefaultBuilderAndFactory(ValidatorBuilder builder) {
+    private void assertDefaultBuilderAndFactory(ValidatorFactoryBuilder builder) {
         assertNotNull(builder);
-        assertTrue(builder instanceof ValidatorBuilderImpl);
+        assertTrue(builder instanceof FactoryBuilderImpl);
 
         ValidatorFactory factory = builder.build();
         assertNotNull(factory);
@@ -148,21 +148,21 @@ public class BootstrapTest extends TestCase {
             }
         };
 
-        SpecializedBuilderFactory<AgimatecValidatorBuilder> type =
-                Validation.builderType(AgimatecValidatorBuilder.class);
+        SpecializedBuilderFactory<AgimatecValidatorFactoryBuilder> type =
+                Validation.builderType(AgimatecValidatorFactoryBuilder.class);
 
-        final SpecializedBuilderFactory<AgimatecValidatorBuilder> specializedBuilderFactory =
+        final SpecializedBuilderFactory<AgimatecValidatorFactoryBuilder> specializedBuilderFactory =
                 type.providerResolver(resolver);
 
         try {
-            specializedBuilderFactory.getValidatorBuilder();
+            specializedBuilderFactory.getBuilder();
             fail();
         }
         catch (ValidationException e) {
             assertEquals(
                     "Wrong error message",
                     "Unable to find provider: interface " +
-                            AgimatecValidatorBuilder.class.getName(),
+                            AgimatecValidatorFactoryBuilder.class.getName(),
                     e.getMessage()
             );
         }
@@ -170,7 +170,7 @@ public class BootstrapTest extends TestCase {
 
     class BadlyBehavedNotNullConstraint extends NotNullConstraint {
         @Override
-        public boolean isValid(Object object, Context context) {
+        public boolean isValid(Object object, ConstraintContext context) {
             return true;
         }
     }

@@ -3,7 +3,7 @@ package com.agimatec.validation.constraints;
 import javax.validation.ConstraintValidator;
 import javax.validation.OverridesParameter;
 import javax.validation.OverridesParameters;
-import javax.validation.ReportAsViolationFromComposingConstraint;
+import javax.validation.ReportAsViolationFromCompositeConstraint;
 import java.lang.annotation.Documented;
 import static java.lang.annotation.ElementType.*;
 import java.lang.annotation.Retention;
@@ -21,7 +21,7 @@ import java.lang.annotation.Target;
 @NotNull
 @Length(min = 4, max = 5, message = "Zipcode should be of size {value}")
 @ConstraintValidator(FrenchZipcodeValidator.class)
-@ReportAsViolationFromComposingConstraint
+@ReportAsViolationFromCompositeConstraint
 @Documented
 @Target({ANNOTATION_TYPE, METHOD, FIELD})
 @Retention(RUNTIME)

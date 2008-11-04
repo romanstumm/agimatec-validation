@@ -1,9 +1,9 @@
 package com.agimatec.validation.constraints;
 
 import javax.validation.Constraint;
-import javax.validation.Context;
-import javax.validation.StandardConstraint;
-import javax.validation.StandardConstraintDescriptor;
+import javax.validation.ConstraintContext;
+//import javax.validation.StandardConstraint;
+//import javax.validation.StandardConstraintDescriptor;
 
 /**
  * <pre>
@@ -12,7 +12,7 @@ import javax.validation.StandardConstraintDescriptor;
  * </pre>
  * Check that a string length is between min and max
  */
-public class LengthConstraint implements Constraint<Length>, StandardConstraint {
+public class LengthConstraint implements Constraint<Length>/*, StandardConstraint */{
     private int min;
     private int max;
 
@@ -33,7 +33,7 @@ public class LengthConstraint implements Constraint<Length>, StandardConstraint 
      *
      * @throws IllegalArgumentException if the object is not of type String
      */
-    public boolean isValid(Object value, Context context) {
+    public boolean isValid(Object value, ConstraintContext context) {
         if (value == null) return true;
         if (!(value instanceof String)) {
             throw new IllegalArgumentException("Expected String type");
@@ -44,7 +44,7 @@ public class LengthConstraint implements Constraint<Length>, StandardConstraint 
     }
 
     /** Returns the standard constraint descriptor in accordance with the max constraint */
-    public StandardConstraintDescriptor getStandardConstraints() {
+   /* public StandardConstraintDescriptor getStandardConstraints() {
         return new StandardConstraintDescriptor() {
             public Integer getLength() {
                 if (max == Integer.MAX_VALUE) {
@@ -54,5 +54,5 @@ public class LengthConstraint implements Constraint<Length>, StandardConstraint 
                 }
             }
         };
-    }
+    }*/
 }

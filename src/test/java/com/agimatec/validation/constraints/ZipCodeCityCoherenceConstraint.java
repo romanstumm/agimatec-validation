@@ -3,7 +3,7 @@ package com.agimatec.validation.constraints;
 import com.agimatec.validation.jsr303.example.Address;
 
 import javax.validation.Constraint;
-import javax.validation.Context;
+import javax.validation.ConstraintContext;
 
 /**
  * Description: Class not implemented! <br/>
@@ -15,7 +15,7 @@ public class ZipCodeCityCoherenceConstraint implements Constraint<ZipCodeCityCoh
     public void initialize(ZipCodeCityCoherenceChecker constraintAnnotation) {
     }
 
-    public boolean isValid(Object value, Context context) {
+    public boolean isValid(Object value, ConstraintContext context) {
         boolean r = true;
         Address adr = (Address) value;
         if ("error".equals(adr.getZipCode())) {

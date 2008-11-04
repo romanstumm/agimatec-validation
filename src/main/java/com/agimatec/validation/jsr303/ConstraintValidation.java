@@ -5,7 +5,10 @@ import com.agimatec.validation.ValidationResults;
 import com.agimatec.validation.model.Validation;
 import com.agimatec.validation.model.ValidationContext;
 
-import javax.validation.*;
+import javax.validation.Constraint;
+import javax.validation.ConstraintDescriptor;
+import javax.validation.MessageResolver;
+import javax.validation.ReportAsViolationFromCompositeConstraint;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
@@ -25,7 +28,7 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
     private final Annotation annotation; // for metadata request API
     private Set<ConstraintValidation> composedConstraints;
     private final Field field;
-    private boolean reportAsSingleInvalidConstraint;
+    private boolean reportFromComposite;
     private Map<String, Object> parameters;
 
     protected ConstraintValidation(Constraint constraint, String[] groupsArray,
@@ -39,23 +42,13 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
 
         this.annotation = annotation;
         this.field = element instanceof Field ? (Field) element : null;
-        this.reportAsSingleInvalidConstraint =
+        this.reportFromComposite =
                 annotation.annotationType().isAnnotationPresent(
-                        ReportAsSingleInvalidConstraint.class) ||
-                annotation.annotationType().isAnnotationPresent(
-                        ReportAsViolationFromComposingConstraint.class);
+                        ReportAsViolationFromCompositeConstraint.class);
     }
 
-    /**
-     * @deprecated remove when spec is stable
-     * @return
-     */
-    public boolean isReportAsSingleInvalidConstraint() {
-        return reportAsSingleInvalidConstraint;
-    }
-
-    public boolean ReportAsViolationFromComposingConstraint() {
-        return reportAsSingleInvalidConstraint;
+    public boolean isReportAsViolationFromCompositeConstraint() {
+        return reportFromComposite;
     }
 
     public void addComposed(ConstraintValidation aConstraintValidation) {
@@ -89,7 +82,7 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
         }
 
         // process composed constraints
-        if (isReportAsSingleInvalidConstraint()) {
+        if (isReportAsViolationFromCompositeConstraint()) {
             BeanValidationContext gctx = (BeanValidationContext) context;
             ConstraintValidationListener oldListener =
                     ((ConstraintValidationListener) gctx.getListener());
@@ -106,7 +99,7 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
             // stop validating when already failed and ReportAsSingleInvalidConstraint = true ?
             if(!listener.getConstaintViolations().isEmpty()) {
                 // enhancement: how should the composed constraint error report look like?
-                ContextImpl jsrContext = new ContextImpl(context, this);
+                ConstraintContextImpl jsrContext = new ConstraintContextImpl(context, this);
                 addErrors(context, messageResolver, value, jsrContext); // add defaultErrorMessage only
                 return;
             }
@@ -116,14 +109,14 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
             }
         }
 
-        ContextImpl jsrContext = new ContextImpl(context, this);
+        ConstraintContextImpl jsrContext = new ConstraintContextImpl(context, this);
         if (!constraint.isValid(value, jsrContext)) {
             addErrors(context, messageResolver, value, jsrContext);
         }
     }
 
     private void addErrors(ValidationContext context, MessageResolver messageResolver, Object value,
-                           ContextImpl jsrContext) {
+                           ConstraintContextImpl jsrContext) {
         if (messageResolver != null) {
             for (ValidationResults.Error each : jsrContext.getErrors()) {
                 context.getListener().addError(

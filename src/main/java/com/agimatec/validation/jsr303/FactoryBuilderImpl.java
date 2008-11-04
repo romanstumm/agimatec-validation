@@ -7,7 +7,7 @@ import javax.validation.*;
 import javax.validation.bootstrap.DefaultValidationProviderResolver;
 import javax.validation.spi.BootstrapState;
 import javax.validation.spi.ValidationProvider;
-import javax.validation.spi.ValidatorBuilderImplementor;
+import javax.validation.spi.ValidatorFactoryConfiguration;
 import java.io.InputStream;
 import java.util.List;
 
@@ -18,10 +18,10 @@ import java.util.List;
  * Time: 14:47:44 <br/>
  * Copyright: Agimatec GmbH
  */
-public class ValidatorBuilderImpl implements AgimatecValidatorBuilder, ValidatorBuilderImplementor {
+public class FactoryBuilderImpl implements AgimatecValidatorFactoryBuilder, ValidatorFactoryConfiguration {
     protected final ValidationProvider provider;
     protected final ValidationProviderResolver providerResolver;
-    protected Class<? extends ValidatorBuilder<?>> providerClass;
+    protected Class<? extends ValidatorFactoryBuilder<?>> providerClass;
 
     protected MessageResolver messageResolver;
     protected ConstraintFactory constraintFactory;
@@ -29,7 +29,7 @@ public class ValidatorBuilderImpl implements AgimatecValidatorBuilder, Validator
 
     private BeanValidator beanValidator;
 
-    public ValidatorBuilderImpl(BootstrapState aState, ValidationProvider aProvider) {
+    public FactoryBuilderImpl(BootstrapState aState, ValidationProvider aProvider) {
         if (aState != null) {
             this.provider = null;
             if (aState.getValidationProviderResolver() == null) {
@@ -52,22 +52,22 @@ public class ValidatorBuilderImpl implements AgimatecValidatorBuilder, Validator
         setBeanValidator(new BeanValidator());
     }
 
-    public ValidatorBuilderImpl messageResolver(MessageResolver resolver) {
+    public FactoryBuilderImpl messageResolver(MessageResolver resolver) {
         this.messageResolver = resolver;
         return this;
     }
 
-    public ValidatorBuilderImpl constraintFactory(ConstraintFactory constraintFactory) {
+    public FactoryBuilderImpl constraintFactory(ConstraintFactory constraintFactory) {
         setConstraintFactory(constraintFactory);
         return this;
     }
 
-    public AgimatecValidatorBuilder beanValidator(BeanValidator beanValidator) {
+    public AgimatecValidatorFactoryBuilder beanValidator(BeanValidator beanValidator) {
         setBeanValidator(beanValidator);
         return this;
     }
 
-    public AgimatecValidatorBuilder configure(InputStream stream) {
+    public AgimatecValidatorFactoryBuilder configure(InputStream stream) {
         configurationStream = stream;
         if (stream != null) {
             try {
@@ -135,7 +135,7 @@ public class ValidatorBuilderImpl implements AgimatecValidatorBuilder, Validator
     }
 
     /** used by XStream to set values from configuration file */
-    public void setProviderClass(Class<? extends ValidatorBuilder<?>> providerClass) {
+    public void setProviderClass(Class<? extends ValidatorFactoryBuilder<?>> providerClass) {
         this.providerClass = providerClass;
     }
 

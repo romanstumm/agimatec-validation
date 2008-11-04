@@ -1,7 +1,7 @@
 package com.agimatec.validation.constraints;
 
 import javax.validation.Constraint;
-import javax.validation.Context;
+import javax.validation.ConstraintContext;
 
 /**
  * <pre>
@@ -14,7 +14,7 @@ public class NotNullConstraint implements Constraint<NotNull> {
         // do nothing
     }
 
-    public boolean isValid(Object value, Context context) {
+    public boolean isValid(Object value, ConstraintContext context) {
         return value != null;
     }
 }

@@ -3,7 +3,7 @@ package com.agimatec.validation.constraints;
 import com.agimatec.validation.routines.EMailValidation;
 
 import javax.validation.Constraint;
-import javax.validation.Context;
+import javax.validation.ConstraintContext;
 
 /**
  * <p/>
@@ -21,7 +21,7 @@ import javax.validation.Context;
 public class EmailValidator implements Constraint<Email> {
     protected final EMailValidation validation = new EMailValidation();
 
-    public boolean isValid(Object value, Context context) {
+    public boolean isValid(Object value, ConstraintContext context) {
         return validation.isValid(value);
     }
 

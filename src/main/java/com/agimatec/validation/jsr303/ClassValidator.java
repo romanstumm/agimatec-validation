@@ -224,7 +224,7 @@ public class ClassValidator<T> implements Validator<T> {
     }
 
     /** @return return the property names having at least a constraint defined */
-    public Set<String> getValidatedProperties() {
+    public Set<String> getPropertiesWithConstraints() {
         Set<String> validatedProperties = new HashSet();
         for (MetaProperty prop : metaBean.getProperties()) {
             if (prop.getValidations().length > 0 || (prop.getMetaBean() != null &&

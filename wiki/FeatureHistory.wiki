@@ -1,5 +1,9 @@
 #summary Features and revision history
 
+*November 2008:
+The reference implementation and JSR303 specification is rapidly changing at the moment.
+Check out the svn-sources to get the code compatible with the current state of the validation-api.*
+
 V0.7: (Nov. 2008)
   * using javax.validation/validation-api from reference implementation
   * implementing proposed bootstrap APIs

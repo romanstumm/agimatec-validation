@@ -1,7 +1,7 @@
 package com.agimatec.validation.constraints;
 
 import javax.validation.Constraint;
-import javax.validation.Context;
+import javax.validation.ConstraintContext;
 
 /**
  * <pre>
@@ -16,7 +16,7 @@ public class PatternConstraint implements Constraint<Pattern> {
         pattern = java.util.regex.Pattern.compile(params.regex(), params.flags());
     }
 
-    public boolean isValid(Object ovalue, Context context) {
+    public boolean isValid(Object ovalue, ConstraintContext context) {
         if (ovalue == null) return true;
         if (!(ovalue instanceof String)) return false;
         final String value = (String) ovalue;

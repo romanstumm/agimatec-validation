@@ -1,7 +1,7 @@
 package com.agimatec.validation.constraints;
 
 import javax.validation.Constraint;
-import javax.validation.Context;
+import javax.validation.ConstraintContext;
 
 /**
  * Description: <br/>
@@ -15,7 +15,7 @@ public class FrenchZipcodeValidator implements Constraint<FrenchZipCode> {
         // do nothing
     }
 
-    public boolean isValid(Object object, Context validationContext) {
+    public boolean isValid(Object object, ConstraintContext validationContext) {
         if (null == object) {
             return false;  // do nothing
         }

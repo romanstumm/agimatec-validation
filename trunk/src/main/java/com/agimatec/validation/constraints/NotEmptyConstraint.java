@@ -1,9 +1,7 @@
 package com.agimatec.validation.constraints;
 
 import javax.validation.Constraint;
-import javax.validation.Context;
-import javax.validation.StandardConstraint;
-import javax.validation.StandardConstraintDescriptor;
+import javax.validation.ConstraintContext;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
@@ -15,12 +13,12 @@ import java.util.Map;
  * as soon as a final version of the specification contains a similar functionality.
  * </pre>
  */
-public class NotEmptyConstraint implements Constraint<NotEmpty>, StandardConstraint {
+public class NotEmptyConstraint implements Constraint<NotEmpty>/*, StandardConstraint */{
     public void initialize(NotEmpty constraintAnnotation) {
         // do nothing
     }
 
-    public boolean isValid(Object value, Context context) {
+    public boolean isValid(Object value, ConstraintContext context) {
         if (value == null) return false;
         if (value.getClass().isArray()) {
             return Array.getLength(value) > 0;
@@ -33,12 +31,12 @@ public class NotEmptyConstraint implements Constraint<NotEmpty>, StandardConstra
         }
     }
 
-    public StandardConstraintDescriptor getStandardConstraints() {
+/*    public StandardConstraintDescriptor getStandardConstraints() {
         return new StandardConstraintDescriptor() {
             @Override
             public Boolean getNullability() {
                 return false;
             }
         };
-    }
+    }*/
 }

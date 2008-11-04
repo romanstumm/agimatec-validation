@@ -3,10 +3,10 @@ package com.agimatec.validation.jsr303;
 import com.agimatec.validation.MetaBeanManager;
 
 import javax.validation.ValidationException;
-import javax.validation.ValidatorBuilder;
+import javax.validation.ValidatorFactoryBuilder;
 import javax.validation.spi.BootstrapState;
 import javax.validation.spi.ValidationProvider;
-import javax.validation.spi.ValidatorBuilderImplementor;
+import javax.validation.spi.ValidatorFactoryConfiguration;
 
 /**
  * Description: Implementation of {@link ValidationProvider} for jsr303 implementation of
@@ -17,26 +17,26 @@ import javax.validation.spi.ValidatorBuilderImplementor;
  * Copyright: Agimatec GmbH
  */
 public class AgimatecValidationProvider implements ValidationProvider {
-    public boolean isSuitable(Class<? extends ValidatorBuilder<?>> builderClass) {
-        return AgimatecValidatorBuilder.class == builderClass;
+    public boolean isSuitable(Class<? extends ValidatorFactoryBuilder<?>> builderClass) {
+        return AgimatecValidatorFactoryBuilder.class == builderClass;
     }
 
-    public <T extends ValidatorBuilder<T>> T createSpecializedValidatorBuilder(BootstrapState state,
-                                                                               Class<T> builderClass) {
-        try {
-            return builderClass.cast(new ValidatorBuilderImpl(null, this));
+    public <T extends ValidatorFactoryBuilder<T>> T createSpecializedValidatorFactoryBuilder(
+            BootstrapState state, Class<T> builderClass) {
+          try {
+            return builderClass.cast(new FactoryBuilderImpl(null, this));
         } catch (ClassCastException ex) {
             throw new ValidationException("provider not suitable: " + builderClass, ex);
         }
     }
 
-    public ValidatorBuilder<?> createGenericValidatorBuilder(BootstrapState state) {
-        return new ValidatorBuilderImpl(state, null);
+    public ValidatorFactoryBuilder<?> createGenericValidatorFactoryBuilder(BootstrapState state) {
+        return new FactoryBuilderImpl(state, null);
     }
 
     public AgimatecValidatorFactory buildValidatorFactory(
-            ValidatorBuilderImplementor configuration) {
-        ValidatorBuilderImpl builder = (ValidatorBuilderImpl) configuration;
+            ValidatorFactoryConfiguration configuration) {
+        FactoryBuilderImpl builder = (FactoryBuilderImpl) configuration;
         AgimatecValidatorFactory factory = new AgimatecValidatorFactory();
         MetaBeanManager metaBeanManager =
                 new MetaBeanManager(new AnnotationMetaBeanBuilder(builder.getConstraintFactory()));

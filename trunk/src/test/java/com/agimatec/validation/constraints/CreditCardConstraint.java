@@ -1,7 +1,7 @@
 package com.agimatec.validation.constraints;
 
 import javax.validation.Constraint;
-import javax.validation.Context;
+import javax.validation.ConstraintContext;
 
 /**
  * Description: <br/>
@@ -14,7 +14,7 @@ public class CreditCardConstraint implements Constraint<CreditCard> {
         // do nothing
     }
 
-    public boolean isValid(Object value, Context context) {
+    public boolean isValid(Object value, ConstraintContext context) {
         // TODO RSt - not implemented, just an example
         return true;
     }

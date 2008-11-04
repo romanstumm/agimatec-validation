@@ -3,7 +3,7 @@ package com.agimatec.validation.jsr303;
 import com.agimatec.validation.ValidationResults.Error;
 import com.agimatec.validation.model.ValidationContext;
 
-import javax.validation.Context;
+import javax.validation.ConstraintContext;
 import javax.validation.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,13 +15,13 @@ import java.util.List;
  * Time: 10:52:27 <br/>
  * Copyright: Agimatec GmbH
  */
-class ContextImpl implements Context {
+class ConstraintContextImpl implements ConstraintContext {
     protected final ValidationContext vContext;
     protected boolean defaultDisabled;
     protected final List<Error> errors;
     protected final ConstraintValidation validation;
 
-    ContextImpl(ValidationContext validationContext, ConstraintValidation aConstraintValidation) {
+    ConstraintContextImpl(ValidationContext validationContext, ConstraintValidation aConstraintValidation) {
         vContext = validationContext;
         errors = new ArrayList<Error>(5);
         validation = aConstraintValidation;

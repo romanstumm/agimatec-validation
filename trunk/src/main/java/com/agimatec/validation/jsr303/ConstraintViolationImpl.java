@@ -57,7 +57,7 @@ class ConstraintViolationImpl<T> implements ConstraintViolation {
     }
 
     /** The value failing to pass the constraint */
-    public Object getValue() {
+    public Object getInvalidValue() {
         return value;
     }
 

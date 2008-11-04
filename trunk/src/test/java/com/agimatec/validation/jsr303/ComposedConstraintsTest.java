@@ -17,7 +17,7 @@ import java.util.Set;
 public class ComposedConstraintsTest extends TestCase {
     static ValidatorFactory factory;
     static {
-        factory = Validation.getValidatorBuilder().build();
+        factory = Validation.getBuilder().build();
     }
 
     public void testMetaDataAPI_ComposedConstraints() {
@@ -25,7 +25,7 @@ public class ComposedConstraintsTest extends TestCase {
         ElementDescriptor ed = addressValidator.getConstraintsForProperty("zipCode");
         assertEquals(1, ed.getConstraintDescriptors().size());
         for (ConstraintDescriptor cd : ed.getConstraintDescriptors()) {
-            assertTrue(cd.ReportAsViolationFromComposingConstraint());
+            assertTrue(cd.isReportAsViolationFromCompositeConstraint());
             assertEquals(3, cd.getComposingConstraints().size());
             System.out.println("params: " + cd.getParameters());
             assertTrue("no composing constraints found!!",

@@ -159,7 +159,7 @@ public class ValidationTest extends TestCase {
                 assertTrue(book == ConstraintViolation.getRootBean());
                 assertTrue(Book.class.equals(ConstraintViolation.getBeanClass()));
                 //the offending value
-                assertTrue(book.getTitle().equals(ConstraintViolation.getValue()));
+                assertTrue(book.getTitle().equals(ConstraintViolation.getInvalidValue()));
                 //the offending property
                 assertTrue("title".equals(ConstraintViolation.getPropertyPath()));
                 assertTrue(ConstraintViolation.getGroups().size() == 1);
@@ -178,7 +178,7 @@ public class ValidationTest extends TestCase {
                 assertTrue(book == ConstraintViolation.getRootBean());
                 assertTrue(Author.class == ConstraintViolation.getBeanClass());
                 //the offending value
-                assertTrue(book.getAuthor().getLastName() == ConstraintViolation.getValue());
+                assertTrue(book.getAuthor().getLastName() == ConstraintViolation.getInvalidValue());
                 //the offending property
                 assertTrue("author.lastName".equals(ConstraintViolation.getPropertyPath()));
             }
@@ -240,7 +240,7 @@ public class ValidationTest extends TestCase {
         assertTrue(bookBeanDescriptor.getConstraintDescriptors().size() == 0); //no constraint
 //        assertTrue("".equals(bookBeanDescriptor.getPropertyPath())); //root element
         //more specifically "author" and "title"
-        assertTrue(bookValidator.getValidatedProperties().size()== 3);
+        assertTrue(bookValidator.getPropertiesWithConstraints().size()== 3);
         //not a property
         assertTrue(bookValidator.getConstraintsForProperty("doesNotExist") == null);
         //property with no constraint
@@ -256,11 +256,11 @@ public class ValidationTest extends TestCase {
         assertTrue(constraintDescriptor.getGroups().size() == 1); //"first"
         assertTrue(
                 constraintDescriptor.getConstraintClass().equals(NotEmptyConstraint.class));
-        StandardConstraint standardConstraint =
+      /*  StandardConstraint standardConstraint =
                 (StandardConstraint) ((ConstraintValidation) constraintDescriptor).
                         getConstraintImplementation();
         //@NotEmpty cannot be null
-        assertTrue(!standardConstraint.getStandardConstraints().getNullability());
+        assertTrue(!standardConstraint.getStandardConstraints().getNullability());*/
         //assuming the implementation returns the Length constraint first
         propertyDescriptor = bookValidator.getConstraintsForProperty("subtitle");
         Iterator<ConstraintDescriptor> iterator =

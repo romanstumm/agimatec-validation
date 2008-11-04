@@ -1,7 +1,7 @@
 package com.agimatec.validation.constraints;
 
 import javax.validation.Constraint;
-import javax.validation.Context;
+import javax.validation.ConstraintContext;
 
 /**
  * <pre>
@@ -16,7 +16,7 @@ public class MinConstraint implements Constraint<Min> {
         min = constraintAnnotation.value();
     }
 
-    public boolean isValid(Object value, Context context) {
+    public boolean isValid(Object value, ConstraintContext context) {
         return ((Number) value).intValue() >= min;
     }
 }

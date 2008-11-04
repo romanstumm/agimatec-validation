@@ -57,7 +57,7 @@ public class Jsr303Test extends TestCase {
 
     public void testMetadataAPI_Engine() {
         Validator validator = getValidator(Engine.class);
-        assertTrue(validator.getValidatedProperties().contains("serialNumber"));
+        assertTrue(validator.getPropertiesWithConstraints().contains("serialNumber"));
         ElementDescriptor desc = validator.getConstraintsForProperty("serialNumber");
 //        assertEquals(ElementType.FIELD, desc.getElementType());
         assertEquals(String.class, desc.getType());
@@ -67,7 +67,7 @@ public class Jsr303Test extends TestCase {
         Validator validator = getValidator(Address.class);
         assertFalse(validator.getConstraintsForBean().getConstraintDescriptors().isEmpty());
 
-        Set<String> props = validator.getValidatedProperties();
+        Set<String> props = validator.getPropertiesWithConstraints();
         assertTrue(props.contains("addressline1")); // annotated at field level
         assertTrue(props.contains("addressline2"));
         assertTrue(props.contains("zipCode"));

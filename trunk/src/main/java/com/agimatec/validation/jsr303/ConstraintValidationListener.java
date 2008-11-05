@@ -3,6 +3,7 @@ package com.agimatec.validation.jsr303;
 import com.agimatec.validation.model.ValidationContext;
 import com.agimatec.validation.model.ValidationListener;
 
+import javax.validation.ConstraintDescriptor;
 import javax.validation.ConstraintViolation;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,20 +31,22 @@ class ConstraintValidationListener<T> implements ValidationListener {
 
         final String propPath;
         final Set<String> groups;
-        if (context instanceof GroupBeanValidationContext) {
-            propPath = ((GroupBeanValidationContext) context).getPropertyPath();
+        final ConstraintDescriptor constraint;
+        if (context instanceof GroupValidationContext) {
+            propPath = ((GroupValidationContext) context).getPropertyPath();
             groups = new HashSet(1);
-            groups.add(((GroupBeanValidationContext) context).getCurrentGroup());
+            groups.add(((GroupValidationContext) context).getCurrentGroup());
+            constraint = ((GroupValidationContext) context).getCurrentConstraint();
         } else {
             propPath = context.getPropertyName();
-            groups = new HashSet(GroupBeanValidationContext.DEFAULT_GROUPS.length);
-            for (String each : GroupBeanValidationContext.DEFAULT_GROUPS) {
+            groups = new HashSet(GroupValidationContext.DEFAULT_GROUPS.length);
+            for (String each : GroupValidationContext.DEFAULT_GROUPS) {
                 groups.add(each);
             }
+            constraint = null;
         }
-
         ConstraintViolationImpl<T> ic = new ConstraintViolationImpl<T>(reason, rootBean, context.getBean(),
-                context.getMetaBean().getBeanClass(), propPath, value, groups);
+                context.getMetaBean().getBeanClass(), propPath, value, groups, constraint);
         constaintViolations.add(ic);
     }
 

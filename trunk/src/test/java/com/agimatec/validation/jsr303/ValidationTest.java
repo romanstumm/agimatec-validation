@@ -235,7 +235,7 @@ public class ValidationTest extends TestCase {
         Validator bookValidator = getValidator(Book.class);
 
         assertTrue(bookValidator.hasConstraints());
-        BeanDescriptor bookBeanDescriptor = bookValidator.getConstraintsForBean();
+        BeanDescriptor bookBeanDescriptor = bookValidator.getConstraintsForClass();
 //        assertTrue(bookBeanDescriptor.getElementType() == ElementType.TYPE);
         assertTrue(bookBeanDescriptor.getConstraintDescriptors().size() == 0); //no constraint
 //        assertTrue("".equals(bookBeanDescriptor.getPropertyPath())); //root element

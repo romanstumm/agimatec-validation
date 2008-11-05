@@ -36,7 +36,7 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
         this.constraint = constraint;
 
         groupsArray = (groupsArray == null || groupsArray.length == 0) ?
-                GroupBeanValidationContext.DEFAULT_GROUPS : groupsArray;
+                GroupValidationContext.DEFAULT_GROUPS : groupsArray;
         this.groups = new HashSet(groupsArray.length);
         this.groups.addAll(Arrays.asList(groupsArray));
 
@@ -64,8 +64,8 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
          * execute unless the given validation constraint has already been processed
          * during this validation routine (as part of a previous group match)
          */
-        if (context instanceof GroupBeanValidationContext) {
-            GroupBeanValidationContext groupContext = (GroupBeanValidationContext) context;
+        if (context instanceof GroupValidationContext) {
+            GroupValidationContext groupContext = (GroupValidationContext) context;
             if (!isMemberOf(groupContext.getCurrentGroup())) {
                 return; // do not validate in the current group
             }
@@ -117,6 +117,7 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
 
     private void addErrors(ValidationContext context, MessageResolver messageResolver, Object value,
                            ConstraintContextImpl jsrContext) {
+        ((GroupValidationContext)context).setCurrentConstraint(this);
         if (messageResolver != null) {
             for (ValidationResults.Error each : jsrContext.getErrors()) {
                 context.getListener().addError(

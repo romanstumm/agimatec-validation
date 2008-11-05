@@ -6,6 +6,7 @@ import com.agimatec.validation.model.MetaProperty;
 import com.agimatec.validation.model.ValidationListener;
 
 import javax.validation.Constraint;
+import javax.validation.ConstraintDescriptor;
 import javax.validation.MessageResolver;
 import java.util.*;
 
@@ -16,7 +17,7 @@ import java.util.*;
  * Time: 16:32:35 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-class GroupBeanValidationContext extends BeanValidationContext
+class GroupValidationContextImpl extends BeanValidationContext
         implements GroupValidationContext {
 
     private final MessageResolver messageResolver;
@@ -31,9 +32,10 @@ class GroupBeanValidationContext extends BeanValidationContext
      */
     private IdentityHashMap<Object, IdentityHashMap<Constraint, Object>> validatedConstraints =
             new IdentityHashMap();
+    private ConstraintDescriptor currentConstraint;
 
 
-    public GroupBeanValidationContext(ValidationListener listener,
+    public GroupValidationContextImpl(ValidationListener listener,
                                       MessageResolver aMessageResolver) {
         super(listener);
         this.messageResolver = aMessageResolver;
@@ -175,6 +177,14 @@ class GroupBeanValidationContext extends BeanValidationContext
 
     public void setCurrentGroup(String currentGroup) {
         this.currentGroup = currentGroup;
+    }
+
+    public void setCurrentConstraint(ConstraintDescriptor constraint) {
+        currentConstraint = constraint;
+    }
+
+    public ConstraintDescriptor getCurrentConstraint() {
+        return currentConstraint;
     }
 
     public MessageResolver getMessageResolver() {

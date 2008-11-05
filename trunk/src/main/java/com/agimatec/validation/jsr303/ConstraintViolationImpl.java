@@ -1,5 +1,6 @@
 package com.agimatec.validation.jsr303;
 
+import javax.validation.ConstraintDescriptor;
 import javax.validation.ConstraintViolation;
 import java.util.Set;
 
@@ -12,29 +13,33 @@ import java.util.Set;
  * Copyright: Agimatec GmbH 2008
  */
 class ConstraintViolationImpl<T> implements ConstraintViolation {
-    private String message;
+    private final String message;
     /**
      * root bean validation was invoked on.
      */
-    private T rootBean;
+    private final T rootBean;
     /**
      * last bean validated.
      */
-    private Object leafBean;
-    private Object value;
-    private String propertyPath;
-    private Class beanClass;
-    private Set<String> groups;
+    private final Object leafBean;
+    private final Object value;
+    private final String propertyPath;
+    private final Class beanClass;
+    private final Set<String> groups;
+    private final ConstraintDescriptor constraintDescriptor;
 
     public ConstraintViolationImpl(String message, T rootBean, Object leafBean,
                                  Class beanClass, String propertyPath,
-                                 Object value, Set<String> groups) {
+                                 Object value, Set<String> groups,
+                                 ConstraintDescriptor constraintDescriptor) {
         this.message = message;
         this.rootBean = rootBean;
         this.beanClass = beanClass;
         this.propertyPath = propertyPath;
+        this.leafBean = leafBean;
         this.value = value;
         this.groups = groups;
+        this.constraintDescriptor = constraintDescriptor;
     }
 
     /** Error message */
@@ -76,6 +81,10 @@ class ConstraintViolationImpl<T> implements ConstraintViolation {
      */
     public Set<String> getGroups() {
         return groups;
+    }
+
+    public ConstraintDescriptor getConstraintDescriptor() {
+        return constraintDescriptor;
     }
 
     public String toString() {

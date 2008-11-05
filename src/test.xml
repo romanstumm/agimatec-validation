@@ -1,0 +1,1344 @@
+<root>
+  <b>Total Threads:</b>
+  119
+  <br>
+  <b>Total Thread Groups:</b>
+  8
+  <br>
+  <br>
+  <b>Thread Group: system</b>
+  : max priority:10, demon:false
+  <blockquote>
+    <b>Thread: Reference Handler</b>
+    : priority:10, demon:true, threadId:2, threadState:WAITING,
+    threadLockName:java.lang.ref.Reference$Lock@3f4f7
+    <br>
+    <blockquote>java.lang.Object.wait(Native Method)<br>java.lang.Object.wait(Object.java:485)<br>
+      java.lang.ref.Reference$ReferenceHandler.run(Reference.java:116)
+      <br>
+    </blockquote>
+    <b>Thread: Finalizer</b>
+    : priority:8, demon:true, threadId:3, threadState:WAITING,
+    threadLockName:java.lang.ref.ReferenceQueue$Lock@eb59fc
+    <br>
+    <blockquote>java.lang.Object.wait(Native Method)<br>
+      java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:116)<br>
+      java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:132)<br>
+      java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:159)
+      <br>
+    </blockquote>
+    <b>Thread: Signal Dispatcher</b>
+    : priority:9, demon:true, threadId:4, threadState:RUNNABLE, threadLockName:null
+    <br>
+    <b>Thread: Attach Listener</b>
+    : priority:5, demon:true, threadId:5, threadState:RUNNABLE, threadLockName:null
+    <br>
+    <b>Thread: RMI TCP Accept-0</b>
+    : priority:5, demon:true, threadId:12, threadState:RUNNABLE, threadLockName:null
+    <br>
+    <blockquote>java.net.PlainSocketImpl.socketAccept(Native Method)<br>
+      java.net.PlainSocketImpl.accept(PlainSocketImpl.java:384)<br>
+      java.net.ServerSocket.implAccept(ServerSocket.java:453)<br>
+      java.net.ServerSocket.accept(ServerSocket.java:421)<br>
+      sun.rmi.transport.tcp.TCPTransport$AcceptLoop.executeAcceptLoop(TCPTransport.java:369)<br>
+      sun.rmi.transport.tcp.TCPTransport$AcceptLoop.run(TCPTransport.java:341)<br>
+      java.lang.Thread.run(Thread.java:619)
+      <br>
+    </blockquote>
+    <b>Thread: RMI TCP Accept-12345</b>
+    : priority:5, demon:true, threadId:13, threadState:RUNNABLE, threadLockName:null
+    <br>
+    <blockquote>java.net.PlainSocketImpl.socketAccept(Native Method)<br>
+      java.net.PlainSocketImpl.accept(PlainSocketImpl.java:384)<br>
+      java.net.ServerSocket.implAccept(ServerSocket.java:453)<br>
+      java.net.ServerSocket.accept(ServerSocket.java:421)<br>
+      sun.rmi.transport.tcp.TCPTransport$AcceptLoop.executeAcceptLoop(TCPTransport.java:369)<br>
+      sun.rmi.transport.tcp.TCPTransport$AcceptLoop.run(TCPTransport.java:341)<br>
+      java.lang.Thread.run(Thread.java:619)
+      <br>
+    </blockquote>
+    <b>Thread: RMI TCP Accept-0</b>
+    : priority:5, demon:true, threadId:14, threadState:RUNNABLE, threadLockName:null
+    <br>
+    <blockquote>java.net.PlainSocketImpl.socketAccept(Native Method)<br>
+      java.net.PlainSocketImpl.accept(PlainSocketImpl.java:384)<br>
+      java.net.ServerSocket.implAccept(ServerSocket.java:453)<br>
+      java.net.ServerSocket.accept(ServerSocket.java:421)<br>
+      sun.management.jmxremote.LocalRMIServerSocketFactory$1.accept(LocalRMIServerSocketFactory.java:34)
+      <br>sun.rmi.transport.tcp.TCPTransport$AcceptLoop.executeAcceptLoop(TCPTransport.java:369)<br>
+      sun.rmi.transport.tcp.TCPTransport$AcceptLoop.run(TCPTransport.java:341)<br>
+      java.lang.Thread.run(Thread.java:619)
+      <br>
+    </blockquote>
+    <b>Thread: RMI Scheduler(0)</b>
+    : priority:5, demon:true, threadId:22, threadState:TIMED_WAITING,
+    threadLockName:java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@2d863c
+    <br>
+    <blockquote>sun.misc.Unsafe.park(Native Method)<br>
+      java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:198)<br>
+      java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1963)
+      <br>java.util.concurrent.DelayQueue.take(DelayQueue.java:164)<br>
+      java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:583)
+      <br>
+      java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:576)
+      <br>java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:947)<br>
+      java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:907)<br>
+      java.lang.Thread.run(Thread.java:619)
+      <br>
+    </blockquote>
+    <b>Thread: RMI TCP Accept-1098</b>
+    : priority:5, demon:true, threadId:25, threadState:RUNNABLE, threadLockName:null
+    <br>
+    <blockquote>java.net.PlainSocketImpl.socketAccept(Native Method)<br>
+      java.net.PlainSocketImpl.accept(PlainSocketImpl.java:384)<br>
+      java.net.ServerSocket.implAccept(ServerSocket.java:453)<br>
+      java.net.ServerSocket.accept(ServerSocket.java:421)<br>
+      sun.rmi.transport.tcp.TCPTransport$AcceptLoop.executeAcceptLoop(TCPTransport.java:369)<br>
+      sun.rmi.transport.tcp.TCPTransport$AcceptLoop.run(TCPTransport.java:341)<br>
+      java.lang.Thread.run(Thread.java:619)
+      <br>
+    </blockquote>
+    <b>Thread: RMI Reaper</b>
+    : priority:5, demon:false, threadId:26, threadState:WAITING,
+    threadLockName:java.lang.ref.ReferenceQueue$Lock@1700353
+    <br>
+    <blockquote>java.lang.Object.wait(Native Method)<br>
+      java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:116)<br>
+      java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:132)<br>
+      sun.rmi.transport.ObjectTable$Reaper.run(ObjectTable.java:333)<br>
+      java.lang.Thread.run(Thread.java:619)
+      <br>
+    </blockquote>
+    <b>Thread: GC Daemon</b>
+    : priority:2, demon:true, threadId:27, threadState:TIMED_WAITING,
+    threadLockName:sun.misc.GC$LatencyLock@174997a
+    <br>
+    <blockquote>java.lang.Object.wait(Native Method)<br>sun.misc.GC$Daemon.run(GC.java:100)
+      <br>
+    </blockquote>
+    <b>Thread: RMI TCP Accept-4444</b>
+    : priority:5, demon:true, threadId:36, threadState:RUNNABLE, threadLockName:null
+    <br>
+    <blockquote>java.net.PlainSocketImpl.socketAccept(Native Method)<br>
+      java.net.PlainSocketImpl.accept(PlainSocketImpl.java:384)<br>
+      java.net.ServerSocket.implAccept(ServerSocket.java:453)<br>
+      java.net.ServerSocket.accept(ServerSocket.java:421)<br>
+      sun.rmi.transport.tcp.TCPTransport$AcceptLoop.executeAcceptLoop(TCPTransport.java:369)<br>
+      sun.rmi.transport.tcp.TCPTransport$AcceptLoop.run(TCPTransport.java:341)<br>
+      java.lang.Thread.run(Thread.java:619)
+      <br>
+    </blockquote>
+    <br>
+    <b>Thread Group: main</b>
+    : max priority:10, demon:false
+    <blockquote>
+      <b>Thread: DestroyJavaVM</b>
+      : priority:5, demon:false, threadId:16, threadState:RUNNABLE, threadLockName:null
+      <br>
+      <br>
+      <b>Thread Group: jboss</b>
+      : max priority:10, demon:false
+      <blockquote>
+        <b>Thread: Timer-0</b>
+        : priority:5, demon:true, threadId:18, threadState:TIMED_WAITING,
+        threadLockName:java.util.TaskQueue@1bfe1d8
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          java.util.TimerThread.mainLoop(Timer.java:509)<br>
+          java.util.TimerThread.run(Timer.java:462)
+          <br>
+        </blockquote>
+        <b>Thread: ScannerThread</b>
+        : priority:5, demon:true, threadId:19, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          org.jboss.deployment.scanner.AbstractDeploymentScanner$ScannerThread.loop(AbstractDeploymentScanner.java:280)
+          <br>
+          org.jboss.deployment.scanner.AbstractDeploymentScanner$ScannerThread.run(AbstractDeploymentScanner.java:225)
+          <br>
+        </blockquote>
+        <b>Thread: SocketServerInvoker#0-3873</b>
+        : priority:5, demon:false, threadId:24, threadState:RUNNABLE, threadLockName:null
+        <br>
+        <blockquote>java.net.PlainSocketImpl.socketAccept(Native Method)<br>
+          java.net.PlainSocketImpl.accept(PlainSocketImpl.java:384)<br>
+          java.net.ServerSocket.implAccept(ServerSocket.java:453)<br>
+          java.net.ServerSocket.accept(ServerSocket.java:421)<br>
+          org.jboss.remoting.transport.socket.SocketServerInvoker.run(SocketServerInvoker.java:383)
+          <br>java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: TimeoutFactory-0</b>
+        : priority:5, demon:true, threadId:30, threadState:WAITING,
+        threadLockName:java.lang.Object@163f5f5
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>java.lang.Object.wait(Object.java:485)
+          <br>
+          org.jboss.util.timeout.TimeoutPriorityQueueImpl.poll(TimeoutPriorityQueueImpl.java:253)
+          <br>
+          org.jboss.util.timeout.TimeoutPriorityQueueImpl.take(TimeoutPriorityQueueImpl.java:230)
+          <br>org.jboss.util.timeout.TimeoutFactory.doWork(TimeoutFactory.java:215)<br>
+          org.jboss.util.timeout.TimeoutFactory.access$000(TimeoutFactory.java:41)<br>
+          org.jboss.util.timeout.TimeoutFactory$1.run(TimeoutFactory.java:136)
+          <br>
+        </blockquote>
+        <b>Thread: Timer-1</b>
+        : priority:5, demon:true, threadId:31, threadState:TIMED_WAITING,
+        threadLockName:java.util.TaskQueue@f11b42
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          java.util.TimerThread.mainLoop(Timer.java:509)<br>
+          java.util.TimerThread.run(Timer.java:462)
+          <br>
+        </blockquote>
+        <b>Thread: Timer-2</b>
+        : priority:5, demon:true, threadId:34, threadState:TIMED_WAITING,
+        threadLockName:java.util.TaskQueue@1204537
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          java.util.TimerThread.mainLoop(Timer.java:509)<br>
+          java.util.TimerThread.run(Timer.java:462)
+          <br>
+        </blockquote>
+        <b>Thread: Timer-3</b>
+        : priority:5, demon:false, threadId:35, threadState:TIMED_WAITING,
+        threadLockName:java.util.TaskQueue@1309add
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          java.util.TimerThread.mainLoop(Timer.java:509)<br>
+          java.util.TimerThread.run(Timer.java:462)
+          <br>
+        </blockquote>
+        <b>Thread: PooledInvokerAcceptor#0-4445</b>
+        : priority:5, demon:false, threadId:37, threadState:RUNNABLE, threadLockName:null
+        <br>
+        <blockquote>java.net.PlainSocketImpl.socketAccept(Native Method)<br>
+          java.net.PlainSocketImpl.accept(PlainSocketImpl.java:384)<br>
+          java.net.ServerSocket.implAccept(ServerSocket.java:453)<br>
+          java.net.ServerSocket.accept(ServerSocket.java:421)<br>
+          org.jboss.invocation.pooled.server.PooledInvoker.run(PooledInvoker.java:262)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: ContainerBackgroundProcessor[StandardEngine[jboss.web]]</b>
+        : priority:5, demon:true, threadId:38, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor.run(ContainerBase.java:1547)
+          <br>java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: Timer-4</b>
+        : priority:5, demon:false, threadId:39, threadState:TIMED_WAITING,
+        threadLockName:java.util.TaskQueue@218ba2
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          java.util.TimerThread.mainLoop(Timer.java:509)<br>
+          java.util.TimerThread.run(Timer.java:462)
+          <br>
+        </blockquote>
+        <b>Thread: DefaultQuartzScheduler_Worker-1</b>
+        : priority:5, demon:false, threadId:40, threadState:TIMED_WAITING,
+        threadLockName:org.quartz.simpl.SimpleThreadPool$WorkerThread@ef513a
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:523)
+          <br>
+        </blockquote>
+        <b>Thread: DefaultQuartzScheduler_Worker-2</b>
+        : priority:5, demon:false, threadId:41, threadState:TIMED_WAITING,
+        threadLockName:org.quartz.simpl.SimpleThreadPool$WorkerThread@3557c
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:523)
+          <br>
+        </blockquote>
+        <b>Thread: DefaultQuartzScheduler_Worker-3</b>
+        : priority:5, demon:false, threadId:42, threadState:TIMED_WAITING,
+        threadLockName:org.quartz.simpl.SimpleThreadPool$WorkerThread@648873
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:523)
+          <br>
+        </blockquote>
+        <b>Thread: DefaultQuartzScheduler_Worker-4</b>
+        : priority:5, demon:false, threadId:43, threadState:TIMED_WAITING,
+        threadLockName:org.quartz.simpl.SimpleThreadPool$WorkerThread@1f1f461
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:523)
+          <br>
+        </blockquote>
+        <b>Thread: DefaultQuartzScheduler_Worker-5</b>
+        : priority:5, demon:false, threadId:44, threadState:TIMED_WAITING,
+        threadLockName:org.quartz.simpl.SimpleThreadPool$WorkerThread@a8ccce
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:523)
+          <br>
+        </blockquote>
+        <b>Thread: DefaultQuartzScheduler_Worker-6</b>
+        : priority:5, demon:false, threadId:45, threadState:TIMED_WAITING,
+        threadLockName:org.quartz.simpl.SimpleThreadPool$WorkerThread@1031837
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:523)
+          <br>
+        </blockquote>
+        <b>Thread: DefaultQuartzScheduler_Worker-7</b>
+        : priority:5, demon:false, threadId:46, threadState:TIMED_WAITING,
+        threadLockName:org.quartz.simpl.SimpleThreadPool$WorkerThread@1e16afa
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:523)
+          <br>
+        </blockquote>
+        <b>Thread: DefaultQuartzScheduler_Worker-8</b>
+        : priority:5, demon:false, threadId:47, threadState:TIMED_WAITING,
+        threadLockName:org.quartz.simpl.SimpleThreadPool$WorkerThread@10db6ae
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:523)
+          <br>
+        </blockquote>
+        <b>Thread: DefaultQuartzScheduler_Worker-9</b>
+        : priority:5, demon:false, threadId:48, threadState:TIMED_WAITING,
+        threadLockName:org.quartz.simpl.SimpleThreadPool$WorkerThread@65f0e7
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:523)
+          <br>
+        </blockquote>
+        <b>Thread: DefaultQuartzScheduler_Worker-10</b>
+        : priority:5, demon:false, threadId:49, threadState:TIMED_WAITING,
+        threadLockName:org.quartz.simpl.SimpleThreadPool$WorkerThread@12c8190
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:523)
+          <br>
+        </blockquote>
+        <b>Thread: HSQLDB Timer @1bbec72</b>
+        : priority:5, demon:true, threadId:51, threadState:TIMED_WAITING,
+        threadLockName:org.hsqldb.lib.HsqlTimer@1bbec72
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          org.hsqldb.lib.HsqlTimer.nextTask(Unknown Source)<br>
+          org.hsqldb.lib.HsqlTimer$TaskRunner.run(Unknown Source)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: JCA PoolFiller</b>
+        : priority:5, demon:false, threadId:52, threadState:WAITING,
+        threadLockName:java.util.LinkedList@c57d32
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>java.lang.Object.wait(Object.java:485)
+          <br>org.jboss.resource.connectionmanager.PoolFiller.run(PoolFiller.java:85)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: IdleRemover</b>
+        : priority:5, demon:true, threadId:53, threadState:TIMED_WAITING,
+        threadLockName:java.util.ArrayList@16ba6b2
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          org.jboss.resource.connectionmanager.IdleRemover$IdleRemoverRunnable.run(IdleRemover.java:161)
+          <br>java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.MachineContingent Spool Thread</b>
+        : priority:5, demon:true, threadId:54, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.NotificationRuleActionParameter
+          Spool Thread
+        </b>
+        : priority:5, demon:true, threadId:55, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.Role Spool Thread</b>
+        : priority:5, demon:true, threadId:56, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.ProductProperty Spool Thread</b>
+        : priority:5, demon:true, threadId:57, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.ProductType Spool Thread</b>
+        : priority:5, demon:true, threadId:58, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.CvCurrency Spool Thread</b>
+        : priority:5, demon:true, threadId:59, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.DeliveryDepot Spool Thread</b>
+        : priority:5, demon:true, threadId:60, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.Privilege Spool Thread</b>
+        : priority:5, demon:true, threadId:61, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.BeanInfos Spool Thread</b>
+        : priority:5, demon:true, threadId:62, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.Shelf Spool Thread</b>
+        : priority:5, demon:true, threadId:63, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.Template Spool Thread</b>
+        : priority:5, demon:true, threadId:64, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.DeliveryMachine Spool Thread</b>
+        : priority:5, demon:true, threadId:65, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.CvCountry Spool Thread</b>
+        : priority:5, demon:true, threadId:66, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.XmlMetaBeans Spool Thread</b>
+        : priority:5, demon:true, threadId:67, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.FilterSet Spool Thread</b>
+        : priority:5, demon:true, threadId:68, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.MachineEventRegistration Spool
+          Thread
+        </b>
+        : priority:5, demon:true, threadId:69, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.ProductPrice Spool Thread</b>
+        : priority:5, demon:true, threadId:70, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.DeliveryContract Spool Thread</b>
+        : priority:5, demon:true, threadId:71, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.Box Spool Thread</b>
+        : priority:5, demon:true, threadId:72, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.StampType Spool Thread</b>
+        : priority:5, demon:true, threadId:73, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.MachineConfiguration Spool Thread
+        </b>
+        : priority:5, demon:true, threadId:74, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.Block Spool Thread</b>
+        : priority:5, demon:true, threadId:75, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.Business Spool Thread</b>
+        : priority:5, demon:true, threadId:76, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.PhysicalBox Spool Thread</b>
+        : priority:5, demon:true, threadId:77, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.StampSold Spool Thread</b>
+        : priority:5, demon:true, threadId:78, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.NotificationRule Spool Thread</b>
+        : priority:5, demon:true, threadId:79, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.ExternalEventRegistration Spool
+          Thread
+        </b>
+        : priority:5, demon:true, threadId:80, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.PermissionScheme Spool Thread</b>
+        : priority:5, demon:true, threadId:81, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.Tag Spool Thread</b>
+        : priority:5, demon:true, threadId:82, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.Configuration Spool Thread</b>
+        : priority:5, demon:true, threadId:83, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.MachineProperty Spool Thread</b>
+        : priority:5, demon:true, threadId:84, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.NotificationRuleAction Spool Thread
+        </b>
+        : priority:5, demon:true, threadId:85, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.DeliveryMachine.tags Spool Thread
+        </b>
+        : priority:5, demon:true, threadId:86, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.Ticket.tags Spool Thread</b>
+        : priority:5, demon:true, threadId:87, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store com.agimatec.nucleus.persistence.model.UserCore.tags Spool Thread</b>
+        : priority:5, demon:true, threadId:88, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store org.hibernate.cache.UpdateTimestampsCache Spool Thread</b>
+        : priority:5, demon:true, threadId:89, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Store org.hibernate.cache.StandardQueryCache Spool Thread</b>
+        : priority:5, demon:true, threadId:90, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          net.sf.ehcache.store.DiskStore.spoolAndExpiryThreadMain(DiskStore.java:588)<br>
+          net.sf.ehcache.store.DiskStore.access$800(DiskStore.java:64)<br>
+          net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread.run(DiskStore.java:1074)
+          <br>
+        </blockquote>
+        <b>Thread: Thread-8</b>
+        : priority:5, demon:true, threadId:95, threadState:TIMED_WAITING,
+        threadLockName:java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@8cac53
+        <br>
+        <blockquote>sun.misc.Unsafe.park(Native Method)<br>
+          java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:198)<br>
+          java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1963)
+          <br>java.util.concurrent.ArrayBlockingQueue.poll(ArrayBlockingQueue.java:342)<br>
+          org.apache.servicemix.jbi.messaging.DeliveryChannelImpl.accept(DeliveryChannelImpl.java:270)
+          <br>
+          org.apache.servicemix.jbi.messaging.DeliveryChannelImpl.accept(DeliveryChannelImpl.java:257)
+          <br>org.apache.servicemix.components.util.OutBinding.run(OutBinding.java:68)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: Thread-9</b>
+        : priority:5, demon:true, threadId:96, threadState:TIMED_WAITING,
+        threadLockName:java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1d2b8b9
+        <br>
+        <blockquote>sun.misc.Unsafe.park(Native Method)<br>
+          java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:198)<br>
+          java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1963)
+          <br>java.util.concurrent.ArrayBlockingQueue.poll(ArrayBlockingQueue.java:342)<br>
+          org.apache.servicemix.jbi.messaging.DeliveryChannelImpl.accept(DeliveryChannelImpl.java:270)
+          <br>
+          org.apache.servicemix.jbi.messaging.DeliveryChannelImpl.accept(DeliveryChannelImpl.java:257)
+          <br>org.apache.servicemix.components.util.OutBinding.run(OutBinding.java:68)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: pool-component.rulebaseRouter-thread-1</b>
+        : priority:5, demon:false, threadId:97, threadState:TIMED_WAITING,
+        threadLockName:java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1a0506c
+        <br>
+        <blockquote>sun.misc.Unsafe.park(Native Method)<br>
+          java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:198)<br>
+          java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1963)
+          <br>java.util.concurrent.ArrayBlockingQueue.poll(ArrayBlockingQueue.java:342)<br>
+          org.apache.servicemix.jbi.messaging.DeliveryChannelImpl.accept(DeliveryChannelImpl.java:270)
+          <br>
+          org.apache.servicemix.common.AsyncBaseLifeCycle.pollDeliveryChannel(AsyncBaseLifeCycle.java:314)
+          <br>org.apache.servicemix.common.AsyncBaseLifeCycle$1.run(AsyncBaseLifeCycle.java:300)<br>
+          java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886)<br>
+          java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: pool-component.resequencer-rulebaseRouter-thread-1</b>
+        : priority:5, demon:false, threadId:98, threadState:TIMED_WAITING,
+        threadLockName:java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1cc2c10
+        <br>
+        <blockquote>sun.misc.Unsafe.park(Native Method)<br>
+          java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:198)<br>
+          java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1963)
+          <br>java.util.concurrent.ArrayBlockingQueue.poll(ArrayBlockingQueue.java:342)<br>
+          org.apache.servicemix.jbi.messaging.DeliveryChannelImpl.accept(DeliveryChannelImpl.java:270)
+          <br>
+          org.apache.servicemix.common.AsyncBaseLifeCycle.pollDeliveryChannel(AsyncBaseLifeCycle.java:314)
+          <br>org.apache.servicemix.common.AsyncBaseLifeCycle$1.run(AsyncBaseLifeCycle.java:300)<br>
+          java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886)<br>
+          java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: pool-component.importRouter-thread-1</b>
+        : priority:5, demon:false, threadId:99, threadState:TIMED_WAITING,
+        threadLockName:java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1bcebe3
+        <br>
+        <blockquote>sun.misc.Unsafe.park(Native Method)<br>
+          java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:198)<br>
+          java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1963)
+          <br>java.util.concurrent.ArrayBlockingQueue.poll(ArrayBlockingQueue.java:342)<br>
+          org.apache.servicemix.jbi.messaging.DeliveryChannelImpl.accept(DeliveryChannelImpl.java:270)
+          <br>
+          org.apache.servicemix.common.AsyncBaseLifeCycle.pollDeliveryChannel(AsyncBaseLifeCycle.java:314)
+          <br>org.apache.servicemix.common.AsyncBaseLifeCycle$1.run(AsyncBaseLifeCycle.java:300)<br>
+          java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886)<br>
+          java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: pool-component.resequencer-importRouter-thread-1</b>
+        : priority:5, demon:false, threadId:100, threadState:TIMED_WAITING,
+        threadLockName:java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1fe9620
+        <br>
+        <blockquote>sun.misc.Unsafe.park(Native Method)<br>
+          java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:198)<br>
+          java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1963)
+          <br>java.util.concurrent.ArrayBlockingQueue.poll(ArrayBlockingQueue.java:342)<br>
+          org.apache.servicemix.jbi.messaging.DeliveryChannelImpl.accept(DeliveryChannelImpl.java:270)
+          <br>
+          org.apache.servicemix.common.AsyncBaseLifeCycle.pollDeliveryChannel(AsyncBaseLifeCycle.java:314)
+          <br>org.apache.servicemix.common.AsyncBaseLifeCycle$1.run(AsyncBaseLifeCycle.java:300)<br>
+          java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886)<br>
+          java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: Thread-10</b>
+        : priority:5, demon:true, threadId:101, threadState:TIMED_WAITING,
+        threadLockName:java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1890988
+        <br>
+        <blockquote>sun.misc.Unsafe.park(Native Method)<br>
+          java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:198)<br>
+          java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1963)
+          <br>java.util.concurrent.ArrayBlockingQueue.poll(ArrayBlockingQueue.java:342)<br>
+          org.apache.servicemix.jbi.messaging.DeliveryChannelImpl.accept(DeliveryChannelImpl.java:270)
+          <br>
+          org.apache.servicemix.jbi.messaging.DeliveryChannelImpl.accept(DeliveryChannelImpl.java:257)
+          <br>org.apache.servicemix.components.util.OutBinding.run(OutBinding.java:68)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: Thread-11</b>
+        : priority:5, demon:true, threadId:102, threadState:TIMED_WAITING,
+        threadLockName:java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@7b5411
+        <br>
+        <blockquote>sun.misc.Unsafe.park(Native Method)<br>
+          java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:198)<br>
+          java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1963)
+          <br>java.util.concurrent.ArrayBlockingQueue.poll(ArrayBlockingQueue.java:342)<br>
+          org.apache.servicemix.jbi.messaging.DeliveryChannelImpl.accept(DeliveryChannelImpl.java:270)
+          <br>
+          org.apache.servicemix.jbi.messaging.DeliveryChannelImpl.accept(DeliveryChannelImpl.java:257)
+          <br>org.apache.servicemix.components.util.OutBinding.run(OutBinding.java:68)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: Compass Scheduled Executor Thread</b>
+        : priority:5, demon:true, threadId:106, threadState:TIMED_WAITING,
+        threadLockName:java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1f19353
+        <br>
+        <blockquote>sun.misc.Unsafe.park(Native Method)<br>
+          java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:198)<br>
+          java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1963)
+          <br>java.util.concurrent.DelayQueue.take(DelayQueue.java:164)<br>
+          java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:583)
+          <br>
+          java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:576)
+          <br>java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:947)<br>
+          java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:907)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: Thread-12</b>
+        : priority:5, demon:false, threadId:107, threadState:RUNNABLE, threadLockName:null
+        <br>
+        <blockquote>java.net.PlainSocketImpl.socketAccept(Native Method)<br>
+          java.net.PlainSocketImpl.accept(PlainSocketImpl.java:384)<br>
+          java.net.ServerSocket.implAccept(ServerSocket.java:453)<br>
+          java.net.ServerSocket.accept(ServerSocket.java:421)<br>
+          mx4j.tools.adaptor.http.HttpAdaptor$1.run(HttpAdaptor.java:523)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: Compass Executor Thread</b>
+        : priority:5, demon:true, threadId:117, threadState:WAITING,
+        threadLockName:java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@484899
+        <br>
+        <blockquote>sun.misc.Unsafe.park(Native Method)<br>
+          java.util.concurrent.locks.LockSupport.park(LockSupport.java:158)<br>
+          java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1925)
+          <br>java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:358)<br>
+          java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:947)<br>
+          java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:907)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: Compass Executor Thread</b>
+        : priority:5, demon:true, threadId:118, threadState:WAITING,
+        threadLockName:java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@484899
+        <br>
+        <blockquote>sun.misc.Unsafe.park(Native Method)<br>
+          java.util.concurrent.locks.LockSupport.park(LockSupport.java:158)<br>
+          java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1925)
+          <br>java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:358)<br>
+          java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:947)<br>
+          java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:907)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: Compass Executor Thread</b>
+        : priority:5, demon:true, threadId:119, threadState:WAITING,
+        threadLockName:java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@484899
+        <br>
+        <blockquote>sun.misc.Unsafe.park(Native Method)<br>
+          java.util.concurrent.locks.LockSupport.park(LockSupport.java:158)<br>
+          java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1925)
+          <br>java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:358)<br>
+          java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:947)<br>
+          java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:907)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: Compass Executor Thread</b>
+        : priority:5, demon:true, threadId:120, threadState:WAITING,
+        threadLockName:java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@484899
+        <br>
+        <blockquote>sun.misc.Unsafe.park(Native Method)<br>
+          java.util.concurrent.locks.LockSupport.park(LockSupport.java:158)<br>
+          java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1925)
+          <br>java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:358)<br>
+          java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:947)<br>
+          java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:907)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: Compass Executor Thread</b>
+        : priority:5, demon:true, threadId:121, threadState:WAITING,
+        threadLockName:java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@484899
+        <br>
+        <blockquote>sun.misc.Unsafe.park(Native Method)<br>
+          java.util.concurrent.locks.LockSupport.park(LockSupport.java:158)<br>
+          java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1925)
+          <br>java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:358)<br>
+          java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:947)<br>
+          java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:907)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: Compass Executor Thread</b>
+        : priority:5, demon:true, threadId:122, threadState:WAITING,
+        threadLockName:java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@484899
+        <br>
+        <blockquote>sun.misc.Unsafe.park(Native Method)<br>
+          java.util.concurrent.locks.LockSupport.park(LockSupport.java:158)<br>
+          java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1925)
+          <br>java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:358)<br>
+          java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:947)<br>
+          java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:907)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: Compass Executor Thread</b>
+        : priority:5, demon:true, threadId:123, threadState:WAITING,
+        threadLockName:java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@484899
+        <br>
+        <blockquote>sun.misc.Unsafe.park(Native Method)<br>
+          java.util.concurrent.locks.LockSupport.park(LockSupport.java:158)<br>
+          java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1925)
+          <br>java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:358)<br>
+          java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:947)<br>
+          java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:907)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: Compass Executor Thread</b>
+        : priority:5, demon:true, threadId:124, threadState:WAITING,
+        threadLockName:java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@484899
+        <br>
+        <blockquote>sun.misc.Unsafe.park(Native Method)<br>
+          java.util.concurrent.locks.LockSupport.park(LockSupport.java:158)<br>
+          java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1925)
+          <br>java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:358)<br>
+          java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:947)<br>
+          java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:907)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: Compass Executor Thread</b>
+        : priority:5, demon:true, threadId:125, threadState:WAITING,
+        threadLockName:java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@484899
+        <br>
+        <blockquote>sun.misc.Unsafe.park(Native Method)<br>
+          java.util.concurrent.locks.LockSupport.park(LockSupport.java:158)<br>
+          java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1925)
+          <br>java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:358)<br>
+          java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:947)<br>
+          java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:907)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: NucleusQuartzScheduler_Worker-1</b>
+        : priority:5, demon:false, threadId:130, threadState:TIMED_WAITING,
+        threadLockName:org.quartz.simpl.SimpleThreadPool$WorkerThread@90a06e
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:523)
+          <br>
+        </blockquote>
+        <b>Thread: NucleusQuartzScheduler_Worker-2</b>
+        : priority:5, demon:false, threadId:131, threadState:TIMED_WAITING,
+        threadLockName:org.quartz.simpl.SimpleThreadPool$WorkerThread@50c570
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:523)
+          <br>
+        </blockquote>
+        <b>Thread: NucleusQuartzScheduler_Worker-3</b>
+        : priority:5, demon:false, threadId:132, threadState:TIMED_WAITING,
+        threadLockName:org.quartz.simpl.SimpleThreadPool$WorkerThread@9e297b
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:523)
+          <br>
+        </blockquote>
+        <b>Thread: NucleusQuartzScheduler_Worker-4</b>
+        : priority:5, demon:false, threadId:133, threadState:TIMED_WAITING,
+        threadLockName:org.quartz.simpl.SimpleThreadPool$WorkerThread@e0191d
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:523)
+          <br>
+        </blockquote>
+        <b>Thread: NucleusQuartzScheduler_Worker-5</b>
+        : priority:5, demon:false, threadId:134, threadState:TIMED_WAITING,
+        threadLockName:org.quartz.simpl.SimpleThreadPool$WorkerThread@17df4d3
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:523)
+          <br>
+        </blockquote>
+        <b>Thread: Timer-5</b>
+        : priority:5, demon:true, threadId:136, threadState:WAITING,
+        threadLockName:java.util.TaskQueue@dc09e9
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>java.lang.Object.wait(Object.java:485)
+          <br>java.util.TimerThread.mainLoop(Timer.java:483)<br>
+          java.util.TimerThread.run(Timer.java:462)
+          <br>
+        </blockquote>
+        <b>Thread: QuartzScheduler_NucleusQuartzScheduler-semi121225815651921_ClusterManager</b>
+        : priority:7, demon:false, threadId:137, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          org.quartz.impl.jdbcjobstore.JobStoreSupport$ClusterManager.run(JobStoreSupport.java:3744)
+          <br>
+        </blockquote>
+        <b>Thread: QuartzScheduler_NucleusQuartzScheduler-semi121225815651921_MisfireHandler</b>
+        : priority:5, demon:false, threadId:138, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          org.quartz.impl.jdbcjobstore.JobStoreSupport$MisfireHandler.run(JobStoreSupport.java:3829)
+          <br>
+        </blockquote>
+        <b>Thread: DiagnosticsManager: Executes diagnostics requests submitted through an
+          instructions file
+        </b>
+        : priority:5, demon:true, threadId:139, threadState:TIMED_WAITING, threadLockName:null
+        <br>
+        <blockquote>java.lang.Thread.sleep(Native Method)<br>
+          com.sonicsw.sdf.impl.DiagnosticsManager.doSleep(Unknown Source)<br>
+          com.sonicsw.sdf.impl.DiagnosticsManager.access$300(Unknown Source)<br>
+          com.sonicsw.sdf.impl.DiagnosticsManager$1.run(Unknown Source)
+          <br>
+        </blockquote>
+        <b>Thread: Durable Connection</b>
+        : priority:5, demon:true, threadId:147, threadState:RUNNABLE, threadLockName:null
+        <br>
+        <blockquote>java.net.PlainSocketImpl.socketConnect(Native Method)<br>
+          java.net.PlainSocketImpl.doConnect(PlainSocketImpl.java:333)<br>
+          java.net.PlainSocketImpl.connectToAddress(PlainSocketImpl.java:195)<br>
+          java.net.PlainSocketImpl.connect(PlainSocketImpl.java:182)<br>
+          java.net.SocksSocketImpl.connect(SocksSocketImpl.java:366)<br>
+          java.net.Socket.connect(Socket.java:519)<br>java.net.Socket.connect(Socket.java:469)<br>
+          java.net.Socket.<init>(Socket.java:366)<br>java.net.Socket.<init>(Socket.java:180)<br>
+          progress.message.net.tcp.ProgressTcpSocket.openSocket(ProgressTcpSocket.java:87)<br>
+          progress.message.net.tcp.AbstractTcpSocket.<init>(AbstractTcpSocket.java:86)<br>
+          progress.message.net.tcp.ProgressTcpSocket.<init>(ProgressTcpSocket.java:62)<br>
+          progress.message.net.tcp.ProgressTcpSocketFactory.createProgressSocket(ProgressTcpSocketFactory.java:53)
+          <br>
+          progress.message.net.ProgressSocketFactory.createProgressSocket(ProgressSocketFactory.java:179)
+          <br>progress.message.zclient.Connection.openSocket(Connection.java:3568)<br>
+          progress.message.zclient.Connection.connectWithRecoveryOpt(Connection.java:812)<br>
+          progress.message.zclient.ReconnectHelper.connectAndChaseSingleFailoverRedirect(ReconnectHelper.java:534)
+          <br>progress.message.zclient.ReconnectHelper.connect(ReconnectHelper.java:367)<br>
+          progress.message.zclient.Connection.connect(Connection.java:1554)<br>
+          progress.message.jimpl.Connection.<init>(Connection.java:642)<br>
+          progress.message.jimpl.TopicConnection.<init>(TopicConnection.java:85)<br>
+          progress.message.jclient.TopicConnectionFactory.createTopicConnection(TopicConnectionFactory.java:227)
+          <br>
+          progress.message.jclient.TopicConnectionFactory.createTopicConnection(TopicConnectionFactory.java:204)
+          <br>com.sonicsw.mf.comm.jms.DurableConnector.subsequentConnect(Unknown Source)<br>
+          com.sonicsw.mf.comm.jms.DurableConnector.access$1900(Unknown Source)<br>
+          com.sonicsw.mf.comm.jms.DurableConnector$ConnectThread.createConnection(Unknown Source)
+          <br>com.sonicsw.mf.comm.jms.DurableConnector$ConnectThread.run(Unknown Source)
+          <br>
+        </blockquote>
+        <b>Thread: JBossLifeThread</b>
+        : priority:5, demon:false, threadId:157, threadState:WAITING,
+        threadLockName:java.lang.Object@1c11819
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>java.lang.Object.wait(Object.java:485)
+          <br>org.jboss.system.server.ServerImpl$LifeThread.run(ServerImpl.java:932)
+          <br>
+        </blockquote>
+        <b>Thread: http-127.0.0.1-8880</b>
+        : priority:5, demon:true, threadId:158, threadState:RUNNABLE, threadLockName:null
+        <br>
+        <blockquote>java.net.PlainSocketImpl.socketAccept(Native Method)<br>
+          java.net.PlainSocketImpl.accept(PlainSocketImpl.java:384)<br>
+          java.net.ServerSocket.implAccept(ServerSocket.java:453)<br>
+          java.net.ServerSocket.accept(ServerSocket.java:421)<br>
+          org.apache.tomcat.util.net.DefaultServerSocketFactory.acceptSocket(DefaultServerSocketFactory.java:60)
+          <br>org.apache.tomcat.util.net.PoolTcpEndpoint.acceptSocket(PoolTcpEndpoint.java:407)<br>
+          org.apache.tomcat.util.net.PoolTcpEndpoint.run(PoolTcpEndpoint.java:647)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: http-127.0.0.1-8880-1</b>
+        : priority:5, demon:true, threadId:160, threadState:WAITING,
+        threadLockName:org.apache.tomcat.util.net.MasterSlaveWorkerThread@11b035c
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>java.lang.Object.wait(Object.java:485)
+          <br>
+          org.apache.tomcat.util.net.MasterSlaveWorkerThread.await(MasterSlaveWorkerThread.java:81)
+          <br>
+          org.apache.tomcat.util.net.MasterSlaveWorkerThread.run(MasterSlaveWorkerThread.java:107)
+          <br>java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: TP-Processor1</b>
+        : priority:5, demon:true, threadId:159, threadState:WAITING,
+        threadLockName:org.apache.tomcat.util.threads.ThreadPool$ControlRunnable@e7730
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>java.lang.Object.wait(Object.java:485)
+          <br>org.apache.tomcat.util.threads.ThreadPool$ControlRunnable.run(ThreadPool.java:656)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: TP-Processor2</b>
+        : priority:5, demon:true, threadId:161, threadState:WAITING,
+        threadLockName:org.apache.tomcat.util.threads.ThreadPool$ControlRunnable@13011ad
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>java.lang.Object.wait(Object.java:485)
+          <br>org.apache.tomcat.util.threads.ThreadPool$ControlRunnable.run(ThreadPool.java:656)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: TP-Processor3</b>
+        : priority:5, demon:true, threadId:162, threadState:WAITING,
+        threadLockName:org.apache.tomcat.util.threads.ThreadPool$ControlRunnable@f953cc
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>java.lang.Object.wait(Object.java:485)
+          <br>org.apache.tomcat.util.threads.ThreadPool$ControlRunnable.run(ThreadPool.java:656)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: TP-Processor4</b>
+        : priority:5, demon:true, threadId:163, threadState:RUNNABLE, threadLockName:null
+        <br>
+        <blockquote>java.net.PlainSocketImpl.socketAccept(Native Method)<br>
+          java.net.PlainSocketImpl.accept(PlainSocketImpl.java:384)<br>
+          java.net.ServerSocket.implAccept(ServerSocket.java:453)<br>
+          java.net.ServerSocket.accept(ServerSocket.java:421)<br>
+          org.apache.jk.common.ChannelSocket.accept(ChannelSocket.java:306)<br>
+          org.apache.jk.common.ChannelSocket.acceptConnections(ChannelSocket.java:660)<br>
+          org.apache.jk.common.ChannelSocket$SocketAcceptor.runIt(ChannelSocket.java:870)<br>
+          org.apache.tomcat.util.threads.ThreadPool$ControlRunnable.run(ThreadPool.java:684)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: TP-Monitor</b>
+        : priority:5, demon:true, threadId:164, threadState:TIMED_WAITING,
+        threadLockName:org.apache.tomcat.util.threads.ThreadPool$MonitorRunnable@780b2b
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          org.apache.tomcat.util.threads.ThreadPool$MonitorRunnable.run(ThreadPool.java:559)<br>
+          java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread:
+          JMS-Connect-Thread-com.agimatec.nucleus.esb.jms.JmsExchangeReceiverComponent@2ee9c4{template.defaultDestinationName=import-from-postat,
+          connection=null}
+        </b>
+        : priority:5, demon:false, threadId:165, threadState:RUNNABLE, threadLockName:null
+        <br>
+        <blockquote>java.net.PlainSocketImpl.socketConnect(Native Method)<br>
+          java.net.PlainSocketImpl.doConnect(PlainSocketImpl.java:333)<br>
+          java.net.PlainSocketImpl.connectToAddress(PlainSocketImpl.java:195)<br>
+          java.net.PlainSocketImpl.connect(PlainSocketImpl.java:182)<br>
+          java.net.SocksSocketImpl.connect(SocksSocketImpl.java:366)<br>
+          java.net.Socket.connect(Socket.java:519)<br>java.net.Socket.connect(Socket.java:469)<br>
+          java.net.Socket.<init>(Socket.java:366)<br>java.net.Socket.<init>(Socket.java:180)<br>
+          progress.message.net.tcp.ProgressTcpSocket.openSocket(Unknown Source)<br>
+          progress.message.net.tcp.AbstractTcpSocket.<init>(Unknown Source)<br>
+          progress.message.net.tcp.ProgressTcpSocket.<init>(Unknown Source)<br>
+          progress.message.net.tcp.ProgressTcpSocketFactory.createProgressSocket(Unknown Source)<br>
+          progress.message.zclient.Connection.ZRB_(Unknown Source)<br>
+          progress.message.zclient.Connection.connectWithRecoveryOpt(Unknown Source)<br>
+          progress.message.zclient.ReconnectHelper.connectAndChaseSingleFailoverRedirect(Unknown
+          Source)<br>progress.message.zclient.ReconnectHelper.connect(Unknown Source)<br>
+          progress.message.zclient.Connection.connect(Unknown Source)<br>
+          progress.message.jimpl.Connection.<init>(Unknown Source)<br>
+          progress.message.jclient.ConnectionFactory.createConnection(Unknown Source)<br>
+          progress.message.jclient.ConnectionFactory.createConnection(Unknown Source)<br>
+          com.agimatec.nucleus.esb.jms.JmsReliableReceiverComponent.connect(JmsReliableReceiverComponent.java:93)
+          <br>
+          com.agimatec.nucleus.esb.jms.JmsReliableReceiverComponent.reconnect(JmsReliableReceiverComponent.java:146)
+          <br>
+          com.agimatec.utility.jms.JmsExceptionReconnector$1.run(JmsExceptionReconnector.java:120)
+          <br>java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread:
+          JMS-Connect-Thread-com.agimatec.nucleus.esb.jms.JmsReliableReceiverComponent@157f145{template.defaultDestinationName=import-from-norge,
+          connection=null}
+        </b>
+        : priority:5, demon:false, threadId:166, threadState:TIMED_WAITING,
+        threadLockName:java.lang.Integer@529649
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          progress.message.zclient.ReconnectHelper.inB_(Unknown Source)<br>
+          progress.message.zclient.ReconnectHelper.connect(Unknown Source)<br>
+          progress.message.zclient.Connection.connect(Unknown Source)<br>
+          progress.message.jimpl.Connection.<init>(Unknown Source)<br>
+          progress.message.jclient.ConnectionFactory.createConnection(Unknown Source)<br>
+          progress.message.jclient.ConnectionFactory.createConnection(Unknown Source)<br>
+          com.agimatec.nucleus.esb.jms.JmsReliableReceiverComponent.connect(JmsReliableReceiverComponent.java:93)
+          <br>
+          com.agimatec.nucleus.esb.jms.JmsReliableReceiverComponent.reconnect(JmsReliableReceiverComponent.java:146)
+          <br>
+          com.agimatec.utility.jms.JmsExceptionReconnector$1.run(JmsExceptionReconnector.java:120)
+          <br>java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread:
+          JMS-Connect-Thread-com.agimatec.nucleus.esb.jms.JmsExchangeReceiverComponent@e395e8{template.defaultDestinationName=into-nucleus,
+          connection=null}
+        </b>
+        : priority:5, demon:false, threadId:167, threadState:TIMED_WAITING,
+        threadLockName:java.lang.Integer@2d9e56
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          progress.message.zclient.ReconnectHelper.inB_(Unknown Source)<br>
+          progress.message.zclient.ReconnectHelper.connect(Unknown Source)<br>
+          progress.message.zclient.Connection.connect(Unknown Source)<br>
+          progress.message.jimpl.Connection.<init>(Unknown Source)<br>
+          progress.message.jclient.ConnectionFactory.createConnection(Unknown Source)<br>
+          progress.message.jclient.ConnectionFactory.createConnection(Unknown Source)<br>
+          com.agimatec.nucleus.esb.jms.JmsReliableReceiverComponent.connect(JmsReliableReceiverComponent.java:93)
+          <br>
+          com.agimatec.nucleus.esb.jms.JmsReliableReceiverComponent.reconnect(JmsReliableReceiverComponent.java:146)
+          <br>
+          com.agimatec.utility.jms.JmsExceptionReconnector$1.run(JmsExceptionReconnector.java:120)
+          <br>java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread:
+          JMS-Connect-Thread-com.agimatec.nucleus.esb.jms.JmsReliableReceiverComponent@1d48eec{template.defaultDestinationName=Pilot,
+          connection=null}
+        </b>
+        : priority:5, demon:false, threadId:168, threadState:TIMED_WAITING,
+        threadLockName:java.lang.Integer@f119d6
+        <br>
+        <blockquote>java.lang.Object.wait(Native Method)<br>
+          progress.message.zclient.ReconnectHelper.inB_(Unknown Source)<br>
+          progress.message.zclient.ReconnectHelper.connect(Unknown Source)<br>
+          progress.message.zclient.Connection.connect(Unknown Source)<br>
+          progress.message.jimpl.Connection.<init>(Unknown Source)<br>
+          progress.message.jclient.ConnectionFactory.createConnection(Unknown Source)<br>
+          progress.message.jclient.ConnectionFactory.createConnection(Unknown Source)<br>
+          com.agimatec.nucleus.esb.jms.JmsReliableReceiverComponent.connect(JmsReliableReceiverComponent.java:93)
+          <br>
+          com.agimatec.nucleus.esb.jms.JmsReliableReceiverComponent.reconnect(JmsReliableReceiverComponent.java:146)
+          <br>
+          com.agimatec.utility.jms.JmsExceptionReconnector$1.run(JmsExceptionReconnector.java:120)
+          <br>java.lang.Thread.run(Thread.java:619)
+          <br>
+        </blockquote>
+        <b>Thread: Thread-79</b>
+        : priority:5, demon:false, threadId:230, threadState:RUNNABLE, threadLockName:null
+        <br>
+        <blockquote>sun.management.ThreadImpl.getThreadInfo0(Native Method)<br>
+          sun.management.ThreadImpl.getThreadInfo(ThreadImpl.java:145)<br>
+          sun.management.ThreadImpl.getThreadInfo(ThreadImpl.java:123)<br>
+          sun.reflect.GeneratedMethodAccessor292.invoke(Unknown Source)<br>
+          sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)<br>
+          java.lang.reflect.Method.invoke(Method.java:597)<br>
+          org.jboss.system.server.ServerInfo.outputJdk5ThreadMXBeanInfo(ServerInfo.java:651)<br>
+          org.jboss.system.server.ServerInfo.getThreadGroupInfo(ServerInfo.java:622)<br>
+          org.jboss.system.server.ServerInfo.getThreadGroupInfo(ServerInfo.java:629)<br>
+          org.jboss.system.server.ServerInfo.getThreadGroupInfo(ServerInfo.java:629)<br>
+          org.jboss.system.server.ServerInfo.listThreadDump(ServerInfo.java:502)<br>
+          sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br>
+          sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)<br>
+          sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)<br>
+          java.lang.reflect.Method.invoke(Method.java:597)<br>
+          org.jboss.mx.interceptor.ReflectedDispatcher.invoke(ReflectedDispatcher.java:155)<br>
+          org.jboss.mx.server.Invocation.dispatch(Invocation.java:94)<br>
+          org.jboss.mx.server.Invocation.invoke(Invocation.java:86)<br>
+          org.jboss.mx.server.AbstractMBeanInvoker.invoke(AbstractMBeanInvoker.java:264)<br>
+          org.jboss.mx.server.MBeanServerImpl.invoke(MBeanServerImpl.java:659)<br>
+          mx4j.tools.adaptor.http.InvokeOperationCommandProcessor.executeRequest(InvokeOperationCommandProcessor.java:164)
+          <br>mx4j.tools.adaptor.http.HttpAdaptor$HttpClient.run(HttpAdaptor.java:980)
+          <br>
+        </blockquote>
+        <br>
+        <b>Thread Group: JBoss Pooled Threads</b>
+        : max priority:10, demon:false
+        <blockquote>
+          <br>
+          <b>Thread Group: System Threads</b>
+          : max priority:10, demon:false
+          <blockquote>
+            <b>Thread: JBoss System Threads(1)-1</b>
+            : priority:5, demon:true, threadId:28, threadState:RUNNABLE, threadLockName:null
+            <br>
+            <blockquote>java.net.PlainSocketImpl.socketAccept(Native Method)<br>
+              java.net.PlainSocketImpl.accept(PlainSocketImpl.java:384)<br>
+              java.net.ServerSocket.implAccept(ServerSocket.java:453)<br>
+              java.net.ServerSocket.accept(ServerSocket.java:421)<br>
+              org.jnp.server.Main$AcceptHandler.run(Main.java:464)<br>
+              org.jboss.util.threadpool.RunnableTaskWrapper.run(RunnableTaskWrapper.java:148)<br>
+              EDU.oswego.cs.dl.util.concurrent.PooledExecutor$Worker.run(PooledExecutor.java:743)
+              <br>java.lang.Thread.run(Thread.java:619)
+              <br>
+            </blockquote>
+            <b>Thread: JBoss System Threads(1)-2</b>
+            : priority:5, demon:true, threadId:29, threadState:RUNNABLE, threadLockName:null
+            <br>
+            <blockquote>java.net.PlainSocketImpl.socketAccept(Native Method)<br>
+              java.net.PlainSocketImpl.accept(PlainSocketImpl.java:384)<br>
+              java.net.ServerSocket.implAccept(ServerSocket.java:453)<br>
+              java.net.ServerSocket.accept(ServerSocket.java:421)<br>
+              org.jboss.web.WebServer.run(WebServer.java:324)<br>
+              org.jboss.util.threadpool.RunnableTaskWrapper.run(RunnableTaskWrapper.java:148)<br>
+              EDU.oswego.cs.dl.util.concurrent.PooledExecutor$Worker.run(PooledExecutor.java:743)
+              <br>java.lang.Thread.run(Thread.java:619)
+              <br>
+            </blockquote>
+          </blockquote>
+        </blockquote>
+        <br>
+        <b>Thread Group: QuartzScheduler:DefaultQuartzScheduler</b>
+        : max priority:10, demon:false
+        <blockquote>
+          <b>Thread: DefaultQuartzScheduler_QuartzSchedulerThread</b>
+          : priority:5, demon:false, threadId:50, threadState:TIMED_WAITING, threadLockName:null
+          <br>
+          <blockquote>java.lang.Thread.sleep(Native Method)<br>
+            org.quartz.core.QuartzSchedulerThread.run(QuartzSchedulerThread.java:420)
+            <br>
+          </blockquote>
+        </blockquote>
+        <br>
+        <b>Thread Group: QuartzScheduler:NucleusQuartzScheduler</b>
+        : max priority:10, demon:false
+        <blockquote>
+          <b>Thread: NucleusQuartzScheduler_QuartzSchedulerThread</b>
+          : priority:5, demon:false, threadId:135, threadState:TIMED_WAITING, threadLockName:null
+          <br>
+          <blockquote>java.lang.Thread.sleep(Native Method)<br>
+            org.quartz.core.QuartzSchedulerThread.run(QuartzSchedulerThread.java:420)
+            <br>
+          </blockquote>
+        </blockquote>
+      </blockquote>
+    </blockquote>
+    <br>
+    <b>Thread Group: RMI Runtime</b>
+    : max priority:10, demon:false
+    <blockquote></blockquote>
+  </blockquote>
+</root>

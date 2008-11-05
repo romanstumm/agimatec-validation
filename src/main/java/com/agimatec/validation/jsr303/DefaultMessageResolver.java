@@ -1,7 +1,5 @@
 package com.agimatec.validation.jsr303;
 
-import org.apache.commons.lang.ObjectUtils;
-
 import javax.validation.ConstraintDescriptor;
 import javax.validation.MessageResolver;
 import java.util.*;
@@ -20,8 +18,8 @@ public class DefaultMessageResolver implements MessageResolver {
             "com/agimatec/validation/jsr303/messageResolver";
     private static final String DEFAULT_MESSAGE_BUNDLE_NAME = "ValidationMessages";
 
-    private ResourceBundle defaultBundle;
-    private ResourceBundle messageBundle;
+    private final Map<Locale, ResourceBundle> defaultBundle = new Hashtable();
+    private final Map<Locale, ResourceBundle> messageBundle = new Hashtable();
     private Locale locale;
     private String messageBundleName;
 
@@ -49,6 +47,12 @@ public class DefaultMessageResolver implements MessageResolver {
          * 3. The message parameter is used as a key to search the default message resolver's built-in
          * message properties. If a property is found, the message parameter is replaced with the property.
          */
+        return replace(message, constraintDescriptor);
+    }
+
+    public String interpolate(String message, ConstraintDescriptor constraintDescriptor,
+                              Object value, Locale locale) {
+        if (message == null || message.length() == 0) return message;
         return replace(message, constraintDescriptor);
     }
 
@@ -80,7 +84,8 @@ public class DefaultMessageResolver implements MessageResolver {
                 } else {
                     String string = null;
                     try {
-                        string = getMessageBundle() != null ? messageBundle.getString(token) : null;
+                        ResourceBundle bundle = getMessageBundle();
+                        string = bundle != null ? bundle.getString(token) : null;
                     } catch (MissingResourceException e) {
                         //give a second chance with the default resource bundle
                     }
@@ -104,10 +109,11 @@ public class DefaultMessageResolver implements MessageResolver {
     }
 
     public void setLocale(Locale aLocale) {
-        if (!ObjectUtils.equals(aLocale, locale)) {
+        /*if (!ObjectUtils.equals(aLocale, locale)) {
             messageBundle = null; // reset, new lookup on access (lazy)
             defaultBundle = null; // reset, new lookup on access (lazy)
         }
+       */
         this.locale = aLocale;
     }
 
@@ -117,7 +123,7 @@ public class DefaultMessageResolver implements MessageResolver {
 
     public void setMessageBundleName(String aBundleName) {
         if (!messageBundleName.equals(aBundleName)) {
-            messageBundle = null; // reset, new lookup on access (lazy)
+            messageBundle.clear(); // reset, new lookup on access (lazy)
         }
         this.messageBundleName = aBundleName;
     }
@@ -128,25 +134,34 @@ public class DefaultMessageResolver implements MessageResolver {
      * @return default bundle
      */
     public ResourceBundle getDefaultBundle() {
-        if (defaultBundle == null) {
-            defaultBundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, locale);
+        ResourceBundle bundle = defaultBundle.get(locale);
+        if (bundle == null) {
+            bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, locale);
+            defaultBundle.put(locale, bundle);
         }
-        return defaultBundle;
+        return bundle;
     }
 
     /** @return the validationMessage-bundle, lazy lookup now */
     public ResourceBundle getMessageBundle() {
-        if (messageBundle == null && messageBundleName != null) {
-            try {
-                messageBundle = ResourceBundle.getBundle(messageBundleName, locale);
-            } catch (MissingResourceException ex) {
-                messageBundle = new ListResourceBundle() {
-                    protected Object[][] getContents() {
-                        return new Object[0][];
-                    }
-                };
+        if (messageBundleName != null) {
+            ResourceBundle bundle = messageBundle.get(locale);
+            if (bundle == null) {
+                try {
+                    bundle = ResourceBundle.getBundle(messageBundleName, locale);
+                    messageBundle.put(locale, bundle);
+                } catch (MissingResourceException ex) {
+                    bundle = new ListResourceBundle() {
+                        protected Object[][] getContents() {
+                            return new Object[0][];
+                        }
+                    };
+                    messageBundle.put(locale, bundle);
+                }
             }
+            return bundle;
+        } else {
+            return null;
         }
-        return messageBundle;
     }
 }

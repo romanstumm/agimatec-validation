@@ -23,7 +23,7 @@ public class FactoryBuilderImpl implements AgimatecValidatorFactoryBuilder, Vali
     protected final ValidationProviderResolver providerResolver;
     protected Class<? extends ValidatorFactoryBuilder<?>> providerClass;
 
-    protected MessageResolver messageResolver;
+    protected MessageResolver messageResolver, defaultMessageResolver;
     protected ConstraintFactory constraintFactory;
     private InputStream configurationStream;
 
@@ -49,6 +49,7 @@ public class FactoryBuilderImpl implements AgimatecValidatorFactoryBuilder, Vali
     private void initializeDefaults() {
         constraintFactory = new DefaultConstraintFactory();
         messageResolver = new DefaultMessageResolver();
+        defaultMessageResolver = messageResolver;
         setBeanValidator(new BeanValidator());
     }
 
@@ -94,6 +95,10 @@ public class FactoryBuilderImpl implements AgimatecValidatorFactoryBuilder, Vali
 
     public MessageResolver getMessageResolver() {
         return messageResolver;
+    }
+
+    public MessageResolver getDefaultMessageResolver() {
+        return defaultMessageResolver;
     }
 
     public ConstraintFactory getConstraintFactory() {

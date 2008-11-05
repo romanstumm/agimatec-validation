@@ -14,7 +14,7 @@ import javax.validation.ValidatorFactory;
  * Time: 17:06:20 <br/>
  * Copyright: Agimatec GmbH
  */
-public class AgimatecValidatorFactory implements ValidatorFactory {
+public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
     private static AgimatecValidatorFactory DEFAULT_FACTORY;
 
     private MetaBeanManager metaBeanManager;
@@ -36,6 +36,22 @@ public class AgimatecValidatorFactory implements ValidatorFactory {
 
     public <T> Validator<T> getValidator(Class<T> clazz) {
         return new ClassValidator(this, metaBeanManager.findForClass(clazz));
+    }
+
+    public <T> Validator<T> getValidator(Class<T> clazz, MessageResolver messageResolver) {
+        AgimatecValidatorFactory factory = this.clone();
+        factory.setMessageResolver(messageResolver);
+        return new ClassValidator(factory, metaBeanManager.findForClass(clazz));
+    }
+
+    @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException"})
+    @Override
+    public synchronized AgimatecValidatorFactory clone() {
+        try {
+            return (AgimatecValidatorFactory) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new InternalError(); // VM bug.
+        }
     }
 
     public void setMetaBeanManager(MetaBeanManager metaBeanManager) {

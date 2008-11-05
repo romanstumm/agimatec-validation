@@ -45,9 +45,9 @@ public class Jsr303Test extends TestCase {
 
     public void testMetadataAPI_Book() {
         Validator<Book> validator = getValidator(Book.class);
-        assertNotNull(validator.getConstraintsForBean());
-        assertTrue(validator.getConstraintsForBean() == validator.getConstraintsForBean());
-        BeanDescriptor bc = validator.getConstraintsForBean();
+        assertNotNull(validator.getConstraintsForClass());
+        assertTrue(validator.getConstraintsForClass() == validator.getConstraintsForClass());
+        BeanDescriptor bc = validator.getConstraintsForClass();
 //        assertEquals(ElementType.TYPE, bc.getElementType());
         assertEquals(Book.class, bc.getType());
 //        assertEquals(false, bc.isCascaded());
@@ -65,7 +65,7 @@ public class Jsr303Test extends TestCase {
 
     public void testMetadataAPI_Address() {
         Validator validator = getValidator(Address.class);
-        assertFalse(validator.getConstraintsForBean().getConstraintDescriptors().isEmpty());
+        assertFalse(validator.getConstraintsForClass().getConstraintDescriptors().isEmpty());
 
         Set<String> props = validator.getPropertiesWithConstraints();
         assertTrue(props.contains("addressline1")); // annotated at field level

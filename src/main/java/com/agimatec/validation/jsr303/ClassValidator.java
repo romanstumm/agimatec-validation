@@ -147,10 +147,10 @@ public class ClassValidator<T> implements Validator<T> {
     protected GroupValidationContext createContext(T object,
                                                    String[] groups) {
         ConstraintValidationListener<T> listener = new ConstraintValidationListener<T>(object);
-        GroupBeanValidationContext context = new GroupBeanValidationContext(listener,
+        GroupValidationContextImpl context = new GroupValidationContextImpl(listener,
                 factory.getMessageResolver());
         if (groups == null || groups.length == 0)
-            groups = GroupBeanValidationContext.DEFAULT_GROUPS;
+            groups = GroupValidationContext.DEFAULT_GROUPS;
         context.setRequestedGroups(groups);
         context.setBean(object, metaBean);
         return context;
@@ -170,7 +170,7 @@ public class ClassValidator<T> implements Validator<T> {
         return false;
     }
 
-    public BeanDescriptor getConstraintsForBean() {
+    public BeanDescriptor getConstraintsForClass() {
         if (elementDescriptor == null) {
             ElementDescriptorImpl edesc = new ElementDescriptorImpl();
 //            edesc.setElementType(ElementType.TYPE);
@@ -233,5 +233,13 @@ public class ClassValidator<T> implements Validator<T> {
             }
         }
         return validatedProperties; /*.toArray(new String[validatedProperties.size()]);*/
+    }
+
+    public AgimatecValidatorFactory getFactory() {
+        return factory;
+    }
+
+    public MetaBean getMetaBean() {
+        return metaBean;
     }
 }

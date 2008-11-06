@@ -17,6 +17,7 @@ import java.util.*;
 
 /**
  * Description: Adapter between Constraint (JSR303) and Validation (Agimatec)<br/>
+ * this instance is immutable!<br/>
  * User: roman.stumm <br/>
  * Date: 01.04.2008 <br/>
  * Time: 17:31:36 <br/>
@@ -28,7 +29,7 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
     private final Annotation annotation; // for metadata request API
     private Set<ConstraintValidation> composedConstraints;
     private final Field field;
-    private boolean reportFromComposite;
+    private final boolean reportFromComposite;
     private Map<String, Object> parameters;
 
     protected ConstraintValidation(Constraint constraint, String[] groupsArray,

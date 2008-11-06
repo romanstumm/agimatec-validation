@@ -9,6 +9,7 @@ import javax.validation.ValidatorFactory;
 
 /**
  * Description: a factory is a complete configurated object that can create validators<br/>
+ * this instance is not thread-safe<br/>
  * User: roman.stumm <br/>
  * Date: 29.10.2008 <br/>
  * Time: 17:06:20 <br/>

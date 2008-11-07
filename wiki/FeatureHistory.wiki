@@ -4,7 +4,9 @@
 The reference implementation and JSR303 specification is rapidly changing at the moment.
 Check out the svn-sources to get the code compatible with the current state of the validation-api.*
 
-V0.7: (Nov. 2008)
+V0.7.1 (snapshot): (Nov. 2008)
+  * compatible with validation-api.jar (snapshot 7th november 2008)
+   - the interfaces and classes changed their names quite often since release 0.7-SNAPSHOT
   * using javax.validation/validation-api from reference implementation
   * implementing proposed bootstrap APIs
   * dropped support for proprietary bootstrap classes 

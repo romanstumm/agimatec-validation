@@ -33,7 +33,7 @@ javax.valiation.ValidatorFactory factory = Validation.getValidatorBuilder().buil
 javax.valiation.Validator customerValidator = factory.getValidator(Customer.class);
 }}}
 
-b) OR you can use agimetec-validation specific APIs:
+b) OR you can use agimatec-validation specific APIs:
 {{{
 // direct constructor invocation
 javax.validation.Validator customerValidator = new ClassValidator(Customer.class);

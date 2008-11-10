@@ -48,7 +48,7 @@ javax.validation.Validator<Customer> customerValidator = AgimatecValidatorFactor
 // ... some business code to create the customer instance
 
 // validate the instance and its child objects
-Set<InvalidConstraint<Customer>> violations = customerValidator.validate(customer);
+Set<ConstraintViolation<Customer>> violations = customerValidator.validate(customer);
 }}}
 
 3. Create constraints for your classes with annotations

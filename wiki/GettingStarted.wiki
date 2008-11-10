@@ -78,12 +78,12 @@ The framework offers additional features that are not part of the upcoming speci
 
 {{{
 <beanInfos>
-  <bean id="Address" impl="com.agimatec.example.Address">
+  <bean id="Address" impl="com.agimatec.validation.jsr303.example.Address">
     <property name="city" mandatory="true" maxLength="10"/>
     <relationship name="country" beanId="Country" mandatory="true"/>
   </bean>
 
-  <bean id="Country" impl="com.agimatec.example.Country">
+  <bean id="Country" impl="com.agimatec.validation.jsr303.example.Country">
     <feature key="mainKey">
       <value class="string">isoCode</value>
     </feature>
@@ -105,9 +105,9 @@ The framework offers additional features that are not part of the upcoming speci
 You can also add custom validators or exchange the default validators:
 {{{
 <beanInfos>
-  <validator id="email" java="com.agimatec.utility.validation.routines.EMailValidation"/>
+  <validator id="email" java="com.agimatec.validation.routines.EMailValidation"/>
 
-  <bean id="Customer" impl="com.agimatec.example.Customer">
+  <bean id="Customer" impl="com.agimatec.validation.jsr303.example.Customer">
     <property name="email">
       <validator refId="email"/>
     </property>

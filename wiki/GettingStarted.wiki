@@ -53,7 +53,7 @@ Set<ConstraintViolation<Customer>> violations = customerValidator.validate(custo
 
 3. Create constraints for your classes with annotations
 
-If you want the validator to find some !InvalidConstraints, annotate your business objects with the annotations in javax.validation or create your own annotations for custom validation rules.
+If you want the validator to find some !ConstraintViolations, annotate your business objects with the annotations in javax.validation or create your own annotations for custom validation rules.
 
 {{{
 public class Customer{

@@ -30,14 +30,12 @@ a) You can do this by using JSR303 bootstrapping APIs:
 javax.valiation.ValidatorFactory factory = Validation.getValidatorBuilder().build()
 
 // create validators using the factory
-javax.valiation.Validator customerValidator = factory.getValidator(Customer.class);
+javax.valiation.Validator customerValidator = factory.getValidator();
 }}}
 
 b) OR you can use agimatec-validation specific APIs:
 {{{
-// direct constructor invocation
-javax.validation.Validator customerValidator = new ClassValidator(Customer.class);
-// or using AgimatecValidatorFactory (you can configure the factory)
+// using AgimatecValidatorFactory (you can configure the factory)
 javax.validation.Validator<Customer> customerValidator = AgimatecValidatorFactory.getDefault().getValidator(Customer.class);
 }}}
 

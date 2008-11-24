@@ -30,13 +30,13 @@ a) You can do this by using JSR303 bootstrapping APIs:
 javax.valiation.ValidatorFactory factory = Validation.getValidatorBuilder().build()
 
 // create validators using the factory
-javax.valiation.Validator customerValidator = factory.getValidator();
+javax.valiation.Validator validator = factory.getValidator();
 }}}
 
 b) OR you can use agimatec-validation specific APIs:
 {{{
 // using AgimatecValidatorFactory (you can configure the factory)
-javax.validation.Validator<Customer> customerValidator = AgimatecValidatorFactory.getDefault().getValidator(Customer.class);
+javax.validation.Validator validator = AgimatecValidatorFactory.getDefault().getValidator();
 }}}
 
 2. validate an instance of your business class
@@ -46,7 +46,7 @@ javax.validation.Validator<Customer> customerValidator = AgimatecValidatorFactor
 // ... some business code to create the customer instance
 
 // validate the instance and its child objects
-Set<ConstraintViolation<Customer>> violations = customerValidator.validate(customer);
+Set<ConstraintViolation<Customer>> violations = validator.validate(customer);
 }}}
 
 3. Create constraints for your classes with annotations

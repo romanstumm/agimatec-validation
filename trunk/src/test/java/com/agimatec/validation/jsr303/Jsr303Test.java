@@ -24,7 +24,7 @@ public class Jsr303Test extends TestCase {
     }
 
     public void testBook() {
-        Validator<BusinessObject> validator = getValidator(BusinessObject.class);
+        Validator validator = getValidator();
 
         BusinessObject object = new BusinessObject();
         object.setTitle("1234567834567 too long title ");
@@ -36,18 +36,18 @@ public class Jsr303Test extends TestCase {
     }
 
     public void testValidateValue() {
-        assertTrue(getValidator(Book.class)
-                .validateValue("subtitle", "123456789098765432").isEmpty());
-        assertFalse(getValidator(Book.class)
-                .validateValue("subtitle",
+        assertTrue(getValidator()
+                .validateValue(Book.class, "subtitle", "123456789098765432").isEmpty());
+        assertFalse(getValidator()
+                .validateValue(Book.class, "subtitle",
                         "123456789098765432123456789098765432123456789098765432").isEmpty());
     }
 
     public void testMetadataAPI_Book() {
-        Validator<Book> validator = getValidator(Book.class);
-        assertNotNull(validator.getConstraintsForClass());
-        assertTrue(validator.getConstraintsForClass() == validator.getConstraintsForClass());
-        BeanDescriptor bc = validator.getConstraintsForClass();
+        Validator validator = getValidator();
+        assertNotNull(validator.getConstraintsForClass(Book.class));
+        assertTrue(validator.getConstraintsForClass(Book.class) == validator.getConstraintsForClass(Book.class));
+        BeanDescriptor bc = validator.getConstraintsForClass(Book.class);
 //        assertEquals(ElementType.TYPE, bc.getElementType());
         assertEquals(Book.class, bc.getType());
 //        assertEquals(false, bc.isCascaded());
@@ -56,18 +56,18 @@ public class Jsr303Test extends TestCase {
     }
 
     public void testMetadataAPI_Engine() {
-        Validator validator = getValidator(Engine.class);
-        assertTrue(validator.getPropertiesWithConstraints().contains("serialNumber"));
-        ElementDescriptor desc = validator.getConstraintsForProperty("serialNumber");
+        Validator validator = getValidator();
+        assertTrue(validator.getPropertiesWithConstraints(Engine.class).contains("serialNumber"));
+        ElementDescriptor desc = validator.getConstraintsForProperty(Engine.class, "serialNumber");
 //        assertEquals(ElementType.FIELD, desc.getElementType());
         assertEquals(String.class, desc.getType());
     }
 
     public void testMetadataAPI_Address() {
-        Validator validator = getValidator(Address.class);
-        assertFalse(validator.getConstraintsForClass().getConstraintDescriptors().isEmpty());
+        Validator validator = getValidator();
+        assertFalse(validator.getConstraintsForClass(Address.class).getConstraintDescriptors().isEmpty());
 
-        Set<String> props = validator.getPropertiesWithConstraints();
+        Set<String> props = validator.getPropertiesWithConstraints(Address.class);
         assertTrue(props.contains("addressline1")); // annotated at field level
         assertTrue(props.contains("addressline2"));
         assertTrue(props.contains("zipCode"));
@@ -75,7 +75,7 @@ public class Jsr303Test extends TestCase {
         assertTrue(props.contains("city"));       // annotated at method level
         assertEquals(5, props.size());
 
-        ElementDescriptor desc = validator.getConstraintsForProperty("addressline1");
+        ElementDescriptor desc = validator.getConstraintsForProperty(Address.class, "addressline1");
         assertNotNull(desc);
         boolean found = false;
         for (ConstraintDescriptor each : desc.getConstraintDescriptors()) {
@@ -90,12 +90,12 @@ public class Jsr303Test extends TestCase {
     }
 
     public void testEngine() {
-        Validator<Engine> validator = getValidator(Engine.class);
+        Validator validator = getValidator(); 
         Engine engine = new Engine();
         validator.validate(engine);
     }
 
-    private Validator getValidator(Class clazz) {
-        return AgimatecValidatorFactory.getDefault().getValidator(clazz);
+    private Validator getValidator() {
+        return AgimatecValidatorFactory.getDefault().getValidator();
     }
 }

@@ -35,14 +35,14 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
     public AgimatecValidatorFactory() {
     }
 
-    public <T> Validator<T> getValidator(Class<T> clazz) {
-        return new ClassValidator(this, metaBeanManager.findForClass(clazz));
+    public Validator getValidator() {
+        return new ClassValidator(this);
     }
 
-    public <T> Validator<T> getValidator(Class<T> clazz, MessageResolver messageResolver) {
+    public Validator getValidator(MessageResolver messageResolver) {
         AgimatecValidatorFactory factory = this.clone();
         factory.setMessageResolver(messageResolver);
-        return new ClassValidator(factory, metaBeanManager.findForClass(clazz));
+        return new ClassValidator(factory);
     }
 
     @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException"})

@@ -16,13 +16,15 @@ import java.util.Set;
  */
 public class ComposedConstraintsTest extends TestCase {
     static ValidatorFactory factory;
+
     static {
         factory = Validation.getBuilder().build();
     }
 
     public void testMetaDataAPI_ComposedConstraints() {
-        Validator<FrenchAddress> addressValidator = factory.getValidator(FrenchAddress.class);
-        ElementDescriptor ed = addressValidator.getConstraintsForProperty("zipCode");
+        Validator addressValidator = factory.getValidator();
+        ElementDescriptor ed =
+                addressValidator.getConstraintsForProperty(FrenchAddress.class, "zipCode");
         assertEquals(1, ed.getConstraintDescriptors().size());
         for (ConstraintDescriptor cd : ed.getConstraintDescriptors()) {
             assertTrue(cd.isReportAsViolationFromCompositeConstraint());
@@ -47,19 +49,19 @@ public class ComposedConstraintsTest extends TestCase {
 
     public void testValidateComposed() {
         FrenchAddress adr = new FrenchAddress();
-        Validator<FrenchAddress> val = factory.getValidator(FrenchAddress.class);
+        Validator val = factory.getValidator();
         Set<ConstraintViolation<FrenchAddress>> findings = val.validate(adr);
         assertEquals(1, findings.size()); // with @ReportAsSingleConstraintViolation
 
 //        assertEquals(3, findings.size()); // without @ReportAsSingleConstraintViolation
-        
+
         ConstraintViolation<FrenchAddress> finding = findings.iterator().next();
         assertEquals("Wrong zipcode", finding.getMessage());
 
         adr.setZipCode("12345");
         findings = val.validate(adr);
         assertEquals(0, findings.size());
-        
+
         adr.setZipCode("1234567234567");
         findings = val.validate(adr);
         assertTrue(findings.size() > 0); // too long

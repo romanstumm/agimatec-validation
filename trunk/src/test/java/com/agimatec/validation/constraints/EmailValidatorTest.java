@@ -21,7 +21,7 @@ public class EmailValidatorTest extends TestCase {
     }
 
     public void testEmail() {
-        Validator validator = AgimatecValidatorFactory.getDefault().getValidator(Customer.class);
+        Validator validator = AgimatecValidatorFactory.getDefault().getValidator();
         Customer customer = new Customer();
         customer.setCustomerId("id-1");
         customer.setFirstName("Mary");

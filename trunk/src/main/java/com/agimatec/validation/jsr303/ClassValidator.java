@@ -17,49 +17,27 @@ import java.util.Set;
 /**
  * API class -
  * Description:
- * instance is able to validate instances of T classes (and the associated objects if any).
+ * instance is able to validate bean instances (and the associated objects).
  * concurrent, multithreaded access implementation is safe.
- * It is recommended to cache BeanValidator<T> instances.
+ * It is recommended to cache the instance.
  * <br/>
  * User: roman.stumm <br/>
  * Date: 01.04.2008 <br/>
  * Time: 13:36:33 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-public class ClassValidator<T> implements Validator<T> {
-    protected final MetaBean metaBean;
+public class ClassValidator implements Validator {
     protected final AgimatecValidatorFactory factory;
-    private ElementDescriptorImpl elementDescriptor;
 
-    /**
-     * create an instance with the default provider for a bean class
-     * <p/>
-     * <pre>compatibility: use official bootstrap API instead</pre>
-     */
-    public ClassValidator(Class<T> aClass) {
-        factory = AgimatecValidatorFactory.getDefault();
-        metaBean = factory.getMetaBeanManager().findForClass(aClass);
-    }
-
-    /**
-     * create an instance with the default provider for a bean id
-     * <p/>
-     * <pre>compatibility: use official bootstrap API instead</pre>
-     */
-    public ClassValidator(String metaBeanId) {
-        factory = AgimatecValidatorFactory.getDefault();
-        metaBean = factory.getMetaBeanManager().findForId(metaBeanId);
-    }
-
-    public ClassValidator(AgimatecValidatorFactory factory, MetaBean metaBean) {
+    public ClassValidator(AgimatecValidatorFactory factory) {
         this.factory = factory;
-        this.metaBean = metaBean;
     }
 
     /** validate all constraints on object */
-    public Set<ConstraintViolation<T>> validate(T object, String... groups) {
+    public <T> Set<ConstraintViolation<T>> validate(T object, String... groups) {
         if (object == null) throw new IllegalArgumentException("cannot validate null");
-        GroupValidationContext context = createContext(object, groups);
+        MetaBean metaBean = factory.getMetaBeanManager().findForClass(object.getClass());
+        GroupValidationContext context = createContext(metaBean, object, groups);
         ConstraintValidationListener result = (ConstraintValidationListener) context.getListener();
         List<String> sequence = context.getSequencedGroups();
         for (String currentGroup : sequence) {
@@ -80,12 +58,13 @@ public class ClassValidator<T> implements Validator<T> {
      *
      * @param propertyName - the attribute name, or nested property name (e.g. prop[2].subpropA.subpropB)
      */
-    public Set<ConstraintViolation<T>> validateProperty(T object, String propertyName,
-                                                      String... groups) {
+    public <T> Set<ConstraintViolation<T>> validateProperty(T object, String propertyName,
+                                                            String... groups) {
         if (object == null) throw new IllegalArgumentException("cannot validate null");
-        GroupValidationContext context = createContext(object, groups);
+        MetaBean metaBean = factory.getMetaBeanManager().findForClass(object.getClass());
+        GroupValidationContext context = createContext(metaBean, object, groups);
         ConstraintValidationListener result = (ConstraintValidationListener) context.getListener();
-        NestedMetaProperty nestedProp = getNestedProperty(object, propertyName);
+        NestedMetaProperty nestedProp = getNestedProperty(metaBean, object, propertyName);
         context.setMetaProperty(nestedProp.getMetaProperty());
         if (nestedProp.isNested()) {
             context.setFixedValue(nestedProp.getValue());
@@ -113,7 +92,7 @@ public class ClassValidator<T> implements Validator<T> {
      * which could contain a path, following the path on a given object to resolve
      * types at runtime from the instance
      */
-    private NestedMetaProperty getNestedProperty(Object t, String propertyName) {
+    private NestedMetaProperty getNestedProperty(MetaBean metaBean, Object t, String propertyName) {
         NestedMetaProperty nested = new NestedMetaProperty(propertyName, t);
         nested.setMetaBean(metaBean);
         nested.parse();
@@ -124,11 +103,12 @@ public class ClassValidator<T> implements Validator<T> {
      * validate all constraints on <code>propertyName</code> property
      * if the property value is <code>value</code>
      */
-    public Set<ConstraintViolation<T>> validateValue(String propertyName, Object value,
-                                                   String... groups) {
-        GroupValidationContext context = createContext(null, groups);
+    public <T> Set<ConstraintViolation<T>> validateValue(Class<T> beanType, String propertyName,
+                                                         Object value, String... groups) {
+        MetaBean metaBean = factory.getMetaBeanManager().findForClass(beanType);
+        GroupValidationContext context = createContext(metaBean, null, groups);
         ConstraintValidationListener result = (ConstraintValidationListener) context.getListener();
-        context.setMetaProperty(getNestedProperty(null, propertyName).getMetaProperty());
+        context.setMetaProperty(getNestedProperty(metaBean, null, propertyName).getMetaProperty());
         context.setFixedValue(value);
         List<String> sequence = context.getSequencedGroups();
         for (String currentGroup : sequence) {
@@ -144,8 +124,8 @@ public class ClassValidator<T> implements Validator<T> {
         return result.getConstaintViolations();
     }
 
-    protected GroupValidationContext createContext(T object,
-                                                   String[] groups) {
+    protected <T> GroupValidationContext createContext(MetaBean metaBean, T object,
+                                                       String[] groups) {
         ConstraintValidationListener<T> listener = new ConstraintValidationListener<T>(object);
         GroupValidationContextImpl context = new GroupValidationContextImpl(listener,
                 factory.getMessageResolver());
@@ -157,10 +137,12 @@ public class ClassValidator<T> implements Validator<T> {
     }
 
     /**
+     * @param clazz class type evaluated
      * @return true if at least one constraint declaration is present for the given bean
      *         or if one property is marked for validation cascade
      */
-    public boolean hasConstraints() {
+    public boolean hasConstraints(Class<?> clazz) {
+        MetaBean metaBean = factory.getMetaBeanManager().findForClass(clazz);
         if (metaBean.getValidations().length > 0) return true;
         for (MetaProperty mprop : metaBean.getProperties()) {
             if (mprop.getValidations().length > 0) return true;
@@ -170,23 +152,16 @@ public class ClassValidator<T> implements Validator<T> {
         return false;
     }
 
-    public BeanDescriptor getConstraintsForClass() {
-        if (elementDescriptor == null) {
-            ElementDescriptorImpl edesc = new ElementDescriptorImpl();
-//            edesc.setElementType(ElementType.TYPE);
+    public BeanDescriptor getConstraintsForClass(Class<?> clazz) {
+        MetaBean metaBean = factory.getMetaBeanManager().findForClass(clazz);
+        ElementDescriptorImpl edesc = metaBean.getFeature(Jsr303Features.Bean.BeanDescriptor);
+        if (edesc == null) {
+            edesc = new ElementDescriptorImpl();
             edesc.setReturnType(metaBean.getBeanClass());
-            ////////////// BEGIN: code to delete ///////////
-            /**
-             * enhancement: this can most likely be deleted (also from the spec)
-             * if the constraint is a class level constraint, then the empty string is used
-             */
-            edesc.setPropertyPath("");
-//            edesc.setCascaded(false);
-            /////////////// END: code to delete ////////////////
             createConstraintDescriptors(edesc, metaBean.getValidations());
-            elementDescriptor = edesc;
+            metaBean.putFeature(Jsr303Features.Bean.BeanDescriptor, edesc);
         }
-        return elementDescriptor;
+        return edesc;
     }
 
     private void createConstraintDescriptors(ElementDescriptorImpl edesc,
@@ -200,7 +175,8 @@ public class ClassValidator<T> implements Validator<T> {
         }
     }
 
-    public PropertyDescriptor getConstraintsForProperty(String propertyName) {
+    public PropertyDescriptor getConstraintsForProperty(Class<?> clazz, String propertyName) {
+        MetaBean metaBean = factory.getMetaBeanManager().findForClass(clazz);
         MetaProperty prop = metaBean.getProperty(propertyName);
         if (prop == null) return null;
         ElementDescriptorImpl edesc = prop.getFeature(Jsr303Features.Property.ElementDescriptor);
@@ -210,21 +186,14 @@ public class ClassValidator<T> implements Validator<T> {
             edesc.setCascaded(prop.getFeature(Features.Property.REF_CASCADE, false));
             edesc.setPropertyPath(propertyName);
             createConstraintDescriptors(edesc, prop.getValidations());
-            // hack try to find if elementType is FIELD
-//            edesc.setElementType(ElementType.FIELD);
-            /*for (ConstraintDescriptor each : edesc.getConstraintDescriptors()) {
-                if (!((ConstraintDescriptorImpl) each).isFieldAccess()) {
-                    edesc.setElementType(ElementType.METHOD);
-                    break;
-                }
-            }*/
             prop.putFeature(Jsr303Features.Property.ElementDescriptor, edesc);
         }
         return edesc;
     }
 
     /** @return return the property names having at least a constraint defined */
-    public Set<String> getPropertiesWithConstraints() {
+    public Set<String> getPropertiesWithConstraints(Class<?> clazz) {
+        MetaBean metaBean = factory.getMetaBeanManager().findForClass(clazz);
         Set<String> validatedProperties = new HashSet();
         for (MetaProperty prop : metaBean.getProperties()) {
             if (prop.getValidations().length > 0 || (prop.getMetaBean() != null &&
@@ -232,14 +201,11 @@ public class ClassValidator<T> implements Validator<T> {
                 validatedProperties.add(prop.getName());
             }
         }
-        return validatedProperties; /*.toArray(new String[validatedProperties.size()]);*/
+        return validatedProperties;
     }
 
     public AgimatecValidatorFactory getFactory() {
         return factory;
     }
 
-    public MetaBean getMetaBean() {
-        return metaBean;
-    }
 }

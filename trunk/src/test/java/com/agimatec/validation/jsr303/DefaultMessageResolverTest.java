@@ -31,15 +31,16 @@ public class DefaultMessageResolverTest extends TestCase {
     public void testCreateResolver() {
         assertTrue(resolver.getDefaultBundle() != null);
 
-        Validator<PreferredGuest> gvalidator = getValidator(PreferredGuest.class);
+        Validator gvalidator = getValidator();
         ConstraintDescriptor desc =
-                (ConstraintDescriptor) gvalidator.getConstraintsForProperty("guestCreditCardNumber")
+                (ConstraintDescriptor) gvalidator.getConstraintsForProperty(PreferredGuest.class,
+                        "guestCreditCardNumber")
                         .getConstraintDescriptors().toArray()[0];
         String msg = resolver.interpolate("{validator.creditcard}", desc, "12345678");
         assertEquals("credit card is not valid", msg);
 
-        Validator<Author> avalidator = getValidator(Author.class);
-        desc = (ConstraintDescriptor) avalidator.getConstraintsForProperty("lastName")
+        Validator avalidator = getValidator();
+        desc = (ConstraintDescriptor) avalidator.getConstraintsForProperty(Author.class, "lastName")
                 .getConstraintDescriptors().toArray()[0];
 
         msg = resolver.interpolate("{validator.notEmpty}", desc, "");
@@ -47,7 +48,7 @@ public class DefaultMessageResolverTest extends TestCase {
     }
 
 
-    private Validator getValidator(Class clazz) {
-        return AgimatecValidatorFactory.getDefault().getValidator(clazz);
+    private Validator getValidator() {
+        return AgimatecValidatorFactory.getDefault().getValidator();
     }
 }

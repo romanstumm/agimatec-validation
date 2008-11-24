@@ -41,8 +41,8 @@ public class FooTest extends TestCase {
     public void testValidation() {
         FooTest t = new FooTest();
 
-        ClassValidator v = new ClassValidator(t.getClass());
-        Set<ConstraintViolation> errors = v.validate(t);
+        ClassValidator v = new ClassValidator(AgimatecValidatorFactory.getDefault());
+        Set<ConstraintViolation<FooTest>> errors = v.validate(t);
         System.out.println("got errors:");
         for (ConstraintViolation error : errors) {
             System.out.println(error.getPropertyPath());

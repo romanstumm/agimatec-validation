@@ -1,7 +1,6 @@
 package com.agimatec.validation.jsr303;
 
 import com.agimatec.validation.constraints.NotNullConstraint;
-import com.agimatec.validation.jsr303.example.Address;
 import com.agimatec.validation.jsr303.example.Customer;
 import junit.framework.TestCase;
 
@@ -22,8 +21,8 @@ import java.util.Set;
  */
 public class BootstrapTest extends TestCase {
     public void testAgimatecBootstrap() {
-        Validator<Address> validator =
-                AgimatecValidatorFactory.getDefault().getValidator(Address.class);
+        Validator validator =
+                AgimatecValidatorFactory.getDefault().getValidator();
         assertNotNull(validator);
         assertTrue(AgimatecValidatorFactory.getDefault() ==
                 AgimatecValidatorFactory.getDefault());
@@ -32,7 +31,7 @@ public class BootstrapTest extends TestCase {
     public void testEverydayBootstrap() {
         AgimatecValidatorFactory factory =
                 (AgimatecValidatorFactory) Validation.getBuilder().build();
-        Validator<Address> validator = factory.getValidator(Address.class);
+        Validator validator = factory.getValidator();
         assertNotNull(validator);
 
         // each call to Validation.getValidationBuilder() returns a new builder with new state
@@ -71,7 +70,7 @@ public class BootstrapTest extends TestCase {
         assertDefaultBuilderAndFactory(builder);
 
         ValidatorFactory factory = builder.build();
-        Validator<Customer> validator = factory.getValidator(Customer.class);
+        Validator validator = factory.getValidator();
 
         Customer customer = new Customer();
         customer.setFirstName("John");
@@ -91,7 +90,7 @@ public class BootstrapTest extends TestCase {
                 }
         );
         factory = builder.build();
-        validator = factory.getValidator(Customer.class);
+        validator = factory.getValidator();
         Set<ConstraintViolation<Customer>> ConstraintViolations2 = validator.validate(customer);
         assertTrue("Wrong number of constraints",
                 ConstraintViolations.size() > ConstraintViolations2.size());

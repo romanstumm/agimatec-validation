@@ -25,5 +25,10 @@ interface Jsr303Features {
 
         /** INFO: cached sortied Array with ValidationEntries */
         String ValidationSequence = "ValidationSequence";
+
+        /**
+         * INFO: cached BeanDescriptor
+         */
+        String BeanDescriptor = "BeanDescriptor";
     }
 }

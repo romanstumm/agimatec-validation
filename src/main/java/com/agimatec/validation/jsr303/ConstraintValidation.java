@@ -25,14 +25,14 @@ import java.util.*;
  */
 class ConstraintValidation implements Validation, ConstraintDescriptor {
     private final Constraint constraint;
-    private final Set<String> groups;
+    private final Set<Class<?>> groups;
     private final Annotation annotation; // for metadata request API
     private Set<ConstraintValidation> composedConstraints;
     private final Field field;
     private final boolean reportFromComposite;
     private Map<String, Object> parameters;
 
-    protected ConstraintValidation(Constraint constraint, String[] groupsArray,
+    protected ConstraintValidation(Constraint constraint, Class<?>[] groupsArray,
                                    Annotation annotation, AnnotatedElement element) {
         this.constraint = constraint;
 
@@ -140,8 +140,8 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
         return constraint;
     }
 
-    protected boolean isMemberOf(String reqGroup) {
-        for (String group : groups) {
+    protected boolean isMemberOf(Class<?> reqGroup) {
+        for (Class<?> group : groups) {
             if (group.equals(reqGroup)) return true;
         }
         return false;
@@ -187,7 +187,7 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
         return composedConstraints == null ? Collections.EMPTY_SET : composedConstraints;
     }
 
-    public Set<String> getGroups() {
+    public Set<Class<?>> getGroups() {
         return groups;
     }
 

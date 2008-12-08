@@ -30,7 +30,7 @@ class ConstraintValidationListener<T> implements ValidationListener {
         else value = context.getPropertyValue();
 
         final String propPath;
-        final Set<String> groups;
+        final Set<Class<?>> groups;
         final ConstraintDescriptor constraint;
         if (context instanceof GroupValidationContext) {
             propPath = ((GroupValidationContext) context).getPropertyPath();
@@ -40,13 +40,13 @@ class ConstraintValidationListener<T> implements ValidationListener {
         } else {
             propPath = context.getPropertyName();
             groups = new HashSet(GroupValidationContext.DEFAULT_GROUPS.length);
-            for (String each : GroupValidationContext.DEFAULT_GROUPS) {
+            for (Class<?> each : GroupValidationContext.DEFAULT_GROUPS) {
                 groups.add(each);
             }
             constraint = null;
         }
         ConstraintViolationImpl<T> ic = new ConstraintViolationImpl<T>(reason, rootBean, context.getBean(),
-                context.getMetaBean().getBeanClass(), propPath, value, groups, constraint);
+                propPath, value, groups, constraint);
         constaintViolations.add(ic);
     }
 

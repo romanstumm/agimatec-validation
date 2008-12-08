@@ -1,9 +1,17 @@
 package com.agimatec.validation.jsr303;
 
+import com.agimatec.validation.model.Features;
+import com.agimatec.validation.model.MetaBean;
+import com.agimatec.validation.model.MetaProperty;
+import com.agimatec.validation.model.Validation;
+
 import javax.validation.BeanDescriptor;
 import javax.validation.ConstraintDescriptor;
 import javax.validation.PropertyDescriptor;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Description: MetaData class<br/>
@@ -14,10 +22,21 @@ import java.util.List;
  */
 class ElementDescriptorImpl implements BeanDescriptor, PropertyDescriptor {
     //    private ElementType elementType;
-    private Class returnType;
+    private MetaBean metaBean;
     private boolean cascaded;
+    private Class type;
     private List<ConstraintDescriptor> constraintDescriptors;
     private String propertyPath;
+
+    public ElementDescriptorImpl(MetaBean metaBean,
+                                 Validation[] validations) {
+        this.metaBean = metaBean;
+        this.type = metaBean.getBeanClass();
+        createConstraintDescriptors(validations);
+    }
+
+    public ElementDescriptorImpl() {
+    }
 
     /*
      * @deprecated not part of ElementDescriptor interface anymore
@@ -29,7 +48,7 @@ class ElementDescriptorImpl implements BeanDescriptor, PropertyDescriptor {
     */
 
     public Class getType() {
-        return returnType;
+        return type;
     }
 
     public boolean isCascaded() {
@@ -41,9 +60,68 @@ class ElementDescriptorImpl implements BeanDescriptor, PropertyDescriptor {
     }
 
     /**
+     * return true if at least one constraint declaration is present for the given bean
+     * or if one property is marked for validation cascade
+     */
+    public boolean hasConstraints() {
+        if (metaBean.getValidations().length > 0) return true;
+        for (MetaProperty mprop : metaBean.getProperties()) {
+            if (mprop.getValidations().length > 0) return true;
+            if (mprop.getMetaBean() != null &&
+                    mprop.getFeature(Features.Property.REF_CASCADE, true)) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Return the property level constraints for a given propertyName
+     * or null if either the property does not exist or has no constraint
+     * The returned object (and associated objects including ConstraintDescriptors)
+     * are immutable.
+     *
+     * @param propertyName property evaludated
+     */
+    public PropertyDescriptor getConstraintsForProperty(String propertyName) {
+        MetaProperty prop = metaBean.getProperty(propertyName);
+        if (prop == null) return null;
+        ElementDescriptorImpl edesc = prop.getFeature(Jsr303Features.Property.ElementDescriptor);
+        if (edesc == null) {
+            edesc = new ElementDescriptorImpl();
+            edesc.setType(prop.getFeature(Features.Property.REF_BEAN_TYPE, prop.getType()));
+            edesc.setCascaded(prop.getFeature(Features.Property.REF_CASCADE, false));
+            edesc.setPropertyPath(propertyName);
+            edesc.createConstraintDescriptors(prop.getValidations());
+            prop.putFeature(Jsr303Features.Property.ElementDescriptor, edesc);
+        }
+        return edesc;
+    }
+
+    /** return the property names having at least a constraint defined */
+    public Set<String> getPropertiesWithConstraints() {
+        Set<String> validatedProperties = new HashSet();
+        for (MetaProperty prop : metaBean.getProperties()) {
+            if (prop.getValidations().length > 0 || (prop.getMetaBean() != null &&
+                    prop.getFeature(Features.Property.REF_CASCADE, true))) {
+                validatedProperties.add(prop.getName());
+            }
+        }
+        return validatedProperties;
+    }
+
+    private void createConstraintDescriptors(Validation[] validations) {
+        setConstraintDescriptors(new ArrayList(validations.length));
+        for (Validation validation : validations) {
+            if (validation instanceof ConstraintValidation) {
+                ConstraintValidation cval = (ConstraintValidation) validation;
+                getConstraintDescriptors().add(cval);
+            }
+        }
+    }
+
+    /**
      * enhancement: delete when spec is stable
+     *
      * @deprecated use getPropertyName() instead
-     * @return
      */
     public String getPropertyPath() {
         return propertyPath;
@@ -69,12 +147,12 @@ class ElementDescriptorImpl implements BeanDescriptor, PropertyDescriptor {
         this.propertyPath = propertyPath;
     }
 
-    public void setReturnType(Class returnType) {
-        this.returnType = returnType;
+    public void setType(Class returnType) {
+        this.type = returnType;
     }
 
     public String toString() {
-        return "ElementDescriptorImpl{" + "returnType=" + returnType + ", propertyPath='" +
+        return "ElementDescriptorImpl{" + "returnType=" + type + ", propertyPath='" +
                 propertyPath + '\'' + '}';
     }
 }

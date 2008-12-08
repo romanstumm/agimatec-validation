@@ -7,11 +7,11 @@ import javax.validation.Valid;
 import java.util.List;
 
 public class Author {
-    @NotEmpty(groups = "last")
+    @NotEmpty(groups = Last.class)
     private String firstName;
-    @NotEmpty(groups = "first")
+    @NotEmpty(groups = First.class)
     private String lastName;
-    @Length(max = 30, groups = "last")
+    @Length(max = 30, groups = First.class)
     private String company;
 
     @Valid

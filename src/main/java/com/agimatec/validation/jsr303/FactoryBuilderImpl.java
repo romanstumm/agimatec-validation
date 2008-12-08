@@ -46,6 +46,12 @@ public class FactoryBuilderImpl implements AgimatecValidatorFactoryBuilder, Vali
         initializeDefaults();
     }
 
+    // TODO RSt - nyi
+    public AgimatecValidatorFactoryBuilder traversableResolver(TraversableResolver resolver)
+    {
+        return null;
+    }
+
     private void initializeDefaults() {
         constraintFactory = new DefaultConstraintFactory();
         messageResolver = new DefaultMessageResolver();
@@ -103,6 +109,10 @@ public class FactoryBuilderImpl implements AgimatecValidatorFactoryBuilder, Vali
 
     public ConstraintFactory getConstraintFactory() {
         return constraintFactory;
+    }
+
+    public TraversableResolver getTraversableResolver() {
+        return null;  // TODO RSt - nyi
     }
 
     public ValidationProvider getProvider() {

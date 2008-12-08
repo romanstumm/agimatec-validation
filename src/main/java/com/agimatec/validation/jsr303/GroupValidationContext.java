@@ -5,6 +5,7 @@ import com.agimatec.validation.model.ValidationContext;
 import javax.validation.Constraint;
 import javax.validation.ConstraintDescriptor;
 import javax.validation.MessageResolver;
+import javax.validation.groups.Default;
 import java.util.List;
 
 /**
@@ -15,13 +16,13 @@ import java.util.List;
  * Copyright: Agimatec GmbH
  */
 interface GroupValidationContext extends ValidationContext {
-    List<String> getSequencedGroups();
+    List<Class<?>> getSequencedGroups();
 
     String getPropertyPath();
 
-    void setCurrentGroup(String currentGroup);
+    void setCurrentGroup(Class<?> currentGroup);
 
-    String getCurrentGroup();
+    Class<?> getCurrentGroup();
 
     void setCurrentConstraint(ConstraintDescriptor constraint);
 
@@ -35,7 +36,7 @@ interface GroupValidationContext extends ValidationContext {
 
     void setFixedValue(Object value);
 
-    String[] DEFAULT_GROUPS = {"default"};
+    Class<?>[] DEFAULT_GROUPS = {Default.class};
 
     MessageResolver getMessageResolver();
 

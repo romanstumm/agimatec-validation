@@ -197,7 +197,7 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
     }
 
     private void processGroupSequence(GroupSequence each, MetaBean metabean) {
-        Map<String, String[]> groupSeqMap = metabean.getFeature(Jsr303Features.Bean.GROUP_SEQ);
+        Map<Class<?>, Class<?>[]> groupSeqMap = metabean.getFeature(Jsr303Features.Bean.GROUP_SEQ);
         if (groupSeqMap == null) {
             groupSeqMap = new HashMap();
             metabean.putFeature(Jsr303Features.Bean.GROUP_SEQ, groupSeqMap);
@@ -247,14 +247,14 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
         Constraint constraint = constraintFactory.getInstance(constraintClass);
         constraint.initialize(annotation);
         Object groups = getAnnotationValue(annotation, "groups");
-        if (groups instanceof String) {
-            groups = new String[]{(String) groups};
+        if (groups instanceof Class<?>) {
+            groups = new Class<?>[]{(Class<?>) groups};
         }
-        if (!(groups instanceof String[])) {
+        if (!(groups instanceof Class<?>[])) {
             groups = null;
         }
         ConstraintValidation validation = new ConstraintValidation(constraint,
-                (String[]) groups, annotation, element);
+                (Class<?>[]) groups, annotation, element);
         if (parentValidation == null) {
             if (prop != null) {
                 prop.addValidation(validation);

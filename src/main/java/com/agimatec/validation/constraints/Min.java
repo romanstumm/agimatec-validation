@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Target({METHOD, FIELD, ANNOTATION_TYPE})
 @Retention(RUNTIME)
 public @interface Min {
-    String[] groups() default {};
+    Class<?>[] groups() default {};
 
     int value();
 

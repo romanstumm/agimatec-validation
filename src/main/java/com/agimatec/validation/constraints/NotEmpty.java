@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Target({METHOD, FIELD, ANNOTATION_TYPE})
 @Retention(RUNTIME)
 public @interface NotEmpty {
-    String[] groups() default {};
+    Class<?>[] groups() default {};
 
     String message() default "{validator.notEmpty}";
 }

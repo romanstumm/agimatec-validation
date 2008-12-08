@@ -46,7 +46,8 @@ public class Jsr303Test extends TestCase {
     public void testMetadataAPI_Book() {
         Validator validator = getValidator();
         assertNotNull(validator.getConstraintsForClass(Book.class));
-        assertTrue(validator.getConstraintsForClass(Book.class) == validator.getConstraintsForClass(Book.class));
+        assertTrue(validator.getConstraintsForClass(Book.class) ==
+                validator.getConstraintsForClass(Book.class));
         BeanDescriptor bc = validator.getConstraintsForClass(Book.class);
 //        assertEquals(ElementType.TYPE, bc.getElementType());
         assertEquals(Book.class, bc.getType());
@@ -57,17 +58,21 @@ public class Jsr303Test extends TestCase {
 
     public void testMetadataAPI_Engine() {
         Validator validator = getValidator();
-        assertTrue(validator.getPropertiesWithConstraints(Engine.class).contains("serialNumber"));
-        ElementDescriptor desc = validator.getConstraintsForProperty(Engine.class, "serialNumber");
+        assertTrue(validator.getConstraintsForClass(Engine.class)
+                .getPropertiesWithConstraints().contains("serialNumber"));
+        ElementDescriptor desc = validator.getConstraintsForClass(Engine.class)
+                .getConstraintsForProperty("serialNumber");
 //        assertEquals(ElementType.FIELD, desc.getElementType());
         assertEquals(String.class, desc.getType());
     }
 
     public void testMetadataAPI_Address() {
         Validator validator = getValidator();
-        assertFalse(validator.getConstraintsForClass(Address.class).getConstraintDescriptors().isEmpty());
+        assertFalse(validator.getConstraintsForClass(Address.class)
+                .getConstraintDescriptors().isEmpty());
 
-        Set<String> props = validator.getPropertiesWithConstraints(Address.class);
+        Set<String> props =
+                validator.getConstraintsForClass(Address.class).getPropertiesWithConstraints();
         assertTrue(props.contains("addressline1")); // annotated at field level
         assertTrue(props.contains("addressline2"));
         assertTrue(props.contains("zipCode"));
@@ -75,7 +80,8 @@ public class Jsr303Test extends TestCase {
         assertTrue(props.contains("city"));       // annotated at method level
         assertEquals(5, props.size());
 
-        ElementDescriptor desc = validator.getConstraintsForProperty(Address.class, "addressline1");
+        ElementDescriptor desc = validator.getConstraintsForClass(Address.class)
+                .getConstraintsForProperty("addressline1");
         assertNotNull(desc);
         boolean found = false;
         for (ConstraintDescriptor each : desc.getConstraintDescriptors()) {
@@ -90,7 +96,7 @@ public class Jsr303Test extends TestCase {
     }
 
     public void testEngine() {
-        Validator validator = getValidator(); 
+        Validator validator = getValidator();
         Engine engine = new Engine();
         validator.validate(engine);
     }

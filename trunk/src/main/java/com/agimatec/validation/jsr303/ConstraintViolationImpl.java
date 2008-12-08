@@ -47,7 +47,7 @@ class ConstraintViolationImpl<T> implements ConstraintViolation {
     }
 
     public String getRawMessage() {
-        return message; // TODO RSt - nyi
+        return message; // TODO RSt - getRawMessage nyi
     }
 
     /** Root bean being validated validated */

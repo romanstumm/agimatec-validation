@@ -46,7 +46,7 @@ public class FactoryBuilderImpl implements AgimatecValidatorFactoryBuilder, Vali
         initializeDefaults();
     }
 
-    // TODO RSt - nyi
+    // TODO RSt - traversableResolver nyi
     public AgimatecValidatorFactoryBuilder traversableResolver(TraversableResolver resolver)
     {
         return null;
@@ -112,7 +112,7 @@ public class FactoryBuilderImpl implements AgimatecValidatorFactoryBuilder, Vali
     }
 
     public TraversableResolver getTraversableResolver() {
-        return null;  // TODO RSt - nyi
+        return null;  // TODO RSt - getTraversableResolver nyi
     }
 
     public ValidationProvider getProvider() {

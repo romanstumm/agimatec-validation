@@ -49,7 +49,7 @@ public class FactoryBuilderImpl implements AgimatecValidatorFactoryBuilder, Vali
     // TODO RSt - traversableResolver nyi
     public AgimatecValidatorFactoryBuilder traversableResolver(TraversableResolver resolver)
     {
-        return null;
+        return this;
     }
 
     private void initializeDefaults() {

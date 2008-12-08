@@ -24,7 +24,8 @@ public class ComposedConstraintsTest extends TestCase {
     public void testMetaDataAPI_ComposedConstraints() {
         Validator addressValidator = factory.getValidator();
         ElementDescriptor ed =
-                addressValidator.getConstraintsForProperty(FrenchAddress.class, "zipCode");
+                addressValidator.getConstraintsForClass(FrenchAddress.class)
+                        .getConstraintsForProperty("zipCode");
         assertEquals(1, ed.getConstraintDescriptors().size());
         for (ConstraintDescriptor cd : ed.getConstraintDescriptors()) {
             assertTrue(cd.isReportAsViolationFromCompositeConstraint());
@@ -56,7 +57,7 @@ public class ComposedConstraintsTest extends TestCase {
 //        assertEquals(3, findings.size()); // without @ReportAsSingleConstraintViolation
 
         ConstraintViolation<FrenchAddress> finding = findings.iterator().next();
-        assertEquals("Wrong zipcode", finding.getMessage());
+        assertEquals("Wrong zipcode", finding.getInterpolatedMessage());
 
         adr.setZipCode("12345");
         findings = val.validate(adr);

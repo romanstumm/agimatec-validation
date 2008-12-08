@@ -6,17 +6,18 @@ import com.agimatec.validation.constraints.NotNull;
 
 import javax.validation.GroupSequence;
 import javax.validation.Valid;
+import javax.validation.groups.Default;
 
-@GroupSequence(name = "default", sequence = {"first", "second", "last"})
+@GroupSequence(name = Default.class, sequence = { First.class, Second.class, Last.class })
 public class Book {
     private String title;
-    @Length(max = 30, groups = "second")
+    @Length(max = 30, groups = Second.class)
     private String subtitle;
     @Valid
-    @NotNull(groups = "first")
+    @NotNull(groups = First.class)
     private Author author;
 
-    @NotEmpty(groups = "first")
+    @NotEmpty(groups = First.class)
     public String getTitle() {
         return title;
     }

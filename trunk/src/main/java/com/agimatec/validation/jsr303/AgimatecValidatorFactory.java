@@ -5,6 +5,7 @@ import com.agimatec.validation.MetaBeanManager;
 
 import javax.validation.MessageResolver;
 import javax.validation.Validator;
+import javax.validation.ValidatorBuilder;
 import javax.validation.ValidatorFactory;
 
 /**
@@ -37,6 +38,14 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
 
     public Validator getValidator() {
         return new ClassValidator(this);
+    }
+
+    /**
+     * TODO RSt - nyi
+     * @return
+     */
+    public ValidatorBuilder defineValidatorState() {
+        return null;  // do nothing
     }
 
     public Validator getValidator(MessageResolver messageResolver) {

@@ -26,5 +26,5 @@ public @interface Pattern {
 
     String message() default "{validator.pattern}";
 
-    String[] groups() default {};
+    Class<?>[] groups() default {};
 }

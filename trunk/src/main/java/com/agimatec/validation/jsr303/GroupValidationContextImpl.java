@@ -22,9 +22,9 @@ class GroupValidationContextImpl extends BeanValidationContext
 
     private final MessageResolver messageResolver;
     private final LinkedList propertyStack = new LinkedList();
-    private String[] requestedGroups;
-    private List<String> sequencedGroups;
-    private String currentGroup;
+    private Class<?>[] requestedGroups;
+    private List<Class<?>> sequencedGroups;
+    private Class<?> currentGroup;
 
     /**
      * contains the validation constraints that have already been processed during
@@ -114,34 +114,34 @@ class GroupValidationContextImpl extends BeanValidationContext
         return sb.toString();
     }
 
-    public void setRequestedGroups(String[] requestedGroups) {
+    public void setRequestedGroups(Class<?>[] requestedGroups) {
         this.requestedGroups = requestedGroups;
     }
 
-    public String[] getRequestedGroups() {
+    public Class<?>[] getRequestedGroups() {
         return requestedGroups;
     }
 
-    public void setSequencedGroups(List<String> sequencedGroups) {
+    public void setSequencedGroups(List<Class<?>> sequencedGroups) {
         this.sequencedGroups = sequencedGroups;
     }
 
-    public List<String> getSequencedGroups() {
+    public List<Class<?>> getSequencedGroups() {
         if (sequencedGroups != null) {
             return sequencedGroups;
         }
 
-        String[] groups = getRequestedGroups();
+        Class<?>[] groups = getRequestedGroups();
         if (groups == null || groups.length == 0) {
             groups = DEFAULT_GROUPS;
         }
-        Map<String, String[]> groupSeqMap = getMetaBean().getFeature(Jsr303Features.Bean.GROUP_SEQ);
-        List<String> sequencedGroups = new ArrayList();
-        for (String eachGroup : groups) {
+        Map<String, Class<?>[]> groupSeqMap = getMetaBean().getFeature(Jsr303Features.Bean.GROUP_SEQ);
+        List<Class<?>> sequencedGroups = new ArrayList();
+        for (Class<?> eachGroup : groups) {
             if (groupSeqMap != null) {
-                String[] theSeq = groupSeqMap.get(eachGroup);
+                Class<?>[] theSeq = groupSeqMap.get(eachGroup);
                 if (theSeq != null) {
-                    for (String eachSeq : theSeq) {
+                    for (Class<?> eachSeq : theSeq) {
                         addSequences(groupSeqMap, eachSeq, sequencedGroups);
                     }
                     continue;
@@ -153,12 +153,12 @@ class GroupValidationContextImpl extends BeanValidationContext
         return sequencedGroups;
     }
 
-    private void addSequences(Map<String, String[]> groupSeqMap, String eachSeq,
-                              List<String> sequence) {
+    private void addSequences(Map<String, Class<?>[]> groupSeqMap, Class<?> eachSeq,
+                              List<Class<?>> sequence) {
         if (!sequence.contains(eachSeq)) {
-            String[] nextSeq = groupSeqMap.get(eachSeq);
+            Class<?>[] nextSeq = groupSeqMap.get(eachSeq);
             if (nextSeq != null) {
-                for (String eachNextSeq : nextSeq) {
+                for (Class<?> eachNextSeq : nextSeq) {
                     /**
                      * Group sequences are recursively resolved: the user must make sure 
                      * no circular graph is defined by the group sequence definitions.
@@ -171,11 +171,11 @@ class GroupValidationContextImpl extends BeanValidationContext
         }
     }
 
-    public String getCurrentGroup() {
+    public Class<?> getCurrentGroup() {
         return currentGroup;
     }
 
-    public void setCurrentGroup(String currentGroup) {
+    public void setCurrentGroup(Class<?> currentGroup) {
         this.currentGroup = currentGroup;
     }
 

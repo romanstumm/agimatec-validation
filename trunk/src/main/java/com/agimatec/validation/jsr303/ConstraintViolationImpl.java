@@ -24,17 +24,15 @@ class ConstraintViolationImpl<T> implements ConstraintViolation {
     private final Object leafBean;
     private final Object value;
     private final String propertyPath;
-    private final Class beanClass;
-    private final Set<String> groups;
+    private final Set<Class<?>> groups;
     private final ConstraintDescriptor constraintDescriptor;
 
     public ConstraintViolationImpl(String message, T rootBean, Object leafBean,
-                                 Class beanClass, String propertyPath,
-                                 Object value, Set<String> groups,
+                                 String propertyPath,
+                                 Object value, Set<Class<?>> groups,
                                  ConstraintDescriptor constraintDescriptor) {
         this.message = message;
         this.rootBean = rootBean;
-        this.beanClass = beanClass;
         this.propertyPath = propertyPath;
         this.leafBean = leafBean;
         this.value = value;
@@ -42,9 +40,14 @@ class ConstraintViolationImpl<T> implements ConstraintViolation {
         this.constraintDescriptor = constraintDescriptor;
     }
 
+
     /** Error message */
-    public String getMessage() {
+    public String getInterpolatedMessage() {
         return message;
+    }
+
+    public String getRawMessage() {
+        return message; // TODO RSt - nyi
     }
 
     /** Root bean being validated validated */
@@ -54,11 +57,6 @@ class ConstraintViolationImpl<T> implements ConstraintViolation {
 
     public Object getLeafBean() {
         return leafBean;
-    }
-
-    /** Bean type being validated */
-    public Class getBeanClass() {
-        return beanClass;
     }
 
     /** The value failing to pass the constraint */
@@ -79,7 +77,7 @@ class ConstraintViolationImpl<T> implements ConstraintViolation {
      * within the list of groups requested for validation
      * (directly or through a group sequence)
      */
-    public Set<String> getGroups() {
+    public Set<Class<?>> getGroups() {
         return groups;
     }
 

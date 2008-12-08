@@ -33,14 +33,15 @@ public class DefaultMessageResolverTest extends TestCase {
 
         Validator gvalidator = getValidator();
         ConstraintDescriptor desc =
-                (ConstraintDescriptor) gvalidator.getConstraintsForProperty(PreferredGuest.class,
-                        "guestCreditCardNumber")
+                (ConstraintDescriptor) gvalidator.getConstraintsForClass(PreferredGuest.class).
+                        getConstraintsForProperty("guestCreditCardNumber")
                         .getConstraintDescriptors().toArray()[0];
         String msg = resolver.interpolate("{validator.creditcard}", desc, "12345678");
         assertEquals("credit card is not valid", msg);
 
         Validator avalidator = getValidator();
-        desc = (ConstraintDescriptor) avalidator.getConstraintsForProperty(Author.class, "lastName")
+        desc = (ConstraintDescriptor) avalidator.getConstraintsForClass(Author.class).
+                getConstraintsForProperty("lastName")
                 .getConstraintDescriptors().toArray()[0];
 
         msg = resolver.interpolate("{validator.notEmpty}", desc, "");

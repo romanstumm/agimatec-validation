@@ -26,5 +26,5 @@ public @interface Length {
 
     String message() default "{validator.length}";
 
-    String[] groups() default {};
+    Class<?>[] groups() default {};
 }

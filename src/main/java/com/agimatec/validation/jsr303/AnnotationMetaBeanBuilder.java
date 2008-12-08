@@ -26,6 +26,7 @@ import java.util.Map;
  * Time: 14:12:51 <br/>
  * Copyright: Agimatec GmbH 2008
  * TODO RSt - overrides parameters not yet implemented
+ * TODO RSt - group inheritance not yet implemented
  */
 public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
     private final ConstraintFactory constraintFactory;

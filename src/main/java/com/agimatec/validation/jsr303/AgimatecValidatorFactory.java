@@ -3,10 +3,7 @@ package com.agimatec.validation.jsr303;
 import com.agimatec.validation.BeanValidator;
 import com.agimatec.validation.MetaBeanManager;
 
-import javax.validation.MessageResolver;
-import javax.validation.Validator;
-import javax.validation.ValidatorBuilder;
-import javax.validation.ValidatorFactory;
+import javax.validation.*;
 
 /**
  * Description: a factory is a complete configurated object that can create validators<br/>
@@ -16,7 +13,7 @@ import javax.validation.ValidatorFactory;
  * Time: 17:06:20 <br/>
  * Copyright: Agimatec GmbH
  */
-public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
+public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable, ValidatorBuilder {
     private static AgimatecValidatorFactory DEFAULT_FACTORY;
 
     private MetaBeanManager metaBeanManager;
@@ -36,16 +33,27 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
     public AgimatecValidatorFactory() {
     }
 
+    public ValidatorBuilder messageResolver(MessageResolver messageResolver) {
+        setMessageResolver(messageResolver);
+        return this;
+    }
+
+    /**
+     * * TODO RSt - traversableResolver() nyi
+     */
+    public ValidatorBuilder traversableResolver(TraversableResolver traversableResolver) {
+        return this;
+    }
+
     public Validator getValidator() {
         return new ClassValidator(this);
     }
 
     /**
-     * TODO RSt - nyi
-     * @return
+     * @return TODO RSt - return separate instance, remove implementation of ValidatorBuilder from here
      */
     public ValidatorBuilder defineValidatorState() {
-        return null;  // do nothing
+        return this;
     }
 
     public Validator getValidator(MessageResolver messageResolver) {

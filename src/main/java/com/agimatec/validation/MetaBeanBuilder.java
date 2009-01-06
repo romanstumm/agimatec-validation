@@ -322,9 +322,7 @@ public class MetaBeanBuilder {
             List<String> jsValidators = new ArrayList<String>(
                     xmlProp.getValidators().size() + (func == null ? 0 : func.length));
             if (func != null && func.length > 0) {
-                for (String each : func) {
-                    jsValidators.add(each);
-                }
+                jsValidators.addAll(Arrays.asList(func));
             }
             boolean useStandard = true;
             for (XMLMetaValidatorReference valRef : xmlProp.getValidators()) {

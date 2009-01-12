@@ -18,7 +18,7 @@ public interface Features {
         /** INFO: String, name of the Property, that is the Primary Key */
         String MAIN_KEY = "mainKey";
         /** INFO: category/domain to which the metaBean belongs to */
-//        String DOMAIN = "domain";
+        String DOMAIN = "domain";
 
 //        String DISPLAY_NAME = "displayName";
         String UNIQUE_KEY = "uniqueKey";

@@ -324,7 +324,7 @@ public class MetaBeanBuilder {
             if (func != null && func.length > 0) {
                 jsValidators.addAll(Arrays.asList(func));
             }
-            boolean useStandard = true;
+            boolean useStandard = prop instanceof MetaProperty;
             for (XMLMetaValidatorReference valRef : xmlProp.getValidators()) {
                 if (standardValidation != null &&
                         valRef.getRefId().equals(standardValidation.getValidationId())) {

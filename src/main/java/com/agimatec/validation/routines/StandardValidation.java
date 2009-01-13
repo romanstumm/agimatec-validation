@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 /**
- * Description: This class implements the standard validations.
+ * Description: This class implements the standard validations for properties!
  * You can subclass this class and replace the implementation
  * in the beanInfo-xml by providing it a validation "standard"<br/>
  * User: roman.stumm <br/>

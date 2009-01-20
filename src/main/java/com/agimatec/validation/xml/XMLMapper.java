@@ -1,7 +1,6 @@
 package com.agimatec.validation.xml;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.annotations.Annotations;
 
 /**
  * Description: <br/>
@@ -17,10 +16,10 @@ public class XMLMapper {
 
     private XMLMapper() {
         xStream = new XStream();
-        Annotations.configureAliases(xStream, XMLFeaturesCapable.class,
+        xStream.processAnnotations(new Class[] {XMLFeaturesCapable.class,
                 XMLMetaFeature.class, XMLMetaBean.class, XMLMetaBeanInfos.class,
                 XMLMetaBeanReference.class, XMLMetaElement.class, XMLMetaProperty.class,
-                XMLMetaValidator.class, XMLMetaValidatorReference.class);
+                XMLMetaValidator.class, XMLMetaValidatorReference.class});
         xStream.setMode(XStream.NO_REFERENCES);
     }
 

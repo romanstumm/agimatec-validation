@@ -29,9 +29,9 @@ import java.util.Map;
  * TODO RSt - group inheritance not yet implemented
  */
 public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
-    private final ConstraintFactory constraintFactory;
+    private final ConstraintValidatorFactory constraintFactory;
 
-    public AnnotationMetaBeanBuilder(ConstraintFactory constraintFactory) {
+    public AnnotationMetaBeanBuilder(ConstraintValidatorFactory constraintFactory) {
         this.constraintFactory = constraintFactory;
     }
 
@@ -152,10 +152,10 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
             * definition if its retention policy contains RUNTIME and if
             * the annotation itself is annotated with javax.validation.ConstraintValidator.
             */
-            ConstraintValidator vcAnno =
-                    annotation.annotationType().getAnnotation(ConstraintValidator.class);
-            if (vcAnno != null) {
-                applyConstraint(annotation, vcAnno.value(), metabean, prop, element, validation);
+            Constraint vcAnno =
+                    annotation.annotationType().getAnnotation(Constraint.class);
+            if (vcAnno != null && vcAnno.validatedBy() != null) {
+                applyConstraint(annotation, vcAnno.validatedBy(), metabean, prop, element, validation);
                 return true;
             } else {
                 /**
@@ -240,12 +240,12 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
      * @throws IllegalAccessException
      * @throws InvocationTargetException
      */
-    private void applyConstraint(Annotation annotation, Class<? extends Constraint> constraintClass,
+    private void applyConstraint(Annotation annotation, Class<? extends ConstraintValidator> constraintClass,
                                  MetaBean metabean, MetaProperty prop, AnnotatedElement element,
                                  ConstraintValidation parentValidation)
             throws IllegalAccessException, InvocationTargetException {
         // The lifetime of a constraint validation implementation instance is undefined.
-        Constraint constraint = constraintFactory.getInstance(constraintClass);
+        ConstraintValidator constraint = constraintFactory.getInstance(constraintClass);
         constraint.initialize(annotation);
         Object groups = getAnnotationValue(annotation, "groups");
         if (groups instanceof Class<?>) {

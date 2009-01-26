@@ -1,6 +1,6 @@
 package com.agimatec.validation.jsr303;
 
-import com.agimatec.validation.constraints.NotNullConstraint;
+import com.agimatec.validation.constraints.NotNullConstraintValidator;
 import com.agimatec.validation.jsr303.example.Customer;
 import junit.framework.TestCase;
 
@@ -40,22 +40,22 @@ public class BootstrapTest extends TestCase {
         assertTrue(factory2 != factory);
         assertTrue(factory2.getBeanValidator() != factory.getBeanValidator());
         assertTrue(factory2.getMetaBeanManager() != factory.getMetaBeanManager());
-        assertTrue(factory2.getMessageResolver() != factory.getMessageResolver());
+        assertTrue(factory2.getMessageInterpolator() != factory.getMessageInterpolator());
 
     }
 
     public void testLocalizedMessageResolverFactory() {
         ValidatorFactoryBuilder<?> builder = Validation.getBuilder();
         // changing the builder allows to create different factories
-        DefaultMessageResolver messageResolverImpl = new DefaultMessageResolver();
+        DefaultMessageInterpolator messageResolverImpl = new DefaultMessageInterpolator();
         messageResolverImpl.setLocale(Locale.ENGLISH);
-        builder.messageResolver(messageResolverImpl);
+        builder.messageInterpolator(messageResolverImpl);
         AgimatecValidatorFactory factory = (AgimatecValidatorFactory) builder.build();
 
         // ALTERNATIVE:
         // you could do it without modifying the builder or reusing it,
         // but then you need to use Agimatec proprietary APIs:
-        ((DefaultMessageResolver) factory.getMessageResolver()).setLocale(Locale.ENGLISH);
+        ((DefaultMessageInterpolator) factory.getMessageInterpolator()).setLocale(Locale.ENGLISH);
         // now factory's message resolver is using the english locale
     }
 
@@ -79,13 +79,13 @@ public class BootstrapTest extends TestCase {
         assertFalse(ConstraintViolations.isEmpty());
 
         builder = Validation.getBuilder();
-        builder.constraintFactory(
-                new ConstraintFactory() {
-                    public <T extends Constraint> T getInstance(Class<T> key) {
-                        if (key == NotNullConstraint.class) {
-                            return (T) new BadlyBehavedNotNullConstraint();
+        builder.constraintValidatorFactory(
+                new ConstraintValidatorFactory() {
+                    public <T extends ConstraintValidator> T getInstance(Class<T> key) {
+                        if (key == NotNullConstraintValidator.class) {
+                            return (T) new BadlyBehavedNotNullConstraintValidator();
                         }
-                        return new DefaultConstraintFactory().getInstance(key);
+                        return new DefaultConstraintValidatorFactory().getInstance(key);
                     }
                 }
         );
@@ -167,9 +167,9 @@ public class BootstrapTest extends TestCase {
         }
     }
 
-    class BadlyBehavedNotNullConstraint extends NotNullConstraint {
+    class BadlyBehavedNotNullConstraintValidator extends NotNullConstraintValidator {
         @Override
-        public boolean isValid(Object object, ConstraintContext context) {
+        public boolean isValid(Object object, ConstraintValidatorContext context) {
             return true;
         }
     }

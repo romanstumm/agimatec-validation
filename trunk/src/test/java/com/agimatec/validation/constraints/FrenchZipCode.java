@@ -1,6 +1,6 @@
 package com.agimatec.validation.constraints;
 
-import javax.validation.ConstraintValidator;
+import javax.validation.Constraint;
 import javax.validation.OverridesParameter;
 import javax.validation.OverridesParameters;
 import javax.validation.ReportAsViolationFromCompositeConstraint;
@@ -20,7 +20,7 @@ import java.lang.annotation.Target;
 @NotEmpty
 @NotNull
 @Length(min = 4, max = 5, message = "Zipcode should be of size {value}")
-@ConstraintValidator(FrenchZipcodeValidator.class)
+@Constraint(validatedBy = FrenchZipcodeValidator.class)
 @ReportAsViolationFromCompositeConstraint
 @Documented
 @Target({ANNOTATION_TYPE, METHOD, FIELD})

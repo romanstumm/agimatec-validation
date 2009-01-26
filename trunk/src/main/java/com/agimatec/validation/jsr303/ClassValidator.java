@@ -125,7 +125,7 @@ public class ClassValidator implements Validator {
                                                        Class<?>[] groups) {
         ConstraintValidationListener<T> listener = new ConstraintValidationListener<T>(object);
         GroupValidationContextImpl context = new GroupValidationContextImpl(listener,
-                factory.getMessageResolver());
+                factory.getMessageInterpolator());
         if (groups == null || groups.length == 0)
             groups = GroupValidationContext.DEFAULT_GROUPS;
         context.setRequestedGroups(groups);

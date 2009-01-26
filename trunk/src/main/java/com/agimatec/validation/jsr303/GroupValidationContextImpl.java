@@ -5,9 +5,9 @@ import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.MetaProperty;
 import com.agimatec.validation.model.ValidationListener;
 
-import javax.validation.Constraint;
 import javax.validation.ConstraintDescriptor;
-import javax.validation.MessageResolver;
+import javax.validation.ConstraintValidator;
+import javax.validation.MessageInterpolator;
 import java.util.*;
 
 /**
@@ -20,7 +20,7 @@ import java.util.*;
 class GroupValidationContextImpl extends BeanValidationContext
         implements GroupValidationContext {
 
-    private final MessageResolver messageResolver;
+    private final MessageInterpolator messageResolver;
     private final LinkedList propertyStack = new LinkedList();
     private Class<?>[] requestedGroups;
     private List<Class<?>> sequencedGroups;
@@ -30,13 +30,13 @@ class GroupValidationContextImpl extends BeanValidationContext
      * contains the validation constraints that have already been processed during
      * this validation routine (as part of a previous group match)
      */
-    private IdentityHashMap<Object, IdentityHashMap<Constraint, Object>> validatedConstraints =
+    private IdentityHashMap<Object, IdentityHashMap<ConstraintValidator, Object>> validatedConstraints =
             new IdentityHashMap();
     private ConstraintDescriptor currentConstraint;
 
 
     public GroupValidationContextImpl(ValidationListener listener,
-                                      MessageResolver aMessageResolver) {
+                                      MessageInterpolator aMessageResolver) {
         super(listener);
         this.messageResolver = aMessageResolver;
     }
@@ -66,8 +66,8 @@ class GroupValidationContextImpl extends BeanValidationContext
     }
 
     /** @return true when the constraint for this object was not already validated in this context */
-    public boolean collectValidated(Object bean, Constraint constraint) {
-        IdentityHashMap<Constraint, Object> beanConstraints = validatedConstraints.get(bean);
+    public boolean collectValidated(Object bean, ConstraintValidator constraint) {
+        IdentityHashMap<ConstraintValidator, Object> beanConstraints = validatedConstraints.get(bean);
         if (beanConstraints == null) {
             beanConstraints = new IdentityHashMap();
             validatedConstraints.put(bean, beanConstraints);
@@ -75,8 +75,8 @@ class GroupValidationContextImpl extends BeanValidationContext
         return beanConstraints.put(constraint, Boolean.TRUE) == null;
     }
 
-    public boolean isValidated(Object bean, Constraint constraint) {
-        IdentityHashMap<Constraint, Object> beanConstraints = validatedConstraints.get(bean);
+    public boolean isValidated(Object bean, ConstraintValidator constraint) {
+        IdentityHashMap<ConstraintValidator, Object> beanConstraints = validatedConstraints.get(bean);
         return beanConstraints != null && beanConstraints.containsKey(constraint);
     }
 
@@ -187,7 +187,7 @@ class GroupValidationContextImpl extends BeanValidationContext
         return currentConstraint;
     }
 
-    public MessageResolver getMessageResolver() {
+    public MessageInterpolator getMessageResolver() {
         return messageResolver;
     }
 }

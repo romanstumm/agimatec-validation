@@ -1,6 +1,6 @@
 package com.agimatec.validation.constraints;
 
-import javax.validation.ConstraintValidator;
+import javax.validation.Constraint;
 import java.lang.annotation.Documented;
 import static java.lang.annotation.ElementType.*;
 import java.lang.annotation.Retention;
@@ -21,7 +21,7 @@ import java.lang.annotation.Target;
  * Copyright: Agimatec GmbH
  */
 @Documented
-@ConstraintValidator(EmailValidator.class)
+@Constraint(validatedBy = EmailValidator.class)
 @Target({METHOD, FIELD, ANNOTATION_TYPE})
 @Retention(RUNTIME)
 public @interface Email {

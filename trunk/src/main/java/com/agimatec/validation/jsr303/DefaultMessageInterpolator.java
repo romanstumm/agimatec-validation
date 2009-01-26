@@ -1,7 +1,7 @@
 package com.agimatec.validation.jsr303;
 
 import javax.validation.ConstraintDescriptor;
-import javax.validation.MessageResolver;
+import javax.validation.MessageInterpolator;
 import java.util.*;
 
 /**
@@ -13,7 +13,7 @@ import java.util.*;
  * Time: 17:21:51 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-public class DefaultMessageResolver implements MessageResolver {
+public class DefaultMessageInterpolator implements MessageInterpolator {
     private static final String DEFAULT_BUNDLE_NAME =
             "com/agimatec/validation/jsr303/messageResolver";
     private static final String DEFAULT_MESSAGE_BUNDLE_NAME = "ValidationMessages";
@@ -23,7 +23,7 @@ public class DefaultMessageResolver implements MessageResolver {
     private Locale locale;
     private String messageBundleName;
 
-    public DefaultMessageResolver() {
+    public DefaultMessageInterpolator() {
         locale = Locale.getDefault();
         messageBundleName = DEFAULT_MESSAGE_BUNDLE_NAME;
     }

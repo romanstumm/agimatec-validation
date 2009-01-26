@@ -2,11 +2,11 @@ package com.agimatec.validation.jsr303.example;
 
 import com.agimatec.validation.constraints.Length;
 import com.agimatec.validation.constraints.NotNull;
-import com.agimatec.validation.constraints.ZipCodeCityCoherenceChecker;
+import com.agimatec.validation.constraints.ZipCodeCityCoherence;
 
 import javax.validation.Valid;
 
-@ZipCodeCityCoherenceChecker
+@ZipCodeCityCoherence
 public class Address {
     @NotNull
     @Length(max = 30)

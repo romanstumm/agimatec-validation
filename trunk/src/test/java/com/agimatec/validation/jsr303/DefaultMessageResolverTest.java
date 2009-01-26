@@ -18,7 +18,7 @@ import javax.validation.Validator;
  *        Copyright: Agimatec GmbH 2008
  */
 public class DefaultMessageResolverTest extends TestCase {
-    DefaultMessageResolver resolver = new DefaultMessageResolver();
+    DefaultMessageInterpolator resolver = new DefaultMessageInterpolator();
 
     public DefaultMessageResolverTest(String name) {
         super(name);

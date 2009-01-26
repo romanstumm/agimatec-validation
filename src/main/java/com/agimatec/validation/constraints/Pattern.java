@@ -1,6 +1,6 @@
 package com.agimatec.validation.constraints;
 
-import javax.validation.ConstraintValidator;
+import javax.validation.Constraint;
 import java.lang.annotation.Documented;
 import static java.lang.annotation.ElementType.*;
 import java.lang.annotation.Retention;
@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
  * </pre>
  */
 @Documented
-@ConstraintValidator(PatternConstraint.class)
+@Constraint(validatedBy = PatternConstraintValidator.class)
 @Target({METHOD, FIELD, ANNOTATION_TYPE})
 @Retention(RUNTIME)
 public @interface Pattern {

@@ -39,9 +39,9 @@ public class AgimatecValidationProvider implements ValidationProvider {
         FactoryBuilderImpl builder = (FactoryBuilderImpl) configuration;
         AgimatecValidatorFactory factory = new AgimatecValidatorFactory();
         MetaBeanManager metaBeanManager =
-                new MetaBeanManager(new AnnotationMetaBeanBuilder(builder.getConstraintFactory()));
+                new MetaBeanManager(new AnnotationMetaBeanBuilder(builder.getConstraintValidatorFactory()));
         factory.setMetaBeanManager(metaBeanManager);
-        factory.setMessageResolver(builder.getMessageResolver());
+        factory.setMessageInterpolator(builder.getMessageInterpolator());
         factory.setBeanValidator(builder.getBeanValidator());
         return factory;
     }

@@ -1,7 +1,7 @@
 package com.agimatec.validation.constraints;
 
-import javax.validation.Constraint;
-import javax.validation.ConstraintContext;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
 /**
  * Description: <br/>
@@ -9,12 +9,12 @@ import javax.validation.ConstraintContext;
  * Date: 02.04.2008 <br/>
  * Time: 18:13:37 <br/>
  */
-public class CreditCardConstraint implements Constraint<CreditCard> {
+public class CreditCardConstraintValidator implements ConstraintValidator<CreditCard> {
     public void initialize(CreditCard constraintAnnotation) {
         // do nothing
     }
 
-    public boolean isValid(Object value, ConstraintContext context) {
+    public boolean isValid(Object value, ConstraintValidatorContext context) {
         // TODO RSt - not implemented, just an example
         return true;
     }

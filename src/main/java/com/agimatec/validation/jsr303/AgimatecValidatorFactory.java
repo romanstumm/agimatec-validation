@@ -17,7 +17,7 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable, Va
     private static AgimatecValidatorFactory DEFAULT_FACTORY;
 
     private MetaBeanManager metaBeanManager;
-    private MessageResolver messageResolver;
+    private MessageInterpolator messageResolver;
     private BeanValidator beanValidator;
 
     /** convenience to retrieve a default global ValidatorFactory */
@@ -33,8 +33,8 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable, Va
     public AgimatecValidatorFactory() {
     }
 
-    public ValidatorBuilder messageResolver(MessageResolver messageResolver) {
-        setMessageResolver(messageResolver);
+    public ValidatorBuilder messageInterpolator(MessageInterpolator messageResolver) {
+        setMessageInterpolator(messageResolver);
         return this;
     }
 
@@ -56,9 +56,9 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable, Va
         return this;
     }
 
-    public Validator getValidator(MessageResolver messageResolver) {
+    public Validator getValidator(MessageInterpolator messageResolver) {
         AgimatecValidatorFactory factory = this.clone();
-        factory.setMessageResolver(messageResolver);
+        factory.setMessageInterpolator(messageResolver);
         return new ClassValidator(factory);
     }
 
@@ -76,11 +76,11 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable, Va
         this.metaBeanManager = metaBeanManager;
     }
 
-    public void setMessageResolver(MessageResolver messageResolver) {
+    public void setMessageInterpolator(MessageInterpolator messageResolver) {
         this.messageResolver = messageResolver;
     }
 
-    public MessageResolver getMessageResolver() {
+    public MessageInterpolator getMessageInterpolator() {
         return messageResolver;
     }
 

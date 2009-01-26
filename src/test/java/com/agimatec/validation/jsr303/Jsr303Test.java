@@ -1,6 +1,6 @@
 package com.agimatec.validation.jsr303;
 
-import com.agimatec.validation.constraints.LengthConstraint;
+import com.agimatec.validation.constraints.LengthConstraintValidator;
 import com.agimatec.validation.example.BusinessObject;
 import com.agimatec.validation.jsr303.example.Address;
 import com.agimatec.validation.jsr303.example.Book;
@@ -85,7 +85,7 @@ public class Jsr303Test extends TestCase {
         assertNotNull(desc);
         boolean found = false;
         for (ConstraintDescriptor each : desc.getConstraintDescriptors()) {
-            if (each.getConstraintClass().equals(LengthConstraint.class)) {
+            if (each.getConstraintValidatorClass().equals(LengthConstraintValidator.class)) {
                 assertTrue(each.getParameters().containsKey("max"));
                 assertEquals(30, each.getParameters().get("max"));
                 found = true;

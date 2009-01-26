@@ -2,9 +2,9 @@ package com.agimatec.validation.jsr303;
 
 import com.agimatec.validation.model.ValidationContext;
 
-import javax.validation.Constraint;
 import javax.validation.ConstraintDescriptor;
-import javax.validation.MessageResolver;
+import javax.validation.ConstraintValidator;
+import javax.validation.MessageInterpolator;
 import javax.validation.groups.Default;
 import java.util.List;
 
@@ -38,7 +38,7 @@ interface GroupValidationContext extends ValidationContext {
 
     Class<?>[] DEFAULT_GROUPS = {Default.class};
 
-    MessageResolver getMessageResolver();
+    MessageInterpolator getMessageResolver();
 
-    boolean collectValidated(Object bean, Constraint constraint);
+    boolean collectValidated(Object bean, ConstraintValidator constraint);
 }

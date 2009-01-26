@@ -23,8 +23,8 @@ public class FactoryBuilderImpl implements AgimatecValidatorFactoryBuilder, Vali
     protected final ValidationProviderResolver providerResolver;
     protected Class<? extends ValidatorFactoryBuilder<?>> providerClass;
 
-    protected MessageResolver messageResolver, defaultMessageResolver;
-    protected ConstraintFactory constraintFactory;
+    protected MessageInterpolator messageResolver, defaultMessageResolver;
+    protected ConstraintValidatorFactory constraintFactory;
     private InputStream configurationStream;
 
     private BeanValidator beanValidator;
@@ -53,18 +53,18 @@ public class FactoryBuilderImpl implements AgimatecValidatorFactoryBuilder, Vali
     }
 
     private void initializeDefaults() {
-        constraintFactory = new DefaultConstraintFactory();
-        messageResolver = new DefaultMessageResolver();
+        constraintFactory = new DefaultConstraintValidatorFactory();
+        messageResolver = new DefaultMessageInterpolator();
         defaultMessageResolver = messageResolver;
         setBeanValidator(new BeanValidator());
     }
 
-    public FactoryBuilderImpl messageResolver(MessageResolver resolver) {
+    public FactoryBuilderImpl messageInterpolator(MessageInterpolator resolver) {
         this.messageResolver = resolver;
         return this;
     }
 
-    public FactoryBuilderImpl constraintFactory(ConstraintFactory constraintFactory) {
+    public FactoryBuilderImpl constraintValidatorFactory(ConstraintValidatorFactory constraintFactory) {
         setConstraintFactory(constraintFactory);
         return this;
     }
@@ -99,15 +99,15 @@ public class FactoryBuilderImpl implements AgimatecValidatorFactoryBuilder, Vali
         }
     }
 
-    public MessageResolver getMessageResolver() {
+    public MessageInterpolator getMessageInterpolator() {
         return messageResolver;
     }
 
-    public MessageResolver getDefaultMessageResolver() {
+    public MessageInterpolator getDefaultMessageInterpolator() {
         return defaultMessageResolver;
     }
 
-    public ConstraintFactory getConstraintFactory() {
+    public ConstraintValidatorFactory getConstraintValidatorFactory() {
         return constraintFactory;
     }
 
@@ -162,11 +162,11 @@ public class FactoryBuilderImpl implements AgimatecValidatorFactoryBuilder, Vali
         return beanValidator;
     }
 
-    public void setConstraintFactory(ConstraintFactory constraintFactory) {
+    public void setConstraintFactory(ConstraintValidatorFactory constraintFactory) {
         this.constraintFactory = constraintFactory;
     }
 
-    public void setMessageResolver(MessageResolver messageResolver) {
+    public void setMessageInterpolator(MessageInterpolator messageResolver) {
         this.messageResolver = messageResolver;
     }
 }

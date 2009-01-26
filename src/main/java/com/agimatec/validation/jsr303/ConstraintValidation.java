@@ -5,9 +5,9 @@ import com.agimatec.validation.ValidationResults;
 import com.agimatec.validation.model.Validation;
 import com.agimatec.validation.model.ValidationContext;
 
-import javax.validation.Constraint;
 import javax.validation.ConstraintDescriptor;
-import javax.validation.MessageResolver;
+import javax.validation.ConstraintValidator;
+import javax.validation.MessageInterpolator;
 import javax.validation.ReportAsViolationFromCompositeConstraint;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -24,7 +24,7 @@ import java.util.*;
  * Copyright: Agimatec GmbH 2008
  */
 class ConstraintValidation implements Validation, ConstraintDescriptor {
-    private final Constraint constraint;
+    private final ConstraintValidator constraint;
     private final Set<Class<?>> groups;
     private final Annotation annotation; // for metadata request API
     private Set<ConstraintValidation> composedConstraints;
@@ -32,7 +32,7 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
     private final boolean reportFromComposite;
     private Map<String, Object> parameters;
 
-    protected ConstraintValidation(Constraint constraint, Class<?>[] groupsArray,
+    protected ConstraintValidation(ConstraintValidator constraint, Class<?>[] groupsArray,
                                    Annotation annotation, AnnotatedElement element) {
         this.constraint = constraint;
 
@@ -60,7 +60,7 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
     }
 
     public void validate(ValidationContext context) {
-        MessageResolver messageResolver = null;
+        MessageInterpolator messageResolver = null;
         /**
          * execute unless the given validation constraint has already been processed
          * during this validation routine (as part of a previous group match)
@@ -116,7 +116,7 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
         }
     }
 
-    private void addErrors(ValidationContext context, MessageResolver messageResolver, Object value,
+    private void addErrors(ValidationContext context, MessageInterpolator messageResolver, Object value,
                            ConstraintContextImpl jsrContext) {
         ((GroupValidationContext)context).setCurrentConstraint(this);
         if (messageResolver != null) {
@@ -136,7 +136,7 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
         return "ConstraintValidation{" + constraint + '}';
     }
 
-    public Constraint getConstraintImplementation() {
+    public ConstraintValidator getConstraintValidator() {
         return constraint;
     }
 
@@ -191,12 +191,7 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
         return groups;
     }
 
-    /** @deprecated TODO RSt - remove when interface is fixed */
-    public Class<? extends Constraint> getContstraintClass() {
-        return getConstraintClass();
-    }
-
-    public Class<? extends Constraint> getConstraintClass() {
-        return getConstraintImplementation().getClass();
+    public Class<? extends ConstraintValidator> getConstraintValidatorClass() {
+        return getConstraintValidator().getClass();
     }
 }

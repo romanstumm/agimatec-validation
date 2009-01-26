@@ -2,8 +2,8 @@ package com.agimatec.validation.constraints;
 
 import com.agimatec.validation.routines.EMailValidation;
 
-import javax.validation.Constraint;
-import javax.validation.ConstraintContext;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
 /**
  * <p/>
@@ -18,10 +18,10 @@ import javax.validation.ConstraintContext;
  * Time: 12:38:37 <br/>
  * Copyright: Agimatec GmbH
  */
-public class EmailValidator implements Constraint<Email> {
+public class EmailValidator implements ConstraintValidator<Email> {
     protected final EMailValidation validation = new EMailValidation();
 
-    public boolean isValid(Object value, ConstraintContext context) {
+    public boolean isValid(Object value, ConstraintValidatorContext context) {
         return validation.isValid(value);
     }
 

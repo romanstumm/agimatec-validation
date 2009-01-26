@@ -1,6 +1,6 @@
 package com.agimatec.validation.constraints;
 
-import javax.validation.ConstraintValidator;
+import javax.validation.Constraint;
 import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
@@ -10,7 +10,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * Date: 01.04.2008 <br/>
  * Time: 12:02:37 <br/>
  */
-@ConstraintValidator(CreditCardConstraint.class)
+@Constraint(validatedBy = CreditCardConstraintValidator.class)
 @Retention(RUNTIME)
 public @interface CreditCard {
     String[] groups() default {};

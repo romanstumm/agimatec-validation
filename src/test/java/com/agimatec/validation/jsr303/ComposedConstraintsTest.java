@@ -1,10 +1,10 @@
 package com.agimatec.validation.jsr303;
 
-import com.agimatec.validation.constraints.Length;
 import com.agimatec.validation.example.FrenchAddress;
 import junit.framework.TestCase;
 
 import javax.validation.*;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 /**
@@ -38,9 +38,9 @@ public class ComposedConstraintsTest extends TestCase {
     }
 
     public void processConstraintDescriptor(ConstraintDescriptor cd) {
-        //Length.class is understood by the tool
-        if (cd.getAnnotation().annotationType().equals(Length.class)) {
-            Length m = (Length) cd.getAnnotation();
+        //Size.class is understood by the tool
+        if (cd.getAnnotation().annotationType().equals(Size.class)) {
+            Size m = (Size) cd.getAnnotation();
             System.out.println("size.max = " + m.max());  //read and use the metadata
         }
         for (ConstraintDescriptor composingCd : cd.getComposingConstraints()) {

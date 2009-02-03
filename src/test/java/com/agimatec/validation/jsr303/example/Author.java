@@ -1,9 +1,9 @@
 package com.agimatec.validation.jsr303.example;
 
-import com.agimatec.validation.constraints.Length;
 import com.agimatec.validation.constraints.NotEmpty;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 public class Author {
@@ -11,7 +11,7 @@ public class Author {
     private String firstName;
     @NotEmpty(groups = First.class)
     private String lastName;
-    @Length(max = 30, groups = First.class)
+    @Size(max = 30, groups = First.class)
     private String company;
 
     @Valid

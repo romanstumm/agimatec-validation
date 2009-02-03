@@ -4,6 +4,7 @@
 
  * @OverridesParameter
  * TraversableResolver
+ * ValidatorContext
  * Method-level validation (currently not implemented in JSR303, exists as proposal only)
  * JSR-303 XML mappings (currently not yet specified in JSR303),
       but proprietary agimatec-validation-XML supported

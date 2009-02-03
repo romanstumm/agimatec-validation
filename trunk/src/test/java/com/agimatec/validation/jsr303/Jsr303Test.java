@@ -59,7 +59,7 @@ public class Jsr303Test extends TestCase {
     public void testMetadataAPI_Engine() {
         Validator validator = getValidator();
         assertTrue(validator.getConstraintsForClass(Engine.class)
-                .getPropertiesWithConstraints().contains("serialNumber"));
+                .getConstrainedProperties().contains("serialNumber"));
         ElementDescriptor desc = validator.getConstraintsForClass(Engine.class)
                 .getConstraintsForProperty("serialNumber");
 //        assertEquals(ElementType.FIELD, desc.getElementType());
@@ -72,7 +72,7 @@ public class Jsr303Test extends TestCase {
                 .getConstraintDescriptors().isEmpty());
 
         Set<String> props =
-                validator.getConstraintsForClass(Address.class).getPropertiesWithConstraints();
+                validator.getConstraintsForClass(Address.class).getConstrainedProperties();
         assertTrue(props.contains("addressline1")); // annotated at field level
         assertTrue(props.contains("addressline2"));
         assertTrue(props.contains("zipCode"));
@@ -85,7 +85,7 @@ public class Jsr303Test extends TestCase {
         assertNotNull(desc);
         boolean found = false;
         for (ConstraintDescriptor each : desc.getConstraintDescriptors()) {
-            if (each.getConstraintValidatorClass().equals(LengthConstraintValidator.class)) {
+            if (each.getConstraintValidatorClasses()[0].equals(LengthConstraintValidator.class)) {
                 assertTrue(each.getParameters().containsKey("max"));
                 assertEquals(30, each.getParameters().get("max"));
                 found = true;

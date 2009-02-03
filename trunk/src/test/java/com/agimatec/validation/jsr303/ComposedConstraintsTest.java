@@ -18,7 +18,7 @@ public class ComposedConstraintsTest extends TestCase {
     static ValidatorFactory factory;
 
     static {
-        factory = Validation.getBuilder().build();
+        factory = Validation.buildDefaultValidatorFactory();
     }
 
     public void testMetaDataAPI_ComposedConstraints() {

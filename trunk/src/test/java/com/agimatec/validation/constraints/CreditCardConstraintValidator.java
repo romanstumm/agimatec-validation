@@ -9,7 +9,7 @@ import javax.validation.ConstraintValidatorContext;
  * Date: 02.04.2008 <br/>
  * Time: 18:13:37 <br/>
  */
-public class CreditCardConstraintValidator implements ConstraintValidator<CreditCard> {
+public class CreditCardConstraintValidator implements ConstraintValidator<CreditCard, Object> {
     public void initialize(CreditCard constraintAnnotation) {
         // do nothing
     }

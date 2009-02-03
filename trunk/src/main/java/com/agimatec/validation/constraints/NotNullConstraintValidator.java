@@ -9,7 +9,7 @@ import javax.validation.ConstraintValidatorContext;
  * as soon as a final version of the specification contains a similar functionality.
  * </pre>
  */
-public class NotNullConstraintValidator implements ConstraintValidator<NotNull> {
+public class NotNullConstraintValidator implements ConstraintValidator<NotNull, Object> {
     public void initialize(NotNull constraintAnnotation) {
         // do nothing
     }

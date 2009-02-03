@@ -18,10 +18,10 @@ import javax.validation.ConstraintValidatorContext;
  * Time: 12:38:37 <br/>
  * Copyright: Agimatec GmbH
  */
-public class EmailValidator implements ConstraintValidator<Email> {
+public class EmailValidator implements ConstraintValidator<Email, String> {
     protected final EMailValidation validation = new EMailValidation();
 
-    public boolean isValid(Object value, ConstraintValidatorContext context) {
+    public boolean isValid(String value, ConstraintValidatorContext context) {
         return validation.isValid(value);
     }
 

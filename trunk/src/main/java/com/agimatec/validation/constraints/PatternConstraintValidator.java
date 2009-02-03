@@ -9,17 +9,14 @@ import javax.validation.ConstraintValidatorContext;
  * as soon as a final version of the specification contains a similar functionality.
  * </pre>
  */
-public class PatternConstraintValidator implements ConstraintValidator<Pattern> {
+public class PatternConstraintValidator implements ConstraintValidator<Pattern, String> {
     private java.util.regex.Pattern pattern;
 
     public void initialize(Pattern params) {
         pattern = java.util.regex.Pattern.compile(params.regex(), params.flags());
     }
 
-    public boolean isValid(Object ovalue, ConstraintValidatorContext context) {
-        if (ovalue == null) return true;
-        if (!(ovalue instanceof String)) return false;
-        final String value = (String) ovalue;
-        return pattern.matcher(value).matches();
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+        return value == null || pattern.matcher(value).matches();
     }
 }

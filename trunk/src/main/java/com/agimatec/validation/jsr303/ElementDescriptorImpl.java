@@ -8,9 +8,7 @@ import com.agimatec.validation.model.Validation;
 import javax.validation.BeanDescriptor;
 import javax.validation.ConstraintDescriptor;
 import javax.validation.PropertyDescriptor;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -25,7 +23,7 @@ class ElementDescriptorImpl implements BeanDescriptor, PropertyDescriptor {
     private MetaBean metaBean;
     private boolean cascaded;
     private Class type;
-    private List<ConstraintDescriptor> constraintDescriptors;
+    private Set<ConstraintDescriptor> constraintDescriptors;
     private String propertyPath;
 
     public ElementDescriptorImpl(MetaBean metaBean,
@@ -55,7 +53,7 @@ class ElementDescriptorImpl implements BeanDescriptor, PropertyDescriptor {
         return cascaded;
     }
 
-    public List<ConstraintDescriptor> getConstraintDescriptors() {
+    public Set<ConstraintDescriptor> getConstraintDescriptors() {
         return constraintDescriptors;
     }
 
@@ -71,6 +69,10 @@ class ElementDescriptorImpl implements BeanDescriptor, PropertyDescriptor {
                     mprop.getFeature(Features.Property.REF_CASCADE, true)) return true;
         }
         return false;
+    }
+
+    public boolean isBeanConstrained() {
+        return false;  // do nothing
     }
 
     /**
@@ -97,7 +99,7 @@ class ElementDescriptorImpl implements BeanDescriptor, PropertyDescriptor {
     }
 
     /** return the property names having at least a constraint defined */
-    public Set<String> getPropertiesWithConstraints() {
+    public Set<String> getConstrainedProperties() {
         Set<String> validatedProperties = new HashSet();
         for (MetaProperty prop : metaBean.getProperties()) {
             if (prop.getValidations().length > 0 || (prop.getMetaBean() != null &&
@@ -109,22 +111,13 @@ class ElementDescriptorImpl implements BeanDescriptor, PropertyDescriptor {
     }
 
     private void createConstraintDescriptors(Validation[] validations) {
-        setConstraintDescriptors(new ArrayList(validations.length));
+        setConstraintDescriptors(new HashSet(validations.length));
         for (Validation validation : validations) {
             if (validation instanceof ConstraintValidation) {
                 ConstraintValidation cval = (ConstraintValidation) validation;
                 getConstraintDescriptors().add(cval);
             }
         }
-    }
-
-    /**
-     * enhancement: delete when spec is stable
-     *
-     * @deprecated use getPropertyName() instead
-     */
-    public String getPropertyPath() {
-        return propertyPath;
     }
 
     public String getPropertyName() {
@@ -135,7 +128,7 @@ class ElementDescriptorImpl implements BeanDescriptor, PropertyDescriptor {
         this.cascaded = cascaded;
     }
 
-    public void setConstraintDescriptors(List<ConstraintDescriptor> constraintDescriptors) {
+    public void setConstraintDescriptors(Set<ConstraintDescriptor> constraintDescriptors) {
         this.constraintDescriptors = constraintDescriptors;
     }
 

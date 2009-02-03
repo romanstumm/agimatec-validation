@@ -12,13 +12,12 @@ import javax.validation.ConstraintValidatorContext;
  * Time: 11:45:22 <br/>
  */
 public class ZipCodeCityCoherenceConstraintValidator
-      implements ConstraintValidator<ZipCodeCityCoherence> {
+      implements ConstraintValidator<ZipCodeCityCoherence, Address> {
     public void initialize(ZipCodeCityCoherence constraintAnnotation) {
     }
 
-    public boolean isValid(Object value, ConstraintValidatorContext context) {
+    public boolean isValid(Address adr, ConstraintValidatorContext context) {
         boolean r = true;
-        Address adr = (Address) value;
         if ("error".equals(adr.getZipCode())) {
             context.disableDefaultError();
             context.addError("zipcode not OK");

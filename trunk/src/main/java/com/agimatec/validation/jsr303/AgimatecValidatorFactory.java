@@ -4,6 +4,7 @@ import com.agimatec.validation.BeanValidator;
 import com.agimatec.validation.MetaBeanManager;
 
 import javax.validation.*;
+import java.io.InputStream;
 
 /**
  * Description: a factory is a complete configurated object that can create validators<br/>
@@ -12,8 +13,8 @@ import javax.validation.*;
  * Date: 29.10.2008 <br/>
  * Time: 17:06:20 <br/>
  * Copyright: Agimatec GmbH
- */
-public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable, ValidatorBuilder {
+ */                                                                         /* TODO RSt - unklar? */
+public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable, Configuration {
     private static AgimatecValidatorFactory DEFAULT_FACTORY;
 
     private MetaBeanManager metaBeanManager;
@@ -25,7 +26,7 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable, Va
         if (DEFAULT_FACTORY == null) {
             AgimatecValidationProvider provider = new AgimatecValidationProvider();
             DEFAULT_FACTORY =
-                    provider.buildValidatorFactory(new FactoryBuilderImpl(null, provider));
+                    provider.buildValidatorFactory(new ConfigurationImpl(null, provider));
         }
         return DEFAULT_FACTORY;
     }
@@ -33,7 +34,11 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable, Va
     public AgimatecValidatorFactory() {
     }
 
-    public ValidatorBuilder messageInterpolator(MessageInterpolator messageResolver) {
+    public Configuration ignoreXmlConfiguration() {
+        return null;  // do nothing
+    }
+
+    public Configuration messageInterpolator(MessageInterpolator messageResolver) {
         setMessageInterpolator(messageResolver);
         return this;
     }
@@ -41,18 +46,42 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable, Va
     /**
      * * TODO RSt - traversableResolver() nyi
      */
-    public ValidatorBuilder traversableResolver(TraversableResolver traversableResolver) {
+    public Configuration traversableResolver(TraversableResolver traversableResolver) {
         return this;
+    }
+
+    public Configuration constraintValidatorFactory(ConstraintValidatorFactory constraintValidatorFactory) {
+        return this;  // TODO RSt - nyi
+    }
+
+    public Configuration addMapping(InputStream stream) {
+        return null;  // TODO RSt - nyi
+    }
+
+    public Configuration addProperty(String name, String value) {
+        return null;  // TODO RSt - nyi
+    }
+
+    public MessageInterpolator getDefaultMessageInterpolator() {
+        return messageResolver;
+    }
+
+    public ValidatorFactory buildValidatorFactory() {
+        return this;     // TODO RSt - nyi
     }
 
     public Validator getValidator() {
         return new ClassValidator(this);
     }
 
+    public ValidatorContext usingContext() {
+        return null;  // TODO RSt - nyi
+    }
+
     /**
      * @return TODO RSt - return separate instance, remove implementation of ValidatorBuilder from here
      */
-    public ValidatorBuilder defineValidatorState() {
+    public Configuration defineValidatorState() {
         return this;
     }
 

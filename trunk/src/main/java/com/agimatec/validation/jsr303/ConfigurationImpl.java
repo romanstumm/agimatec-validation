@@ -62,7 +62,7 @@ public class ConfigurationImpl implements AgimatecValidatorConfiguration, Config
     }
 
     public AgimatecValidatorConfiguration ignoreXmlConfiguration() {
-        return null;  // TODO RSt - nyi
+        return this;  // TODO RSt - nyi
     }
 
     public ConfigurationImpl messageInterpolator(MessageInterpolator resolver) {
@@ -76,11 +76,11 @@ public class ConfigurationImpl implements AgimatecValidatorConfiguration, Config
     }
 
     public AgimatecValidatorConfiguration addMapping(InputStream stream) {
-        return null;  // TODO RSt - nyi
+        return this;  // TODO RSt - nyi
     }
 
     public AgimatecValidatorConfiguration addProperty(String name, String value) {
-        return null;  // TODO RSt - nyi
+        return this;  // TODO RSt - nyi
     }
 
     public AgimatecValidatorConfiguration beanValidator(BeanValidator beanValidator) {

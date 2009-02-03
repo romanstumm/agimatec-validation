@@ -3,8 +3,10 @@ package com.agimatec.validation.jsr303;
 import com.agimatec.validation.BeanValidator;
 import com.agimatec.validation.MetaBeanManager;
 
-import javax.validation.*;
-import java.io.InputStream;
+import javax.validation.MessageInterpolator;
+import javax.validation.Validator;
+import javax.validation.ValidatorContext;
+import javax.validation.ValidatorFactory;
 
 /**
  * Description: a factory is a complete configurated object that can create validators<br/>
@@ -13,8 +15,8 @@ import java.io.InputStream;
  * Date: 29.10.2008 <br/>
  * Time: 17:06:20 <br/>
  * Copyright: Agimatec GmbH
- */                                                                         /* TODO RSt - remove interface here */
-public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable, Configuration {
+ */
+public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
     private static AgimatecValidatorFactory DEFAULT_FACTORY;
 
     private MetaBeanManager metaBeanManager;
@@ -34,40 +36,8 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable, Co
     public AgimatecValidatorFactory() {
     }
 
-    public Configuration ignoreXmlConfiguration() {
-        return this;  // TODO RSt - nyi
-    }
-
-    public Configuration messageInterpolator(MessageInterpolator messageResolver) {
-        setMessageInterpolator(messageResolver);
-        return this;
-    }
-
-    /**
-     * * TODO RSt - traversableResolver() nyi
-     */
-    public Configuration traversableResolver(TraversableResolver traversableResolver) {
-        return this;
-    }
-
-    public Configuration constraintValidatorFactory(ConstraintValidatorFactory constraintValidatorFactory) {
-        return this;  // TODO RSt - nyi
-    }
-
-    public Configuration addMapping(InputStream stream) {
-        return null;  // TODO RSt - nyi
-    }
-
-    public Configuration addProperty(String name, String value) {
-        return null;  // TODO RSt - nyi
-    }
-
     public MessageInterpolator getDefaultMessageInterpolator() {
         return messageResolver;
-    }
-
-    public ValidatorFactory buildValidatorFactory() {
-        return this;     // TODO RSt - nyi
     }
 
     public Validator getValidator() {
@@ -76,13 +46,6 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable, Co
 
     public ValidatorContext usingContext() {
         return null;  // TODO RSt - nyi
-    }
-
-    /**
-     * @return TODO RSt - return separate instance, remove implementation of ValidatorBuilder from here
-     */
-    public Configuration defineValidatorState() {
-        return this;
     }
 
     public Validator getValidator(MessageInterpolator messageResolver) {

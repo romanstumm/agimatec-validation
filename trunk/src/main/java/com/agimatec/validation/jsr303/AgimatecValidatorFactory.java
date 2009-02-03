@@ -13,7 +13,7 @@ import java.io.InputStream;
  * Date: 29.10.2008 <br/>
  * Time: 17:06:20 <br/>
  * Copyright: Agimatec GmbH
- */                                                                         /* TODO RSt - unklar? */
+ */                                                                         /* TODO RSt - remove interface here */
 public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable, Configuration {
     private static AgimatecValidatorFactory DEFAULT_FACTORY;
 
@@ -35,7 +35,7 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable, Co
     }
 
     public Configuration ignoreXmlConfiguration() {
-        return null;  // do nothing
+        return this;  // TODO RSt - nyi
     }
 
     public Configuration messageInterpolator(MessageInterpolator messageResolver) {

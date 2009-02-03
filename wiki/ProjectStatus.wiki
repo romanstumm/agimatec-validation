@@ -1,6 +1,11 @@
 #summary Project status and history
 
-= Mile stones =
+= Features =
+
+03.02.2009
+----------
+  * renamed bootstrap classes of validation-api.jar supported
+  * Default-BuildInConstraint Configuration for standard Annotations (NotNull, Null, Max, Size...) implemented
 
 30.10.2008
 ----------

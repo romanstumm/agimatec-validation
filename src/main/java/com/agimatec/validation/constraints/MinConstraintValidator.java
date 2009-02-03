@@ -9,14 +9,14 @@ import javax.validation.ConstraintValidatorContext;
  * as soon as a final version of the specification contains a similar functionality.
  * </pre>
  */
-public class MinConstraintValidator implements ConstraintValidator<Min> {
+public class MinConstraintValidator implements ConstraintValidator<Min, Number> {
     private int min;
 
     public void initialize(Min constraintAnnotation) {
         min = constraintAnnotation.value();
     }
 
-    public boolean isValid(Object value, ConstraintValidatorContext context) {
-        return ((Number) value).intValue() >= min;
+    public boolean isValid(Number value, ConstraintValidatorContext context) {
+        return value.intValue() >= min;
     }
 }

@@ -245,7 +245,7 @@ public class ValidationTest extends TestCase {
         assertTrue(bookBeanDescriptor.getConstraintDescriptors().size() == 0); //no constraint
 //        assertTrue("".equals(bookBeanDescriptor.getPropertyPath())); //root element
         //more specifically "author" and "title"
-        assertTrue(bookBeanDescriptor.getPropertiesWithConstraints().size() == 3);
+        assertTrue(bookBeanDescriptor.getConstrainedProperties().size() == 3);
         //not a property
         assertTrue(bookBeanDescriptor.getConstraintsForProperty("doesNotExist") == null);
         //property with no constraint
@@ -261,7 +261,7 @@ public class ValidationTest extends TestCase {
         assertTrue(constraintDescriptor.getAnnotation().annotationType().equals(NotEmpty.class));
         assertTrue(constraintDescriptor.getGroups().size() == 1); //"first"
         assertTrue(
-                constraintDescriptor.getConstraintValidatorClass().equals(
+                constraintDescriptor.getConstraintValidatorClasses()[0].equals(
                       NotEmptyConstraintValidator.class));
         /*  StandardConstraint standardConstraint =
                 (StandardConstraint) ((ConstraintValidation) constraintDescriptor).

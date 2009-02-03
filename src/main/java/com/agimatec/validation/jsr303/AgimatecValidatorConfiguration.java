@@ -2,7 +2,7 @@ package com.agimatec.validation.jsr303;
 
 import com.agimatec.validation.BeanValidator;
 
-import javax.validation.ValidatorFactoryBuilder;
+import javax.validation.Configuration;
 
 /**
  * Description: Uniquely identify Agimatec Validation in the Bean Validation bootstrap
@@ -12,11 +12,11 @@ import javax.validation.ValidatorFactoryBuilder;
  * Time: 16:16:45 <br/>
  * Copyright: Agimatec GmbH
  */
-public interface AgimatecValidatorFactoryBuilder
-        extends ValidatorFactoryBuilder<AgimatecValidatorFactoryBuilder> {
+public interface AgimatecValidatorConfiguration
+        extends Configuration<AgimatecValidatorConfiguration> {
     /**
      * set the implementation class for bean validation. the implementation
      * is responsible to provide a validation context.
      */
-    AgimatecValidatorFactoryBuilder beanValidator(BeanValidator beanValidator);
+    AgimatecValidatorConfiguration beanValidator(BeanValidator beanValidator);
 }

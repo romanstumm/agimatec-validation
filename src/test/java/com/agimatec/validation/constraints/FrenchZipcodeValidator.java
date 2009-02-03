@@ -10,7 +10,7 @@ import javax.validation.ConstraintValidatorContext;
  * Time: 16:38:25 <br/>
  * Copyright: Agimatec GmbH
  */
-public class FrenchZipcodeValidator implements ConstraintValidator<FrenchZipCode> {
+public class FrenchZipcodeValidator implements ConstraintValidator<FrenchZipCode, Object> {
     public void initialize(FrenchZipCode constraintAnnotation) {
         // do nothing
     }

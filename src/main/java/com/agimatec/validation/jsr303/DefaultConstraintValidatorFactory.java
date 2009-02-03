@@ -17,7 +17,7 @@ public class DefaultConstraintValidatorFactory implements ConstraintValidatorFac
      * @return Returns a new Constraint instance
      *         The ConstraintFactory is <b>not</b> responsible for calling Constraint#initialize
      */
-    public <T extends ConstraintValidator> T getInstance(Class<T> constraintClass) {
+    public <T extends ConstraintValidator<?, ?>> T getInstance(Class<T> constraintClass) {
         try {
             return constraintClass.newInstance();
         } catch (Exception e) {

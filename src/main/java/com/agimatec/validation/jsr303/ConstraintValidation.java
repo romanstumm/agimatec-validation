@@ -24,7 +24,7 @@ import java.util.*;
  * Copyright: Agimatec GmbH 2008
  */
 class ConstraintValidation implements Validation, ConstraintDescriptor {
-    private final ConstraintValidator constraint;
+    private final ConstraintValidator[] constraints;
     private final Set<Class<?>> groups;
     private final Annotation annotation; // for metadata request API
     private Set<ConstraintValidation> composedConstraints;
@@ -32,20 +32,20 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
     private final boolean reportFromComposite;
     private Map<String, Object> parameters;
 
-    protected ConstraintValidation(ConstraintValidator constraint, Class<?>[] groupsArray,
-                                   Annotation annotation, AnnotatedElement element) {
-        this.constraint = constraint;
+    protected ConstraintValidation(ConstraintValidator[] constraints,
+                                   Class<?>[] groupsArray, Annotation annotation,
+                                   AnnotatedElement element) {
+        this.constraints = constraints;
 
         groupsArray = (groupsArray == null || groupsArray.length == 0) ?
-                GroupValidationContext.DEFAULT_GROUPS : groupsArray;
+              GroupValidationContext.DEFAULT_GROUPS : groupsArray;
         this.groups = new HashSet(groupsArray.length);
         this.groups.addAll(Arrays.asList(groupsArray));
 
         this.annotation = annotation;
         this.field = element instanceof Field ? (Field) element : null;
-        this.reportFromComposite =
-                annotation.annotationType().isAnnotationPresent(
-                        ReportAsViolationFromCompositeConstraint.class);
+        this.reportFromComposite = annotation.annotationType()
+              .isAnnotationPresent(ReportAsViolationFromCompositeConstraint.class);
     }
 
     public boolean isReportAsViolationFromCompositeConstraint() {
@@ -70,8 +70,10 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
             if (!isMemberOf(groupContext.getCurrentGroup())) {
                 return; // do not validate in the current group
             }
-            if (!groupContext.collectValidated(context.getBean(), constraint))
-                return; // already done
+            for (ConstraintValidator constraint : constraints) {
+                if (!groupContext.collectValidated(context.getBean(), constraint))
+                    return; // already done
+            }
             messageResolver = groupContext.getMessageResolver();
 
         }
@@ -86,9 +88,9 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
         if (isReportAsViolationFromCompositeConstraint()) {
             BeanValidationContext gctx = (BeanValidationContext) context;
             ConstraintValidationListener oldListener =
-                    ((ConstraintValidationListener) gctx.getListener());
+                  ((ConstraintValidationListener) gctx.getListener());
             ConstraintValidationListener listener =
-                    new ConstraintValidationListener(oldListener.getRootBean());
+                  new ConstraintValidationListener(oldListener.getRootBean());
             gctx.setListener(listener);
             try {
                 for (ConstraintValidation composed : getComposed()) {
@@ -98,10 +100,12 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
                 gctx.setListener(oldListener);
             }
             // stop validating when already failed and ReportAsSingleInvalidConstraint = true ?
-            if(!listener.getConstaintViolations().isEmpty()) {
+            if (!listener.getConstaintViolations().isEmpty()) {
                 // enhancement: how should the composed constraint error report look like?
-                ConstraintContextImpl jsrContext = new ConstraintContextImpl(context, this);
-                addErrors(context, messageResolver, value, jsrContext); // add defaultErrorMessage only
+                ConstraintContextImpl jsrContext =
+                      new ConstraintContextImpl(context, this);
+                addErrors(context, messageResolver, value,
+                      jsrContext); // add defaultErrorMessage only
                 return;
             }
         } else {
@@ -110,20 +114,22 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
             }
         }
 
-        ConstraintContextImpl jsrContext = new ConstraintContextImpl(context, this);
-        if (!constraint.isValid(value, jsrContext)) {
-            addErrors(context, messageResolver, value, jsrContext);
+        for (ConstraintValidator constraint : constraints) {
+            ConstraintContextImpl jsrContext = new ConstraintContextImpl(context, this);
+            if (!constraint.isValid(value, jsrContext)) {
+                addErrors(context, messageResolver, value, jsrContext);
+            }
         }
     }
 
-    private void addErrors(ValidationContext context, MessageInterpolator messageResolver, Object value,
-                           ConstraintContextImpl jsrContext) {
-        ((GroupValidationContext)context).setCurrentConstraint(this);
+    private void addErrors(ValidationContext context, MessageInterpolator messageResolver,
+                           Object value, ConstraintContextImpl jsrContext) {
+        ((GroupValidationContext) context).setCurrentConstraint(this);
         if (messageResolver != null) {
             for (ValidationResults.Error each : jsrContext.getErrors()) {
                 context.getListener().addError(
-                        messageResolver.interpolate(each.getReason(), this, value),
-                        context);
+                      messageResolver.interpolate(each.getReason(), this, value),
+                      context);
             }
         } else {
             for (ValidationResults.Error each : jsrContext.getErrors()) {
@@ -133,11 +139,11 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
     }
 
     public String toString() {
-        return "ConstraintValidation{" + constraint + '}';
+        return "ConstraintValidation{" + constraints + '}';
     }
 
-    public ConstraintValidator getConstraintValidator() {
-        return constraint;
+    public ConstraintValidator[] getConstraintValidators() {
+        return constraints;
     }
 
     protected boolean isMemberOf(Class<?> reqGroup) {
@@ -166,10 +172,12 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
         if (parameters == null) {
             parameters = new HashMap();
             if (getAnnotation() != null) {
-                for (Method method : getAnnotation().annotationType().getDeclaredMethods()) {
+                for (Method method : getAnnotation().annotationType()
+                      .getDeclaredMethods()) {
                     if (method.getParameterTypes().length == 0) {
                         try {
-                            parameters.put(method.getName(), method.invoke(getAnnotation()));
+                            parameters
+                                  .put(method.getName(), method.invoke(getAnnotation()));
                         } catch (Exception e) { // do nothing
                         }
                     }
@@ -191,7 +199,12 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
         return groups;
     }
 
-    public Class<? extends ConstraintValidator> getConstraintValidatorClass() {
-        return getConstraintValidator().getClass();
+    public Class<? extends ConstraintValidator<?, ?>>[] getConstraintValidatorClasses() {
+        Class[] classes = new Class[constraints.length];
+        int i=0;
+        for (ConstraintValidator constraint : constraints) {
+            classes[i++] = constraint.getClass();
+        }
+        return classes;
     }
 }

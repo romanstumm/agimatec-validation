@@ -1,17 +1,17 @@
 package com.agimatec.validation.jsr303.example;
 
-import com.agimatec.validation.constraints.Length;
 import com.agimatec.validation.constraints.NotEmpty;
-import com.agimatec.validation.constraints.NotNull;
 
 import javax.validation.GroupSequence;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.validation.groups.Default;
 
 @GroupSequence(name = Default.class, sequence = { First.class, Second.class, Last.class })
 public class Book {
     private String title;
-    @Length(max = 30, groups = Second.class)
+    @Size(max = 30, groups = Second.class)
     private String subtitle;
     @Valid
     @NotNull(groups = First.class)

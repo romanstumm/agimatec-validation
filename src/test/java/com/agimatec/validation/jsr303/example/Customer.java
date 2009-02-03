@@ -1,8 +1,9 @@
 package com.agimatec.validation.jsr303.example;
 
 import com.agimatec.validation.constraints.Email;
-import com.agimatec.validation.constraints.NotNull;
 import com.agimatec.validation.constraints.Password;
+
+import javax.validation.constraints.NotNull;
 
 public class Customer implements Person {
     private String firstName;

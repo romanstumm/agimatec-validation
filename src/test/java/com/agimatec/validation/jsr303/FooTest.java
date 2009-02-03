@@ -1,10 +1,10 @@
 package com.agimatec.validation.jsr303;
 
-import com.agimatec.validation.constraints.NotNull;
 import junit.framework.TestCase;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;

@@ -1,6 +1,6 @@
 package com.agimatec.validation.jsr303.example;
 
-import com.agimatec.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
 
 /**
  * Description: <br/>

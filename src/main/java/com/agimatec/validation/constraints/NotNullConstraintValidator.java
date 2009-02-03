@@ -2,12 +2,10 @@ package com.agimatec.validation.constraints;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import javax.validation.constraints.NotNull;
 
 /**
- * <pre>
- * This class is NOT part of the bean_validation spec and might disappear
- * as soon as a final version of the specification contains a similar functionality.
- * </pre>
+ * valid when object is NOT null
  */
 public class NotNullConstraintValidator implements ConstraintValidator<NotNull, Object> {
     public void initialize(NotNull constraintAnnotation) {

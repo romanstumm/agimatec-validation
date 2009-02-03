@@ -1,19 +1,19 @@
 package com.agimatec.validation.jsr303.example;
 
-import com.agimatec.validation.constraints.Length;
-import com.agimatec.validation.constraints.NotNull;
 import com.agimatec.validation.constraints.ZipCodeCityCoherence;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @ZipCodeCityCoherence
 public class Address {
     @NotNull
-    @Length(max = 30)
+    @Size(max = 30)
     private String addressline1;
-    @Length(max = 30)
+    @Size(max = 30)
     private String addressline2;
-    @Length(max = 11)
+    @Size(max = 11)
     private String zipCode;
     @NotNull
     @Valid
@@ -44,7 +44,7 @@ public class Address {
         this.zipCode = zipCode;
     }
 
-    @Length(max = 30)
+    @Size(max = 30)
     @NotNull
     public String getCity() {
         return city;

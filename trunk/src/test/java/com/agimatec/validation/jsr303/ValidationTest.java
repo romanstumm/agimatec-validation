@@ -44,7 +44,7 @@ public class ValidationTest extends TestCase {
         author.setCompany("Some random publisher with a very very very long name");
 
         // author.firstName fails to pass the NotEmpty constraint
-        //  author.company fails to pass the Length constraint
+        //  author.company fails to pass the Size constraint
     }
 
     /**
@@ -273,7 +273,7 @@ public class ValidationTest extends TestCase {
                         getConstraintImplementation();
         //@NotEmpty cannot be null
         assertTrue(!standardConstraint.getStandardConstraints().getNullability());*/
-        //assuming the implementation returns the Length constraint first
+        //assuming the implementation returns the Size constraint first
         propertyDescriptor = bookBeanDescriptor.getConstraintsForProperty("subtitle");
         Iterator<ConstraintDescriptor> iterator =
               propertyDescriptor.getConstraintDescriptors().iterator();

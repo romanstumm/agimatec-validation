@@ -16,7 +16,7 @@
 03.02.2009
 ----------
   * renamed bootstrap classes of validation-api.jar supported
-  * Default-BuildInConstraint Configuration for standard Annotations (NotNull, Null, Max, Size...) implemented
+  * Default-BuildInConstraint Configuration for standard Annotations (NotNull, Null, Max, Size...) implemented. Thus javax.validation.constraint annotations will also be validated automatically.
 
 30.10.2008
 ----------

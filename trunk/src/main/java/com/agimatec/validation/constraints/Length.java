@@ -8,6 +8,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
 
 /**
+ * @deprecated use @Size instead
  * Validate that the string is between 'min' and 'max' (inclusive).
  * <p/>
  * <pre>

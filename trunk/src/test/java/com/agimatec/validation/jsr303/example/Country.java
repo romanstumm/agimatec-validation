@@ -1,14 +1,15 @@
 package com.agimatec.validation.jsr303.example;
 
-import com.agimatec.validation.constraints.Length;
-import com.agimatec.validation.constraints.NotNull;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class Country {
     @NotNull
     private String name;
-    @Length(max = 2)
+    @Size(max = 2)
     private String ISO2Code;
-    @Length(max = 3)
+    @Size(max = 3)
     private String ISO3Code;
 
     public String getName() {

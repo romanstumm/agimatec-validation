@@ -6,6 +6,7 @@ import javax.validation.ConstraintValidatorContext;
 //import javax.validation.StandardConstraintDescriptor;
 
 /**
+ * @deprecated use @Size and SizeConstraintValidator instead
  * <pre>
  * This class is NOT part of the bean_validation spec and might disappear
  * as soon as a final version of the specification contains a similar functionality.

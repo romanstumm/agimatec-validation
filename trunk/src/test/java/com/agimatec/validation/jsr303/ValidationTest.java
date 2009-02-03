@@ -1,12 +1,12 @@
 package com.agimatec.validation.jsr303;
 
-import com.agimatec.validation.constraints.Length;
 import com.agimatec.validation.constraints.NotEmpty;
 import com.agimatec.validation.constraints.NotEmptyConstraintValidator;
 import com.agimatec.validation.jsr303.example.*;
 import junit.framework.TestCase;
 
 import javax.validation.*;
+import javax.validation.constraints.Size;
 import javax.validation.groups.Default;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -75,7 +75,7 @@ public class ValidationTest extends TestCase {
         adr.setCity("Berlin");
         adr.setZipCode("12345");
         adr.setCompany("agimatec GmbH");
-        found = v.validate(a,  Default.class, First.class, Last.class);
+        found = v.validate(a, Default.class, First.class, Last.class);
         assertEquals(1, found.size());
         ConstraintViolation ic = (ConstraintViolation) found.iterator().next();
         assertEquals("addresses[0].country.name", ic.getPropertyPath());
@@ -123,7 +123,7 @@ public class ValidationTest extends TestCase {
         foo11.getFoos().add(foo2);
 
         Set<ConstraintViolation<RecursiveFoo>> constraints =
-                getValidator().validate(foo1);
+              getValidator().validate(foo1);
         assertPropertyPath("foos[0].foos[0].foos", constraints);
         assertPropertyPath("foos[1].foos", constraints);
     }
@@ -157,11 +157,12 @@ public class ValidationTest extends TestCase {
         //assuming an english locale, the interpolated message is returned
         for (ConstraintViolation constraintViolation : constraintViolations) {
             if (constraintViolation.getRootBean().getClass() == Book.class) {
-                assertTrue("may not be null or empty".equals(constraintViolation.getInterpolatedMessage()));
+                assertTrue("may not be null or empty".equals(
+                      constraintViolation.getInterpolatedMessage()));
                 assertTrue(book == constraintViolation.getRootBean());
 
                 //the offending property
-                if(constraintViolation.getPropertyPath().equals("title")) {
+                if (constraintViolation.getPropertyPath().equals("title")) {
                     foundTitleConstraint = true;
                     //the offending value
                     assertEquals(book.getTitle(), constraintViolation.getInvalidValue());
@@ -179,12 +180,15 @@ public class ValidationTest extends TestCase {
 
             if (constraintViolation.getRootBean().getClass() == Author.class) {
                 // The second failure, NotEmpty on the author's lastname, will produce the following ConstraintViolation object:
-                assertTrue("may not be null or empty".equals(constraintViolation.getInterpolatedMessage()));
+                assertTrue("may not be null or empty".equals(
+                      constraintViolation.getInterpolatedMessage()));
                 assertTrue(book == constraintViolation.getRootBean());
                 //the offending value
-                assertTrue(book.getAuthor().getLastName() == constraintViolation.getInvalidValue());
+                assertTrue(book.getAuthor().getLastName() ==
+                      constraintViolation.getInvalidValue());
                 //the offending property
-                assertTrue("author.lastName".equals(constraintViolation.getPropertyPath()));
+                assertTrue(
+                      "author.lastName".equals(constraintViolation.getPropertyPath()));
             }
         }
         assertTrue(foundTitleConstraint);
@@ -210,8 +214,8 @@ public class ValidationTest extends TestCase {
         }
     }
 
-    public void testValidateNestedPropertyPath()
-            throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    public void testValidateNestedPropertyPath() throws InvocationTargetException,
+          NoSuchMethodException, IllegalAccessException {
         final String propPath = "addresses[0].country.ISO2Code";
 
         Validator v = getValidator();
@@ -223,12 +227,10 @@ public class ValidationTest extends TestCase {
         adr.setCountry(country);
         country.setISO2Code("too_long");
 
-        Set<ConstraintViolation<Author>> iv =
-                v.validateProperty(author, propPath);
+        Set<ConstraintViolation<Author>> iv = v.validateProperty(author, propPath);
         assertEquals(1, iv.size());
         country.setISO2Code("23");
-        iv =
-                v.validateProperty(author, propPath);
+        iv = v.validateProperty(author, propPath);
         assertEquals(0, iv.size());
         iv = v.validateValue(Author.class, propPath, "345");
         assertEquals(1, iv.size());
@@ -238,11 +240,13 @@ public class ValidationTest extends TestCase {
 
     public void testMetadataAPI() {
         Validator bookValidator = getValidator();
-        BeanDescriptor bookBeanDescriptor = bookValidator.getConstraintsForClass(Book.class);
+        BeanDescriptor bookBeanDescriptor =
+              bookValidator.getConstraintsForClass(Book.class);
 //
         assertTrue(bookBeanDescriptor.hasConstraints());
 //          assertTrue(bookBeanDescriptor.getElementType() == ElementType.TYPE);
-        assertTrue(bookBeanDescriptor.getConstraintDescriptors().size() == 0); //no constraint
+        assertTrue(
+              bookBeanDescriptor.getConstraintDescriptors().size() == 0); //no constraint
 //        assertTrue("".equals(bookBeanDescriptor.getPropertyPath())); //root element
         //more specifically "author" and "title"
         assertTrue(bookBeanDescriptor.getConstrainedProperties().size() == 3);
@@ -251,18 +255,19 @@ public class ValidationTest extends TestCase {
         //property with no constraint
         assertTrue(bookBeanDescriptor.getConstraintsForProperty("description") == null);
         PropertyDescriptor propertyDescriptor =
-                bookBeanDescriptor.getConstraintsForProperty("title");
+              bookBeanDescriptor.getConstraintsForProperty("title");
 //        assertTrue(propertyDescriptor.getElementType() == ElementType.METHOD);
         assertTrue(propertyDescriptor.getConstraintDescriptors().size() == 1);
         assertTrue("title".equals(propertyDescriptor.getPropertyName()));
         //assuming the implementation returns the NotEmpty constraint first
-        ConstraintDescriptor constraintDescriptor = propertyDescriptor.getConstraintDescriptors()
-                .iterator().next();
-        assertTrue(constraintDescriptor.getAnnotation().annotationType().equals(NotEmpty.class));
+        ConstraintDescriptor constraintDescriptor =
+              propertyDescriptor.getConstraintDescriptors()
+                    .iterator().next();
+        assertTrue(constraintDescriptor.getAnnotation().annotationType().equals(
+              NotEmpty.class));
         assertTrue(constraintDescriptor.getGroups().size() == 1); //"first"
-        assertTrue(
-                constraintDescriptor.getConstraintValidatorClasses()[0].equals(
-                      NotEmptyConstraintValidator.class));
+        assertEquals(NotEmptyConstraintValidator.class,
+              constraintDescriptor.getConstraintValidatorClasses().get(0));
         /*  StandardConstraint standardConstraint =
                 (StandardConstraint) ((ConstraintValidation) constraintDescriptor).
                         getConstraintImplementation();
@@ -271,9 +276,10 @@ public class ValidationTest extends TestCase {
         //assuming the implementation returns the Length constraint first
         propertyDescriptor = bookBeanDescriptor.getConstraintsForProperty("subtitle");
         Iterator<ConstraintDescriptor> iterator =
-                propertyDescriptor.getConstraintDescriptors().iterator();
+              propertyDescriptor.getConstraintDescriptors().iterator();
         constraintDescriptor = iterator.next();
-        assertTrue(constraintDescriptor.getAnnotation().annotationType().equals(Length.class));
+        assertTrue(
+              constraintDescriptor.getAnnotation().annotationType().equals(Size.class));
         assertTrue(((Integer) constraintDescriptor.getParameters().get("max")) == 30);
         assertTrue(constraintDescriptor.getGroups().size() == 1);
         propertyDescriptor = bookBeanDescriptor.getConstraintsForProperty("author");

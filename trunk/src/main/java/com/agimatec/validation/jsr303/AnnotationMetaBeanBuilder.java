@@ -4,19 +4,20 @@ import com.agimatec.validation.MetaBeanBuilder;
 import com.agimatec.validation.model.Features;
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.MetaProperty;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.validation.*;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Description: process the class annotations for constraint validations
@@ -29,7 +30,11 @@ import java.util.Map;
  * TODO RSt - group inheritance not yet implemented
  */
 public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
+    private static final Log log = LogFactory.getLog(AnnotationMetaBeanBuilder.class);
     private final ConstraintValidatorFactory constraintFactory;
+    private static final String DEFAULT_CONSTAINTS =
+          "com/agimatec/validation/jsr303/defaultConstraints.properties";
+    protected Map<String, Class[]> defaultConstraints;
 
     public AnnotationMetaBeanBuilder(ConstraintValidatorFactory constraintFactory) {
         this.constraintFactory = constraintFactory;
@@ -153,12 +158,19 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
             /*
             * An annotation is considered a constraint
             * definition if its retention policy contains RUNTIME and if
-            * the annotation itself is annotated with javax.validation.ConstraintValidator.
+            * the annotation itself is annotated with javax.validation.Constraint.
+            * or if it is a defaultConstraint
             */
             Constraint vcAnno =
                   annotation.annotationType().getAnnotation(Constraint.class);
-            if (vcAnno != null && vcAnno.validatedBy() != null) {
-                applyConstraint(annotation, vcAnno.validatedBy(), metabean, prop, element,
+            Class<? extends ConstraintValidator<?, ?>>[] validatorClass;
+            if (vcAnno == null) {
+                validatorClass = getDefaultConstraintValidator(annotation);
+            } else {
+                validatorClass = vcAnno.validatedBy();
+            }
+            if (validatorClass != null) {
+                applyConstraint(annotation, validatorClass, metabean, prop, element,
                       validation);
                 return true;
             } else {
@@ -182,6 +194,51 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
             }
         }
         return false;
+    }
+
+    private Class<? extends ConstraintValidator<?, ?>>[] getDefaultConstraintValidator(
+          Annotation annotation) {
+        return getDefaultConstraints().get(annotation.annotationType().getName());
+    }
+
+    protected Map<String, Class[]> getDefaultConstraints() {
+        if (defaultConstraints == null) {
+            Properties defaultConstraintProperties = new Properties();
+            ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+            if (classloader == null) classloader = getClass().getClassLoader();
+            InputStream stream = classloader.getResourceAsStream(DEFAULT_CONSTAINTS);
+            if (stream != null) {
+                try {
+                    defaultConstraintProperties.load(stream);
+                } catch (IOException e) {
+                    log.error("cannot load " + DEFAULT_CONSTAINTS, e);
+                }
+            } else {
+                log.warn("cannot find " + DEFAULT_CONSTAINTS);
+            }
+            defaultConstraints = new HashMap();
+            for (Map.Entry entry : defaultConstraintProperties.entrySet()) {
+
+                StringTokenizer tokens =
+                      new StringTokenizer((String) entry.getValue(), ", ");
+                LinkedList classes = new LinkedList();
+                while (tokens.hasMoreTokens()) {
+                    String eachClassName = tokens.nextToken();
+                    try {
+                        Class constraintValidatorClass =
+                              Class.forName(eachClassName, true, classloader);
+                        classes.add(constraintValidatorClass);
+                    } catch (ClassNotFoundException e) {
+                        log.error("Cannot find class " + entry.getValue(), e);
+                    }
+                }
+                defaultConstraints
+                      .put((String) entry.getKey(),
+                            (Class[]) classes.toArray(new Class[classes.size()]));
+
+            }
+        }
+        return defaultConstraints;
     }
 
     private boolean processValid(/*AnnotatedElement element, MetaBean metabean, */

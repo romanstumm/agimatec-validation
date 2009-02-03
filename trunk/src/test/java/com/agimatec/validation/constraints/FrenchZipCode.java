@@ -4,6 +4,8 @@ import javax.validation.Constraint;
 import javax.validation.OverridesParameter;
 import javax.validation.OverridesParameters;
 import javax.validation.ReportAsViolationFromCompositeConstraint;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.lang.annotation.Documented;
 import static java.lang.annotation.ElementType.*;
 import java.lang.annotation.Retention;
@@ -19,7 +21,7 @@ import java.lang.annotation.Target;
  */
 @NotEmpty
 @NotNull
-@Length(min = 4, max = 5, message = "Zipcode should be of size {value}")
+@Size(min = 4, max = 5, message = "Zipcode should be of size {value}")
 @Constraint(validatedBy = FrenchZipcodeValidator.class)
 @ReportAsViolationFromCompositeConstraint
 @Documented
@@ -27,11 +29,11 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 public @interface FrenchZipCode {
     @OverridesParameters({
-        @OverridesParameter(constraint = Length.class, parameter = "min"),
-        @OverridesParameter(constraint = Length.class, parameter = "max")})
+        @OverridesParameter(constraint = Size.class, parameter = "min"),
+        @OverridesParameter(constraint = Size.class, parameter = "max")})
     int size() default 6;
 
-    @OverridesParameter(constraint=Length.class, parameter="message")
+    @OverridesParameter(constraint=Size.class, parameter="message")
     String sizeMessage() default "{error.zipcode.size}";
 
     String message() default "Wrong zipcode";

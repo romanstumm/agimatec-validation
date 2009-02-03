@@ -199,11 +199,10 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
         return groups;
     }
 
-    public Class<? extends ConstraintValidator<?, ?>>[] getConstraintValidatorClasses() {
-        Class[] classes = new Class[constraints.length];
-        int i=0;
+    public List<Class<? extends ConstraintValidator<?, ?>>> getConstraintValidatorClasses() {
+        List<Class<? extends ConstraintValidator<?, ?>>> classes = new ArrayList(constraints.length);
         for (ConstraintValidator constraint : constraints) {
-            classes[i++] = constraint.getClass();
+            classes.add((Class<? extends ConstraintValidator<?, ?>>) constraint.getClass());
         }
         return classes;
     }

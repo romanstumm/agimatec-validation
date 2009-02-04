@@ -12,9 +12,9 @@ The Wiki of "agimatec-validation" is open for community contribution. Useful inf
   * see http://forum.hibernate.org/viewtopic.php?t=991154 
 The agimatec-validation framework supports them (check out source from SVN), but
 there is more work to be done...
-  * The upcoming version 0.7 will not contain the javax.validation classes anymore but  instead use them from the official reference implementation.
-  * The upcoming version 0.7 will implement the bootstrap API and thus will not support ValidationProvider and ValidationProviderFactory anymore
-  * The version 0.7 will have packages renamed from com.agimatec.utility.validation to com.agimatec.validation
+  * version 0.7: does not contain javax.validation classes anymore, instead depends on the reference implementation.
+  * version 0.7: implements bootstrap API and thus will not support ValidationProvider and ValidationProviderFactory anymore
+  * version 0.7: packages renamed from com.agimatec.utility.validation to com.agimatec.validation
 
 [FeatureHistory feature history]
 

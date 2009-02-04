@@ -21,13 +21,15 @@ If you want to use the standard JSR APIs, your code
   * references classes in package javax.validation  
   * and directly uses classes in package com.agimatec.validation.jsr303
 
+_Note: The JSR 303 API is still work-in-progress and might differ from what is documented here. To get working examples of the APIs, refer to the test cases in the test-source-jar._
+
 1. create a validator for one of your business classes
 
 a) You can do this by using JSR303 bootstrapping APIs:
 
 {{{
-// create a factory (call this once and hold the reference!)
-javax.valiation.ValidatorFactory factory = Validation.getValidatorBuilder().build()
+// create a factory (call this once and hold the reference)
+javax.valiation.ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 
 // create validators using the factory
 javax.valiation.Validator validator = factory.getValidator();

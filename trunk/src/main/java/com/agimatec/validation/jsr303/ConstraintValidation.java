@@ -8,7 +8,7 @@ import com.agimatec.validation.model.ValidationContext;
 import javax.validation.ConstraintDescriptor;
 import javax.validation.ConstraintValidator;
 import javax.validation.MessageInterpolator;
-import javax.validation.ReportAsViolationFromCompositeConstraint;
+import javax.validation.ReportAsSingleViolation;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
@@ -45,10 +45,10 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
         this.annotation = annotation;
         this.field = element instanceof Field ? (Field) element : null;
         this.reportFromComposite = annotation.annotationType()
-              .isAnnotationPresent(ReportAsViolationFromCompositeConstraint.class);
+              .isAnnotationPresent(ReportAsSingleViolation.class);
     }
 
-    public boolean isReportAsViolationFromCompositeConstraint() {
+    public boolean isReportAsSingleViolation() {
         return reportFromComposite;
     }
 
@@ -85,7 +85,7 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
         }
 
         // process composed constraints
-        if (isReportAsViolationFromCompositeConstraint()) {
+        if (isReportAsSingleViolation()) {
             BeanValidationContext gctx = (BeanValidationContext) context;
             ConstraintValidationListener oldListener =
                   ((ConstraintValidationListener) gctx.getListener());

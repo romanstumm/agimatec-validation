@@ -28,7 +28,7 @@ public class ComposedConstraintsTest extends TestCase {
                         .getConstraintsForProperty("zipCode");
         assertEquals(1, ed.getConstraintDescriptors().size());
         for (ConstraintDescriptor cd : ed.getConstraintDescriptors()) {
-            assertTrue(cd.isReportAsViolationFromCompositeConstraint());
+            assertTrue(cd.isReportAsSingleViolation());
             assertEquals(3, cd.getComposingConstraints().size());
             System.out.println("params: " + cd.getParameters());
             assertTrue("no composing constraints found!!",

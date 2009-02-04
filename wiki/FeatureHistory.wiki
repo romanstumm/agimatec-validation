@@ -6,7 +6,8 @@ Check out the svn-sources to get the code compatible with the current state of t
 
 V0.7.3 (snapshot): (Jan 2009)
   * compatible with validation-api (snapshot 4tn feb. 2009), many classes have been renamed
-  * support all javax.validation.constraints that currently exist in the validation-api
+  * validates all javax.validation.constraints that currently exist in the validation-api
+   (see resource defaultConstraints.properties in agimatec-validation.jar)
   * not-yet-implemented: OverridesParameter, TraversableResolver, ValidatorContext, group inheritance, type-safety check calling ConstraintValidator 
 
 V0.7.1 (snapshot): (Nov. 2008)

@@ -104,7 +104,7 @@ public class XMLMetaElement extends XMLFeaturesCapable {
     public void mergeInto(MetaProperty prop) throws ClassNotFoundException {
         mergeFeaturesInto(prop);
         if (getType() != null && getType().length() > 0) {
-            prop.setType(ClassUtils.getClass(getType())); // or use getGenericType() ?
+            prop.setType(ClassUtils.getClass(getType())); // enhancement: or use getGenericType() ?
         }
         if (getHidden() != null) {
             prop.putFeature(HIDDEN, getHidden().booleanValue());

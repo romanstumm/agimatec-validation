@@ -19,13 +19,21 @@ import java.util.*;
  * Copyright: Agimatec GmbH 2008
  */
 public class JSONGenerator {
-    private Template template;
+    private final Template template;
 
     public JSONGenerator() throws IOException {
+        this("bean-infos-json.ftl");
+    }
+
+    public JSONGenerator(String templateName) throws IOException {
         Configuration freemarker = new Configuration();
         freemarker.setNumberFormat("0.######");  // prevent locale-sensitive number format
         freemarker.setClassForTemplateLoading(getClass(), "");
-        template = freemarker.getTemplate("bean-infos-json.ftl");
+        template = freemarker.getTemplate(templateName);
+    }
+
+    public JSONGenerator(Template template) {
+        this.template = template;
     }
 
     public String toJSON(MetaBean metaBean) throws IOException, TemplateException {

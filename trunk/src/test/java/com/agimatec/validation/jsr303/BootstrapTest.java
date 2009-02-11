@@ -1,6 +1,6 @@
 package com.agimatec.validation.jsr303;
 
-import com.agimatec.validation.constraints.NotNullConstraintValidator;
+import com.agimatec.validation.constraints.NotNullValidator;
 import com.agimatec.validation.jsr303.example.Customer;
 import junit.framework.TestCase;
 
@@ -82,8 +82,8 @@ public class BootstrapTest extends TestCase {
         builder.constraintValidatorFactory(
                 new ConstraintValidatorFactory() {
                     public <T extends ConstraintValidator<?, ?>> T getInstance(Class<T> key) {
-                        if (key == NotNullConstraintValidator.class) {
-                            return (T) new BadlyBehavedNotNullConstraintValidator();
+                        if (key == NotNullValidator.class) {
+                            return (T) new BadlyBehavedNotNullValidator();
                         }
                         return new DefaultConstraintValidatorFactory().getInstance(key);
                     }
@@ -167,7 +167,7 @@ public class BootstrapTest extends TestCase {
         }
     }
 
-    class BadlyBehavedNotNullConstraintValidator extends NotNullConstraintValidator {
+    class BadlyBehavedNotNullValidator extends NotNullValidator {
         @Override
         public boolean isValid(Object object, ConstraintValidatorContext context) {
             return true;

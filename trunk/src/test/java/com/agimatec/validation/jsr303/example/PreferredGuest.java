@@ -1,9 +1,9 @@
 package com.agimatec.validation.jsr303.example;
 
-import com.agimatec.validation.constraints.CreditCard;
+import javax.validation.constraints.Digits;
 
 public class PreferredGuest extends Customer {
-    @CreditCard
+    @Digits(integer = 10, fraction = 0)
     private String guestCreditCardNumber;
 
     public String getGuestCreditCardNumber() {

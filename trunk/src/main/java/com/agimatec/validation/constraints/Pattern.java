@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
  * </pre>
  */
 @Documented
-@Constraint(validatedBy = PatternConstraintValidator.class)
+@Constraint(validatedBy = PatternValidator.class)
 @Target({METHOD, FIELD, ANNOTATION_TYPE})
 @Retention(RUNTIME)
 public @interface Pattern {

@@ -1,7 +1,7 @@
 package com.agimatec.validation.jsr303;
 
 import com.agimatec.validation.constraints.NotEmpty;
-import com.agimatec.validation.constraints.NotEmptyConstraintValidator;
+import com.agimatec.validation.constraints.NotEmptyValidator;
 import com.agimatec.validation.jsr303.example.*;
 import junit.framework.TestCase;
 
@@ -196,7 +196,7 @@ public class ValidationTest extends TestCase {
 
     /**
      * test that:
-     * the {@link com.agimatec.validation.constraints.ZipCodeCityCoherenceConstraintValidator} adds
+     * the {@link com.agimatec.validation.constraints.ZipCodeCityCoherenceValidator} adds
      * custom messages to the context and suppresses the default message
      */
     public void testContextMessages() {
@@ -266,7 +266,7 @@ public class ValidationTest extends TestCase {
         assertTrue(constraintDescriptor.getAnnotation().annotationType().equals(
               NotEmpty.class));
         assertTrue(constraintDescriptor.getGroups().size() == 1); //"first"
-        assertEquals(NotEmptyConstraintValidator.class,
+        assertEquals(NotEmptyValidator.class,
               constraintDescriptor.getConstraintValidatorClasses().get(0));
         /*  StandardConstraint standardConstraint =
                 (StandardConstraint) ((ConstraintValidation) constraintDescriptor).

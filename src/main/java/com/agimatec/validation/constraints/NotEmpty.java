@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
  * </pre>
  */
 @Documented
-@Constraint(validatedBy = NotEmptyConstraintValidator.class)
+@Constraint(validatedBy = NotEmptyValidator.class)
 @Target({METHOD, FIELD, ANNOTATION_TYPE})
 @Retention(RUNTIME)
 public @interface NotEmpty {

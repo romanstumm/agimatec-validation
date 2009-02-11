@@ -8,7 +8,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
 
 @Documented
-@Constraint(validatedBy = ZipCodeCityCoherenceConstraintValidator.class)
+@Constraint(validatedBy = ZipCodeCityCoherenceValidator.class)
 @Target({TYPE})
 @Retention(RUNTIME)
 public @interface ZipCodeCityCoherence {

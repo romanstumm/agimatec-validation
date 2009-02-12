@@ -89,7 +89,7 @@ class ElementDescriptorImpl implements BeanDescriptor, PropertyDescriptor {
         ElementDescriptorImpl edesc = prop.getFeature(Jsr303Features.Property.ElementDescriptor);
         if (edesc == null) {
             edesc = new ElementDescriptorImpl();
-            edesc.setType(prop.getFeature(Features.Property.REF_BEAN_TYPE, prop.getType()));
+            edesc.setType(prop.getFeature(Features.Property.REF_BEAN_TYPE, prop.getTypeClass()));
             edesc.setCascaded(prop.getFeature(Features.Property.REF_CASCADE, false));
             edesc.setPropertyPath(propertyName);
             edesc.createConstraintDescriptors(prop.getValidations());

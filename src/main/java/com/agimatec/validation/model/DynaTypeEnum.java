@@ -32,10 +32,16 @@ public class DynaTypeEnum implements DynaType {
         return enumClass;
     }
 
+    /**
+     * used by freemarker-template "bean-infos-json.ftl"
+     */
     public boolean isEnum() {
         return enumClass.isEnum();
     }
 
+    /**
+     * used by freemarker-template "bean-infos-json.ftl"
+     */
     public Object[] getEnumConstants() {
         if(enumConstants != null) {
             return enumConstants;

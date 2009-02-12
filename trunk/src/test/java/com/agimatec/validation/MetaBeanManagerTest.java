@@ -34,7 +34,7 @@ public class MetaBeanManagerTest extends TestCase {
     public void setUp() throws Exception {
         super.setUp();
         mbm.getBuilder().addLoader(new XMLMetaBeanURLLoader(
-                BusinessObject.class.getResource("test-beanInfos.xml")));
+              BusinessObject.class.getResource("test-beanInfos.xml")));
     }
 
     public void tearDown() throws Exception {
@@ -43,7 +43,7 @@ public class MetaBeanManagerTest extends TestCase {
 
     public void testEnrichCopies() throws Exception {
         Map<String, MetaBean> copies = mbm.enrichCopies(new XMLMetaBeanURLLoader(
-                BusinessObject.class.getResource("test-beanInfos-custom.xml")).load());
+              BusinessObject.class.getResource("test-beanInfos-custom.xml")).load());
         assertNotNull(copies);
         MetaBean mb = copies.get(BusinessObject.class.getName());
         assertFalse(mb.getProperty("lastName").isMandatory());
@@ -63,21 +63,21 @@ public class MetaBeanManagerTest extends TestCase {
         MetaBean info = finder.findForClass(BusinessObject.class);
         assertNotNull(info);
         assertTrue(info == info.getProperty("address").getMetaBean().getProperty("owner")
-                .getMetaBean());
+              .getMetaBean());
         assertTrue(info == info.getProperty("addresses").getMetaBean()
-                .getProperty("owner").getMetaBean());
+              .getProperty("owner").getMetaBean());
         assertTrue(info.getProperty("email").getJavaScriptValidations().length > 0);
     }
 
     public void testBeanInfosCustomPatchGenerated()
-            throws IOException, TemplateException {
+          throws IOException, TemplateException {
         MetaBean mbean = mbm.findForClass(BusinessObject.class);
         MetaProperty mprop = mbean.getProperty("lastName");
         assertTrue(mprop.isMandatory());
 
         mbm.getCache().removeFromCache(mbean);
         mbm.getBuilder().addLoader(new XMLMetaBeanURLLoader(
-                BusinessObject.class.getResource("test-beanInfos-custom.xml")));
+              BusinessObject.class.getResource("test-beanInfos-custom.xml")));
         mbean = mbm.findForClass(BusinessObject.class);
         mprop = mbean.getProperty("lastName");
         assertTrue(!mprop.isMandatory());
@@ -99,14 +99,13 @@ public class MetaBeanManagerTest extends TestCase {
         Map<String, MetaBean> all2 = mbm.findAll();
         assertEquals(all.size(), all2.size());
         assertTrue(all.get(BusinessObject.class.getName()) ==
-                all2.get(BusinessObject.class.getName()));
-        assertTrue(all.get(BusinessObject.class.getName()) !=
-                null);
+              all2.get(BusinessObject.class.getName()));
+        assertTrue(all.get(BusinessObject.class.getName()) != null);
         MetaBean bean = all.get(BusinessObject.class.getName());
         assertTrue(bean == bean.getProperty("address").getMetaBean().getProperty("owner")
-                .getMetaBean());
+              .getMetaBean());
         assertTrue(bean == bean.getProperty("addresses").getMetaBean()
-                .getProperty("owner").getMetaBean());
+              .getProperty("owner").getMetaBean());
     }
 
     public void testJSON() throws Exception {
@@ -129,4 +128,5 @@ public class MetaBeanManagerTest extends TestCase {
     public static Test suite() {
         return new TestSuite(MetaBeanManagerTest.class);
     }
+
 }

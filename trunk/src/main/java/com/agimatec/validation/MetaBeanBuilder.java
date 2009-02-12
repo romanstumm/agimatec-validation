@@ -28,7 +28,7 @@ public class MetaBeanBuilder {
     private static final Log log = LogFactory.getLog(MetaBeanBuilder.class);
     // use LinkedHashMap to keep sequence of loaders
     private final Map<XMLMetaBeanLoader, XMLMetaBeanInfos> resources =
-            new LinkedHashMap();
+          new LinkedHashMap();
 
     private StandardValidation standardValidation = StandardValidation.getInstance();
 
@@ -54,8 +54,9 @@ public class MetaBeanBuilder {
         final Map<String, MetaBean> all = new HashMap<String, MetaBean>();
         visitXMLBeanMeta(null, new Visitor() {
             public void visit(XMLMetaBean empty, XMLMetaBeanInfos xmlInfos)
-                    throws Exception {
+                  throws Exception {
                 if (xmlInfos.getBeans() == null) return; // empty file, ignore
+                XMLResult carrier = new XMLResult(null, xmlInfos);
 
                 for (XMLMetaBean xmlMeta : xmlInfos.getBeans()) {
                     MetaBean meta = all.get(xmlMeta.getId());
@@ -63,7 +64,8 @@ public class MetaBeanBuilder {
                         meta = createMetaBean(xmlMeta);
                         all.put(xmlMeta.getId(), meta);
                     }
-                    enrichMetaBean(meta, new XMLResult(xmlMeta, xmlInfos));
+                    carrier.xmlMeta = xmlMeta;
+                    enrichMetaBean(meta, carrier);
                 }
             }
 
@@ -75,14 +77,16 @@ public class MetaBeanBuilder {
     }
 
     public Map<String, MetaBean> enrichCopies(Map<String, MetaBean> all,
-                                              XMLMetaBeanInfos... infos)
+                                              XMLMetaBeanInfos... infosArray)
             throws Exception {
         final Map<String, MetaBean> copies = new HashMap<String, MetaBean>(all.size());
         boolean nothing = true;
-        for (XMLMetaBeanInfos each : infos) {
-            if (each == null) continue;
+        XMLResult carrier = new XMLResult();
+        for (XMLMetaBeanInfos xmlMetaBeanInfos : infosArray) {
+            carrier.xmlInfos = xmlMetaBeanInfos;
+            if (xmlMetaBeanInfos == null) continue;
             try {
-                for (XMLMetaBean xmlMeta : each.getBeans()) {
+                for (XMLMetaBean xmlMeta : xmlMetaBeanInfos.getBeans()) {
                     nothing = false;
                     MetaBean copy = copies.get(xmlMeta.getId());
                     if (copy == null) { // ist noch nicht kopiert
@@ -94,10 +98,11 @@ public class MetaBeanBuilder {
                         }
                         copies.put(xmlMeta.getId(), copy);
                     }
-                    enrichMetaBean(copy, new XMLResult(xmlMeta, each));
+                    carrier.xmlMeta = xmlMeta;
+                    enrichMetaBean(copy, carrier);
                 }
             } catch (IOException e) {
-                handleLoadException(each, e);
+                handleLoadException(xmlMetaBeanInfos, e);
             }
         }
         if (nothing) return all;
@@ -127,7 +132,7 @@ public class MetaBeanBuilder {
             }
 
             public void visit(XMLMetaBean xmlMeta, XMLMetaBeanInfos xmlInfos)
-                    throws Exception {
+                  throws Exception {
                 if (meta == null) {
                     meta = createMetaBean(xmlMeta);
                 }
@@ -166,7 +171,7 @@ public class MetaBeanBuilder {
         final MetaBean metaBean = buildMetaBean(Introspector.getBeanInfo(clazz));
         visitXMLBeanMeta(metaBean.getId(), new Visitor() {
             public void visit(XMLMetaBean xmlMeta, XMLMetaBeanInfos xmlInfos)
-                    throws Exception {
+                  throws Exception {
                 enrichMetaBean(metaBean, new XMLResult(xmlMeta, xmlInfos));
             }
 
@@ -181,9 +186,9 @@ public class MetaBeanBuilder {
         MetaBean meta = new MetaBean();
         if (info.getBeanDescriptor() != null) {
             meta.setId(info.getBeanDescriptor()
-                    .getBeanClass().getName()); // id = full class name!
+                  .getBeanClass().getName()); // id = full class name!
             meta.setName(
-                    info.getBeanDescriptor().getName()); // (display?)name = simple class name!
+                  info.getBeanDescriptor().getName()); // (display?)name = simple class name!
             meta.setBeanClass(info.getBeanDescriptor().getBeanClass());
         }
         for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
@@ -220,7 +225,7 @@ public class MetaBeanBuilder {
      */
     protected XMLResult findXMLBeanMeta(String beanId) {
         for (Map.Entry<XMLMetaBeanLoader, XMLMetaBeanInfos> entry : resources
-                .entrySet()) {
+              .entrySet()) {
             if (entry.getValue() == null) {
                 // load when not already loaded
                 try {
@@ -252,7 +257,7 @@ public class MetaBeanBuilder {
 
     protected void visitXMLBeanMeta(String beanId, Visitor visitor) throws Exception {
         for (Map.Entry<XMLMetaBeanLoader, XMLMetaBeanInfos> entry : resources
-                .entrySet()) {
+              .entrySet()) {
             if (entry.getValue() == null) {
                 // load when not already loaded
                 try {
@@ -316,42 +321,43 @@ public class MetaBeanBuilder {
     }
 
     protected void enrichValidations(FeaturesCapable prop, XMLFeaturesCapable xmlProp,
-                                     XMLResult result, boolean addStandard) throws Exception {
+                                     XMLResult result, boolean addStandard)
+          throws Exception {
         if (xmlProp.getValidators() != null) {
             String[] func = prop.getFeature(JAVASCRIPT_VALIDATION_FUNCTIONS);
             List<String> jsValidators = new ArrayList<String>(
-                    xmlProp.getValidators().size() + (func == null ? 0 : func.length));
+                  xmlProp.getValidators().size() + (func == null ? 0 : func.length));
             if (func != null && func.length > 0) {
                 jsValidators.addAll(Arrays.asList(func));
             }
             boolean useStandard = prop instanceof MetaProperty;
             for (XMLMetaValidatorReference valRef : xmlProp.getValidators()) {
                 if (standardValidation != null &&
-                        valRef.getRefId().equals(standardValidation.getValidationId())) {
+                      valRef.getRefId().equals(standardValidation.getValidationId())) {
                     useStandard = false;
                 }
                 XMLMetaValidator validator =
-                        result.xmlInfos.getValidator(valRef.getRefId());
+                      result.xmlInfos.getValidator(valRef.getRefId());
                 if (validator != null) {
                     if (validator.getValidation() != null) {
                         prop.addValidation(validator.getValidation());
                     }
                     if (validator.getJsFunction() != null &&
-                            !jsValidators.contains(validator.getJsFunction())) {
+                          !jsValidators.contains(validator.getJsFunction())) {
                         jsValidators.add(validator.getJsFunction());
                     }
                 }
             }
             if (!jsValidators.isEmpty()) {
                 prop.putFeature(JAVASCRIPT_VALIDATION_FUNCTIONS,
-                        jsValidators.toArray(new String[jsValidators.size()]));
+                      jsValidators.toArray(new String[jsValidators.size()]));
             }
             if (useStandard && standardValidation != null) {
                 if (!prop.hasValidation(standardValidation))
                     prop.addValidation(standardValidation);
             }
-        } else
-        if (addStandard && standardValidation != null && !prop.hasValidation(standardValidation)) {
+        } else if (addStandard && standardValidation != null &&
+              !prop.hasValidation(standardValidation)) {
             prop.addValidation(standardValidation);
         }
     }
@@ -363,6 +369,9 @@ public class MetaBeanBuilder {
         public XMLResult(XMLMetaBean metaBean, XMLMetaBeanInfos metaInfos) {
             this.xmlMeta = metaBean;
             this.xmlInfos = metaInfos;
+        }
+
+        public XMLResult() {
         }
     }
 }

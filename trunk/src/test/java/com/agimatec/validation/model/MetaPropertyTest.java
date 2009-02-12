@@ -23,8 +23,8 @@ public class MetaPropertyTest extends TestCase {
         prop.setType(String.class);
         assertEquals(String.class, prop.getTypeClass());
         assertEquals(String.class, prop.getType());
-        prop.setType(new DynaTypeEnum(BusinessEnum.class, BusinessEnum.VALUE1,
-              BusinessEnum.VALUE3));
+        prop.setType(new DynaTypeEnum(BusinessEnum.class, BusinessEnum.VALUE1.name(),
+              BusinessEnum.VALUE3.name()));
         assertEquals(BusinessEnum.class, prop.getTypeClass());
         assertEquals(2, ((DynaTypeEnum)prop.getType()).getEnumConstants().length);
     }

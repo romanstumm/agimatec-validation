@@ -1,5 +1,8 @@
 package com.agimatec.validation.model;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+
 /**
  * Description: the meta description of a property of a bean. it supports a map
  * of features and multiple validations<br/>
@@ -11,10 +14,11 @@ package com.agimatec.validation.model;
  * @see Validation
  * @see MetaBean
  */
-public class MetaProperty extends FeaturesCapable implements Cloneable, Features.Property {
+public class MetaProperty extends FeaturesCapable
+      implements Cloneable, Features.Property {
     private String name;
 
-    private Class<?> type;
+    private Type type;
     private MetaBean metaBean;
 
     /** the meta info of the target bean (mainly for relationships) */
@@ -30,12 +34,28 @@ public class MetaProperty extends FeaturesCapable implements Cloneable, Features
         return metaBean != null;
     }
 
-    public void setType(Class<?> type) {
+    public void setType(Type type) {
         this.type = type;
     }
 
-    public Class<?> getType() {
+    public Type getType() {
         return type;
+    }
+
+    public Class<?> getTypeClass() {
+        return getTypeClass(type);
+    }
+
+    private Class<?> getTypeClass(Type rawType) {
+        if (rawType instanceof Class) {
+            return (Class) rawType;
+        } else if (rawType instanceof ParameterizedType) {
+            return getTypeClass(((ParameterizedType) rawType).getRawType()); // recursion!
+        } else if(rawType instanceof DynaType) {
+            return getTypeClass(((DynaType)rawType).getRawType()); // recursion
+        } else {
+            return null; // class cannot be determined!
+        }
     }
 
     public String getName() {

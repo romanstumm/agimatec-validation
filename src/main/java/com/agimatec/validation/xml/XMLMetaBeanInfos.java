@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Description: <br/>
+ * Description: root element of a xml-beanInfos document<br/>
  * User: roman.stumm <br/>
  * Date: 05.07.2007 <br/>
  * Time: 14:58:11 <br/>

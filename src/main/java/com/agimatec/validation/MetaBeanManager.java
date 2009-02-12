@@ -20,7 +20,8 @@ import java.util.Map;
  * Time: 16:19:43 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-public class MetaBeanManager implements MetaBeanFinder, XMLMetaBeanRegistry, MetaBeanEnricher {
+public class MetaBeanManager
+      implements MetaBeanFinder, XMLMetaBeanRegistry, MetaBeanEnricher {
 
     protected final MetaBeanCache cache = new MetaBeanCache();
     protected final MetaBeanBuilder builder;
@@ -116,7 +117,8 @@ public class MetaBeanManager implements MetaBeanFinder, XMLMetaBeanRegistry, Met
         } catch (IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
-            throw new IllegalArgumentException("error creating beanInfo with id: " + beanInfoId, e);
+            throw new IllegalArgumentException(
+                  "error creating beanInfo with id: " + beanInfoId, e);
         }
     }
 

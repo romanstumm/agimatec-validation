@@ -9,19 +9,23 @@ package com.agimatec.validation.model;
  */
 public class DynaTypeEnum implements DynaType {
     private final Class enumClass;
-    private Object[] enumConstants;
+    private Value[] enumConstants;
 
     public DynaTypeEnum(Class enumClass) {
         this.enumClass = enumClass;
     }
 
-    public DynaTypeEnum(Class enumClass, Object... enumConstants) {
+    public DynaTypeEnum(Class enumClass, String... names) {
         this.enumClass = enumClass;
-        this.enumConstants = enumConstants;
+        setEnumNames(names);
     }
 
-    public void setEnumConstants(Object[] enumConstants) {
-        this.enumConstants = enumConstants;
+    public void setEnumNames(String[] names) {
+        enumConstants = new Value[names.length];
+        int i=0;
+        for(String each : names) {
+            enumConstants[i++] = new Value(each);
+        }
     }
 
     public String getName() {
@@ -42,15 +46,24 @@ public class DynaTypeEnum implements DynaType {
     /**
      * used by freemarker-template "bean-infos-json.ftl"
      */
-    public Object[] getEnumConstants() {
-        if(enumConstants != null) {
-            return enumConstants;
-        } else {
-            return enumClass.getEnumConstants();
-        }
+    public Value[] getEnumConstants() {
+        return enumConstants;
     }
 
     public boolean isAssignableFrom(Class cls) {
         return enumClass.isAssignableFrom(cls);
+    }
+
+    public static final class Value {
+        final String name;
+
+        Value(String name) {
+            this.name = name;
+        }
+
+        public String name() {
+            return name;
+        }
+
     }
 }

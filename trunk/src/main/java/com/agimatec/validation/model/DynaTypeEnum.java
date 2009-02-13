@@ -54,6 +54,9 @@ public class DynaTypeEnum implements DynaType {
         return enumClass.isAssignableFrom(cls);
     }
 
+    /**
+     * represent a single "enum" instance (= the value)
+     */
     public static final class Value {
         final String name;
 
@@ -61,6 +64,10 @@ public class DynaTypeEnum implements DynaType {
             this.name = name;
         }
 
+        /**
+         * used by freemarker-template "bean-infos-json.ftl"
+         * @return
+         */
         public String name() {
             return name;
         }

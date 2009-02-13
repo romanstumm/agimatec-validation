@@ -1,8 +1,10 @@
 package com.agimatec.validation;
 
+import com.agimatec.validation.example.BusinessEnum;
 import com.agimatec.validation.example.BusinessObject;
 import com.agimatec.validation.example.BusinessObjectAddress;
 import com.agimatec.validation.json.JSONGenerator;
+import com.agimatec.validation.model.DynaTypeEnum;
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.MetaProperty;
 import com.agimatec.validation.xml.XMLMetaBeanURLLoader;
@@ -123,6 +125,23 @@ public class MetaBeanManagerTest extends TestCase {
         String json = converter.toJSON(metaBeans);
         assertNotNull(json);
         System.out.println(json);
+    }
+
+    public void testJSON_dynaTypeEnum() throws Exception {
+        MetaBean info = mbm.findForClass(BusinessObject.class);
+        MetaProperty choice = info.getProperty("choice");
+        choice.setType(new DynaTypeEnum(BusinessEnum.class, "CUSTOM_1", "CUSTOM_2"));
+
+        JSONGenerator converter = new JSONGenerator();
+
+        List<MetaBean> metaBeans = new ArrayList(1);
+        metaBeans.add(info);
+        String json = converter.toJSON(metaBeans);
+        assertNotNull(json);
+//        System.out.println(json);
+        assertTrue(json.indexOf("CUSTOM_1")>0);
+        assertTrue(json.indexOf("CUSTOM_2")>0);
+        assertTrue(json.indexOf("VALUE1")<0);
     }
 
     public static Test suite() {

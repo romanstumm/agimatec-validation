@@ -4,25 +4,8 @@
 
 The Wiki of "agimatec-validation" is open for community contribution. Useful information will be eventually incorporated into other parts of this site. Please be careful not to overwrite content from other people! 
 
-== Announcement ==
-  * 25.01.2009: We are working on the implementation of the new version of the JSR303 specification (see http://jcp.org/en/jsr/detail?id=303).
-
-= Supported features =
-29.10.2008: Reference implementation and bootstrap proposal are out 
-  * see http://forum.hibernate.org/viewtopic.php?t=991154 
-The agimatec-validation framework supports them (check out source from SVN), but
-there is more work to be done...
-  * version 0.7: does not contain javax.validation classes anymore, instead depends on the validation-api of the reference implementation.
-  * version 0.7: implements bootstrap API and thus will not support ValidationProvider and ValidationProviderFactory anymore
-  * version 0.7: packages renamed from com.agimatec.utility.validation to com.agimatec.validation
-
-[FeatureHistory feature history]
-
 = Project status =
 [ProjectStatus project status]
-
-== Feature requests ==
-[FeatureRequests feature requests]
 
 = Getting started =
 [GettingStarted getting started]

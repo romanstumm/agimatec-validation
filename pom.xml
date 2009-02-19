@@ -22,7 +22,7 @@
     </repository>
   </distributionManagement>
   <packaging>jar</packaging>
-  <version>0.8-SNAPSHOT</version>
+  <version>0.8.0-SNAPSHOT</version>
   <name>JSR 303: bean-validation by agimatec GmbH</name>
   <description>
     This is an implementation of JSR 303 (Bean Validation), a

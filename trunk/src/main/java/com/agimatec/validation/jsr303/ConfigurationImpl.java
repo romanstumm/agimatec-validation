@@ -20,7 +20,8 @@ import java.util.Set;
  * Time: 14:47:44 <br/>
  * Copyright: Agimatec GmbH
  */
-public class ConfigurationImpl implements AgimatecValidatorConfiguration, ConfigurationState {
+public class ConfigurationImpl
+      implements AgimatecValidatorConfiguration, ConfigurationState {
     protected final ValidationProvider provider;
     protected final ValidationProviderResolver providerResolver;
     protected Class<? extends Configuration<?>> providerClass;
@@ -48,9 +49,13 @@ public class ConfigurationImpl implements AgimatecValidatorConfiguration, Config
         initializeDefaults();
     }
 
-    // TODO RSt - traversableResolver nyi
-    public AgimatecValidatorConfiguration traversableResolver(TraversableResolver resolver)
-    {
+    /**
+     * TODO RSt - not yet implemented
+     *
+     * @return this
+     */
+    public AgimatecValidatorConfiguration traversableResolver(
+          TraversableResolver resolver) {
         return this;
     }
 
@@ -70,17 +75,28 @@ public class ConfigurationImpl implements AgimatecValidatorConfiguration, Config
         return this;
     }
 
-    public ConfigurationImpl constraintValidatorFactory(ConstraintValidatorFactory constraintFactory) {
+    public ConfigurationImpl constraintValidatorFactory(
+          ConstraintValidatorFactory constraintFactory) {
         setConstraintFactory(constraintFactory);
         return this;
     }
 
+    /**
+     * TODO RSt - not yet implemented
+     *
+     * @return this
+     */
     public AgimatecValidatorConfiguration addMapping(InputStream stream) {
-        return this;  // TODO RSt - nyi
+        return this;
     }
 
+    /**
+     * TODO RSt - not yet implemented
+     *
+     * @return this
+     */
     public AgimatecValidatorConfiguration addProperty(String name, String value) {
-        return this;  // TODO RSt - nyi
+        return this;
     }
 
     public AgimatecValidatorConfiguration beanValidator(BeanValidator beanValidator) {
@@ -104,8 +120,13 @@ public class ConfigurationImpl implements AgimatecValidatorConfiguration, Config
         return configurationStream;
     }
 
+    /**
+     * TODO RSt - not yet implemented
+     *
+     * @return false
+     */
     public boolean isIgnoreXmlConfiguration() {
-        return false;  // TODO RSt - nyi
+        return false;
     }
 
     public MessageInterpolator getMessageInterpolator() {
@@ -133,10 +154,20 @@ public class ConfigurationImpl implements AgimatecValidatorConfiguration, Config
         return constraintFactory;
     }
 
+    /**
+     * TODO RSt - not yet implemented
+     *
+     * @return null
+     */
     public TraversableResolver getTraversableResolver() {
-        return null;  // TODO RSt - getTraversableResolver nyi
+        return null;
     }
 
+    /**
+     * TODO RSt - not yet implemented
+     *
+     * @return null
+     */
     public Map<String, String> getProperties() {
         return null;  // do nothing
     }
@@ -147,8 +178,8 @@ public class ConfigurationImpl implements AgimatecValidatorConfiguration, Config
 
     private ValidationProvider findProvider() {
         if (getConfigurationStream() == null) {
-            InputStream stream =
-                    getClass().getClassLoader().getResourceAsStream("META-INF/validation.xml");
+            InputStream stream = getClass().getClassLoader()
+                  .getResourceAsStream("META-INF/validation.xml");
             if (stream != null) {
                 try {
                     readValidationXml(stream);
@@ -159,20 +190,28 @@ public class ConfigurationImpl implements AgimatecValidatorConfiguration, Config
             }
         }
         if (providerClass != null) {
-            for (ValidationProvider provider : providerResolver.getValidationProviders()) {
+            for (ValidationProvider provider : providerResolver
+                  .getValidationProviders()) {
                 if (provider.isSuitable(providerClass)) {
                     return provider;
                 }
             }
-            throw new ValidationException("Unable to find suitable provider: " + providerClass);
+            throw new ValidationException(
+                  "Unable to find suitable provider: " + providerClass);
         } else {
-            List<ValidationProvider> providers = providerResolver.getValidationProviders();
+            List<ValidationProvider> providers =
+                  providerResolver.getValidationProviders();
             return providers.get(0);
         }
     }
 
+    /**
+     * TODO RSt - improve, clarify
+     * @param stream
+     */
     private void readValidationXml(InputStream stream) {
-        XMLMapper.getInstance().getXStream().fromXML(stream, this); // TODO RSt - improve, clarify
+        XMLMapper.getInstance().getXStream()
+              .fromXML(stream, this); 
     }
 
     /** used by XStream to set values from configuration file */

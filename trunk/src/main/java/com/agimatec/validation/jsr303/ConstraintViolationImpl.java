@@ -14,13 +14,9 @@ import java.util.Set;
  */
 class ConstraintViolationImpl<T> implements ConstraintViolation {
     private final String message;
-    /**
-     * root bean validation was invoked on.
-     */
+    /** root bean validation was invoked on. */
     private final T rootBean;
-    /**
-     * last bean validated.
-     */
+    /** last bean validated. */
     private final Object leafBean;
     private final Object value;
     private final String propertyPath;
@@ -28,9 +24,9 @@ class ConstraintViolationImpl<T> implements ConstraintViolation {
     private final ConstraintDescriptor constraintDescriptor;
 
     public ConstraintViolationImpl(String message, T rootBean, Object leafBean,
-                                 String propertyPath,
-                                 Object value, Set<Class<?>> groups,
-                                 ConstraintDescriptor constraintDescriptor) {
+                                   String propertyPath, Object value,
+                                   Set<Class<?>> groups,
+                                   ConstraintDescriptor constraintDescriptor) {
         this.message = message;
         this.rootBean = rootBean;
         this.propertyPath = propertyPath;
@@ -40,14 +36,31 @@ class ConstraintViolationImpl<T> implements ConstraintViolation {
         this.constraintDescriptor = constraintDescriptor;
     }
 
-
-    /** Error message */
+    /**
+     * @deprecated use getMessage() instead
+     */
     public String getInterpolatedMessage() {
+        return getMessage();
+    }
+
+    /**
+     * @deprecated use getMessageTemplate() instead
+     * @return
+     */
+    public String getRawMessage() {
+        return getMessage();
+    }
+
+    /**
+     * former name getInterpolatedMessage()
+     * @return The interpolated error message for this constraint violation.
+     **/
+    public String getMessage() {
         return message;
     }
 
-    public String getRawMessage() {
-        return message; // TODO RSt - getRawMessage nyi
+    public String getMessageTemplate() {
+        return message; // TODO RSt - getMessageTemplate nyi
     }
 
     /** Root bean being validated validated */
@@ -86,12 +99,8 @@ class ConstraintViolationImpl<T> implements ConstraintViolation {
     }
 
     public String toString() {
-        return "ConstraintViolationImpl{" +
-                "rootBean=" + rootBean +
-                ", propertyPath='" + propertyPath + '\'' +
-                ", message='" + message + '\'' +
-                ", leafBean=" + leafBean +
-                ", value=" + value +
-                '}';
+        return "ConstraintViolationImpl{" + "rootBean=" + rootBean + ", propertyPath='" +
+              propertyPath + '\'' + ", message='" + message + '\'' + ", leafBean=" +
+              leafBean + ", value=" + value + '}';
     }
 }

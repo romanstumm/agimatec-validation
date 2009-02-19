@@ -1,12 +1,9 @@
 package com.agimatec.validation.constraints;
 
-import org.apache.commons.lang.StringUtils;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.constraints.Digits;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
+import java.math.BigDecimal;
 
 /**
  * Description: validate that the value is be a number within accepted range.
@@ -16,7 +13,7 @@ import java.text.DecimalFormatSymbols;
  * <li><code>BigInteger</code></li>
  * <li><code>Number</code></li>
  * <li><code>String</code></li>
- * <li><code>short</code>, <code>int</code>, <code>long</code>, <code>float</code>,
+ * <li><code>byte</code>,<code>short</code>, <code>int</code>, <code>long</code>, <code>float</code>,
  * <code>double</code></li><br/>
  * User: roman <br/>
  * Date: 03.02.2009 <br/>
@@ -44,38 +41,42 @@ public class DigitsValidator implements ConstraintValidator<Digits, Object> {
         this.fractional = fractional;
     }
 
-    public boolean isValid(Object value,
-                           ConstraintValidatorContext constraintValidatorContext) {
-
+    public boolean isValid(Object value, ConstraintValidatorContext context) {
         if (value == null) return true;
-        String svalue = null;
-        // enhancement: implementation needs improvement!
-        if (value instanceof Number) {
-            DecimalFormat format = createPlainDigitFormat();
-            svalue = format.format(value);
-        } else if (value instanceof String) {
-            svalue = (String)value;
-        }
-        if(svalue != null) {
-            int idx = svalue.indexOf('.');
-            String left, right;
-            if(idx < 0) {
-                // no faction
-                left = svalue;
-                right = "";
-            } else {
-                left = svalue.substring(0, idx);
-                right = svalue.substring(idx+1);
+        BigDecimal bigInt;
+        if (value instanceof String) {
+            bigInt = toBigDecimal((String) value);
+        } else if (value instanceof BigDecimal) {
+            bigInt = (BigDecimal) value;
+        } else {
+            try {
+//            DecimalFormat format = createPlainDigitFormat();
+//            value = format.format(value);
+                bigInt = new BigDecimal(value.toString());
+            } catch (NumberFormatException ex) {
+                bigInt = null;
             }
-            return ((left.length() == 0 || StringUtils.isNumeric(left)) &&
-                   left.length()<=integral) &&
-                  ((right.length() == 0 || StringUtils.isNumeric(right)) &&
-                   right.length()<=fractional);
         }
-        return false;
+        if (bigInt == null) return false;
+
+        int intLen = bigInt.precision() - bigInt.scale();
+        if(integral >= intLen) {
+            int factLen = bigInt.scale() < 0 ? 0 : bigInt.scale();
+            return fractional >= factLen;
+        } else {
+            return false;
+        }
     }
 
-    private DecimalFormat createPlainDigitFormat() {
+    private BigDecimal toBigDecimal(String str) {
+        try {
+            return new BigDecimal(str);
+        } catch (NumberFormatException nfe) {
+            return null;
+        }
+    }
+
+    /*protected DecimalFormat createPlainDigitFormat() {
         DecimalFormat plainNumericFormat = new DecimalFormat("#.#");
         plainNumericFormat.setMaximumFractionDigits(Integer.MAX_VALUE);
         plainNumericFormat.setMaximumIntegerDigits(Integer.MAX_VALUE);
@@ -84,5 +85,5 @@ public class DigitsValidator implements ConstraintValidator<Digits, Object> {
         dfs.setDecimalSeparator('.');
         plainNumericFormat.setDecimalFormatSymbols(dfs);
         return plainNumericFormat;
-    }
+    }*/
 }

@@ -158,7 +158,7 @@ public class ValidationTest extends TestCase {
         for (ConstraintViolation constraintViolation : constraintViolations) {
             if (constraintViolation.getRootBean().getClass() == Book.class) {
                 assertTrue("may not be null or empty".equals(
-                      constraintViolation.getInterpolatedMessage()));
+                      constraintViolation.getMessage()));
                 assertTrue(book == constraintViolation.getRootBean());
 
                 //the offending property
@@ -181,7 +181,7 @@ public class ValidationTest extends TestCase {
             if (constraintViolation.getRootBean().getClass() == Author.class) {
                 // The second failure, NotEmpty on the author's lastname, will produce the following ConstraintViolation object:
                 assertTrue("may not be null or empty".equals(
-                      constraintViolation.getInterpolatedMessage()));
+                      constraintViolation.getMessage()));
                 assertTrue(book == constraintViolation.getRootBean());
                 //the offending value
                 assertTrue(book.getAuthor().getLastName() ==
@@ -210,7 +210,7 @@ public class ValidationTest extends TestCase {
         Set<ConstraintViolation<Address>> violations = v.validate(ad);
         assertEquals(2, violations.size());
         for (ConstraintViolation each : violations) {
-            assertTrue(each.getInterpolatedMessage().endsWith(" not OK"));
+            assertTrue(each.getMessage().endsWith(" not OK"));
         }
     }
 

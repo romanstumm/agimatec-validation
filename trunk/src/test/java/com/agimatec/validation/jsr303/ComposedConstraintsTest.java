@@ -57,7 +57,7 @@ public class ComposedConstraintsTest extends TestCase {
 //        assertEquals(3, findings.size()); // without @ReportAsSingleConstraintViolation
 
         ConstraintViolation<FrenchAddress> finding = findings.iterator().next();
-        assertEquals("Wrong zipcode", finding.getInterpolatedMessage());
+        assertEquals("Wrong zipcode", finding.getMessage());
 
         adr.setZipCode("12345");
         findings = val.validate(adr);

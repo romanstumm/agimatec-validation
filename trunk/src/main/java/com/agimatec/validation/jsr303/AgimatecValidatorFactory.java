@@ -44,8 +44,12 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
         return new ClassValidator(this);
     }
 
+    /**
+     * TODO RSt - not yet implemented
+     * @return null
+     */
     public ValidatorContext usingContext() {
-        return null;  // TODO RSt - nyi
+        return null;
     }
 
     public Validator getValidator(MessageInterpolator messageResolver) {

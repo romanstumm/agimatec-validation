@@ -9,7 +9,7 @@ The sources in svn are probably newer than the release you find in the "Download
 ----------
   * SVN URL of validation api classes has moved to 
     http://anonsvn.jboss.org/repos/hibernate/beanvalidation/trunk/validation-api
-  * agimatec-validation made compatible with current state of validation-api
+  * agimatec-validation made compatible with current state of jsr 303 validation-api
 
 
 03.02.2009

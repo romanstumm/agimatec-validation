@@ -22,8 +22,8 @@ When building the project from source, you need the compatible version validatio
 
 Check out the reference implementation and build it first:
 svn checkout http://anonsvn.jboss.org/repos/hibernate/beanvalidation/trunk/validation-api validation-api
-cd ri
-mvn clean install -Dmaven.test.skip=true
+cd validation-api
+mvn clean install
 
 [There is not yet a public maven repository to get the artifact of validation-api from.]
 

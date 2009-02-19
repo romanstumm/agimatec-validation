@@ -1,52 +1,16 @@
-#summary Project status and history
-
-= Features =
-
-19.02.2009
-----------
-  * SVN URL of reference implemenation has moved to 
-    http://anonsvn.jboss.org/repos/hibernate/beanvalidation/trunk/validation-api
-  * agimatec-validation made compatible with current state of reference implementation
-
-03.02.2009
-----------
-  * renamed bootstrap classes of validation-api.jar supported
-  * Default-BuildInConstraint Configuration for standard Annotations (NotNull, Null, Max, Size...) implemented. Thus javax.validation.constraint annotations will also be validated automatically.
-
-30.10.2008
-----------
-Reference Implementation and bootstrap proposal are out!
-http://forum.hibernate.org/viewtopic.php?t=991154
-The agimatec-validation framework supports them.
-
-26.09.2008
-----------
-release 0.6 available for download. contains minor changes and one additional, experimental feature:
-
-to make !InvalidConstraint.getPropertyPath contain index in case of a collection, 
-set 
-!GroupBeanValidationContext.INCLUDE_INDEX_IN_PROPERTY_PATH = true;
-
-I hope, this will be clarified as soon as the next version of the JSR303 spec will be available.
-
-
-11.04.2008
-----------
-The sources in svn are newer than the files of the release 0.5 in the Downloads section and contain bugfixes and enhancements (complete JSR 303 implementation, performance improvements). 
-{{{
-
-}}}
+#summary Project status
 
 = Project status =
 
-  * The agimatec-validation framework is older than the JSR 303 specification, but the similarities were striking so that the adaption to the standard was possible within a short time.
+  * The agimatec-validation framework is older than the JSR 303 specification, but the similarities were striking so that the adaption to the standard was possible withing a short time. For things to be done refer to FeatureRequests.
 
-  * The specification is still in a early draft state and subject to change. This implementation will change as soon as the specification is stable.
+  * The specification is in beta state and subject to change.
 
-  * The classes in javax.validation have been removed since release 0.7. (release 0.7++ depend on validation-api.jar)
+  * Please verify that the version of validation-api.jar you are using
+  is compatible with agimatec-validation.jar
 
   * You can use the framework with the JSR303 interfaces if you want to strictly use the standard.
   Refer to classes in packages javax.validation and com.agimatec.validation.jsr303
   
   or you can access the propriatary APIs of agimatec-validation for additional features.
-  Refer to classes !MetaBeanManagerFactory and !BeanValidator
+  Refer to class !MetaBeanManagerFactory, !BeanValidator and !ThreadBeanValidator.

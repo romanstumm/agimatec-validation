@@ -8,13 +8,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
 
 /**
+ * @deprecated use javax.validation.constraints.Pattern instead
  * <pre>
  * This class is NOT part of the bean_validation spec and might disappear
  * as soon as a final version of the specification contains a similar functionality.
  * </pre>
  */
 @Documented
-@Constraint(validatedBy = PatternValidator.class)
+@Constraint(validatedBy = SimplePatternValidator.class)
 @Target({METHOD, FIELD, ANNOTATION_TYPE})
 @Retention(RUNTIME)
 public @interface Pattern {

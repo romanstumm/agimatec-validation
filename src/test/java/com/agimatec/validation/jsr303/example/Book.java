@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.validation.groups.Default;
 
-@GroupSequence(name = Default.class, sequence = { First.class, Second.class, Last.class })
+@GroupSequence(name = Default.class, value = { First.class, Second.class, Last.class })
 public class Book {
     private String title;
     @Size(max = 30, groups = Second.class)

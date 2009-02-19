@@ -1,19 +1,19 @@
 JSR 303: bean-validation by agimatec GmbH
 ==========================================
-This is an early implementation of JSR 303 (Bean Validation), a specification of the Java
+This is an implementation of JSR 303 (Bean Validation), a specification of the Java
 API for Javabean validation in Java EE and Java SE.
 The technical objective is to provide a class level constraint declaration and validation
 facility for the Java application developer, as well as a constraint metadata repository
 and query API.
 This implementation is based on the validation framework of agimatec GmbH,
-that is in production for more than a year and offers additional features,
+that is in production since 2007 and offers additional features,
 like XML-based extensible metadata, code generation (JSON for AJAX applications),
 JSR303 annotation support.
 
 How to compile the project
 ==========================
 Requirements:
-0. Sources require java1.5 or higher. (Tested with JDK 1.5.0._12)
+0. Sources require java1.5 or higher. (Tested with JDK 1.5.0_12 and 1.6.0_07)
 1. The project is built with maven2 (2.0.9). 
    You need to download and install maven2 from: http://maven.apache.org/
 2. Invoke maven2 from within the directory of the pom.xml file
@@ -21,7 +21,7 @@ Requirements:
 When building the project from source, you need the compatible version validation-api.jar:
 
 Check out the reference implementation and build it first:
-svn checkout http://anonsvn.jboss.org/repos/hibernate/validator/trunk ri
+svn checkout http://anonsvn.jboss.org/repos/hibernate/beanvalidation/trunk/validation-api validation-api
 cd ri
 mvn clean install -Dmaven.test.skip=true
 
@@ -69,10 +69,10 @@ Project status
   were striking so that the adaption to the standard was possible withing a short time.
   There are still things to be done...
 
-* The specification is still in a early draft state and subject to change. This implementation will
-change as soon as the specification is stable.
+* The specification is in beta state and subject to change.
 
-* The classes in javax.validation will be removed as soon as they are available from official sites.
+* Please verify that the version of validation-api.jar you are using
+  is compatible with agimatec-validation.jar
 
 * You can use the framework with the JSR303 interfaces if you want to strictly use the standard.
   Refer to classes in packages javax.validation and com.agimatec.validation.jsr303
@@ -87,5 +87,5 @@ Feedback, questions, contribution
 http://code.google.com/p/agimatec-validation
 http://www.agimatec.de
 
-Roman Stumm, agimatec GmbH, 2008
+Roman Stumm, agimatec GmbH, 2008, 2009
 email: roman.stumm@agimatec.de

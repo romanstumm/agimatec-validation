@@ -149,12 +149,12 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
         } else if (annotation instanceof GroupSequence) {
             processGroupSequence((GroupSequence) annotation, metabean);
             return true;
-        } else if (annotation instanceof GroupSequences) {
+        }/* else if (annotation instanceof GroupSequences) {
             for (GroupSequence each : ((GroupSequences) annotation).value()) {
                 processGroupSequence(each, metabean);
             }
             return ((GroupSequences) annotation).value().length > 0;
-        } else {
+        }*/ else {
             /*
             * An annotation is considered a constraint
             * definition if its retention policy contains RUNTIME and if
@@ -265,7 +265,7 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
             groupSeqMap = new HashMap();
             metabean.putFeature(Jsr303Features.Bean.GROUP_SEQ, groupSeqMap);
         }
-        groupSeqMap.put(each.name(), each.sequence());
+        groupSeqMap.put(each.name(), each.value());
     }
 
     /*  private Class findBeanType(AnnotatedElement element, MetaBean metabean, MetaProperty prop) {

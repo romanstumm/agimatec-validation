@@ -5,7 +5,8 @@
   * The agimatec-validation framework is older than the JSR 303 specification, but the similarities were striking so that the adaption to the standard was possible withing a short time. 
 
   * For things to be done refer to FeatureRequests.
-  * You can find features, releases and news at FeatureHistory.
+
+  * You can find features and news at FeatureHistory.
 
   * The specification is in beta state and subject to change.
 

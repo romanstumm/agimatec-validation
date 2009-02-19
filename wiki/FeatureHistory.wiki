@@ -35,7 +35,7 @@ V0.7.1 (snapshot): (Nov. 2008)
   * dropped support for proprietary bootstrap classes 
   * implementing current functionality from jsr303-spec draft
   * package redesign
-  * javax.valiation.ConstraintContext support implemented
+  * javax.validation.!ConstraintContext support implemented
   * composed constraints implemented (currently without !OverridesParameter!)
   * support for nested properties (needs improvement!)
 
@@ -47,8 +47,8 @@ V0.6.1:
 V0.5:
   * support for resolution of association types during runtime. (required by JSR303)
     consequences: relationship targets can have different types, generics on collection types not required anymore
-  * ValidationContext and GroupValidationContext are interfaces
-  * new testcase ValidationTest.testValidAnnotation() tests nested, polimorphic relationships  
+  * !ValidationContext and !GroupValidationContext are interfaces
+  * new testcase !ValidationTest.testValidAnnotation() tests nested, polimorphic relationships  
 V0.4:
   * implementation of [http://jcp.org/aboutJava/communityprocess/edr/jsr303/ JSR 303: bean-validation]
   * Define constraints with predefined annotations

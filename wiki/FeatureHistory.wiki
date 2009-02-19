@@ -1,5 +1,22 @@
 #summary Features and revision history
 
+= Latest changes =
+The sources in svn are probably newer than the release you find in the "Downloads" section. Refer to BuildAgimatecValidation to create a jar from the sources.
+
+= History =
+
+19.02.2009
+----------
+  * SVN URL of reference implemenation has moved to 
+    http://anonsvn.jboss.org/repos/hibernate/beanvalidation/trunk/validation-api
+  * agimatec-validation made compatible with current state of reference implementation
+
+
+03.02.2009
+----------
+  * renamed bootstrap classes of validation-api.jar supported
+  * Default-BuildInConstraint Configuration for standard Annotations (NotNull, Null, Max, Size...) implemented. Thus javax.validation.constraint annotations will also be validated automatically.
+
 *November 2008:
 The reference implementation and JSR303 specification is rapidly changing at the moment.
 Check out the svn-sources to get the code compatible with the current state of the validation-api.*

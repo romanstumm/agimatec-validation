@@ -22,20 +22,13 @@
     </repository>
   </distributionManagement>
   <packaging>jar</packaging>
-  <version>0.8.0-SNAPSHOT</version>
-  <name>JSR 303: bean-validation by agimatec GmbH</name>
+  <version>0.9.0-SNAPSHOT</version>
+  <name>agimatec-validation and metadata framework</name>
   <description>
-    This is an implementation of JSR 303 (Bean Validation), a
-    specification of the Java API for Javabean validation in Java EE and Java SE.
-
-    The technical objective is to provide a class level constraint declaration
-    and validation facility for the Java application developer, as well as a constraint
-    metadata repository and query API.
-
-    This implementation is based on the validation framework of agimatec GmbH,
-    that is in production since 2007 and offers additional features,
+    This is the implementation of the validation framework of agimatec GmbH,
+    that is in production since 2007. Features:
     like XML-based extensible metadata, code generation (JSON for AJAX applications),
-    and optionally, JSR303 annotation support.
+    validation of java-beans with relationships.
   </description>
   <url>http://code.google.com/p/agimatec-validation/</url>
   <prerequisites>
@@ -151,12 +144,6 @@
       <artifactId>freemarker</artifactId>
       <optional>true</optional>
       <version>2.3.15</version> <!-- some older version is also compatible -->
-    </dependency>
-
-    <dependency>
-      <groupId>javax.validation</groupId>
-      <artifactId>validation-api</artifactId>
-      <version>1.0.Beta3-SNAPSHOT</version>
     </dependency>
   </dependencies>
 

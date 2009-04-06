@@ -1,14 +1,6 @@
-JSR 303: bean-validation by agimatec GmbH
-==========================================
-This is an implementation of JSR 303 (Bean Validation), a specification of the Java
-API for Javabean validation in Java EE and Java SE.
-The technical objective is to provide a class level constraint declaration and validation
-facility for the Java application developer, as well as a constraint metadata repository
-and query API.
-This implementation is based on the validation framework of agimatec GmbH,
-that is in production since 2007 and offers additional features,
-like XML-based extensible metadata, code generation (JSON for AJAX applications),
-JSR303 annotation support.
+agimatec-validation
+===================
+validation and metadata framework by agimatec GmbH
 
 How to compile the project
 ==========================
@@ -17,15 +9,6 @@ Requirements:
 1. The project is built with maven2 (2.0.9). 
    You need to download and install maven2 from: http://maven.apache.org/
 2. Invoke maven2 from within the directory of the pom.xml file
-
-When building the project from source, you need the compatible version validation-api.jar:
-
-Check out the reference implementation and build it first:
-svn checkout http://anonsvn.jboss.org/repos/hibernate/beanvalidation/trunk/validation-api validation-api
-cd validation-api
-mvn clean install
-
-[There is not yet a public maven repository to get the artifact of validation-api from.]
 
 compile agimatec-validation project:
 ------------------------------------
@@ -65,24 +48,12 @@ You can also refer to the test cases in src/test/java/** for examples.
 
 Project status
 ==============
-* The agimatec-validation framework is older than the JSR 303 specification, but the similarities
-  were striking so that the adaption to the standard was possible withing a short time.
-  There are still things to be done...
-
-* The specification is in beta state and subject to change.
-
-* Please verify that the version of validation-api.jar you are using
-  is compatible with agimatec-validation.jar
-
-* You can use the framework with the JSR303 interfaces if you want to strictly use the standard.
-  Refer to classes in packages javax.validation and com.agimatec.validation.jsr303
-  
-  or you can access the propriatary APIs of agimatec-validation for additional features.
-  Refer to class MetaBeanManagerFactory, BeanValidator and ThreadBeanValidator.
+* You can use the APIs of agimatec-validation:
+  refer to classes MetaBeanManagerFactory and BeanValidator 
 
 Feedback, questions, contribution
 =================================
-** Your feedback is welcome! **
+** Feedback is welcome! **
 
 http://code.google.com/p/agimatec-validation
 http://www.agimatec.de

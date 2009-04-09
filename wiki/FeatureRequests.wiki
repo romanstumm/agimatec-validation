@@ -4,9 +4,7 @@
  * @OverridesParameter
  * TraversableResolver
  * Method-level validation (currently not implemented in JSR303, exists as proposal only)
- * JSR-303 XML mappings (currently not yet specified in JSR303),
-      but proprietary agimatec-validation-XML supported
- * group inheritance not yet implemented
+ * JSR-303 XML mappings, but proprietary agimatec-validation-XML supported
  * need to improve integration between JSR303 annotations and agimatec-metadata validations. 
  * type-safety check when call a constraint-validator implementation's isValid() method
  * use of ConstraintViolationException

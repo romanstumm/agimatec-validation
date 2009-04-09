@@ -264,11 +264,11 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
             for (Class<?> group : annotation.value()) {
                 if (group.getName().equals(beanClass.getName())) {
                     groupSeq.add(Default.class);
-                // TODO RSt - clarify: is this behavior meant by the spec?
+                /*// TODO RSt - clarify: is this behavior meant by the spec?
                 } else if (group.getName().equals(Default.class.getName())) {
                     throw new ValidationException(
                           "'Default.class' must not appear in @GroupSequence! Use '" +
-                                beanClass.getSimpleName() + ".class' instead."); 
+                                beanClass.getSimpleName() + ".class' instead."); */
                 } else {
                     groupSeq.add(group);
                 }

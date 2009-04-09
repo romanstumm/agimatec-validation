@@ -1,7 +1,5 @@
 package com.agimatec.validation.jsr303.groups;
 
-import javax.validation.groups.Default;
-
 /** wrap an interface that represents a single group. */
 public class Group {
     private Class<?> group;
@@ -12,10 +10,6 @@ public class Group {
 
     public Class<?> getGroup() {
         return group;
-    }
-
-    public boolean isDefaultGroup() {
-        return getGroup().getName().equals(Default.class.getName());
     }
 
     @Override

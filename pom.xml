@@ -22,7 +22,7 @@
     </repository>
   </distributionManagement>
   <packaging>jar</packaging>
-  <version>0.9.1-SNAPSHOT</version>
+  <version>0.9.0-SNAPSHOT</version>
   <name>agimatec-validation and metadata framework</name>
   <description>
     This is the implementation of the validation framework of agimatec GmbH,

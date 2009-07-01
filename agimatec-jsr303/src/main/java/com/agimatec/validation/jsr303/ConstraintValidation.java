@@ -126,7 +126,7 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
         if (messageResolver != null) {
             for (ValidationResults.Error each : jsrContext.getErrors()) {
                 context.getListener().addError(
-                      messageResolver.interpolate(each.getReason(), context),
+                      messageResolver.interpolate(each.getReason(), this, each.getPropertyName()),
                       context);
             }
         } else {
@@ -166,7 +166,7 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
         return constraintValidation.getField() instanceof Field;
     }*/
 
-    public Map<String, Object> getAttributes() {
+    public Map<String, Object> getParameters() {
         if (parameters == null) {
             parameters = new HashMap();
             if (getAnnotation() != null) {
@@ -204,4 +204,5 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
         }
         return classes;
     }
+
 }

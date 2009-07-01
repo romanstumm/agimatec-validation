@@ -37,7 +37,7 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
     }
 
     public MessageInterpolator getDefaultMessageInterpolator() {
-        return messageResolver;
+        return getDefault().getDefaultMessageInterpolator();
     }
 
     public Validator getValidator() {
@@ -77,7 +77,7 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
     }
 
     public MessageInterpolator getMessageInterpolator() {
-        return messageResolver;
+        return ((messageResolver != null) ? messageResolver : getDefaultMessageInterpolator());
     }
 
     public MetaBeanManager getMetaBeanManager() {

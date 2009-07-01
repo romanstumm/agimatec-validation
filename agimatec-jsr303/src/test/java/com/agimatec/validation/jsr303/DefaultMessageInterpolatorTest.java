@@ -1,5 +1,7 @@
 package com.agimatec.validation.jsr303;
 
+import java.util.Locale;
+
 import com.agimatec.validation.jsr303.example.Author;
 import com.agimatec.validation.jsr303.example.PreferredGuest;
 import junit.framework.Assert;
@@ -30,39 +32,51 @@ public class DefaultMessageInterpolatorTest extends TestCase {
         return new TestSuite(DefaultMessageInterpolatorTest.class);
     }
 
+    public ConstraintDescriptor<?> getConstraintDescriptorCC() {
+        return (ConstraintDescriptor<?>) getValidator()
+              .getConstraintsForClass(PreferredGuest.class).
+              getConstraintsForProperty("guestCreditCardNumber")
+              .getConstraintDescriptors().toArray()[0];
+    }
+
+    public Object getValidatedValueCC() {
+        return "12345678";
+    }
+
+    public ConstraintDescriptor<?> getConstraintDescriptorLN() {
+        return (ConstraintDescriptor<?>) getValidator()
+              .getConstraintsForClass(Author.class)
+              .getConstraintsForProperty("lastName")
+              .getConstraintDescriptors().toArray()[0];
+    }
+
+    public Object getValidatedValueLN() {
+        return "";
+    }
+
     public void testCreateResolver() {
 
-        final Validator gvalidator = getValidator();
-        MessageInterpolator.Context ctx = new MessageInterpolator.Context() {
+        MessageInterpolator ctx = new MessageInterpolator() {
 
-            public ConstraintDescriptor<?> getConstraintDescriptor() {
-                return (ConstraintDescriptor<?>) gvalidator
-                      .getConstraintsForClass(PreferredGuest.class).
-                      getConstraintsForProperty("guestCreditCardNumber")
-                      .getConstraintDescriptors().toArray()[0];
+            public String interpolate(String message, ConstraintDescriptor constraint,
+                Object value) {
+                return interpolator.interpolate(message, constraint, value);
             }
 
-            public Object getValidatedValue() {
-                return "12345678";
+            public String interpolate(String message, ConstraintDescriptor constraint,
+                Object value, Locale locale) {
+                return interpolator.interpolate(message, constraint, value,
+                    locale);
             }
         };
-        String msg = interpolator.interpolate("{validator.creditcard}", ctx);
+        String msg = interpolator.interpolate("{validator.creditcard}",
+            getConstraintDescriptorCC(),
+            getValidatedValueCC());
         Assert.assertEquals("credit card is not valid", msg);
 
-        ctx = new MessageInterpolator.Context() {
-            public ConstraintDescriptor<?> getConstraintDescriptor() {
-                return (ConstraintDescriptor) gvalidator
-                      .getConstraintsForClass(Author.class).
-                      getConstraintsForProperty("lastName")
-                      .getConstraintDescriptors().toArray()[0];
-            }
-
-            public Object getValidatedValue() {
-                return "";
-            }
-        };
-
-        msg = interpolator.interpolate("{constraint.notEmpty}", ctx);
+        msg = interpolator.interpolate("{constraint.notEmpty}",
+            getConstraintDescriptorLN(),
+            getValidatedValueLN());
         Assert.assertEquals("may not be empty", msg);
     }
 

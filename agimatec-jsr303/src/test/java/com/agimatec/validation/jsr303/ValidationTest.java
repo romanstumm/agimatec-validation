@@ -271,7 +271,7 @@ public class ValidationTest extends TestCase {
         Assert.assertTrue(
               constraintDescriptor.getAnnotation().annotationType().equals(Size.class));
         Assert.assertTrue(
-              ((Integer) constraintDescriptor.getAttributes().get("max")) == 30);
+              ((Integer) constraintDescriptor.getParameters().get("max")) == 30);
         Assert.assertTrue(constraintDescriptor.getGroups().size() == 1);
         propertyDescriptor = bookBeanDescriptor.getConstraintsForProperty("author");
 //        assertEquals(ElementType.FIELD, propertyDescriptor.getElementType());

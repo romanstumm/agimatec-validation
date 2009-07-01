@@ -1,29 +1,40 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<!--
+    Maven release plugin requires the project tag to be on a single line.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache</groupId>
+    <artifactId>apache</artifactId>
+    <version>6</version>
+  </parent>
+
   <groupId>com.agimatec</groupId>
   <artifactId>agimatec-jsr303</artifactId>
-
-  <distributionManagement>
-    <site>
-      <id>${agimatec-site-id}</id>
-      <url>${agimatec-site-url}/agimatec-jsr303/site</url>
-    </site>
-    <snapshotRepository>
-      <id>deployment.dav</id>
-      <name>Snapshot Artifacts</name>
-      <url>${deployment-dav-url}</url>
-    </snapshotRepository>
-    <repository>
-      <id>internal.dav</id>
-      <name>Release Artifacts</name>
-      <url>${internal-dav-url}</url>
-    </repository>
-  </distributionManagement>
+  <name>JSR 303: bean-validation by agimatec GmbH</name>
   <packaging>jar</packaging>
   <version>0.9.1-SNAPSHOT</version>
-  <name>JSR 303: bean-validation by agimatec GmbH</name>
+
   <description>
     This is an implementation of JSR 303 (Bean Validation), a
     specification of the Java API for Javabean validation in Java EE and Java SE.
@@ -37,11 +48,26 @@
     like XML-based extensible metadata, code generation (JSON for AJAX applications),
     and optionally, JSR303 annotation support.
   </description>
-  <url>http://code.google.com/p/agimatec-validation/</url>
-  <prerequisites>
-    <maven>2.0</maven>
-  </prerequisites>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <organization>
+    <name>agimatec GmbH</name>
+    <url>http://www.agimatec.de</url>
+  </organization>
+
   <inceptionYear>2008</inceptionYear>
+
+  <url>http://code.google.com/p/agimatec-validation/</url>
+
+  <scm>
+    <connection>scm:svn:http://agimatec-validation.googlecode.com/svn/trunk/agimatec-jsr303</connection>
+    <developerConnection>scm:svn:https://agimatec-validation.googlecode.com/svn/trunk/agimatec-jsr303</developerConnection>
+    <url>http://agimatec-validation.googlecode.com/svn/trunk/agimatec-jsr303</url>
+  </scm>
+
   <licenses>
     <license>
       <name>Apache License 2.0</name>
@@ -50,29 +76,6 @@
     </license>
   </licenses>
 
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <show>package</show>
-        </configuration>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>javadoc</report>
-              <report>test-javadoc</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>jdepend-maven-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </reporting>
   <!-- <mailingLists>
     <mailingList>
       <name>Mailing List</name>
@@ -95,10 +98,77 @@
       <organization>agimatec</organization>
     </developer>
   </developers>
-  <organization>
-    <name>agimatec GmbH</name>
-    <url>http://www.agimatec.de</url>
-  </organization>
+
+  <distributionManagement>
+    <site>
+      <id>${agimatec-site-id}</id>
+      <url>${agimatec-site-url}/agimatec-jsr303/site</url>
+    </site>
+    <snapshotRepository>
+      <id>deployment.dav</id>
+      <name>Snapshot Artifacts</name>
+      <url>${deployment-dav-url}</url>
+    </snapshotRepository>
+    <repository>
+      <id>internal.dav</id>
+      <name>Release Artifacts</name>
+      <url>${internal-dav-url}</url>
+    </repository>
+  </distributionManagement>
+
+  <repositories>
+    <repository>
+      <id>repository.jboss.org</id>
+      <name>JBoss Repository</name>
+      <url>http://repository.jboss.org/maven2</url>
+      <layout>default</layout>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </repository>
+
+    <repository>
+      <id>snapshots.jboss.org</id>
+      <name>JBoss Repository</name>
+      <url>http://snapshots.jboss.org/maven2</url>
+      <layout>default</layout>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+  </repositories>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.5</version>
+        <configuration>
+          <show>package</show>
+        </configuration>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>javadoc</report>
+              <report>test-javadoc</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jdepend-maven-plugin</artifactId>
+        <version>2.0-beta-2</version>
+      </plugin>
+    </plugins>
+  </reporting>
 
   <dependencies>
     <dependency>
@@ -106,6 +176,7 @@
       <artifactId>agimatec-validation</artifactId>
       <version>0.9.1-SNAPSHOT</version>
     </dependency>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -120,7 +191,6 @@
       <optional>true</optional>
     </dependency>
 
-
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
@@ -131,11 +201,17 @@
     <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
-      <version>1.0.Beta4-SNAPSHOT</version>
+      <version>1.0.Beta4</version>
     </dependency>
   </dependencies>
 
+  <prerequisites>
+    <maven>2.0</maven>
+  </prerequisites>
+
   <build>
+    <defaultGoal>install</defaultGoal>
+
     <extensions>
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
@@ -143,15 +219,23 @@
         <version>1.0-beta-2</version>
       </extension>
     </extensions>
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.0.2</version>
         <configuration>
           <source>1.5</source>
           <target>1.5</target>
           <encoding>UTF-8</encoding>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.4.3</version>
       </plugin>
     </plugins>
   </build>

@@ -7,6 +7,8 @@ import com.agimatec.validation.model.Validation;
 
 import javax.validation.BeanDescriptor;
 import javax.validation.PropertyDescriptor;
+
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -70,12 +72,12 @@ class BeanDescriptorImpl extends ElementDescriptorImpl implements BeanDescriptor
     }
 
     /** return the property descriptors having at least a constraint defined */
-    public Set<PropertyDescriptor> getConstrainedProperties() {
-        Set<PropertyDescriptor> validatedProperties = new HashSet();
+    public Set<String> getConstrainedProperties() {
+        Set<String> validatedProperties = new HashSet();
         for (MetaProperty prop : metaBean.getProperties()) {
             if (prop.getValidations().length > 0 || (prop.getMetaBean() != null &&
                   prop.getFeature(Features.Property.REF_CASCADE, true))) {
-                validatedProperties.add(getPropertyDescriptor(prop));
+                validatedProperties.add(getPropertyDescriptor(prop).getPropertyName());
             }
         }
         return validatedProperties;

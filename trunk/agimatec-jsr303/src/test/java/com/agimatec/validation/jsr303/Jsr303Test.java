@@ -73,17 +73,13 @@ public class Jsr303Test extends TestCase {
         Assert.assertFalse(validator.getConstraintsForClass(Address.class)
               .getConstraintDescriptors().isEmpty());
 
-        Set<PropertyDescriptor> props =
-              validator.getConstraintsForClass(Address.class).getConstrainedProperties();
-        Set<String> propNames = new HashSet(props.size());
-        for (PropertyDescriptor each : props) {
-            propNames.add(each.getPropertyName());
-        }
-        Assert.assertTrue(propNames.contains("addressline1")); // annotated at field level
-        Assert.assertTrue(propNames.contains("addressline2"));
-        Assert.assertTrue(propNames.contains("zipCode"));
-        Assert.assertTrue(propNames.contains("country"));
-        Assert.assertTrue(propNames.contains("city"));       // annotated at method level
+        Set<String> props = validator.getConstraintsForClass(Address.class).
+            getConstrainedProperties();
+        Assert.assertTrue(props.contains("addressline1")); // annotated at field level
+        Assert.assertTrue(props.contains("addressline2"));
+        Assert.assertTrue(props.contains("zipCode"));
+        Assert.assertTrue(props.contains("country"));
+        Assert.assertTrue(props.contains("city"));       // annotated at method level
         Assert.assertEquals(5, props.size());
 
         ElementDescriptor desc = validator.getConstraintsForClass(Address.class)
@@ -92,8 +88,8 @@ public class Jsr303Test extends TestCase {
         boolean found = false;
         for (ConstraintDescriptor each : desc.getConstraintDescriptors()) {
             if (each.getConstraintValidatorClasses().get(0).equals(SizeValidator.class)) {
-                Assert.assertTrue(each.getAttributes().containsKey("max"));
-                assertEquals(30, each.getAttributes().get("max"));
+                Assert.assertTrue(each.getParameters().containsKey("max"));
+                assertEquals(30, each.getParameters().get("max"));
                 found = true;
             }
         }

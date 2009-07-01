@@ -94,8 +94,7 @@ public class GroupSequenceTest extends TestCase {
               validator.validate(book, First.class, Second.class, Last.class);
         assertEquals(1, constraintViolations.size());
         constraintViolation = constraintViolations.iterator().next();
-        assertEquals("size must be between 0 and 30",
-              constraintViolation.getMessage());
+        assertEquals("size must be between 0 and 30", constraintViolation.getMessage());
         assertEquals( book, constraintViolation.getRootBean());
         assertEquals(book.getSubtitle(), constraintViolation.getInvalidValue());
         assertEquals("subtitle", constraintViolation.getPropertyPath());

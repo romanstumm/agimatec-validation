@@ -15,7 +15,7 @@ import javax.validation.MessageInterpolator;
  * Time: 10:15:08 <br/>
  * Copyright: Agimatec GmbH
  */
-interface GroupValidationContext extends ValidationContext, MessageInterpolator.Context  {
+interface GroupValidationContext extends ValidationContext, MessageInterpolator  {
     /**
      * the groups in their sequence for validation
      * @return
@@ -29,7 +29,11 @@ interface GroupValidationContext extends ValidationContext, MessageInterpolator.
     String getPropertyPath();
 
     void setConstraintDescriptor(ConstraintDescriptor constraint);
+    
+    public ConstraintDescriptor getConstraintDescriptor();
 
+    public Object getValidatedValue();
+    
     /**
      * Clear map of validated objects (invoke when you want to 'reuse' the
      * context for different validations)

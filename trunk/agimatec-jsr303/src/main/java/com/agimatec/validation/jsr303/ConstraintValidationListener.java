@@ -34,10 +34,11 @@ class ConstraintValidationListener<T> implements ValidationListener {
         final Set<Class<?>> groups;
         final ConstraintDescriptor constraint;
         if (context instanceof GroupValidationContext) {
-            propPath = ((GroupValidationContext) context).getPropertyPath();
+            GroupValidationContext gcontext = (GroupValidationContext) context;
+            propPath = gcontext.getPropertyPath();
             groups = new HashSet(1);
-            groups.add(((GroupValidationContext) context).getCurrentGroup().getGroup());
-            constraint = ((GroupValidationContext) context).getConstraintDescriptor();
+            groups.add(gcontext.getCurrentGroup().getGroup());
+            constraint = gcontext.getConstraintDescriptor();
         } else {
             propPath = context.getPropertyName();
             groups = new HashSet(GroupsComputer.DEFAULT_GROUP_ARRAY.length);

@@ -20,5 +20,5 @@ import java.lang.annotation.Target;
 public @interface NotEmpty {
     Class<?>[] groups() default {};
 
-    String message() default "{constraint.notEmpty}";
+    String message() default "{com.agimatec.validation.constraints.NotEmpty.message}";
 }

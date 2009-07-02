@@ -27,5 +27,5 @@ import java.lang.annotation.Target;
 public @interface Email {
     Class<?>[] groups() default {};
 
-    String message() default "{constraint.email}";
+    String message() default "{com.agimatec.validation.constraints.Email.message}";
 }

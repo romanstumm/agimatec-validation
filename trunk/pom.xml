@@ -1,9 +1,97 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<!--
+    Maven release plugin requires the project tag to be on a single line.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache</groupId>
+    <artifactId>apache</artifactId>
+    <version>6</version>
+  </parent>
+
   <groupId>com.agimatec</groupId>
   <artifactId>agimatec-validation</artifactId>
+  <name>agimatec-validation and metadata framework</name>
+  <packaging>jar</packaging>
+  <version>0.9.1-SNAPSHOT</version>
+
+  <description>
+    This is the implementation of the validation framework of agimatec GmbH,
+    that is in production since 2007. Features:
+    like XML-based extensible metadata, code generation (JSON for AJAX applications),
+    validation of java-beans with relationships.
+  </description>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <organization>
+    <name>agimatec GmbH</name>
+    <url>http://www.agimatec.de</url>
+  </organization>
+
+  <inceptionYear>2007</inceptionYear>
+
+  <url>http://code.google.com/p/agimatec-validation/</url>
+
+  <scm>
+    <connection>scm:svn:http://agimatec-validation.googlecode.com/svn/trunk</connection>
+    <developerConnection>scm:svn:https://agimatec-validation.googlecode.com/svn/trunk</developerConnection>
+    <url>http://agimatec-validation.googlecode.com/svn/trunk</url>
+  </scm>
+
+  <licenses>
+    <license>
+      <name>Apache License 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+      <comments>Open Source for the Java community</comments>
+    </license>
+  </licenses>
+
+  <!-- <mailingLists>
+    <mailingList>
+      <name>Mailing List</name>
+      <subscribe>insert@mail.address.here</subscribe>
+      <unsubscribe>insert@mail.address.here</unsubscribe>
+      <post>insert@mail.address.here</post>
+    </mailingList>
+  </mailingLists>-->
+
+  <developers>
+    <developer>
+      <id>fabian.crabus</id>
+      <name>Fabian Crabus</name>
+      <email>fabian.crabus@agimatec.com</email>
+      <organization>agimatec</organization>
+    </developer>
+    <developer>
+      <id>roman.stumm</id>
+      <name>Roman Stumm</name>
+      <email>roman.stumm@agimatec.de</email>
+      <organization>agimatec</organization>
+    </developer>
+  </developers>
 
   <distributionManagement>
     <site>
@@ -21,27 +109,6 @@
       <url>${internal-dav-url}</url>
     </repository>
   </distributionManagement>
-  <packaging>jar</packaging>
-  <version>0.9.1-SNAPSHOT</version>
-  <name>agimatec-validation and metadata framework</name>
-  <description>
-    This is the implementation of the validation framework of agimatec GmbH,
-    that is in production since 2007. Features:
-    like XML-based extensible metadata, code generation (JSON for AJAX applications),
-    validation of java-beans with relationships.
-  </description>
-  <url>http://code.google.com/p/agimatec-validation/</url>
-  <prerequisites>
-    <maven>2.0</maven>
-  </prerequisites>
-  <inceptionYear>2008</inceptionYear>
-  <licenses>
-    <license>
-      <name>Apache License 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-      <comments>Open Source for the Java community</comments>
-    </license>
-  </licenses>
 
   <reporting>
     <plugins>
@@ -66,32 +133,6 @@
       </plugin>
     </plugins>
   </reporting>
-  <!-- <mailingLists>
-    <mailingList>
-      <name>Mailing List</name>
-      <subscribe>insert@mail.address.here</subscribe>
-      <unsubscribe>insert@mail.address.here</unsubscribe>
-      <post>insert@mail.address.here</post>
-    </mailingList>
-  </mailingLists>-->
-  <developers>
-    <developer>
-      <id>fabian.crabus</id>
-      <name>Fabian Crabus</name>
-      <email>fabian.crabus@agimatec.com</email>
-      <organization>agimatec</organization>
-    </developer>
-    <developer>
-      <id>roman.stumm</id>
-      <name>Roman Stumm</name>
-      <email>roman.stumm@agimatec.de</email>
-      <organization>agimatec</organization>
-    </developer>
-  </developers>
-  <organization>
-    <name>agimatec GmbH</name>
-    <url>http://www.agimatec.de</url>
-  </organization>
 
   <dependencies>
     <dependency>
@@ -147,7 +188,29 @@
     </dependency>
   </dependencies>
 
+  <prerequisites>
+    <maven>2.0</maven>
+  </prerequisites>
+
   <build>
+    <defaultGoal>install</defaultGoal>
+
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <!-- also include license and notice files -->
+      <resource>
+        <directory>${basedir}</directory>
+          <includes>
+            <include>NOTICE.txt</include>
+            <include>LICENSE.txt</include>
+            <include>DISCLAIMER.txt</include>
+          </includes>
+        <targetPath>META-INF</targetPath>
+      </resource>
+    </resources>
+
     <extensions>
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
@@ -155,15 +218,40 @@
         <version>1.0-beta-2</version>
       </extension>
     </extensions>
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.0.2</version>
         <configuration>
           <source>1.5</source>
           <target>1.5</target>
           <encoding>UTF-8</encoding>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>ianal-maven-plugin</artifactId>
+        <version>1.0-alpha-1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>verify-legal-files</goal>
+            </goals>
+            <configuration>
+              <!-- Fail the build if any artifacts are missing legal files -->
+              <strict>true</strict>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.4.3</version>
       </plugin>
     </plugins>
   </build>

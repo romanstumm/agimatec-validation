@@ -31,7 +31,7 @@
 
   <groupId>com.agimatec</groupId>
   <artifactId>agimatec-jsr303</artifactId>
-  <name>JSR 303: bean-validation by agimatec GmbH</name>
+  <name>JSR 303: Bean Validation 1.0 Implementation by agimatec GmbH</name>
   <packaging>jar</packaging>
   <version>0.9.1-SNAPSHOT</version>
 
@@ -84,6 +84,7 @@
       <post>insert@mail.address.here</post>
     </mailingList>
   </mailingLists>-->
+
   <developers>
     <developer>
       <id>fabian.crabus</id>
@@ -212,6 +213,22 @@
   <build>
     <defaultGoal>install</defaultGoal>
 
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <!-- also include license and notice files -->
+      <resource>
+        <directory>${basedir}</directory>
+          <includes>
+            <include>NOTICE.txt</include>
+            <include>LICENSE.txt</include>
+            <include>DISCLAIMER.txt</include>
+          </includes>
+        <targetPath>META-INF</targetPath>
+      </resource>
+    </resources>
+
     <extensions>
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
@@ -230,6 +247,23 @@
           <target>1.5</target>
           <encoding>UTF-8</encoding>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>ianal-maven-plugin</artifactId>
+        <version>1.0-alpha-1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>verify-legal-files</goal>
+            </goals>
+            <configuration>
+              <!-- Fail the build if any artifacts are missing legal files -->
+              <strict>true</strict>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>

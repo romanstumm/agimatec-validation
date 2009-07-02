@@ -12,7 +12,6 @@ import javax.validation.ConstraintValidator;
 import javax.validation.MessageInterpolator;
 import java.util.IdentityHashMap;
 import java.util.LinkedList;
-import java.util.Locale;
 
 /**
  * Description: instance per validation process, not thread-safe<br/>
@@ -156,14 +155,4 @@ class GroupValidationContextImpl extends BeanValidationContext
         return messageResolver;
     }
 
-    public String interpolate(String message, ConstraintDescriptor constraint,
-        Object value) {
-        return getMessageResolver().interpolate(message, constraint, value);
-    }
-
-    public String interpolate(String message, ConstraintDescriptor constraint,
-        Object value, Locale locale) {
-        return getMessageResolver().interpolate(message, constraint, value,
-            locale);
-    }
 }

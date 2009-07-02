@@ -7,8 +7,6 @@ import com.agimatec.validation.model.Validation;
 
 import javax.validation.BeanDescriptor;
 import javax.validation.PropertyDescriptor;
-
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -77,7 +75,7 @@ class BeanDescriptorImpl extends ElementDescriptorImpl implements BeanDescriptor
         for (MetaProperty prop : metaBean.getProperties()) {
             if (prop.getValidations().length > 0 || (prop.getMetaBean() != null &&
                   prop.getFeature(Features.Property.REF_CASCADE, true))) {
-                validatedProperties.add(getPropertyDescriptor(prop).getPropertyName());
+                validatedProperties.add(prop.getName());
             }
         }
         return validatedProperties;

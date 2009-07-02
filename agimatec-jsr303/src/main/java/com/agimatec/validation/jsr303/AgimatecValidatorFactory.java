@@ -36,9 +36,10 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
     public AgimatecValidatorFactory() {
     }
 
-    public MessageInterpolator getDefaultMessageInterpolator() {
-        return getDefault().getDefaultMessageInterpolator();
+    protected MessageInterpolator getDefaultMessageInterpolator() {
+        return messageResolver;
     }
+
 
     public Validator getValidator() {
         return new ClassValidator(this);

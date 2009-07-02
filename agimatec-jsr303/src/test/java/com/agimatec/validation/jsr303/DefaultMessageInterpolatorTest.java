@@ -1,7 +1,5 @@
 package com.agimatec.validation.jsr303;
 
-import java.util.Locale;
-
 import com.agimatec.validation.jsr303.example.Author;
 import com.agimatec.validation.jsr303.example.PreferredGuest;
 import junit.framework.Assert;
@@ -12,6 +10,7 @@ import junit.framework.TestSuite;
 import javax.validation.ConstraintDescriptor;
 import javax.validation.MessageInterpolator;
 import javax.validation.Validator;
+import java.util.Locale;
 
 /**
  * MessageResolverImpl Tester.
@@ -69,12 +68,12 @@ public class DefaultMessageInterpolatorTest extends TestCase {
                     locale);
             }
         };
-        String msg = interpolator.interpolate("{validator.creditcard}",
+        String msg = interpolator.interpolate("{test.validator.creditcard}",
             getConstraintDescriptorCC(),
             getValidatedValueCC());
         Assert.assertEquals("credit card is not valid", msg);
 
-        msg = interpolator.interpolate("{constraint.notEmpty}",
+        msg = interpolator.interpolate("{com.agimatec.validation.constraints.NotEmpty.message}",
             getConstraintDescriptorLN(),
             getValidatedValueLN());
         Assert.assertEquals("may not be empty", msg);

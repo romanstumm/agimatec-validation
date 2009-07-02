@@ -10,6 +10,8 @@ import javax.validation.ConstraintDescriptor;
 import javax.validation.ConstraintValidator;
 import javax.validation.MessageInterpolator;
 import javax.validation.ReportAsSingleViolation;
+import javax.validation.MessageInterpolator.Context;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
@@ -126,7 +128,7 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
         if (messageResolver != null) {
             for (ValidationResults.Error each : jsrContext.getErrors()) {
                 context.getListener().addError(
-                      messageResolver.interpolate(each.getReason(), this, each.getPropertyName()),
+                      messageResolver.interpolate(each.getReason(), (Context) context),
                       context);
             }
         } else {
@@ -166,7 +168,7 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
         return constraintValidation.getField() instanceof Field;
     }*/
 
-    public Map<String, Object> getParameters() {
+    public Map<String, Object> getAttributes() {
         if (parameters == null) {
             parameters = new HashMap();
             if (getAnnotation() != null) {

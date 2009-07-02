@@ -1,8 +1,7 @@
 package com.agimatec.validation.constraints;
 
 import javax.validation.Constraint;
-import javax.validation.OverridesParameter;
-import javax.validation.OverridesParameters;
+import javax.validation.OverridesAttribute;
 import javax.validation.ReportAsSingleViolation;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -28,12 +27,12 @@ import java.lang.annotation.Target;
 @Target({ANNOTATION_TYPE, METHOD, FIELD})
 @Retention(RUNTIME)
 public @interface FrenchZipCode {
-    @OverridesParameters({
-            @OverridesParameter(constraint = Size.class, parameter= "min"),
-        @OverridesParameter(constraint = Size.class, parameter = "max")})
+    @OverridesAttribute.List({
+            @OverridesAttribute(constraint = Size.class, name= "min"),
+        @OverridesAttribute(constraint = Size.class, name = "max")})
     int size() default 6;
 
-    @OverridesParameter(constraint=Size.class, parameter="message")
+    @OverridesAttribute(constraint=Size.class, name="message")
     String sizeMessage() default "{error.zipcode.size}";
 
     String message() default "Wrong zipcode";

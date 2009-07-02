@@ -32,7 +32,7 @@ class ConstraintContextImpl implements ConstraintValidatorContext {
     }
 
     public String getDefaultErrorMessage() {
-        return (String) validation.getParameters().get("message");
+        return (String) validation.getAttributes().get("message");
     }
 
     public void addError(String message) {

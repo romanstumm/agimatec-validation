@@ -15,7 +15,7 @@ import javax.validation.MessageInterpolator;
  * Time: 10:15:08 <br/>
  * Copyright: Agimatec GmbH
  */
-interface GroupValidationContext extends ValidationContext  {
+interface GroupValidationContext extends ValidationContext {
     /**
      * the groups in their sequence for validation
      * @return

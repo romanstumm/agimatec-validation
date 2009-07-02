@@ -48,7 +48,7 @@ public class DecimalMaxValidator implements ConstraintValidator<DecimalMax, Obje
         if (value instanceof String) {
             bigDec = toBigDecimal((String) value);
         } else if (value instanceof Number) {
-            bigDec = (BigDecimal) value;
+            bigDec = new BigDecimal(((Number)value).doubleValue());
         } else {
             throw new IllegalArgumentException("Object must compatiable with BigDecimal");
         }

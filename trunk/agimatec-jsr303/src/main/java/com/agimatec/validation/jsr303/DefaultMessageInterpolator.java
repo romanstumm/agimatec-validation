@@ -74,17 +74,17 @@ public class DefaultMessageInterpolator implements MessageInterpolator {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String interpolate(String message, ConstraintDescriptor constraint,
-	        Object value) {
-		return interpolateMessage( message, constraint.getParameters(), defaultLocale );
+	public String interpolate(String message, Context context) {
+		// probably no need for caching, but it could be done by parameters since the map
+		// is immutable and uniquely built per Validation definition, the comparaison has to be based on == and not equals though
+		return interpolateMessage( message, context.getConstraintDescriptor().getAttributes(), defaultLocale );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public String interpolate(String message, ConstraintDescriptor constraint,
-	        Object value, Locale locale) {
-		return interpolateMessage( message, constraint.getParameters(), locale );
+	public String interpolate(String message, Context context, Locale locale) {
+		return interpolateMessage( message, context.getConstraintDescriptor().getAttributes(), locale );
 	}
     
 	/**

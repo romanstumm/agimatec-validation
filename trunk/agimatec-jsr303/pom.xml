@@ -201,7 +201,7 @@
     <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
-      <version>1.0.Beta4</version>
+      <version>1.0.CR1</version>
     </dependency>
   </dependencies>
 

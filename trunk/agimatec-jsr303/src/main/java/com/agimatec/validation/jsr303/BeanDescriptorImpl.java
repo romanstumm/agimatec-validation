@@ -70,12 +70,12 @@ class BeanDescriptorImpl extends ElementDescriptorImpl implements BeanDescriptor
     }
 
     /** return the property descriptors having at least a constraint defined */
-    public Set<String> getConstrainedProperties() {
-        Set<String> validatedProperties = new HashSet();
+    public Set<PropertyDescriptor> getConstrainedProperties() {
+        Set<PropertyDescriptor> validatedProperties = new HashSet();
         for (MetaProperty prop : metaBean.getProperties()) {
             if (prop.getValidations().length > 0 || (prop.getMetaBean() != null &&
                   prop.getFeature(Features.Property.REF_CASCADE, true))) {
-                validatedProperties.add(prop.getName());
+                validatedProperties.add(getPropertyDescriptor(prop));
             }
         }
         return validatedProperties;

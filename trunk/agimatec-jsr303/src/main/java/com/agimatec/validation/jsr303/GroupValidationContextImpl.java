@@ -21,7 +21,7 @@ import java.util.LinkedList;
  * Copyright: Agimatec GmbH 2008
  */
 class GroupValidationContextImpl extends BeanValidationContext
-      implements GroupValidationContext {
+      implements GroupValidationContext, MessageInterpolator.Context {
 
     private final MessageInterpolator messageResolver;
     private final LinkedList propertyStack = new LinkedList();

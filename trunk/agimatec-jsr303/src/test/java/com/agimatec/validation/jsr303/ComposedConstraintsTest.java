@@ -31,7 +31,7 @@ public class ComposedConstraintsTest extends TestCase {
         for (ConstraintDescriptor cd : ed.getConstraintDescriptors()) {
             Assert.assertTrue(cd.isReportAsSingleViolation());
             Assert.assertEquals(3, cd.getComposingConstraints().size());
-            System.out.println("params: " + cd.getParameters());
+            System.out.println("params: " + cd.getAttributes());
             Assert.assertTrue("no composing constraints found!!",
                     !cd.getComposingConstraints().isEmpty());
             processConstraintDescriptor(cd); //check all constraints on zip code

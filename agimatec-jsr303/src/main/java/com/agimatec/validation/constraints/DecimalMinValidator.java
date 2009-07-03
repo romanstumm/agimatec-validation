@@ -28,7 +28,6 @@ import javax.validation.constraints.DecimalMin;
 /**
  * Description: validate that number-value of passed object is >= min-value<br/>
  * 
- * @version $Rev$ $Date$
  */
 public class DecimalMinValidator implements ConstraintValidator<DecimalMin, Object> {
     private BigDecimal min;
@@ -47,15 +46,15 @@ public class DecimalMinValidator implements ConstraintValidator<DecimalMin, Obje
         BigDecimal bigDec;
         if (value instanceof String) {
             bigDec = toBigDecimal((String) value);
+        } else if(value instanceof BigDecimal) {
+            bigDec = (BigDecimal)value;
         } else if (value instanceof Number) {
             bigDec = new BigDecimal(((Number)value).doubleValue());
         } else {
             throw new IllegalArgumentException("Object must compatiable with BigDecimal");
         }
-        if (bigDec == null)
-            return false;
+        return bigDec != null && bigDec.compareTo(min) != -1;
 
-        return bigDec.compareTo(min) != -1;
     }
 
     private BigDecimal toBigDecimal(String str) {

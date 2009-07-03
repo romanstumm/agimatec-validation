@@ -26,9 +26,8 @@ import javax.validation.ValidationException;
 import javax.validation.constraints.DecimalMax;
 
 /**
- * Description: validate that number-value of passed object is >= max-value<br/>
+ * Description: validate that number-value of passed object is <= max-value<br/>
  * 
- * @version $Rev$ $Date$
  */
 public class DecimalMaxValidator implements ConstraintValidator<DecimalMax, Object> {
     private BigDecimal max;
@@ -47,15 +46,15 @@ public class DecimalMaxValidator implements ConstraintValidator<DecimalMax, Obje
         BigDecimal bigDec;
         if (value instanceof String) {
             bigDec = toBigDecimal((String) value);
+        } else if(value instanceof BigDecimal) {
+            bigDec = (BigDecimal)value;
         } else if (value instanceof Number) {
             bigDec = new BigDecimal(((Number)value).doubleValue());
         } else {
             throw new IllegalArgumentException("Object must compatiable with BigDecimal");
         }
-        if (bigDec == null)
-            return false;
+        return bigDec != null && bigDec.compareTo(max) != 1;
 
-        return bigDec.compareTo(max) != 1;
     }
 
     private BigDecimal toBigDecimal(String str) {

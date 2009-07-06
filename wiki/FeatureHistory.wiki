@@ -8,7 +8,7 @@ The sources in svn are probably newer than the release you find in the "Download
 03.07.2009
 ----------
 version 0.9.1-SNAPSHOT - r219
-  * constraints DecimalMin and DecimalMax now available
+  * constraints {{{@DecimalMin}}} and {{{@DecimalMax}}} now available
 
 02.07.2009
 ----------

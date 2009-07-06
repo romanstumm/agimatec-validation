@@ -4,9 +4,25 @@
 The sources in svn are probably newer than the release you find in the "Downloads" section. Refer to BuildAgimatecValidation to create a jar from the sources.
 
 = History =
+
+03.07.2009
+----------
+version 0.9.1-SNAPSHOT - r219
+  * constraints @DecimalMin and @DecimalMax now available
+
+02.07.2009
+----------
+version 0.9.1-SNAPSHOT - r214
+  * compatible with validation-api-1.0.CR1.jar
+
+01.07.2009
+----------
+version 0.9.1-SNAPSHOT - r212
+  * compatible with validation-api-1.0.Beta4.jar
+
 09.04.2009
 ----------
-version 0.9.0-snapshot
+version 0.9.0-snapshot - r211
   * compatible with latest version of validation-api.jar (beta4-snapshot)
   * support group sequences and group inheritance
 

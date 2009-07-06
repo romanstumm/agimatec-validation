@@ -4,19 +4,20 @@
 
 The Wiki of "agimatec-validation" is open for community contribution. Useful information will be eventually incorporated into other parts of this site. Please be careful not to overwrite content from other people! 
 
-= Project status =
-  * [ProjectStatus project status]
-  * [FeatureHistory news]
-  * [FeatureRequests things to be done]
-
-= Getting started =
-  * [GettingStarted getting started]
-
-= Building the project with Maven2 =
+  * [GettingStarted Getting Started]
   * [BuildAgimatecValidation How to build agimatec-validation]
+  * [ProjectStatus Project Status]
+  * [FeatureHistory News]
+  * [FeatureRequests Things to be done]
+
+
+= Used By =
+The following projects are using our code:
+  * [http://openjpa.apache.org/ Apache OpenJPA] is using the agimatec-jsr303 implementation to test their support for JSR-303 as an optional component of their implementation of the JSR-317 JPA 2.0 specification. 
+
 
 = More =
-You need to know more? Ask for more documentation. Tell us what you want to know, we document it here.
+You need to know more? Ask for more documentation. Tell us what you want to know and we will try to document it here.
 
 We want to know your option and are curious to know your use cases for the validation framework (many different are possible, e.g. validation in an EJB container, validation for a Swing app, webapp or AJAX app. Code generation, GUI generation, scaffolding, etc.)
 Write us! We appreciate your comments.

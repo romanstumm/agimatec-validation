@@ -10,17 +10,19 @@ The Wiki of "agimatec-validation" is open for community contribution. Useful inf
   * [FeatureHistory News]
   * [FeatureRequests Things to be done]
 
+
 = Feedback =
 
 We have a [http://groups.google.com/group/agimatec-validation Google Group] setup to use for open project communication.
 
-  * Homepage: [http://groups.google.com/group/agimatec-validation http://groups.google.com/group/agimatec-validation]
+  [http://groups.google.com/group/agimatec-validation http://groups.google.com/intl/en/images/logos/groups_logo_sm.gif]
+  * Homepage: [http://groups.google.com/group/agimatec-validation http://groups.google.com/group/agimatec-validation] 
   * Group mail: agimatec-validation at googlegroups.com
 
 
 = Used By =
 The following projects are using our code:
-  * [http://openjpa.apache.org/ Apache OpenJPA] is using the agimatec-jsr303 implementation to test their support for JSR-303 as an optional component of their implementation of the JSR-317 JPA 2.0 specification. 
+  * *[http://openjpa.apache.org/ Apache OpenJPA]* - is using the agimatec-jsr303 implementation to test their support for JSR-303 as an optional component of their implementation of the JSR-317 JPA 2.0 specification. 
 
 
 = More =

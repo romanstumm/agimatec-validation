@@ -10,6 +10,13 @@ The Wiki of "agimatec-validation" is open for community contribution. Useful inf
   * [FeatureHistory News]
   * [FeatureRequests Things to be done]
 
+= Feedback =
+
+We have a [http://groups.google.com/group/agimatec-validation Google Group] setup to use for open project communication.
+
+  * Homepage: [http://groups.google.com/group/agimatec-validation http://groups.google.com/group/agimatec-validation]
+  * Group mail: agimatec-validation at googlegroups.com
+
 
 = Used By =
 The following projects are using our code:

@@ -24,7 +24,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.googlecode.agimatec</groupId>
+    <groupId>com.agimatec</groupId>
     <artifactId>agimatec-validation-parent</artifactId>
     <version>0.9.1-SNAPSHOT</version>
   </parent>

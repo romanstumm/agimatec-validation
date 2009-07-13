@@ -123,6 +123,9 @@
     <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
+      <!-- allow users to choose an API provider
+      <scope>provided</scope>
+      -->
     </dependency>
   </dependencies>
 

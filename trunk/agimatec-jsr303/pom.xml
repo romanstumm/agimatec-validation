@@ -138,7 +138,7 @@
       </resource>
       <!-- also include license and notice files -->
       <resource>
-        <directory>${basedir}/..</directory>
+        <directory>${basedir}</directory>
           <includes>
             <include>NOTICE.txt</include>
             <include>LICENSE.txt</include>

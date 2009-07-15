@@ -123,9 +123,14 @@
     <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
-      <!-- allow users to choose an API provider
+      <!-- allow users to choose an API provider -->
       <scope>provided</scope>
-      -->
+    </dependency>
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-jpa_2.0_spec</artifactId>
+      <!-- allow users to choose an API provider -->
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 

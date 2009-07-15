@@ -1,118 +1,100 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with this
+ * work for additional information regarding copyright ownership. The ASF
+ * licenses this file to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package com.agimatec.validation.jsr303;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 import javax.validation.ValidationException;
 import javax.validation.ValidationProviderResolver;
 import javax.validation.spi.ValidationProvider;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.*;
+
 
 /**
- * Find <code>ValidationProvider</code> according to the default <code>ValidationProviderResolver</code> defined in the
- * Bean Validation specification. This implementation uses the current classloader or the classloader which has loaded
- * the current class if the current class loader is unavailable. The classloader is used to retrieve the Service Provider files.
- * <p>
- * This class implements the Service Provider pattern described <a href="http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html#Service%20Provider">here</a>.
- * Since we cannot rely on Java 6 we have to reimplement the <code>Service</code> functionality.
- * </p>
  *
- * Duplicated from the private innner class Validation#DefaultValidationProviderResolver
+ * @see javax.validation.Validation#DefaultValidationProviderResolver
  *
- * @author Emmanuel Bernard
- * @author Hardy Ferentschik
  */
 public class DefaultValidationProviderResolver implements ValidationProviderResolver {
 
-	//cache per classloader for an appropriate discovery
-	//keep them in a weak hashmap to avoid memory leaks and allow proper hot redeployment
-	//TODO use a WeakConcurrentHashMap
-	private static final Map<ClassLoader, List<ValidationProvider>> providersPerClassloader =
-			new WeakHashMap<ClassLoader, List<ValidationProvider>>();
+    //TODO - Spec recommends caching per classloader
+    private static final String SPI_CFG =
+        "META-INF/services/javax.validation.spi.ValidationProvider";
 
-	private static final String SERVICES_FILE = "META-INF/services/" + ValidationProvider.class.getName();
-
-	public List<ValidationProvider> getValidationProviders() {
-		ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-		if ( classloader == null ) {
-			classloader = DefaultValidationProviderResolver.class.getClassLoader();
-		}
-
-		List<ValidationProvider> providers;
-		synchronized ( providersPerClassloader ) {
-			providers = providersPerClassloader.get( classloader );
-		}
-
-		if ( providers == null ) {
-			providers = new ArrayList<ValidationProvider>();
-			String name = null;
-			try {
-				Enumeration<URL> providerDefinitions = classloader.getResources( SERVICES_FILE );
-				while ( providerDefinitions.hasMoreElements() ) {
-					URL url = providerDefinitions.nextElement();
-					InputStream stream = url.openStream();
-					try {
-						BufferedReader reader = new BufferedReader( new InputStreamReader( stream ), 100 );
-						name = reader.readLine();
-						while ( name != null ) {
-							name = name.trim();
-							if ( !name.startsWith( "#" ) ) {
-								final Class<?> providerClass = loadClass(
-										name,
-										DefaultValidationProviderResolver.class
-								);
-
-								providers.add(
-										( ValidationProvider ) providerClass.newInstance()
-								);
-							}
-							name = reader.readLine();
-						}
-					}
-					finally {
-						stream.close();
-					}
-				}
-			}
-			catch ( IOException e ) {
-				throw new ValidationException( "Unable to read " + SERVICES_FILE, e );
-			}
-			catch ( ClassNotFoundException e ) {
-				//TODO is it better to not fail the whole loading because of a black sheep?
-				throw new ValidationException( "Unable to load Bean Validation provider " + name, e );
-			}
-			catch ( IllegalAccessException e ) {
-				throw new ValidationException( "Unable to instanciate Bean Validation provider" + name, e );
-			}
-			catch ( InstantiationException e ) {
-				throw new ValidationException( "Unable to instanciate Bean Validation provider" + name, e );
-			}
-
-			synchronized ( providersPerClassloader ) {
-				providersPerClassloader.put( classloader, providers );
-			}
-		}
-
-		return providers;
-	}
-
-	private static Class<?> loadClass(String name, Class caller) throws ClassNotFoundException {
-		try {
-			//try context classloader, if fails try caller classloader
-			ClassLoader loader = Thread.currentThread().getContextClassLoader();
-			if ( loader != null ) {
-				return loader.loadClass( name );
-			}
-		}
-		catch ( ClassNotFoundException e ) {
-			//trying caller classloader
-			if ( caller == null ) {
-				throw e;
-			}
-		}
-		return Class.forName( name, true, caller.getClassLoader() );
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * javax.validation.ValidationProviderResolver#getValidationProviders()
+     */
+    public List<ValidationProvider> getValidationProviders() {
+        List<ValidationProvider> providers = new ArrayList<ValidationProvider>();
+        try {
+            // get our classloader
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            if (cl == null)
+                cl = DefaultValidationProviderResolver.class.getClassLoader();
+            // find all service provider cfgs
+            Enumeration<URL> cfgs = cl.getResources(SPI_CFG);
+            while (cfgs.hasMoreElements()) {
+                URL url = cfgs.nextElement();
+                BufferedReader br = null;
+                try {
+                    br = new BufferedReader(new InputStreamReader(url.openStream()), 256);
+                    String line = br.readLine();
+                    // cfgs may contain multiple providers and/or comments
+                    while (line != null) {
+                        line = line.trim();
+                        if (!line.startsWith("#")) {
+                            try {
+                                // try loading the specified class
+                                final Class<?> provider = cl.loadClass(line);
+                                // create an instance to return
+                                providers.add((ValidationProvider) provider.newInstance());
+                            } catch (ClassNotFoundException e) {
+                                throw new ValidationException("Failed to load provider " +
+                                    line + " configured in file " + url, e);
+                            } catch (InstantiationException e) {
+                                throw new ValidationException("Failed to instantiate provider " +
+                                    line + " configured in file " + url, e);
+                            } catch (IllegalAccessException e) {
+                                throw new ValidationException("Failed to access provider " +
+                                    line + " configured in file " + url, e);
+                            }
+                        }
+                        line = br.readLine();
+                    }
+                    br.close();
+                } catch (IOException e) {
+                    throw new ValidationException("Error trying to read " + url, e);
+                } finally {
+                    if (br != null)
+                        br.close();
+                }
+            }
+        } catch (IOException e) {
+            throw new ValidationException("Error trying to read a " + SPI_CFG, e);
+        }
+        // caller must handle the case of no providers found
+        return providers;
+    }
 }

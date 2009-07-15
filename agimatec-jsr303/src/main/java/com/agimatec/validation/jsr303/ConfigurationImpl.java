@@ -19,17 +19,15 @@ import java.util.Set;
  * Time: 14:47:44 <br/>
  * Copyright: Agimatec GmbH
  */
-public class ConfigurationImpl
-      implements AgimatecValidatorConfiguration, ConfigurationState {
+public class ConfigurationImpl implements AgimatecValidatorConfiguration, ConfigurationState {
     protected final ValidationProvider provider;
     protected final ValidationProviderResolver providerResolver;
     protected Class<? extends Configuration<?>> providerClass;
-
     protected MessageInterpolator messageInterpolator, defaultMessageResolver;
     protected ConstraintValidatorFactory constraintFactory;
     private InputStream configurationStream;
-
     private BeanValidator beanValidator;
+    private TraversableResolver traversableResolver;
 
     public ConfigurationImpl(BootstrapState aState, ValidationProvider aProvider) {
         if (aState != null) {
@@ -48,13 +46,9 @@ public class ConfigurationImpl
         initializeDefaults();
     }
 
-    /**
-     * TODO RSt - not yet implemented
-     *
-     * @return this
-     */
     public AgimatecValidatorConfiguration traversableResolver(
           TraversableResolver resolver) {
+        traversableResolver = resolver;
         return this;
     }
 
@@ -62,6 +56,7 @@ public class ConfigurationImpl
         constraintFactory = new DefaultConstraintValidatorFactory();
         messageInterpolator = new DefaultMessageInterpolator();
         defaultMessageResolver = messageInterpolator;
+        traversableResolver = new DefaultTraversableResolver();
         setBeanValidator(new BeanValidator());
     }
 
@@ -155,13 +150,8 @@ public class ConfigurationImpl
         return constraintFactory;
     }
 
-    /**
-     * TODO RSt - not yet implemented
-     *
-     * @return null
-     */
     public TraversableResolver getTraversableResolver() {
-        return null;
+        return traversableResolver;
     }
 
     /**

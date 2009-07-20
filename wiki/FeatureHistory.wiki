@@ -5,15 +5,12 @@ The sources in svn are probably newer than the release you find in the "Download
 
 = History =
 
-03.07.2009
+20.07.2009
 ----------
-version 0.9.1-SNAPSHOT - r219
-  * constraints {{{@DecimalMin}}} and {{{@DecimalMax}}} now available
-
-02.07.2009
-----------
-version 0.9.1-SNAPSHOT - r214
+version 0.9.1-SNAPSHOT - r239
+  * artifacts published to http://oss.sonatype.org/content/repositories/agimatec-snapshots/com/agimatec/
   * compatible with validation-api-1.0.CR1.jar
+  * constraints {{{@DecimalMin}}} and {{{@DecimalMax}}} now available
 
 01.07.2009
 ----------

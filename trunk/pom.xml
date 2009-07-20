@@ -27,12 +27,16 @@
   <artifactId>agimatec-validation-parent</artifactId>
   <name>agimatec-validation-parent :: Parent POM</name>
   <packaging>pom</packaging>
-  <version>0.9.1-SNAPSHOT</version>
+  <version>0.9.2-SNAPSHOT</version>
 
   <description>agimatec-validation parent pom</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <agimatec-site-url>http://agimatec-validation.googlecode.com/svn/site/maven2</agimatec-site-url>
+    <agimatec-snapshots-url>http://oss.sonatype.org/content/repositories/agimatec-snapshots</agimatec-snapshots-url>
+    <agimatec-releases-url>http://oss.sonatype.org/content/repositories/agimatec-releases</agimatec-releases-url>
   </properties>
 
   <organization>
@@ -101,28 +105,38 @@
 
   <distributionManagement>
     <site>
-      <id>${agimatec-site-id}</id>
-      <url>${agimatec-site-url}/agimatec-validation/site</url>
+      <id>agimatec-site</id>
+      <url>${agimatec-site-url}</url>
     </site>
     <snapshotRepository>
-      <id>deployment.dav</id>
-      <name>Snapshot Artifacts</name>
-      <url>${deployment-dav-url}</url>
+      <id>agimatec-snapshots</id>
+      <name>Agimatec Snapshot Repository</name>
+      <url>${agimatec-snapshots-url}</url>
+      <uniqueVersion>false</uniqueVersion>
     </snapshotRepository>
     <repository>
-      <id>internal.dav</id>
-      <name>Release Artifacts</name>
-      <url>${internal-dav-url}</url>
+      <id>agimatec-releases</id>
+      <name>Agimatec Release Repository</name>
+      <url>${agimatec-releases-url}</url>
     </repository>
   </distributionManagement>
 
   <reporting>
     <plugins>
       <plugin>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.1.1</version>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <show>package</show>
+          <quiet>true</quiet>
+          <source>1.5</source>
+          <links>
+            <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
+          </links>
         </configuration>
         <reportSets>
           <reportSet>
@@ -203,10 +217,6 @@
     </dependencies>
   </dependencyManagement>
 
-  <prerequisites>
-    <maven>2.0</maven>
-  </prerequisites>
-
   <build>
     <defaultGoal>install</defaultGoal>
 
@@ -253,28 +263,23 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.4</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>1.0-beta-1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-gpg-plugin</artifactId>
           <version>1.0-alpha-4</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <version>2.4</version>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>jdepend-maven-plugin</artifactId>
-          <version>2.0-beta-2</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-release-plugin</artifactId>
-          <version>2.0-beta-7</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-source-plugin</artifactId>
-          <version>2.0.4</version>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>2.2</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -291,6 +296,21 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>2.5</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>jdepend-maven-plugin</artifactId>
+          <version>2.0-beta-2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.0-beta-9</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
           <version>2.3</version>
           <configuration>
@@ -300,22 +320,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>2.0-beta-7</version>
+          <version>2.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
           <version>2.2-beta-3</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-install-plugin</artifactId>
-          <version>2.2</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-deploy-plugin</artifactId>
-          <version>2.4</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -338,8 +348,14 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.4.3</version>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>2.0.4</version>
+        </plugin>
       </plugins>
     </pluginManagement>
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -362,8 +378,81 @@
       </plugin>
     </plugins>
   </build>
+
   <modules>
     <module>agimatec-validation</module>
     <module>agimatec-jsr303</module>
   </modules>
+
+  <profiles>
+    <!-- START SNIPPET: release-profile -->
+    <profile>
+      <id>release</id>
+      <activation>
+        <property>
+          <name>release</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <!-- sign all artifacts -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <configuration>
+              <passphrase>${gpg.passphrase}</passphrase>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <!-- deploy the artifacts to a staging location for perusal -->
+          <plugin>
+            <inherited>true</inherited>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <configuration>
+              <updateReleaseInfo>true</updateReleaseInfo>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <!-- this fails the ianal check
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <encoding>${project.build.sourceEncoding}</encoding>
+            </configuration>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          -->
+        </plugins>
+      </build>
+    </profile>
+    <!-- END SNIPPET: release-profile -->
+  </profiles>
+
 </project>
+

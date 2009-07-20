@@ -1,0 +1,62 @@
+= Publishing Artifacts to a Maven Repo =
+
+Starting with the 0.9.1-SNAPSHOT level of the code, the top project POM is setup to deploy SNAPSHOT and Release artifacts to the [https://docs.sonatype.com/display/NX/OSS+Repository+Hosting Sonatype OSS Repository] by using the following build options:
+
+  * mvn clean deploy -Prelease
+
+For SNAPSHOT builds, the artifacts will only be hosted off of the Sonatype repo and will require other projects to add a reference to the repository in their POMs -
+{{{
+        <repositories>
+            <repository>
+                <id>agimatec-snapshots</id>
+                <name>Sonatype OSS Repository</name>
+                <url>http://oss.sonatype.org/content/repositories/agimatec-snapshots</url>
+                <layout>default</layout>
+                <snapshots>
+                    <enabled>true</enabled>
+                    <updatePolicy>daily</updatePolicy>
+                    <checksumPolicy>ignore</checksumPolicy>
+                </snapshots>
+                <releases>
+                    <enabled>false</enabled>
+                </releases>
+            </repository>
+        </repositories>
+}}}
+
+Once we have an official release, the artifacts will be synch'ed from the Sonatype server to Maven Central.
+
+
+= Maven Setup =
+
+The in-depth details can be found on the Sonatype wiki page describing the [https://docs.sonatype.com/display/NX/OSS+Repository+Hosting Sonatype OSS Repository], but we'll include the basics below.
+
+Edit/create your maven settings file (.m2/settings.xml) with a new server profile:
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+    <servers>
+        . . .
+        <server>
+            <!-- Sonatype Nexus settings -->
+            <id>agimatec-snapshots</id>
+            <username>sonatype_uid</username>
+            <password>sonatype_pwd</password>
+        </server>
+        <server>
+            <!-- Sonatype Nexus settings -->
+            <id>agimatec-releases</id>
+            <username>sonatype_uid</username>
+            <password>sonatype_pwd</password>
+        </server>
+    </servers>
+</settings>
+}}}
+
+= Creating a Sonatype Nexus Account =
+
+Have one of the existing project members who have an account submit a request as described at [https://docs.sonatype.com/display/NX/OSS+Repository+Hosting Sonatype OSS Repository], which basically involves creating a [https://issues.sonatype.org/browse/OSSRH JIRA issue].

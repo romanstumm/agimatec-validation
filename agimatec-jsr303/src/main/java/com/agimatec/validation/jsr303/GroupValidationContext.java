@@ -3,6 +3,7 @@ package com.agimatec.validation.jsr303;
 import com.agimatec.validation.jsr303.groups.Group;
 import com.agimatec.validation.jsr303.groups.Groups;
 import com.agimatec.validation.model.ValidationContext;
+import com.agimatec.validation.model.MetaBean;
 
 import javax.validation.ConstraintDescriptor;
 import javax.validation.ConstraintValidator;
@@ -28,6 +29,7 @@ interface GroupValidationContext extends ValidationContext {
     Group getCurrentGroup();
 
     String getPropertyPath();
+    MetaBean getRootMetaBean();
 
     void setConstraintDescriptor(ConstraintDescriptor constraint);
     
@@ -48,4 +50,5 @@ interface GroupValidationContext extends ValidationContext {
     TraversableResolver getTraversableResolver();    
 
     boolean collectValidated(Object bean, ConstraintValidator constraint);
+
 }

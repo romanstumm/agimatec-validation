@@ -26,6 +26,7 @@ class GroupValidationContextImpl extends BeanValidationContext
 
     private final MessageInterpolator messageResolver;
     private final LinkedList propertyStack = new LinkedList();
+    private final MetaBean rootMetaBean;
     private Groups groups;
     private Group currentGroup;
 
@@ -41,10 +42,12 @@ class GroupValidationContextImpl extends BeanValidationContext
 
     public GroupValidationContextImpl(ValidationListener listener,
                                       MessageInterpolator aMessageResolver,
-                                      TraversableResolver traversableResolver) {
+                                      TraversableResolver traversableResolver,
+                                      MetaBean rootMetaBean) {
         super(listener);
         this.messageResolver = aMessageResolver;
         this.traversableResolver = traversableResolver;
+        this.rootMetaBean = rootMetaBean;
     }
 
     @Override
@@ -120,6 +123,10 @@ class GroupValidationContextImpl extends BeanValidationContext
             sb.append(getMetaProperty().getName());
         }
         return sb.toString();
+    }
+
+    public MetaBean getRootMetaBean() {
+        return rootMetaBean;
     }
 
     public void setGroups(Groups groups) {

@@ -83,9 +83,9 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
 
         }
 
-        if(!gcontext.getTraversableResolver()
-              .isTraversable(gcontext.getValidatedValue(), gcontext.getPropertyName(),
-                    gcontext.getMetaBean().getBeanClass(), gcontext.getPropertyPath(),
+        if (gcontext.getMetaProperty() != null && !gcontext.getTraversableResolver()
+              .isTraversable(gcontext.getBean(), gcontext.getPropertyName(),
+                    gcontext.getRootMetaBean().getBeanClass(), gcontext.getPropertyPath(),
                     field != null ? ElementType.FIELD : ElementType.METHOD)) return;
 
 

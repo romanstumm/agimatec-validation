@@ -10,6 +10,7 @@ import com.agimatec.validation.model.ValidationListener;
 import javax.validation.ConstraintDescriptor;
 import javax.validation.ConstraintValidator;
 import javax.validation.MessageInterpolator;
+import javax.validation.TraversableResolver;
 import java.util.IdentityHashMap;
 import java.util.LinkedList;
 
@@ -35,12 +36,15 @@ class GroupValidationContextImpl extends BeanValidationContext
     private IdentityHashMap<Object, IdentityHashMap<ConstraintValidator, Object>> validatedConstraints =
           new IdentityHashMap();
     private ConstraintDescriptor currentConstraint;
+    private TraversableResolver traversableResolver;
 
 
     public GroupValidationContextImpl(ValidationListener listener,
-                                      MessageInterpolator aMessageResolver) {
+                                      MessageInterpolator aMessageResolver,
+                                      TraversableResolver traversableResolver) {
         super(listener);
         this.messageResolver = aMessageResolver;
+        this.traversableResolver = traversableResolver;
     }
 
     @Override
@@ -155,4 +159,7 @@ class GroupValidationContextImpl extends BeanValidationContext
         return messageResolver;
     }
 
+    public TraversableResolver getTraversableResolver() {
+        return traversableResolver;
+    }
 }

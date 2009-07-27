@@ -13,6 +13,7 @@ import javax.validation.ReportAsSingleViolation;
 import javax.validation.MessageInterpolator.Context;
 
 import java.lang.annotation.Annotation;
+import java.lang.annotation.ElementType;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -63,7 +64,7 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
     }
 
     public void validate(ValidationContext context) {
-        final GroupValidationContext gcontext = (GroupValidationContext)context;
+        final GroupValidationContext gcontext = (GroupValidationContext) context;
         MessageInterpolator messageResolver = null;
         /**
          * execute unless the given validation constraint has already been processed
@@ -81,7 +82,15 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
             messageResolver = groupContext.getMessageResolver();
 
         }
-        if (context.getMetaProperty() != null) { // compute and cache propertyValue from field
+
+        if(!gcontext.getTraversableResolver()
+              .isTraversable(gcontext.getValidatedValue(), gcontext.getPropertyName(),
+                    gcontext.getMetaBean().getBeanClass(), gcontext.getPropertyPath(),
+                    field != null ? ElementType.FIELD : ElementType.METHOD)) return;
+
+
+        if (context.getMetaProperty() !=
+              null) { // compute and cache propertyValue from field
             context.getPropertyValue(field);
         }
 
@@ -105,7 +114,8 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
                 // enhancement: how should the composed constraint error report look like?
                 ConstraintContextImpl jsrContext =
                       new ConstraintContextImpl(context, this);
-                addErrors(gcontext, messageResolver, jsrContext); // add defaultErrorMessage only
+                addErrors(gcontext, messageResolver,
+                      jsrContext); // add defaultErrorMessage only
                 return;
             }
         } else {
@@ -122,7 +132,8 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
         }
     }
 
-    private void addErrors(GroupValidationContext context, MessageInterpolator messageResolver,
+    private void addErrors(GroupValidationContext context,
+                           MessageInterpolator messageResolver,
                            ConstraintContextImpl jsrContext) {
         context.setConstraintDescriptor(this);
         if (messageResolver != null) {
@@ -200,9 +211,11 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
     }
 
     public List<Class<? extends ConstraintValidator<?, ?>>> getConstraintValidatorClasses() {
-        List<Class<? extends ConstraintValidator<?, ?>>> classes = new ArrayList(constraints.length);
+        List<Class<? extends ConstraintValidator<?, ?>>> classes =
+              new ArrayList(constraints.length);
         for (ConstraintValidator constraint : constraints) {
-            classes.add((Class<? extends ConstraintValidator<?, ?>>) constraint.getClass());
+            classes.add((Class<? extends ConstraintValidator<?, ?>>) constraint
+                  .getClass());
         }
         return classes;
     }

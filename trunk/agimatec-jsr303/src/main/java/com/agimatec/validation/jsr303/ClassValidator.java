@@ -190,7 +190,9 @@ public class ClassValidator implements Validator {
         ConstraintValidationListener<T> listener =
               new ConstraintValidationListener<T>(object);
         GroupValidationContextImpl context =
-              new GroupValidationContextImpl(listener, factory.getMessageInterpolator());
+              new GroupValidationContextImpl(listener,
+                    factory.getMessageInterpolator(),
+                    factory.getTraversableResolver());
         context.setBean(object, metaBean);
         context.setGroups(groupsComputer.computeGroups(groups));
         return context;

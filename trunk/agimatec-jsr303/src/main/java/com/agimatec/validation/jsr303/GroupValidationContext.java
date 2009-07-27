@@ -7,6 +7,7 @@ import com.agimatec.validation.model.ValidationContext;
 import javax.validation.ConstraintDescriptor;
 import javax.validation.ConstraintValidator;
 import javax.validation.MessageInterpolator;
+import javax.validation.TraversableResolver;
 
 /**
  * Description: <br/>
@@ -43,6 +44,8 @@ interface GroupValidationContext extends ValidationContext {
     void setFixedValue(Object value);
 
     MessageInterpolator getMessageResolver();
+
+    TraversableResolver getTraversableResolver();    
 
     boolean collectValidated(Object bean, ConstraintValidator constraint);
 }

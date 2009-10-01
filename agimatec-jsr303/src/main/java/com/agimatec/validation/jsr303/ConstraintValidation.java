@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with this
+ * work for additional information regarding copyright ownership. The ASF
+ * licenses this file to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package com.agimatec.validation.jsr303;
 
 import com.agimatec.validation.BeanValidationContext;
@@ -6,11 +22,11 @@ import com.agimatec.validation.jsr303.groups.GroupsComputer;
 import com.agimatec.validation.model.Validation;
 import com.agimatec.validation.model.ValidationContext;
 
-import javax.validation.ConstraintDescriptor;
 import javax.validation.ConstraintValidator;
 import javax.validation.MessageInterpolator;
-import javax.validation.ReportAsSingleViolation;
 import javax.validation.MessageInterpolator.Context;
+import javax.validation.metadata.ConstraintDescriptor;
+import javax.validation.ReportAsSingleViolation;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
@@ -67,8 +83,9 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
         final GroupValidationContext gcontext = (GroupValidationContext) context;
         MessageInterpolator messageResolver = null;
         /**
-         * execute unless the given validation constraint has already been processed
-         * during this validation routine (as part of a previous group match)
+         * execute unless the given validation constraint has already been
+         * processed during this validation routine (as part of a previous
+         * group match)
          */
         if (context instanceof GroupValidationContext) {
             GroupValidationContext groupContext = (GroupValidationContext) context;
@@ -80,17 +97,20 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
                     return; // already done
             }
             messageResolver = groupContext.getMessageResolver();
-
         }
 
-        if (gcontext.getMetaProperty() != null && !gcontext.getTraversableResolver()
-              .isTraversable(gcontext.getBean(), gcontext.getPropertyName(),
-                    gcontext.getRootMetaBean().getBeanClass(), gcontext.getPropertyPath(),
-                    field != null ? ElementType.FIELD : ElementType.METHOD)) return;
+        if (gcontext.getMetaProperty() != null && 
+            !gcontext.getTraversableResolver().isReachable(
+                gcontext.getBean(),
+                gcontext.getPropertyPath().getPathWithoutLeafNode(),
+                gcontext.getRootMetaBean().getBeanClass(),
+                gcontext.getPropertyPath(),
+                field != null ? ElementType.FIELD : ElementType.METHOD))  {
+            return;
+        }
 
-
-        if (context.getMetaProperty() !=
-              null) { // compute and cache propertyValue from field
+        if (context.getMetaProperty() != null) {
+            // compute and cache propertyValue from field
             context.getPropertyValue(field);
         }
 
@@ -138,7 +158,7 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
         context.setConstraintDescriptor(this);
         if (messageResolver != null) {
             for (ValidationResults.Error each : jsrContext.getErrors()) {
-                context.getListener().addError(
+                context.getListener().addError(each.getReason(),
                       messageResolver.interpolate(each.getReason(), (Context) context),
                       context);
             }

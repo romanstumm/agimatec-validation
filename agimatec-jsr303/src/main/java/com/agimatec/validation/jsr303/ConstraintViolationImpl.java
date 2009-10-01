@@ -1,8 +1,26 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with this
+ * work for additional information regarding copyright ownership. The ASF
+ * licenses this file to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package com.agimatec.validation.jsr303;
 
-import javax.validation.ConstraintDescriptor;
-import javax.validation.ConstraintViolation;
+import java.util.HashSet;
 import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.metadata.ConstraintDescriptor;
 
 /**
  * Description: Describe a constraint validation defect<br/>
@@ -12,10 +30,12 @@ import java.util.Set;
  * Time: 14:50:12 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-class ConstraintViolationImpl<T> implements ConstraintViolation {
+class ConstraintViolationImpl<T> implements ConstraintViolation<T> {
+    private final String messageTemplate;
     private final String message;
     /** root bean validation was invoked on. */
     private final T rootBean;
+    private final Class<T> rootBeanClass;
     /** last bean validated. */
     private final Object leafBean;
     private final Object value;
@@ -23,15 +43,33 @@ class ConstraintViolationImpl<T> implements ConstraintViolation {
     private final Set<Class<?>> groups;
     private final ConstraintDescriptor constraintDescriptor;
 
-    public ConstraintViolationImpl(String message, T rootBean, Object leafBean,
-                                   String propertyPath, Object value,
-                                   Set<Class<?>> groups,
-                                   ConstraintDescriptor constraintDescriptor) {
-        this.message = message;
+    public ConstraintViolationImpl(String messageTemplate, String interpolatedMessage,
+                                   Class<T> rootBeanClass, T rootBean,
+                                   Object leafBean, Object value,
+                                   String propertyPath, ConstraintDescriptor constraintDescriptor) {
+        this.messageTemplate = messageTemplate;
+        this.message = interpolatedMessage;
+        this.rootBeanClass = rootBeanClass;
         this.rootBean = rootBean;
-        this.propertyPath = propertyPath;
         this.leafBean = leafBean;
         this.value = value;
+        this.propertyPath = propertyPath;
+        this.groups = new HashSet();
+        this.constraintDescriptor = constraintDescriptor;
+    }
+
+    public ConstraintViolationImpl(String messageTemplate, String interpolatedMessage,
+                                   Class<T> rootBeanClass, T rootBean,
+                                   Object leafBean, Object value,
+                                   String propertyPath, Set<Class<?>> groups,
+                                   ConstraintDescriptor constraintDescriptor) {
+        this.messageTemplate = messageTemplate;
+        this.message = interpolatedMessage;
+        this.rootBeanClass = rootBeanClass;
+        this.rootBean = rootBean;
+        this.leafBean = leafBean;
+        this.value = value;
+        this.propertyPath = propertyPath;
         this.groups = groups;
         this.constraintDescriptor = constraintDescriptor;
     }
@@ -48,7 +86,7 @@ class ConstraintViolationImpl<T> implements ConstraintViolation {
      * @return
      */
     public String getRawMessage() {
-        return getMessage();
+        return getMessageTemplate();
     }
 
     /**
@@ -60,12 +98,16 @@ class ConstraintViolationImpl<T> implements ConstraintViolation {
     }
 
     public String getMessageTemplate() {
-        return message; // TODO RSt - getMessageTemplate nyi
+        return messageTemplate;
     }
 
     /** Root bean being validated validated */
     public T getRootBean() {
         return rootBean;
+    }
+
+    public Class<T> getRootBeanClass() {
+        return rootBeanClass;
     }
 
     public Object getLeafBean() {
@@ -103,4 +145,5 @@ class ConstraintViolationImpl<T> implements ConstraintViolation {
               propertyPath + '\'' + ", message='" + message + '\'' + ", leafBean=" +
               leafBean + ", value=" + value + '}';
     }
+
 }

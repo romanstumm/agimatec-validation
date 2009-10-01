@@ -18,28 +18,33 @@ public class ValidationResults implements ValidationListener, Serializable {
     private Map<Object, Map<String, List<Error>>> errorsByOwner;
 
     public void addError(String reason, ValidationContext context) {
-        addError(reason, context.getBean(), context.getPropertyName());
+        addError(reason, reason, context.getBean(), context.getPropertyName());
+    }
+
+    public void addError(String template, String reason, ValidationContext context) {
+        addError(template, reason, context.getBean(), context.getPropertyName());        
     }
 
     /**
      * API to add an error to the validation results.
      *
+     * @param template     - Features message template
      * @param reason       - Features from {@link com.agimatec.validation.routines.Reasons} or custom validation reason
      * @param bean         - (optional) owner bean or null
      * @param propertyName - (optional) propertyName where valiation error occurred or null
      */
-    public void addError(String reason, Object bean, String propertyName) {
+    public void addError(String template, String reason, Object bean, String propertyName) {
         if (errorsByReason == null) {
             initialize();
         }
-        Error error = createError(reason, bean, propertyName);
+        Error error = createError(template, reason, bean, propertyName);
 
         addToReasonBucket(error);
         addToOwnerBucket(error);
     }
 
-    protected Error createError(String reason, Object owner, String propertyName) {
-        return new Error(reason, owner, propertyName);
+    protected Error createError(String template, String reason, Object owner, String propertyName) {
+        return new Error(template, reason, owner, propertyName);
     }
 
     /**
@@ -138,14 +143,27 @@ public class ValidationResults implements ValidationListener, Serializable {
     }
 
     public static class Error implements Serializable {
+        final String template;
         final String reason;
         final Object owner;
         final String propertyName;
 
         public Error(String aReason, Object aOwner, String aPropertyName) {
+            this.template = aReason;
             this.reason = aReason;
             this.owner = aOwner;
             this.propertyName = aPropertyName;
+        }
+
+        public Error(String aTemplate, String aReason, Object aOwner, String aPropertyName) {
+            this.template = aTemplate;
+            this.reason = aReason;
+            this.owner = aOwner;
+            this.propertyName = aPropertyName;
+        }
+
+        public String getTemplate() {
+            return template;
         }
 
         public String getReason() {
@@ -165,4 +183,5 @@ public class ValidationResults implements ValidationListener, Serializable {
                     propertyName + '\'' + '}';
         }
     }
+
 }

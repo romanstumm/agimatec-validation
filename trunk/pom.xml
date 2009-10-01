@@ -160,19 +160,20 @@
       <dependency>
         <groupId>javax.validation</groupId>
         <artifactId>validation-api</artifactId>
-        <version>1.0.CR1</version>
+        <version>1.0.CR5</version>
       </dependency>
-      <!-- Apache Geronimo version of the spec
+      <!-- Apache Geronimo version of the Bean Validation spec
       <dependency>
         <groupId>org.apache.geronimo.specs</groupId>
         <artifactId>geronimo-validation_1.0_spec</artifactId>
-        <version>1.0-EA2-SNAPSHOT</version>
+        <version>1.0-EA5-SNAPSHOT</version>
       </dependency>
       -->
+      <!-- JPA2 spec required for JPA aware TraversableResolver support -->
       <dependency>
         <groupId>org.apache.geronimo.specs</groupId>
         <artifactId>geronimo-jpa_2.0_spec</artifactId>
-        <version>1.0-EA3-SNAPSHOT</version>
+        <version>1.0-EA8-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>

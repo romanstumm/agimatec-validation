@@ -18,6 +18,7 @@ package com.agimatec.validation.jsr303;
 
 import java.lang.annotation.ElementType;
 
+import javax.validation.Path;
 import javax.validation.TraversableResolver;
 
 
@@ -40,6 +41,7 @@ public class DefaultTraversableResolver implements TraversableResolver {
     public DefaultTraversableResolver() {
         try {
             // see if a javax.persistence.PersistenceUtil is available
+// TODO - Handle custom SecurityManager w/ PrivelagedAction handles
             @SuppressWarnings("unused")
             Class<?> pu = Class.forName(PERSISTENCE_UTIL_CLASSNAME);
             // now load our JPA aware version
@@ -50,11 +52,20 @@ public class DefaultTraversableResolver implements TraversableResolver {
         }
     }
 
-    public boolean isTraversable(Object traversableObject,
-            String traversableProperty, Class<?> rootBeanType,
-            String pathToTraversableObject, ElementType elementType) {
-        return ((jpaTR == null) || jpaTR.isTraversable(traversableObject,
+    public boolean isReachable(Object traversableObject,
+            Path.Node traversableProperty, Class<?> rootBeanType,
+            Path pathToTraversableObject, ElementType elementType) {
+        return ((jpaTR == null) || jpaTR.isReachable(traversableObject,
+            traversableProperty, rootBeanType, pathToTraversableObject,
+            elementType));
+    }
+
+    public boolean isCascadable(Object traversableObject,
+            Path.Node traversableProperty, Class<?> rootBeanType,
+            Path pathToTraversableObject, ElementType elementType) {
+        return ((jpaTR == null) || jpaTR.isCascadable(traversableObject,
             traversableProperty, rootBeanType, pathToTraversableObject,
             elementType));
     }
 }
+

@@ -345,6 +345,31 @@
           </executions>
         </plugin>
         <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>rat-maven-plugin</artifactId>
+          <version>1.0-alpha-3</version>
+          <configuration>
+            <excludeSubProjects>false</excludeSubProjects>
+            <numUnapprovedLicenses>0</numUnapprovedLicenses>
+            <excludes>
+              <!--
+                  comments are usupported by Java service descriptors
+              -->
+              <exclude>**/javax.validation.spi.ValidationProvider</exclude>
+
+              <!-- General informational files -->
+              <exclude>README.txt</exclude>
+
+              <!-- generated content -->
+              <exclude>**/.*/**</exclude>
+              <exclude>**/*.log</exclude>
+              <exclude>**/maven-eclipse.xml</exclude>
+              <exclude>**/rat.txt</exclude>
+              <exclude>**/target/**/*</exclude>
+            </excludes>
+          </configuration>
+        </plugin>
+        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.4.3</version>

@@ -46,8 +46,8 @@ public class DefaultValidationProviderResolver implements ValidationProviderReso
      * @see
      * javax.validation.ValidationProviderResolver#getValidationProviders()
      */
-    public List<ValidationProvider> getValidationProviders() {
-        List<ValidationProvider> providers = new ArrayList<ValidationProvider>();
+    public List<ValidationProvider<?>> getValidationProviders() {
+        List<ValidationProvider<?>> providers = new ArrayList<ValidationProvider<?>>();
         try {
             // get our classloader
             ClassLoader cl = Thread.currentThread().getContextClassLoader();

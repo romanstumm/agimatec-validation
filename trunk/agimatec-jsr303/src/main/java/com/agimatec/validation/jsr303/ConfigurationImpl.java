@@ -215,7 +215,7 @@ public class ConfigurationImpl implements AgimatecValidatorConfiguration, Config
             throw new ValidationException(
                   "Unable to find suitable provider: " + providerClass);
         } else {
-            List<ValidationProvider> providers =
+            List<ValidationProvider<?>> providers =
                   providerResolver.getValidationProviders();
             return providers.get(0);
         }

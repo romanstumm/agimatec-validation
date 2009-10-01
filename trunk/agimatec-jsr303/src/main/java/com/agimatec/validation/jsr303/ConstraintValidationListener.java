@@ -1,11 +1,28 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with this
+ * work for additional information regarding copyright ownership. The ASF
+ * licenses this file to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package com.agimatec.validation.jsr303;
 
 import com.agimatec.validation.jsr303.groups.GroupsComputer;
 import com.agimatec.validation.model.ValidationContext;
 import com.agimatec.validation.model.ValidationListener;
 
-import javax.validation.ConstraintDescriptor;
 import javax.validation.ConstraintViolation;
+import javax.validation.metadata.ConstraintDescriptor;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,8 +41,12 @@ class ConstraintValidationListener<T> implements ValidationListener {
         this.rootBean = aRootBean;
     }
 
-    @SuppressWarnings({"ManualArrayToCollectionCopy"})
     public void addError(String reason, ValidationContext context) {
+        addError(reason, reason, context);
+    }
+
+    @SuppressWarnings({"ManualArrayToCollectionCopy"})
+    public void addError(String template, String reason, ValidationContext context) {
         final Object value;
         if (context.getMetaProperty() == null) value = context.getBean();
         else value = context.getPropertyValue();
@@ -47,8 +68,11 @@ class ConstraintValidationListener<T> implements ValidationListener {
             }
             constraint = null;
         }
-        ConstraintViolationImpl<T> ic = new ConstraintViolationImpl<T>(reason, rootBean,
-              context.getBean(), propPath, value, groups, constraint);
+        ConstraintViolationImpl<T> ic = new ConstraintViolationImpl<T>(
+                        template, reason,
+                        (Class<T>)context.getBean().getClass(), rootBean,
+                        context.getBean(), value,
+                        propPath, groups, constraint);
         constaintViolations.add(ic);
     }
 
@@ -63,4 +87,5 @@ class ConstraintValidationListener<T> implements ValidationListener {
     public T getRootBean() {
         return rootBean;
     }
+
 }

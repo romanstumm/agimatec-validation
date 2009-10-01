@@ -1,5 +1,6 @@
 package com.agimatec.validation.model;
 
+
 /**
  * Description: The interface to collect errors found during validation<br/>
  * User: roman.stumm <br/>
@@ -18,4 +19,6 @@ public interface ValidationListener {
      *                propertyName = the Name of the attribute that caused the error
      */
     void addError(String reason, ValidationContext context);
+
+    void addError(String template, String reason, ValidationContext context);
 }

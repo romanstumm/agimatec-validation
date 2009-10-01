@@ -21,8 +21,8 @@ package com.agimatec.validation.jsr303;
 import java.util.List;
 import java.util.Set;
 
-import javax.validation.BeanDescriptor;
 import javax.validation.ConstraintViolation;
+import javax.validation.metadata.BeanDescriptor;
 import javax.validation.Validator;
 
 import com.agimatec.validation.jsr303.groups.Group;
@@ -151,14 +151,15 @@ public class ClassValidator implements Validator {
      * TODO RSt - nyi @throws javax.validation.ValidationException if a non recoverable error happens
      * during the validation process
      */
+    @SuppressWarnings("unchecked")
     public <T> Set<ConstraintViolation<T>> validateValue(Class<T> beanType,
                                                          String propertyName,
                                                          Object value,
                                                          Class<?>... groups) {
         MetaBean metaBean = factory.getMetaBeanManager().findForClass(beanType);
         GroupValidationContext context = createContext(metaBean, null, groups);
-        ConstraintValidationListener result =
-              (ConstraintValidationListener) context.getListener();
+        ConstraintValidationListener<T> result =
+              (ConstraintValidationListener<T>) context.getListener();
         context.setMetaProperty(
               getNestedProperty(metaBean, null, propertyName).getMetaProperty());
         context.setFixedValue(value);

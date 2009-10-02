@@ -79,7 +79,7 @@ public class DefaultTraversableResolver implements TraversableResolver {
             log.info("Instantiated an instance of " +
                   JPA_AWARE_TRAVERSABLE_RESOLVER_CLASSNAME + ".");
         } catch (Exception e) {
-            log.info("Unable to load or instanciate JPA aware resolver " +
+            log.warn("Unable to load or instanciate JPA aware resolver " +
                   JPA_AWARE_TRAVERSABLE_RESOLVER_CLASSNAME +
                   ". All properties will per default be traversable.");
         }

@@ -19,15 +19,15 @@ package com.agimatec.validation.jsr303;
 import com.agimatec.validation.BeanValidationContext;
 import com.agimatec.validation.jsr303.groups.Group;
 import com.agimatec.validation.jsr303.groups.Groups;
+import com.agimatec.validation.jsr303.util.PathImpl;
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.MetaProperty;
 import com.agimatec.validation.model.ValidationListener;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.MessageInterpolator;
-import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.TraversableResolver;
-
+import javax.validation.metadata.ConstraintDescriptor;
 import java.util.IdentityHashMap;
 import java.util.LinkedList;
 
@@ -120,7 +120,7 @@ class GroupValidationContextImpl extends BeanValidationContext
      *
      * @return the path in dot notation
      */
-    public String getPropertyPath() {
+    public PathImpl getPropertyPath() {
         StringBuilder sb = new StringBuilder();
         boolean dot = false;
         for (Object prop : propertyStack) {
@@ -139,7 +139,7 @@ class GroupValidationContextImpl extends BeanValidationContext
             if (dot) sb.append('.');
             sb.append(getMetaProperty().getName());
         }
-        return sb.toString();
+        return PathImpl.fromString(sb.toString());
     }
 
     public MetaBean getRootMetaBean() {

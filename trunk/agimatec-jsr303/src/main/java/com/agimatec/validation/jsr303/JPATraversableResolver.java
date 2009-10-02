@@ -16,31 +16,25 @@
  */
 package com.agimatec.validation.jsr303;
 
-import java.lang.annotation.ElementType;
-
 import javax.persistence.Persistence;
 import javax.validation.Path;
 import javax.validation.TraversableResolver;
+import java.lang.annotation.ElementType;
 
 
-/**
- *
- * @see javax.validation.TraversableResolver
- *
- */
+/** @see javax.validation.TraversableResolver */
 public class JPATraversableResolver implements TraversableResolver {
 
-    public boolean isReachable(Object traversableObject,
-            Path.Node traversableProperty, Class<?> rootBeanType,
-            Path pathToTraversableObject, ElementType elementType) {
-        return (traversableObject == null) || Persistence.getPersistenceUtil()
-            .isLoaded(traversableObject, traversableProperty.getName());
+    public boolean isReachable(Object traversableObject, Path.Node traversableProperty,
+                               Class<?> rootBeanType, Path pathToTraversableObject,
+                               ElementType elementType) {
+        return traversableObject == null || Persistence.getPersistenceUtil()
+              .isLoaded(traversableObject, traversableProperty.getName());
     }
 
-    public boolean isCascadable(Object traversableObject,
-            Path.Node traversableProperty, Class<?> rootBeanType,
-            Path pathToTraversableObject, ElementType elementType) {
+    public boolean isCascadable(Object traversableObject, Path.Node traversableProperty,
+                                Class<?> rootBeanType, Path pathToTraversableObject,
+                                ElementType elementType) {
         return true;
     }
 }
-

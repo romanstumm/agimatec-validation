@@ -27,7 +27,7 @@
   <artifactId>agimatec-validation-parent</artifactId>
   <name>agimatec-validation-parent :: Parent POM</name>
   <packaging>pom</packaging>
-  <version>0.9.2-SNAPSHOT</version>
+  <version>0.9.3-SNAPSHOT</version>
 
   <description>agimatec-validation parent pom</description>
 
@@ -82,7 +82,7 @@
       <id>roman.stumm</id>
       <name>Roman Stumm</name>
       <email>roman.stumm@agimatec.de</email>
-      <organization>agimatec</organization>
+      <organization>agimatec GmbH</organization>
     </developer>
     <developer>
       <id>donaldrwoods</id>
@@ -162,11 +162,11 @@
         <artifactId>validation-api</artifactId>
         <version>1.0.CR5</version>
       </dependency>
-      <!-- Apache Geronimo version of the Bean Validation spec
+      <!-- Apache Geronimo version of the spec
       <dependency>
         <groupId>org.apache.geronimo.specs</groupId>
         <artifactId>geronimo-validation_1.0_spec</artifactId>
-        <version>1.0-EA5-SNAPSHOT</version>
+        <version>1.0-EA2-SNAPSHOT</version>
       </dependency>
       -->
       <!-- JPA2 spec required for JPA aware TraversableResolver support -->

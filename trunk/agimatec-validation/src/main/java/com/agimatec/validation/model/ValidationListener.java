@@ -19,6 +19,4 @@ public interface ValidationListener {
      *                propertyName = the Name of the attribute that caused the error
      */
     void addError(String reason, ValidationContext context);
-
-    void addError(String template, String reason, ValidationContext context);
 }

@@ -1,18 +1,20 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements. See the NOTICE file distributed with this
- * work for additional information regarding copyright ownership. The ASF
- * licenses this file to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package com.agimatec.validation.jsr303;
 
@@ -23,11 +25,10 @@ import com.agimatec.validation.model.Validation;
 import com.agimatec.validation.model.ValidationContext;
 
 import javax.validation.ConstraintValidator;
-import javax.validation.MessageInterpolator;
-import javax.validation.MessageInterpolator.Context;
-import javax.validation.metadata.ConstraintDescriptor;
+import javax.validation.Path;
+import javax.validation.Payload;
 import javax.validation.ReportAsSingleViolation;
-
+import javax.validation.metadata.ConstraintDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.AnnotatedElement;
@@ -43,7 +44,7 @@ import java.util.*;
  * Time: 17:31:36 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-class ConstraintValidation implements Validation, ConstraintDescriptor {
+public class ConstraintValidation implements Validation, ConstraintDescriptor {
     private final ConstraintValidator[] constraints;
     private final Set<Class<?>> groups;
     private final Annotation annotation; // for metadata request API
@@ -80,37 +81,31 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
     }
 
     public void validate(ValidationContext context) {
-        final GroupValidationContext gcontext = (GroupValidationContext) context;
-        MessageInterpolator messageResolver = null;
+        validate((GroupValidationContext) context);
+    }
+
+    public void validate(GroupValidationContext context) {
         /**
-         * execute unless the given validation constraint has already been
-         * processed during this validation routine (as part of a previous
-         * group match)
+         * execute unless the given validation constraint has already been processed
+         * during this validation routine (as part of a previous group match)
          */
-        if (context instanceof GroupValidationContext) {
-            GroupValidationContext groupContext = (GroupValidationContext) context;
-            if (!isMemberOf(groupContext.getCurrentGroup().getGroup())) {
-                return; // do not validate in the current group
-            }
-            for (ConstraintValidator constraint : constraints) {
-                if (!groupContext.collectValidated(context.getBean(), constraint))
-                    return; // already done
-            }
-            messageResolver = groupContext.getMessageResolver();
+        if (!isMemberOf(context.getCurrentGroup().getGroup())) {
+            return; // do not validate in the current group
+        }
+        for (ConstraintValidator constraint : constraints) {
+            if (!context.collectValidated(context.getBean(), constraint))
+                return; // already done
         }
 
-        if (gcontext.getMetaProperty() != null && 
-            !gcontext.getTraversableResolver().isReachable(
-                gcontext.getBean(),
-                gcontext.getPropertyPath().getPathWithoutLeafNode(),
-                gcontext.getRootMetaBean().getBeanClass(),
-                gcontext.getPropertyPath(),
-                field != null ? ElementType.FIELD : ElementType.METHOD))  {
-            return;
-        }
 
-        if (context.getMetaProperty() != null) {
-            // compute and cache propertyValue from field
+        if (context.getMetaProperty() != null && !context.getTraversableResolver()
+              .isCascadable(context.getBean(), (Path.Node) null,
+                    // TODO RSt - provide Node
+                    context.getRootMetaBean().getBeanClass(), context.getPropertyPath(),
+                    field != null ? ElementType.FIELD : ElementType.METHOD)) return;
+
+        if (context.getMetaProperty() !=
+              null) { // compute and cache propertyValue from field
             context.getPropertyValue(field);
         }
 
@@ -132,10 +127,9 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
             // stop validating when already failed and ReportAsSingleInvalidConstraint = true ?
             if (!listener.getConstaintViolations().isEmpty()) {
                 // enhancement: how should the composed constraint error report look like?
-                ConstraintContextImpl jsrContext =
-                      new ConstraintContextImpl(context, this);
-                addErrors(gcontext, messageResolver,
-                      jsrContext); // add defaultErrorMessage only
+                ConstraintValidatorContextImpl jsrContext =
+                      new ConstraintValidatorContextImpl(context, this);
+                addErrors(context, jsrContext); // add defaultErrorMessage only*/
                 return;
             }
         } else {
@@ -145,27 +139,19 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
         }
 
         for (ConstraintValidator constraint : constraints) {
-            ConstraintContextImpl jsrContext = new ConstraintContextImpl(context, this);
-            if (!constraint.isValid(gcontext.getValidatedValue(), jsrContext)) {
-                addErrors(gcontext, messageResolver, jsrContext);
+            ConstraintValidatorContextImpl jsrContext =
+                  new ConstraintValidatorContextImpl(context, this);
+            if (!constraint.isValid(context.getValidatedValue(), jsrContext)) {
+                addErrors(context, jsrContext);
             }
         }
     }
 
     private void addErrors(GroupValidationContext context,
-                           MessageInterpolator messageResolver,
-                           ConstraintContextImpl jsrContext) {
+                           ConstraintValidatorContextImpl jsrContext) {
         context.setConstraintDescriptor(this);
-        if (messageResolver != null) {
-            for (ValidationResults.Error each : jsrContext.getErrors()) {
-                context.getListener().addError(each.getReason(),
-                      messageResolver.interpolate(each.getReason(), (Context) context),
-                      context);
-            }
-        } else {
-            for (ValidationResults.Error each : jsrContext.getErrors()) {
-                context.getListener().addError(each.getReason(), context);
-            }
+        for (ValidationResults.Error each : jsrContext.getErrorMessages()) {
+            context.getListener().addError(each.getReason(), context);
         }
     }
 
@@ -228,6 +214,10 @@ class ConstraintValidation implements Validation, ConstraintDescriptor {
 
     public Set<Class<?>> getGroups() {
         return groups;
+    }
+
+    public Set<Class<? extends Payload>> getPayload() {
+        return Collections.EMPTY_SET; // TODO RSt - nyi Payload support
     }
 
     public List<Class<? extends ConstraintValidator<?, ?>>> getConstraintValidatorClasses() {

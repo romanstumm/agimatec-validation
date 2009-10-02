@@ -16,13 +16,17 @@
  */
 package com.agimatec.validation.jsr303;
 
+import com.agimatec.validation.jsr303.groups.Group;
+import com.agimatec.validation.jsr303.groups.Groups;
+import com.agimatec.validation.jsr303.groups.GroupsComputer;
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.MetaProperty;
 import com.agimatec.validation.model.Validation;
 
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.ElementDescriptor;
-
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,20 +39,23 @@ import java.util.Set;
  */
 abstract class ElementDescriptorImpl implements ElementDescriptor {
     protected MetaBean metaBean;
-    protected Class type;
+    protected Class elementClass;
     private Set<ConstraintDescriptor<?>> constraintDescriptors;
 
     public ElementDescriptorImpl(MetaBean metaBean, Validation[] validations) {
         this.metaBean = metaBean;
-        this.type = metaBean.getBeanClass();
+        this.elementClass = metaBean.getBeanClass();
         createConstraintDescriptors(validations);
     }
 
     public ElementDescriptorImpl() {
     }
 
-    public Class getType() {
-        return type;
+    /**
+     * @return Statically defined returned type.
+     */
+    public Class getElementClass() {
+        return elementClass;
     }
 
     public Set<ConstraintDescriptor<?>> getConstraintDescriptors() {
@@ -62,6 +69,21 @@ abstract class ElementDescriptorImpl implements ElementDescriptor {
             if (mprop.getValidations().length > 0) return true;
         }
         return false;
+    }
+
+    public Set<ConstraintDescriptor<?>> getUnorderedConstraintDescriptorsMatchingGroups(
+          Class<?>... groups) {
+        Set<ConstraintDescriptor<?>> matchingDescriptors =
+              new HashSet<ConstraintDescriptor<?>>();
+        Groups groupChain = new GroupsComputer().computeGroups(Arrays.asList(groups));
+        for (Group group : groupChain.getGroups()) {
+            for (ConstraintDescriptor<?> descriptor : constraintDescriptors) {
+                if (descriptor.getGroups().contains(group.getGroup())) {
+                    matchingDescriptors.add(descriptor);
+                }
+            }
+        }
+        return Collections.unmodifiableSet(matchingDescriptors);
     }
 
     protected void createConstraintDescriptors(Validation[] validations) {
@@ -80,8 +102,8 @@ abstract class ElementDescriptorImpl implements ElementDescriptor {
         this.constraintDescriptors = constraintDescriptors;
     }
 
-    public void setType(Class returnType) {
-        this.type = returnType;
+    public void setElementClass(Class returnType) {
+        this.elementClass = returnType;
     }
 
 }

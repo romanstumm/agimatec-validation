@@ -23,10 +23,14 @@ import com.agimatec.validation.jsr303.example.*;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import javax.validation.*;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.validation.groups.Default;
+import javax.validation.metadata.BeanDescriptor;
+import javax.validation.metadata.ConstraintDescriptor;
+import javax.validation.metadata.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -96,7 +100,7 @@ public class ValidationTest extends TestCase {
         found = v.validate(a, Default.class, First.class, Last.class);
         Assert.assertEquals(1, found.size());
         ConstraintViolation ic = (ConstraintViolation) found.iterator().next();
-        Assert.assertEquals("addresses[0].country.name", ic.getPropertyPath());
+        Assert.assertEquals("addresses[0].country.name", ic.getPropertyPath().toString());
     }
 
     public void testPropertyPathWithIndex() {
@@ -126,7 +130,7 @@ public class ValidationTest extends TestCase {
     private <T> void assertPropertyPath(String propertyPath,
                                         Set<ConstraintViolation<T>> constraints) {
         for (ConstraintViolation each : constraints) {
-            if (each.getPropertyPath().equals(propertyPath)) return;
+            if (each.getPropertyPath().toString().equals(propertyPath)) return;
         }
         Assert.fail(propertyPath + " not found in " + constraints);
     }
@@ -182,7 +186,7 @@ public class ValidationTest extends TestCase {
                 Assert.assertTrue(book == constraintViolation.getRootBean());
 
                 //the offending property
-                if (constraintViolation.getPropertyPath().equals("title")) {
+                if (constraintViolation.getPropertyPath().toString().equals("title")) {
                     foundTitleConstraint = true;
                     //the offending value
                     Assert.assertEquals(book.getTitle(),

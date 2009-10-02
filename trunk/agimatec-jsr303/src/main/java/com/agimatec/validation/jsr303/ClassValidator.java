@@ -18,19 +18,18 @@
  */
 package com.agimatec.validation.jsr303;
 
-import java.util.List;
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.metadata.BeanDescriptor;
-import javax.validation.Validator;
-
 import com.agimatec.validation.jsr303.groups.Group;
 import com.agimatec.validation.jsr303.groups.Groups;
 import com.agimatec.validation.jsr303.groups.GroupsComputer;
-import com.agimatec.validation.model.Features;
+import com.agimatec.validation.jsr303.util.SecureActions;
 import com.agimatec.validation.model.MetaBean;
-import com.agimatec.validation.model.MetaProperty;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ValidationException;
+import javax.validation.Validator;
+import javax.validation.metadata.BeanDescriptor;
+import java.util.List;
+import java.util.Set;
 
 /**
  * API class -
@@ -45,91 +44,114 @@ import com.agimatec.validation.model.MetaProperty;
  * Copyright: Agimatec GmbH 2008
  */
 public class ClassValidator implements Validator {
-    protected final AgimatecValidatorFactory factory;
+    protected final AgimatecFactoryContext context;
     protected final GroupsComputer groupsComputer = new GroupsComputer();
 
+    public ClassValidator(AgimatecFactoryContext factoryContext) {
+        this.context = factoryContext;
+    }
+
+    /** @deprecated provided for backward compatibility */
     public ClassValidator(AgimatecValidatorFactory factory) {
-        this.factory = factory;
+        this(factory.usingContext());
     }
 
     /**
      * validate all constraints on object
-     * TODO RSt - nyi @throws javax.validation.ValidationException if a non recoverable error happens
-     * during the validation process
+     *
+     * @throws javax.validation.ValidationException
+     *          if a non recoverable error happens during the validation process
      */
     public <T> Set<ConstraintViolation<T>> validate(T object, Class<?>... groups) {
         if (object == null) throw new IllegalArgumentException("cannot validate null");
-        MetaBean metaBean = factory.getMetaBeanManager().findForClass(object.getClass());
-        GroupValidationContext context = createContext(metaBean, object, groups);
-        ConstraintValidationListener result =
-              (ConstraintValidationListener) context.getListener();
-        Groups sequence = context.getGroups();
-        // 1. process groups
-        for(Group current : sequence.getGroups()) {
-            context.resetValidated();
-            context.setCurrentGroup(current);
-            factory.getBeanValidator().validateContext(context);
-        }
-        // 2. process sequences
-        for (List<Group> eachSeq : sequence.getSequences()) {
-            for (Group current : eachSeq) {
+        try {
+            MetaBean metaBean = context.getFactory().getMetaBeanManager()
+                  .findForClass(object.getClass());
+            GroupValidationContext context = createContext(metaBean, object, groups);
+            ConstraintValidationListener result =
+                  (ConstraintValidationListener) context.getListener();
+            Groups sequence = context.getGroups();
+            // 1. process groups
+            for (Group current : sequence.getGroups()) {
                 context.resetValidated();
                 context.setCurrentGroup(current);
-                factory.getBeanValidator().validateContext(context);
-                /**
-                 * if one of the group process in the sequence leads to one or more validation failure,
-                 * the groups following in the sequence must not be processed
-                 */
-                if (!result.isEmpty()) break;
+                this.context.getBeanValidator().validateContext(context);
             }
+            // 2. process sequences
+            for (List<Group> eachSeq : sequence.getSequences()) {
+                for (Group current : eachSeq) {
+                    context.resetValidated();
+                    context.setCurrentGroup(current);
+                    this.context.getBeanValidator().validateContext(context);
+                    /**
+                     * if one of the group process in the sequence leads to one or more validation failure,
+                     * the groups following in the sequence must not be processed
+                     */
+                    if (!result.isEmpty()) break;
+                }
+            }
+            return result.getConstaintViolations();
+        } catch (RuntimeException ex) {
+            throw unrecoverableValidationError(ex, object);
         }
-        return result.getConstaintViolations();
+    }
+
+    private ValidationException unrecoverableValidationError(RuntimeException ex,
+                                                             Object object) {
+        throw new ValidationException("error during validation of " + object, ex);
     }
 
     /**
      * validate all constraints on <code>propertyName</code> property of object
      *
      * @param propertyName - the attribute name, or nested property name (e.g. prop[2].subpropA.subpropB)
-     *                     TODO RSt - nyi @throws javax.validation.ValidationException if a non recoverable error happens
-     *                     during the validation process
+     * @throws javax.validation.ValidationException
+     *          if a non recoverable error happens
+     *          during the validation process
      */
     public <T> Set<ConstraintViolation<T>> validateProperty(T object, String propertyName,
                                                             Class<?>... groups) {
         if (object == null) throw new IllegalArgumentException("cannot validate null");
-        MetaBean metaBean = factory.getMetaBeanManager().findForClass(object.getClass());
-        GroupValidationContext context = createContext(metaBean, object, groups);
-        ConstraintValidationListener result =
-              (ConstraintValidationListener) context.getListener();
-        NestedMetaProperty nestedProp = getNestedProperty(metaBean, object, propertyName);
-        context.setMetaProperty(nestedProp.getMetaProperty());
-        if (nestedProp.isNested()) {
-            context.setFixedValue(nestedProp.getValue());
-        } else {
+        try {
+            MetaBean metaBean =
+                  context.getMetaBeanManager().findForClass(object.getClass());
+            GroupValidationContext context = createContext(metaBean, object, groups);
+            ConstraintValidationListener result =
+                  (ConstraintValidationListener) context.getListener();
+            NestedMetaProperty nestedProp =
+                  getNestedProperty(metaBean, object, propertyName);
             context.setMetaProperty(nestedProp.getMetaProperty());
-        }
-        if (context.getMetaProperty() == null) throw new IllegalArgumentException(
-              "Unknown property " + object.getClass().getName() + "." + propertyName);
-        Groups sequence = context.getGroups();
-         // 1. process groups
-        for(Group current : sequence.getGroups()) {
-            context.resetValidated();
-            context.setCurrentGroup(current);
-            factory.getBeanValidator().validateProperty(context);
-        }
-        // 2. process sequences
-        for (List<Group> eachSeq : sequence.getSequences()) {
-            for (Group current : eachSeq) {
+            if (nestedProp.isNested()) {
+                context.setFixedValue(nestedProp.getValue());
+            } else {
+                context.setMetaProperty(nestedProp.getMetaProperty());
+            }
+            if (context.getMetaProperty() == null) throw new IllegalArgumentException(
+                  "Unknown property " + object.getClass().getName() + "." + propertyName);
+            Groups sequence = context.getGroups();
+            // 1. process groups
+            for (Group current : sequence.getGroups()) {
                 context.resetValidated();
                 context.setCurrentGroup(current);
-                factory.getBeanValidator().validateProperty(context);
-                /**
-                 * if one of the group process in the sequence leads to one or more validation failure,
-                 * the groups following in the sequence must not be processed
-                 */
-                if (!result.isEmpty()) break;
+                this.context.getBeanValidator().validateProperty(context);
             }
+            // 2. process sequences
+            for (List<Group> eachSeq : sequence.getSequences()) {
+                for (Group current : eachSeq) {
+                    context.resetValidated();
+                    context.setCurrentGroup(current);
+                    this.context.getBeanValidator().validateProperty(context);
+                    /**
+                     * if one of the group process in the sequence leads to one or more validation failure,
+                     * the groups following in the sequence must not be processed
+                     */
+                    if (!result.isEmpty()) break;
+                }
+            }
+            return result.getConstaintViolations();
+        } catch (RuntimeException ex) {
+            throw unrecoverableValidationError(ex, object);
         }
-        return result.getConstaintViolations();
     }
 
     /**
@@ -148,53 +170,56 @@ public class ClassValidator implements Validator {
     /**
      * validate all constraints on <code>propertyName</code> property
      * if the property value is <code>value</code>
-     * TODO RSt - nyi @throws javax.validation.ValidationException if a non recoverable error happens
-     * during the validation process
+     *
+     * @throws javax.validation.ValidationException
+     *          if a non recoverable error happens
+     *          during the validation process
      */
-    @SuppressWarnings("unchecked")
     public <T> Set<ConstraintViolation<T>> validateValue(Class<T> beanType,
                                                          String propertyName,
                                                          Object value,
                                                          Class<?>... groups) {
-        MetaBean metaBean = factory.getMetaBeanManager().findForClass(beanType);
-        GroupValidationContext context = createContext(metaBean, null, groups);
-        ConstraintValidationListener<T> result =
-              (ConstraintValidationListener<T>) context.getListener();
-        context.setMetaProperty(
-              getNestedProperty(metaBean, null, propertyName).getMetaProperty());
-        context.setFixedValue(value);
-        Groups sequence = context.getGroups();
-         // 1. process groups
-        for(Group current : sequence.getGroups()) {
-            context.resetValidated();
-            context.setCurrentGroup(current);
-            factory.getBeanValidator().validateProperty(context);
-        }
-        // 2. process sequences
-        for (List<Group> eachSeq : sequence.getSequences()) {
-            for (Group current : eachSeq) {
+        try {
+            MetaBean metaBean = context.getMetaBeanManager().findForClass(beanType);
+            GroupValidationContext context = createContext(metaBean, null, groups);
+            ConstraintValidationListener result =
+                  (ConstraintValidationListener) context.getListener();
+            context.setMetaProperty(
+                  getNestedProperty(metaBean, null, propertyName).getMetaProperty());
+            context.setFixedValue(value);
+            Groups sequence = context.getGroups();
+            // 1. process groups
+            for (Group current : sequence.getGroups()) {
                 context.resetValidated();
                 context.setCurrentGroup(current);
-                factory.getBeanValidator().validateProperty(context);
-                /**
-                 * if one of the group process in the sequence leads to one or more validation failure,
-                 * the groups following in the sequence must not be processed
-                 */
-                if (!result.isEmpty()) break;
+                this.context.getBeanValidator().validateProperty(context);
             }
+            // 2. process sequences
+            for (List<Group> eachSeq : sequence.getSequences()) {
+                for (Group current : eachSeq) {
+                    context.resetValidated();
+                    context.setCurrentGroup(current);
+                    this.context.getBeanValidator().validateProperty(context);
+                    /**
+                     * if one of the group process in the sequence leads to one or more validation failure,
+                     * the groups following in the sequence must not be processed
+                     */
+                    if (!result.isEmpty()) break;
+                }
+            }
+            return result.getConstaintViolations();
+        } catch (RuntimeException ex) {
+            throw unrecoverableValidationError(ex, beanType);
         }
-        return result.getConstaintViolations();
     }
 
     protected <T> GroupValidationContext createContext(MetaBean metaBean, T object,
                                                        Class<?>[] groups) {
         ConstraintValidationListener<T> listener =
               new ConstraintValidationListener<T>(object);
-        GroupValidationContextImpl context =
-              new GroupValidationContextImpl(listener,
-                    factory.getMessageInterpolator(),
-                    factory.getTraversableResolver(),
-                    metaBean);
+        GroupValidationContextImpl context = new GroupValidationContextImpl(listener,
+              this.context.getMessageInterpolator(),
+              this.context.getTraversableResolver(), metaBean);
         context.setBean(object, metaBean);
         context.setGroups(groupsComputer.computeGroups(groups));
         return context;
@@ -205,7 +230,7 @@ public class ClassValidator implements Validator {
      * @return true if at least one constraint declaration is present for the given bean
      *         or if one property is marked for validation cascade
      */
-    public boolean hasConstraints(Class<?> clazz) {
+    /*public boolean hasConstraints(Class<?> clazz) {
         MetaBean metaBean = factory.getMetaBeanManager().findForClass(clazz);
         if (metaBean.getValidations().length > 0) return true;
         for (MetaProperty mprop : metaBean.getProperties()) {
@@ -214,25 +239,45 @@ public class ClassValidator implements Validator {
                   mprop.getFeature(Features.Property.REF_CASCADE, true)) return true;
         }
         return false;
+    }*/
+
+    /**
+     * Return the descriptor object describing bean constraints
+     * The returned object (and associated objects including ConstraintDescriptors)
+     * are immutable.
+     *
+     * @throws ValidationException if a non recoverable error happens
+     *                             during the metadata discovery or if some
+     *                             constraints are invalid.
+     */
+    public BeanDescriptor getConstraintsForClass(Class<?> clazz) {
+        try {
+            MetaBean metaBean = context.getMetaBeanManager().findForClass(clazz);
+            BeanDescriptorImpl edesc =
+                  metaBean.getFeature(Jsr303Features.Bean.BeanDescriptor);
+            if (edesc == null) {
+                edesc = new BeanDescriptorImpl(metaBean, metaBean.getValidations());
+                metaBean.putFeature(Jsr303Features.Bean.BeanDescriptor, edesc);
+            }
+            return edesc;
+        } catch (RuntimeException ex) {
+            throw new ValidationException("error retrieving constraints for " + clazz,
+                  ex);
+        }
     }
 
     /**
-     * TODO RSt - nyi @throws javax.validation.ValidationException if a non recoverable error happens
-     * during the validation process
+     * Return an object of the specified type to allow access to the
+     * provider-specific API.  If the Bean Validation provider
+     * implementation does not support the specified class, the
+     * ValidationException is thrown.
+     *
+     * @param type the class of the object to be returned.
+     * @return an instance of the specified class
+     * @throws ValidationException if the provider does not
+     *                             support the call.
      */
-    public BeanDescriptor getConstraintsForClass(Class<?> clazz) {
-        MetaBean metaBean = factory.getMetaBeanManager().findForClass(clazz);
-        BeanDescriptorImpl edesc =
-              metaBean.getFeature(Jsr303Features.Bean.BeanDescriptor);
-        if (edesc == null) {
-            edesc = new BeanDescriptorImpl(metaBean, metaBean.getValidations());
-            metaBean.putFeature(Jsr303Features.Bean.BeanDescriptor, edesc);
-        }
-        return edesc;
+    public <T> T unwrap(Class<T> type) {
+        return SecureActions.newInstance(type);
     }
-
-    public AgimatecValidatorFactory getFactory() {
-        return factory;
-    }
-
 }

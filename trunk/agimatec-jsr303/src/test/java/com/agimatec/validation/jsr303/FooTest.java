@@ -22,6 +22,7 @@ import junit.framework.TestCase;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
+import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,7 +60,7 @@ public class FooTest extends TestCase {
     public void testValidation() {
         FooTest t = new FooTest();
 
-        ClassValidator v = new ClassValidator(AgimatecValidatorFactory.getDefault());
+        Validator v = AgimatecValidatorFactory.getDefault().getValidator();
         Set<ConstraintViolation<FooTest>> errors = v.validate(t);
         System.out.println("got errors:");
         for (ConstraintViolation error : errors) {

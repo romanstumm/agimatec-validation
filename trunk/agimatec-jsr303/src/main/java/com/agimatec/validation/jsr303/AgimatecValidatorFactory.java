@@ -18,14 +18,11 @@
  */
 package com.agimatec.validation.jsr303;
 
-import javax.validation.MessageInterpolator;
-import javax.validation.TraversableResolver;
-import javax.validation.Validator;
-import javax.validation.ValidatorContext;
-import javax.validation.ValidatorFactory;
-
 import com.agimatec.validation.BeanValidator;
 import com.agimatec.validation.MetaBeanManager;
+import com.agimatec.validation.jsr303.util.SecureActions;
+
+import javax.validation.*;
 
 /**
  * Description: a factory is a complete configurated object that can create validators<br/>
@@ -42,13 +39,14 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
     private MessageInterpolator messageResolver;
     private BeanValidator beanValidator;
     private TraversableResolver traversableResolver;
+    private ConstraintValidatorFactory constraintValidatorFactory;
 
     /** convenience to retrieve a default global ValidatorFactory */
     public static AgimatecValidatorFactory getDefault() {
         if (DEFAULT_FACTORY == null) {
             AgimatecValidationProvider provider = new AgimatecValidationProvider();
             DEFAULT_FACTORY =
-                    provider.buildValidatorFactory(new ConfigurationImpl(null, provider));
+                  provider.buildValidatorFactory(new ConfigurationImpl(null, provider));
         }
         return DEFAULT_FACTORY;
     }
@@ -60,23 +58,19 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
         return messageResolver;
     }
 
-
+    /**
+     * shortcut method to create a new Validator instance with factory's settings
+     * @return the new validator instance
+     */
     public Validator getValidator() {
-        return new ClassValidator(this);
+        return usingContext().getValidator();
     }
 
     /**
-     * TODO RSt - not yet implemented
-     * @return null
+     * @return the validator factory's context 
      */
-    public ValidatorContext usingContext() {
-        return null;
-    }
-
-    public Validator getValidator(MessageInterpolator messageResolver) {
-        AgimatecValidatorFactory factory = this.clone();
-        factory.setMessageInterpolator(messageResolver);
-        return new ClassValidator(factory);
+    public AgimatecFactoryContext usingContext() {
+        return new AgimatecFactoryContext(this);
     }
 
     @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException"})
@@ -98,7 +92,8 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
     }
 
     public MessageInterpolator getMessageInterpolator() {
-        return ((messageResolver != null) ? messageResolver : getDefaultMessageInterpolator());
+        return ((messageResolver != null) ? messageResolver :
+              getDefaultMessageInterpolator());
     }
 
     public MetaBeanManager getMetaBeanManager() {
@@ -119,5 +114,18 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
 
     public TraversableResolver getTraversableResolver() {
         return traversableResolver;
+    }
+
+    public ConstraintValidatorFactory getConstraintValidatorFactory() {
+        return constraintValidatorFactory;
+    }
+
+    public void setConstraintValidatorFactory(
+          ConstraintValidatorFactory constraintValidatorFactory) {
+        this.constraintValidatorFactory = constraintValidatorFactory;
+    }
+
+    public <T> T unwrap(Class<T> type) {
+        return SecureActions.newInstance(type);
     }
 }

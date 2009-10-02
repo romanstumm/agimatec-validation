@@ -16,56 +16,73 @@
  */
 package com.agimatec.validation.jsr303;
 
-import java.lang.annotation.ElementType;
+import com.agimatec.validation.jsr303.util.SecureActions;
+import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.validation.Path;
 import javax.validation.TraversableResolver;
+import java.lang.annotation.ElementType;
 
 
-/**
- *
- * @see javax.validation.TraversableResolver
- *
- */
+/** @see javax.validation.TraversableResolver */
 public class DefaultTraversableResolver implements TraversableResolver {
+    private static final Log log = LogFactory.getLog(DefaultTraversableResolver.class);
 
+    /** Class to load to check whether JPA 2 is on the classpath. */
     private static final String PERSISTENCE_UTIL_CLASSNAME =
-        "javax.persistence.PersistenceUtil";
+          "javax.persistence.PersistenceUtil";
 
+    /** Class to instantiate in case JPA 2 is on the classpath. */
     private static final String JPA_AWARE_TRAVERSABLE_RESOLVER_CLASSNAME =
-        "com.agimatec.validation.jsr303.JPATraversableResolver";
+          "com.agimatec.validation.jsr303.JPATraversableResolver";
+
 
     private TraversableResolver jpaTR;
 
 
     public DefaultTraversableResolver() {
+        initJpa();
+    }
+
+    public boolean isReachable(Object traversableObject, Path.Node traversableProperty,
+                               Class<?> rootBeanType, Path pathToTraversableObject,
+                               ElementType elementType) {
+        return jpaTR == null || jpaTR.isReachable(traversableObject, traversableProperty,
+              rootBeanType, pathToTraversableObject, elementType);
+    }
+
+    public boolean isCascadable(Object traversableObject, Path.Node traversableProperty,
+                                Class<?> rootBeanType, Path pathToTraversableObject,
+                                ElementType elementType) {
+        return jpaTR == null || jpaTR.isCascadable(traversableObject, traversableProperty,
+              rootBeanType, pathToTraversableObject, elementType);
+    }
+
+    /** Tries to load detect and load JPA. */
+    private void initJpa() {
         try {
-            // see if a javax.persistence.PersistenceUtil is available
-// TODO - Handle custom SecurityManager w/ PrivelagedAction handles
-            @SuppressWarnings("unused")
-            Class<?> pu = Class.forName(PERSISTENCE_UTIL_CLASSNAME);
-            // now load our JPA aware version
-            Class<?> tr = Class.forName(JPA_AWARE_TRAVERSABLE_RESOLVER_CLASSNAME);
-            jpaTR = (TraversableResolver) tr.newInstance();
+            ClassUtils.getClass(PERSISTENCE_UTIL_CLASSNAME);
+            log.debug("Found " + PERSISTENCE_UTIL_CLASSNAME + " on classpath.");
         } catch (Exception e) {
-            // ignore
+            log.debug("Cannot find " + PERSISTENCE_UTIL_CLASSNAME +
+                  " on classpath. All properties will per default be traversable.");
+            return;
+        }
+
+        try {
+            Class<? extends TraversableResolver> jpaAwareResolverClass =
+                  (Class<? extends TraversableResolver>) ClassUtils
+                        .getClass(JPA_AWARE_TRAVERSABLE_RESOLVER_CLASSNAME);
+            jpaTR = SecureActions.newInstance(jpaAwareResolverClass);
+            log.info("Instantiated an instance of " +
+                  JPA_AWARE_TRAVERSABLE_RESOLVER_CLASSNAME + ".");
+        } catch (Exception e) {
+            log.info("Unable to load or instanciate JPA aware resolver " +
+                  JPA_AWARE_TRAVERSABLE_RESOLVER_CLASSNAME +
+                  ". All properties will per default be traversable.");
         }
     }
 
-    public boolean isReachable(Object traversableObject,
-            Path.Node traversableProperty, Class<?> rootBeanType,
-            Path pathToTraversableObject, ElementType elementType) {
-        return ((jpaTR == null) || jpaTR.isReachable(traversableObject,
-            traversableProperty, rootBeanType, pathToTraversableObject,
-            elementType));
-    }
-
-    public boolean isCascadable(Object traversableObject,
-            Path.Node traversableProperty, Class<?> rootBeanType,
-            Path pathToTraversableObject, ElementType elementType) {
-        return ((jpaTR == null) || jpaTR.isCascadable(traversableObject,
-            traversableProperty, rootBeanType, pathToTraversableObject,
-            elementType));
-    }
 }
-

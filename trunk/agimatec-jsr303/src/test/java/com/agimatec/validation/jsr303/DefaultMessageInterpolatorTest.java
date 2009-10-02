@@ -24,8 +24,8 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import javax.validation.MessageInterpolator;
-import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.Validator;
+import javax.validation.metadata.ConstraintDescriptor;
 
 /**
  * MessageResolverImpl Tester.

@@ -117,15 +117,15 @@ public class BootstrapTest extends TestCase {
     public void testCustomResolverAndType() {
         ValidationProviderResolver resolver = new ValidationProviderResolver() {
 
-            public List<ValidationProvider> getValidationProviders() {
-                List<ValidationProvider> list = new ArrayList<ValidationProvider>();
+            public List<ValidationProvider<?>> getValidationProviders() {
+                List<ValidationProvider<?>> list = new ArrayList(1);
                 list.add(new AgimatecValidationProvider());
                 return list;
             }
         };
 
         AgimatecValidatorConfiguration builder = Validation
-                .byProvider(AgimatecValidatorConfiguration.class)
+                .byProvider(AgimatecValidationProvider.class)
                 .providerResolver(resolver)
                 .configure();
         assertDefaultBuilderAndFactory(builder);
@@ -134,8 +134,8 @@ public class BootstrapTest extends TestCase {
     public void testCustomResolver() {
         ValidationProviderResolver resolver = new ValidationProviderResolver() {
 
-            public List<ValidationProvider> getValidationProviders() {
-                List<ValidationProvider> list = new ArrayList<ValidationProvider>();
+            public List<ValidationProvider<?>> getValidationProviders() {
+                List list = new ArrayList();
                 list.add(new AgimatecValidationProvider());
                 return list;
             }
@@ -160,13 +160,13 @@ public class BootstrapTest extends TestCase {
     public void testFailingCustomResolver() {
         ValidationProviderResolver resolver = new ValidationProviderResolver() {
 
-            public List<ValidationProvider> getValidationProviders() {
-                return new ArrayList<ValidationProvider>();
+            public List<ValidationProvider<?>> getValidationProviders() {
+                return new ArrayList();
             }
         };
 
         ProviderSpecificBootstrap<AgimatecValidatorConfiguration> type =
-                Validation.byProvider(AgimatecValidatorConfiguration.class);
+                Validation.byProvider(AgimatecValidationProvider.class);
 
         final ProviderSpecificBootstrap<AgimatecValidatorConfiguration> specializedBuilderFactory =
                 type.providerResolver(resolver);

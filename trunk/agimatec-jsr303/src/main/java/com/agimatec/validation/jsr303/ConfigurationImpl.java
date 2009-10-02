@@ -18,39 +18,33 @@
  */
 package com.agimatec.validation.jsr303;
 
+import com.agimatec.validation.BeanValidator;
+
+import javax.validation.*;
+import javax.validation.spi.BootstrapState;
+import javax.validation.spi.ConfigurationState;
+import javax.validation.spi.ValidationProvider;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.validation.Configuration;
-import javax.validation.ConstraintValidatorFactory;
-import javax.validation.MessageInterpolator;
-import javax.validation.TraversableResolver;
-import javax.validation.ValidationException;
-import javax.validation.ValidationProviderResolver;
-import javax.validation.ValidatorFactory;
-import javax.validation.spi.BootstrapState;
-import javax.validation.spi.ConfigurationState;
-import javax.validation.spi.ValidationProvider;
-
-import com.agimatec.validation.BeanValidator;
-import com.agimatec.validation.xml.XMLMapper;
-
 /**
- * Description: <br/>
+ * Description:
+ * TODO RSt - split implementation of interface Configuration and ConfigurationState as soon as JSR303-XML configuration is supported
+ * <br/>
  * User: roman.stumm <br/>
  * Date: 29.10.2008 <br/>
  * Time: 14:47:44 <br/>
  * Copyright: Agimatec GmbH
  */
-public class ConfigurationImpl implements AgimatecValidatorConfiguration, ConfigurationState {
+public class ConfigurationImpl
+      implements AgimatecValidatorConfiguration, ConfigurationState {
     protected final ValidationProvider provider;
     protected final ValidationProviderResolver providerResolver;
     protected Class<? extends Configuration<?>> providerClass;
     protected MessageInterpolator messageInterpolator, defaultMessageResolver;
     protected ConstraintValidatorFactory constraintFactory;
-    private InputStream configurationStream;
     private BeanValidator beanValidator;
     private TraversableResolver traversableResolver;
 
@@ -118,51 +112,55 @@ public class ConfigurationImpl implements AgimatecValidatorConfiguration, Config
         return this;
     }
 
+    /**
+     * TODO RSt - not yet implemented
+     *
+     * @return null
+     */
+    public Map<String, String> getProperties() {
+        return null;  // do nothing
+    }
+
     public AgimatecValidatorConfiguration beanValidator(BeanValidator beanValidator) {
         setBeanValidator(beanValidator);
         return this;
     }
 
-    public AgimatecValidatorConfiguration configure(InputStream stream) {
-        configurationStream = stream;
-        if (stream != null) {
-            try {
-                readValidationXml(stream);
-            } catch (Exception e) {
-                throw new ValidationException("error reading stream", e);
-            }
-        }
-        return this;
-    }
-
-    public InputStream getConfigurationStream() {
-        return configurationStream;
-    }
-
     /**
      * TODO RSt - not yet implemented
      *
-     * @return false
+     * @return true
      */
     public boolean isIgnoreXmlConfiguration() {
-        return false;
+        return true;
+    }
+
+    // TODO RSt - nyi
+    public Set<InputStream> getMappingStreams() {
+        return null;  // do nothing
     }
 
     public MessageInterpolator getMessageInterpolator() {
         return messageInterpolator;
     }
 
-    public Set<InputStream> getMappingStreams() {
-        return null;  // do nothing
-    }
-
     public MessageInterpolator getDefaultMessageInterpolator() {
         return defaultMessageResolver;
     }
 
-    /** main factory method to build a ValidatorFactory
-     * TODO RSt - @throw ValidationException if the ValidatorFactory cannot be built
-     **/
+    public TraversableResolver getDefaultTraversableResolver() {
+        return traversableResolver;
+    }
+
+    public ConstraintValidatorFactory getDefaultConstraintValidatorFactory() {
+        return constraintFactory;
+    }
+
+    /**
+     * main factory method to build a ValidatorFactory
+     *
+     * @throw ValidationException if the ValidatorFactory cannot be built
+     */
     public ValidatorFactory buildValidatorFactory() {
         if (provider != null) {
             return provider.buildValidatorFactory(this);
@@ -179,23 +177,15 @@ public class ConfigurationImpl implements AgimatecValidatorConfiguration, Config
         return traversableResolver;
     }
 
-    /**
-     * TODO RSt - not yet implemented
-     *
-     * @return null
-     */
-    public Map<String, String> getProperties() {
-        return null;  // do nothing
-    }
-
     public ValidationProvider getProvider() {
         return provider;
     }
 
     private ValidationProvider findProvider() {
-        if (getConfigurationStream() == null) {
+        /* if (!isIgnoreXmlConfiguration()) {
             InputStream stream = getClass().getClassLoader()
                   .getResourceAsStream("META-INF/validation.xml");
+            // TODO RSt - nyi: config by XML
             if (stream != null) {
                 try {
                     readValidationXml(stream);
@@ -204,11 +194,11 @@ public class ConfigurationImpl implements AgimatecValidatorConfiguration, Config
                     throw new ValidationException("error reading stream", e);
                 }
             }
-        }
+        }    */
         if (providerClass != null) {
             for (ValidationProvider provider : providerResolver
                   .getValidationProviders()) {
-                if (provider.isSuitable(providerClass)) {
+                if (providerClass.isAssignableFrom(provider.getClass())) {
                     return provider;
                 }
             }
@@ -219,15 +209,6 @@ public class ConfigurationImpl implements AgimatecValidatorConfiguration, Config
                   providerResolver.getValidationProviders();
             return providers.get(0);
         }
-    }
-
-    /**
-     * TODO RSt - improve, clarify
-     * @param stream
-     */
-    private void readValidationXml(InputStream stream) {
-        XMLMapper.getInstance().getXStream()
-              .fromXML(stream, this); 
     }
 
     /** used by XStream to set values from configuration file */

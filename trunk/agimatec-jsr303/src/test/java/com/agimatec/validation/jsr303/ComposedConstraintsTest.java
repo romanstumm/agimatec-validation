@@ -22,8 +22,13 @@ import com.agimatec.validation.jsr303.example.FrenchAddress;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import javax.validation.*;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import javax.validation.constraints.Size;
+import javax.validation.metadata.ConstraintDescriptor;
+import javax.validation.metadata.ElementDescriptor;
 import java.util.Set;
 
 /**

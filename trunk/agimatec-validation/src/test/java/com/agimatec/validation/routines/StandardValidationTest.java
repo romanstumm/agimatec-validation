@@ -158,11 +158,8 @@ public class StandardValidationTest extends TestCase implements ValidationListen
         return new TestSuite(StandardValidationTest.class);
     }
 
-    public void addError(String tempalte, String reason, ValidationContext context) {
-        reasons.add(reason);
-    }
-
     public void addError(String reason, ValidationContext context) {
         reasons.add(reason);
     }
+
 }

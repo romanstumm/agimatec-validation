@@ -20,6 +20,7 @@ package com.agimatec.validation.jsr303;
 
 import javax.validation.metadata.PropertyDescriptor;
 
+
 /**
  * Description: <br/>
  * User: roman <br/>
@@ -48,7 +49,7 @@ class PropertyDescriptorImpl extends ElementDescriptorImpl implements PropertyDe
     }
 
     public String toString() {
-        return "PropertyDescriptorImpl{" + "returnType=" + type + ", propertyPath='" +
+        return "PropertyDescriptorImpl{" + "returnType=" + elementClass + ", propertyPath='" +
               propertyPath + '\'' + '}';
     }
 }

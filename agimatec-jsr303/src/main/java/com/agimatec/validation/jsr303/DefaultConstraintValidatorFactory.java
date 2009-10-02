@@ -18,6 +18,8 @@
  */
 package com.agimatec.validation.jsr303;
 
+import com.agimatec.validation.jsr303.util.SecureActions;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorFactory;
 
@@ -36,10 +38,6 @@ public class DefaultConstraintValidatorFactory implements ConstraintValidatorFac
      *         The ConstraintFactory is <b>not</b> responsible for calling Constraint#initialize
      */
     public <T extends ConstraintValidator<?, ?>> T getInstance(Class<T> constraintClass) {
-        try {
-            return constraintClass.newInstance();
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e);
-        }
+        return SecureActions.newInstance(constraintClass);
     }
 }

@@ -38,12 +38,12 @@ public class ZipCodeCityCoherenceValidator
         boolean r = true;
         if ("error".equals(adr.getZipCode())) {
             context.disableDefaultError();
-            context.addError("zipcode not OK");
+            context.buildErrorWithMessageTemplate("zipcode not OK").addError();
             r = false;
         }
         if ("error".equals(adr.getCity())) {
             context.disableDefaultError();
-            context.addError("city not OK", "city");
+            context.buildErrorWithMessageTemplate("city not OK").addSubNode("city").addError();
             r = false;
         }
         return r;

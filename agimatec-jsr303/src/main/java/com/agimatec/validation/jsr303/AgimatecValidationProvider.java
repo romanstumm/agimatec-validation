@@ -18,13 +18,13 @@
  */
 package com.agimatec.validation.jsr303;
 
+import com.agimatec.validation.MetaBeanManager;
+
 import javax.validation.Configuration;
 import javax.validation.ValidationException;
 import javax.validation.spi.BootstrapState;
 import javax.validation.spi.ConfigurationState;
 import javax.validation.spi.ValidationProvider;
-
-import com.agimatec.validation.MetaBeanManager;
 
 /**
  * Description: Implementation of {@link ValidationProvider} for jsr303 implementation of
@@ -33,12 +33,11 @@ import com.agimatec.validation.MetaBeanManager;
  *   * @OverridesParameter
  *   * Method-level validation (added in JSR303 1.0.CR3)
  *   * JSR-303 XML mappings (validation.xml), but proprietary agimatec-validation-XML supported
- *   * need to improve integration between JSR303 annotations and agimatec-metadata validations. 
+ *   * need to improve integration between JSR303 annotations and agimatec-metadata validations.
  *   * type-safety check when call a constraint-validator implementation's isValid() method
- *   * use of ConstraintViolationException
+ *   * use of ConstraintViolationException (not clear in spec...?)
  *   * javax.validation.constraints.[plural forms] not tested
  *   * difference between ConstraintViolation.getMessageTemplate() and getMessage()
- *   * ValidatorFactory.usingContext()
  * </pre>
  * <br/>
  * User: roman.stumm <br/>
@@ -46,18 +45,15 @@ import com.agimatec.validation.MetaBeanManager;
  * Time: 14:45:41 <br/>
  * Copyright: Agimatec GmbH
  */
-public class AgimatecValidationProvider implements ValidationProvider {
+public class AgimatecValidationProvider
+      implements ValidationProvider<AgimatecValidatorConfiguration> {
     public boolean isSuitable(Class<? extends Configuration<?>> builderClass) {
         return AgimatecValidatorConfiguration.class == builderClass;
     }
 
-    public <T extends Configuration<T>> T createSpecializedConfiguration(
-            BootstrapState state, Class<T> configurationClass) {
-          try {
-            return configurationClass.cast(new ConfigurationImpl(null, this));
-        } catch (ClassCastException ex) {
-            throw new ValidationException("provider not suitable: " + configurationClass, ex);
-        }
+    public AgimatecValidatorConfiguration createSpecializedConfiguration(
+          BootstrapState state) {
+        return new ConfigurationImpl(state, this);
     }
 
     public Configuration<?> createGenericConfiguration(BootstrapState state) {
@@ -65,21 +61,26 @@ public class AgimatecValidationProvider implements ValidationProvider {
     }
 
     /**
-     * TODO RSt - @throws javax.validation.ValidationException if the ValidatorFactory cannot be built
-     * @param configuration
-     * @return
+     * @throws javax.validation.ValidationException
+     *          if the ValidatorFactory cannot be built
      */
     public AgimatecValidatorFactory buildValidatorFactory(
-            ConfigurationState configuration) {
-        ConfigurationImpl builder = (ConfigurationImpl) configuration;
-        AgimatecValidatorFactory factory = new AgimatecValidatorFactory();
-        MetaBeanManager metaBeanManager =
-                new MetaBeanManager(new AnnotationMetaBeanBuilder(builder.getConstraintValidatorFactory()));
-        factory.setMetaBeanManager(metaBeanManager);
-        factory.setMessageInterpolator(builder.getMessageInterpolator());
-        factory.setBeanValidator(builder.getBeanValidator());
-        factory.setTraversableResolver(builder.getTraversableResolver());
-        return factory;
+          ConfigurationState configuration) {
+        try {
+            ConfigurationImpl builder = (ConfigurationImpl) configuration;
+            AgimatecValidatorFactory factory = new AgimatecValidatorFactory();
+            MetaBeanManager metaBeanManager = new MetaBeanManager(
+                  new AnnotationMetaBeanBuilder(builder.getConstraintValidatorFactory()));
+            factory.setMetaBeanManager(metaBeanManager);
+            factory.setMessageInterpolator(builder.getMessageInterpolator());
+            factory.setTraversableResolver(builder.getTraversableResolver());
+            factory.setConstraintValidatorFactory(
+                  configuration.getConstraintValidatorFactory());
+            factory.setBeanValidator(builder.getBeanValidator());
+            return factory;
+        } catch (RuntimeException ex) {
+            throw new ValidationException("error building ValidatorFactory", ex);
+        }
     }
 
 }

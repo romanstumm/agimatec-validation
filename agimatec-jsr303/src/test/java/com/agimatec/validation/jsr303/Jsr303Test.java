@@ -26,7 +26,11 @@ import com.agimatec.validation.jsr303.example.Second;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import javax.validation.*;
+import javax.validation.Validator;
+import javax.validation.metadata.BeanDescriptor;
+import javax.validation.metadata.ConstraintDescriptor;
+import javax.validation.metadata.ElementDescriptor;
+import javax.validation.metadata.PropertyDescriptor;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -71,7 +75,7 @@ public class Jsr303Test extends TestCase {
               validator.getConstraintsForClass(Book.class));
         BeanDescriptor bc = validator.getConstraintsForClass(Book.class);
 //        assertEquals(ElementType.TYPE, bc.getElementType());
-        Assert.assertEquals(Book.class, bc.getType());
+        Assert.assertEquals(Book.class, bc.getElementClass());
 //        assertEquals(false, bc.isCascaded());
 //        assertEquals("", bc.getPropertyPath());
         Assert.assertTrue(bc.getConstraintDescriptors() != null);
@@ -83,7 +87,7 @@ public class Jsr303Test extends TestCase {
               .getConstraintsForProperty("serialNumber");
         assertNotNull(desc);
 //        assertEquals(ElementType.FIELD, desc.getElementType());
-        Assert.assertEquals(String.class, desc.getType());
+        Assert.assertEquals(String.class, desc.getElementClass());
     }
 
     public void testMetadataAPI_Address() {

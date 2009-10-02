@@ -16,6 +16,11 @@
  */
 package com.agimatec.validation.jsr303;
 
+import com.agimatec.validation.jsr303.util.SecureActions;
+
+import javax.validation.ValidationException;
+import javax.validation.ValidationProviderResolver;
+import javax.validation.spi.ValidationProvider;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,16 +29,6 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-import javax.validation.ValidationException;
-import javax.validation.ValidationProviderResolver;
-import javax.validation.spi.ValidationProvider;
-
-
-/**
- *
- * @see javax.validation.Validation#DefaultValidationProviderResolver
- *
- */
 public class DefaultValidationProviderResolver implements ValidationProviderResolver {
 
     //TODO - Spec recommends caching per classloader
@@ -47,7 +42,7 @@ public class DefaultValidationProviderResolver implements ValidationProviderReso
      * javax.validation.ValidationProviderResolver#getValidationProviders()
      */
     public List<ValidationProvider<?>> getValidationProviders() {
-        List<ValidationProvider<?>> providers = new ArrayList<ValidationProvider<?>>();
+        List<ValidationProvider<?>> providers = new ArrayList();
         try {
             // get our classloader
             ClassLoader cl = Thread.currentThread().getContextClassLoader();
@@ -69,15 +64,9 @@ public class DefaultValidationProviderResolver implements ValidationProviderReso
                                 // try loading the specified class
                                 final Class<?> provider = cl.loadClass(line);
                                 // create an instance to return
-                                providers.add((ValidationProvider) provider.newInstance());
+                                providers.add((ValidationProvider) SecureActions.newInstance(provider));
                             } catch (ClassNotFoundException e) {
                                 throw new ValidationException("Failed to load provider " +
-                                    line + " configured in file " + url, e);
-                            } catch (InstantiationException e) {
-                                throw new ValidationException("Failed to instantiate provider " +
-                                    line + " configured in file " + url, e);
-                            } catch (IllegalAccessException e) {
-                                throw new ValidationException("Failed to access provider " +
                                     line + " configured in file " + url, e);
                             }
                         }

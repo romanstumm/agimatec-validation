@@ -18,13 +18,14 @@ package com.agimatec.validation.jsr303;
 
 import com.agimatec.validation.jsr303.groups.Group;
 import com.agimatec.validation.jsr303.groups.Groups;
-import com.agimatec.validation.model.ValidationContext;
+import com.agimatec.validation.jsr303.util.PathImpl;
 import com.agimatec.validation.model.MetaBean;
+import com.agimatec.validation.model.ValidationContext;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.MessageInterpolator;
-import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.TraversableResolver;
+import javax.validation.metadata.ConstraintDescriptor;
 
 /**
  * Description: <br/>
@@ -44,7 +45,7 @@ interface GroupValidationContext extends ValidationContext {
 
     Group getCurrentGroup();
 
-    String getPropertyPath();
+    PathImpl getPropertyPath();
     MetaBean getRootMetaBean();
 
     void setConstraintDescriptor(ConstraintDescriptor constraint);

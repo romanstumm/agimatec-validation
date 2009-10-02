@@ -103,7 +103,7 @@ public class GroupSequenceTest extends TestCase {
         assertEquals(book, constraintViolation.getRootBean());
         assertEquals(book.getTitle(),
               constraintViolation.getInvalidValue());
-        assertEquals("title", constraintViolation.getPropertyPath());
+        assertEquals("title", constraintViolation.getPropertyPath().toString());
 
         book.setTitle("My fault");
         book.setSubtitle("confessions of a president - a book for a nice price");
@@ -115,7 +115,7 @@ public class GroupSequenceTest extends TestCase {
         assertEquals("size must be between 0 and 30", constraintViolation.getMessage());
         assertEquals( book, constraintViolation.getRootBean());
         assertEquals(book.getSubtitle(), constraintViolation.getInvalidValue());
-        assertEquals("subtitle", constraintViolation.getPropertyPath());
+        assertEquals("subtitle", constraintViolation.getPropertyPath().toString());
 
         book.setSubtitle("Capitalism in crisis");
         author.setCompany("1234567890ß9876543212578909876542245678987432");
@@ -127,7 +127,7 @@ public class GroupSequenceTest extends TestCase {
         assertEquals("size must be between 0 and 40", constraintViolation.getMessage());
         assertEquals(book, constraintViolation.getRootBean());
         assertEquals(author.getCompany(), constraintViolation.getInvalidValue());
-        assertEquals("author.company", constraintViolation.getPropertyPath());
+        assertEquals("author.company", constraintViolation.getPropertyPath().toString());
 
         author.setCompany("agimatec");
 
@@ -158,7 +158,7 @@ public class GroupSequenceTest extends TestCase {
         assertEquals("may not be null", constraintViolation.getMessage());
         assertEquals(book, constraintViolation.getRootBean());
         assertEquals(book.getTitle(), constraintViolation.getInvalidValue());
-        assertEquals("title", constraintViolation.getPropertyPath());
+        assertEquals("title", constraintViolation.getPropertyPath().toString());
 
         book.setTitle("247307892430798789024389798789");
         book.setSubtitle("f43u rlök fjöq3liu opiur ölw3kj rölkj d");

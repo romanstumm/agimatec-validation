@@ -120,25 +120,29 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="org.apache.geronimo.specs:geronimo-jpa_2.0_spec:1.0-EA3-SNAPSHOT">
+      <library name="javax.validation:validation-api:1.0.CR5">
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/org/apache/geronimo/specs/geronimo-jpa_2.0_spec/1.0-EA3-SNAPSHOT/geronimo-jpa_2.0_spec-1.0-EA3-SNAPSHOT.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/javax/validation/validation-api/1.0.CR5/validation-api-1.0.CR5.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$MAVEN_REPOSITORY$/org/apache/geronimo/specs/geronimo-jpa_2.0_spec/1.0-EA3-SNAPSHOT/geronimo-jpa_2.0_spec-1.0-EA3-SNAPSHOT-javadoc.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/javax/validation/validation-api/1.0.CR5/validation-api-1.0.CR5-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$MAVEN_REPOSITORY$/org/apache/geronimo/specs/geronimo-jpa_2.0_spec/1.0-EA3-SNAPSHOT/geronimo-jpa_2.0_spec-1.0-EA3-SNAPSHOT-sources.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/javax/validation/validation-api/1.0.CR5/validation-api-1.0.CR5-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library>
+      <library name="org.apache.geronimo.specs:geronimo-jpa_2.0_spec:1.0-EA8-SNAPSHOT">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../validation-api/target/validation-api-1.0.Beta4-SNAPSHOT.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/org/apache/geronimo/specs/geronimo-jpa_2.0_spec/1.0-EA8-SNAPSHOT/geronimo-jpa_2.0_spec-1.0-EA8-SNAPSHOT.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$MAVEN_REPOSITORY$/org/apache/geronimo/specs/geronimo-jpa_2.0_spec/1.0-EA8-SNAPSHOT/geronimo-jpa_2.0_spec-1.0-EA8-SNAPSHOT-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MAVEN_REPOSITORY$/org/apache/geronimo/specs/geronimo-jpa_2.0_spec/1.0-EA8-SNAPSHOT/geronimo-jpa_2.0_spec-1.0-EA8-SNAPSHOT-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntryProperties />

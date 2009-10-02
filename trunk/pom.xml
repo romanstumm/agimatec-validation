@@ -27,7 +27,7 @@
   <artifactId>agimatec-validation-parent</artifactId>
   <name>agimatec-validation-parent :: Parent POM</name>
   <packaging>pom</packaging>
-  <version>0.9.3-SNAPSHOT</version>
+  <version>0.9.4-SNAPSHOT</version>
 
   <description>agimatec-validation parent pom</description>
 
@@ -101,6 +101,18 @@
         <enabled>false</enabled>
       </releases>
     </repository>
+    <repository>
+      <id>geronimo-staging</id>
+      <url>https://repository.apache.org/content/repositories/geronimo-staging-017/</url>
+      <releases>
+        <checksumPolicy>fail</checksumPolicy>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
   </repositories>
 
   <distributionManagement>
@@ -166,14 +178,14 @@
       <dependency>
         <groupId>org.apache.geronimo.specs</groupId>
         <artifactId>geronimo-validation_1.0_spec</artifactId>
-        <version>1.0-EA2-SNAPSHOT</version>
+        <version>1.0-CR5</version>
       </dependency>
       -->
       <!-- JPA2 spec required for JPA aware TraversableResolver support -->
       <dependency>
         <groupId>org.apache.geronimo.specs</groupId>
         <artifactId>geronimo-jpa_2.0_spec</artifactId>
-        <version>1.0-EA8-SNAPSHOT</version>
+        <version>1.0-PFD2</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>

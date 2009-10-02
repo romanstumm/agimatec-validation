@@ -109,19 +109,17 @@ public final class PathImpl implements Path {
         nodeList = new ArrayList<Node>();
     }
 
-    /* private PathImpl(List<Node> nodeList) {
+    private PathImpl(List<Node> nodeList) {
         this.nodeList = new ArrayList<Node>();
         for (Node node : nodeList) {
             this.nodeList.add(new NodeImpl(node));
         }
-    } */
+    }
 
     public boolean isRootPath() {
         return nodeList.size() == 1 && nodeList.get(0).getName() == null;
     }
 
-    // TODO RSt - remove
-    /*
     public PathImpl getPathWithoutLeafNode() {
         List<Node> nodes = new ArrayList<Node>(nodeList);
         PathImpl path = null;
@@ -130,12 +128,12 @@ public final class PathImpl implements Path {
             path = new PathImpl(nodes);
         }
         return path;
-    } */
+    }
 
     public void addNode(Node node) {
         nodeList.add(node);
     }
-    /*
+
     public Node removeLeafNode() {
         if (nodeList.size() == 0) {
             throw new IllegalStateException("No nodes in path!");
@@ -161,7 +159,6 @@ public final class PathImpl implements Path {
         }
         return true;
     }
-    */
 
     public NodeImpl getLeafNode() {
         if (nodeList.size() == 0) {

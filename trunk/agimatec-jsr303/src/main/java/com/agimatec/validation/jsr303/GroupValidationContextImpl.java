@@ -139,6 +139,7 @@ class GroupValidationContextImpl extends BeanValidationContext
             if (dot) sb.append('.');
             sb.append(getMetaProperty().getName());
         }
+        // TODO RSt - use path internally (optimize)
         return PathImpl.fromString(sb.toString());
     }
 

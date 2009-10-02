@@ -174,14 +174,17 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
             */
             Constraint vcAnno =
                   annotation.annotationType().getAnnotation(Constraint.class);
-            Class<? extends ConstraintValidator<?, ?>>[] validatorClass;
+            Class<? extends ConstraintValidator<?, ?>>[] validatorClasses;
             if (vcAnno == null) {
-                validatorClass = getDefaultConstraintValidator(annotation);
+                validatorClasses = getDefaultConstraintValidator(annotation);
             } else {
-                validatorClass = vcAnno.validatedBy();
+                validatorClasses = vcAnno.validatedBy();
+                if(validatorClasses == null || validatorClasses.length == 0) {
+                    validatorClasses = getDefaultConstraintValidator(annotation);
+                }
             }
-            if (validatorClass != null) {
-                applyConstraint(annotation, validatorClass, metabean, prop, element,
+            if (validatorClasses != null) {
+                applyConstraint(annotation, validatorClasses, metabean, prop, element,
                       validation);
                 return true;
             } else {

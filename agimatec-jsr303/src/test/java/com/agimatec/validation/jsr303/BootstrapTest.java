@@ -178,8 +178,7 @@ public class BootstrapTest extends TestCase {
         catch (ValidationException e) {
             Assert.assertEquals(
                     "Wrong error message",
-                    "Unable to find provider: interface " +
-                            AgimatecValidatorConfiguration.class.getName(),
+                    "Unable to find provider: class com.agimatec.validation.jsr303.AgimatecValidationProvider",
                     e.getMessage()
             );
         }

@@ -49,6 +49,11 @@ public class DefaultMessageInterpolatorTest extends TestCase {
     public void testCreateResolver() {
 
         final Validator gvalidator = getValidator();
+
+        assertTrue(!gvalidator.getConstraintsForClass(PreferredGuest.class)
+              .getConstraintsForProperty("guestCreditCardNumber")
+              .getConstraintDescriptors().isEmpty());
+
         MessageInterpolator.Context ctx = new MessageInterpolator.Context() {
 
             public ConstraintDescriptor<?> getConstraintDescriptor() {
@@ -77,6 +82,7 @@ public class DefaultMessageInterpolatorTest extends TestCase {
                 return "";
             }
         };
+
 
         msg = interpolator.interpolate("{constraint.notEmpty}", ctx);
         Assert.assertEquals("may not be empty", msg);

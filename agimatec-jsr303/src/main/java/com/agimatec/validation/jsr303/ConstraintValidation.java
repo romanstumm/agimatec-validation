@@ -21,13 +21,12 @@ package com.agimatec.validation.jsr303;
 import com.agimatec.validation.BeanValidationContext;
 import com.agimatec.validation.ValidationResults;
 import com.agimatec.validation.jsr303.groups.GroupsComputer;
+import com.agimatec.validation.jsr303.util.PathImpl;
+import com.agimatec.validation.jsr303.util.NodeImpl;
 import com.agimatec.validation.model.Validation;
 import com.agimatec.validation.model.ValidationContext;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.Path;
-import javax.validation.Payload;
-import javax.validation.ReportAsSingleViolation;
+import javax.validation.*;
 import javax.validation.metadata.ConstraintDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
@@ -97,15 +96,9 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
                 return; // already done
         }
 
-
-        if (context.getMetaProperty() != null && !context.getTraversableResolver()
-              .isCascadable(context.getBean(), (Path.Node) null,
-                    // TODO RSt - provide Node
-                    context.getRootMetaBean().getBeanClass(), context.getPropertyPath(),
-                    field != null ? ElementType.FIELD : ElementType.METHOD)) return;
-
-        if (context.getMetaProperty() !=
-              null) { // compute and cache propertyValue from field
+        if (context.getMetaProperty() != null) {
+            if (!isCascadeEnabled(context)) return;
+            // compute and cache propertyValue from field
             context.getPropertyValue(field);
         }
 
@@ -145,6 +138,38 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
                 addErrors(context, jsrContext);
             }
         }
+    }
+
+    private boolean isCascadeEnabled(GroupValidationContext context) {
+        ElementType etype = field != null ? ElementType.FIELD : ElementType.METHOD;
+        PathImpl path = context.getPropertyPath();
+        NodeImpl node = path.getLeafNode();
+        PathImpl beanPath = path.getPathWithoutLeafNode();
+        if (beanPath == null) {
+            beanPath = PathImpl.create(null);
+        }
+        try {
+            if (!context.getTraversableResolver()
+                  .isReachable(context.getBean(), node,
+                        context.getRootMetaBean().getBeanClass(), beanPath, etype))
+                return false;
+        } catch (RuntimeException e) {
+            throw new ValidationException(
+                  "Error in TraversableResolver.isReachable() for " + context.getBean(),
+                  e);
+        }
+
+        try {
+            if (!context.getTraversableResolver()
+                  .isCascadable(context.getBean(), node,
+                        context.getRootMetaBean().getBeanClass(), beanPath, etype))
+                return false;
+        } catch (RuntimeException e) {
+            throw new ValidationException(
+                  "Error TraversableResolver.isCascadable() for " + context.getBean(), e);
+        }
+
+        return true;
     }
 
     private void addErrors(GroupValidationContext context,

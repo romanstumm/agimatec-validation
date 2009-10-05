@@ -25,10 +25,14 @@ import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
 
+/**
+ * not implemented! simple dummy implemenation for tests only!
+ */
 @Documented
 @Constraint(validatedBy = ZipCodeCityCoherenceValidator.class)
 @Target({TYPE})
 @Retention(RUNTIME)
 public @interface ZipCodeCityCoherence {
-    String message() default "{validator.zipCodeCityCoherence}";
+    String message() default "{validator.zipCodeCityCoherence}";    
+    Class<?>[] groups() default {};
 }

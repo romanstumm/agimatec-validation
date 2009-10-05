@@ -76,6 +76,8 @@ public class MetaBeanManager
                 }
                 complete = true;
                 return map;
+            } catch (RuntimeException e) {
+                throw e; // do not wrap runtime exceptions
             } catch (Exception e) {
                 throw new IllegalArgumentException("error creating beanInfos", e);
             }
@@ -101,6 +103,8 @@ public class MetaBeanManager
                 computeRelationships(meta, patched);
             }
             return patched;
+        } catch (RuntimeException e) {
+            throw e; // do not wrap runtime exceptions
         } catch (Exception e) {
             throw new IllegalArgumentException("error enriching beanInfos", e);
         }
@@ -114,8 +118,8 @@ public class MetaBeanManager
             cache.cache(beanInfo);
             computeRelationships(beanInfo);
             return beanInfo;
-        } catch (IllegalArgumentException e) {
-            throw e;
+        } catch (RuntimeException e) {
+            throw e; // do not wrap runtime exceptions
         } catch (Exception e) {
             throw new IllegalArgumentException(
                   "error creating beanInfo with id: " + beanInfoId, e);
@@ -130,6 +134,8 @@ public class MetaBeanManager
             cache.cache(beanInfo);
             computeRelationships(beanInfo);
             return beanInfo;
+        } catch (RuntimeException e) {
+            throw e; // do not wrap runtime exceptions
         } catch (Exception e) {
             throw new IllegalArgumentException("error creating beanInfo for " + clazz, e);
         }

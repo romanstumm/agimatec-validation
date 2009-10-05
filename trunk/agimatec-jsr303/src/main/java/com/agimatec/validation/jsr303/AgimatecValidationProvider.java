@@ -38,6 +38,8 @@ import javax.validation.spi.ValidationProvider;
  *   * use of ConstraintViolationException (not clear in spec...?)
  *   * javax.validation.constraints.[plural forms] not tested
  *   * difference between ConstraintViolation.getMessageTemplate() and getMessage()
+ *   * Object graph validation: Set, Map (value) validation not yet supported
+ *     (currently only Array and Collection are supported)
  * </pre>
  * <br/>
  * User: roman.stumm <br/>

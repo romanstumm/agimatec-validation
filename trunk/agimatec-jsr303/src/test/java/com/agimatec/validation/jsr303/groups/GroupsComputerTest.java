@@ -27,6 +27,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import javax.validation.ValidationException;
+import javax.validation.groups.Default;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -140,7 +141,7 @@ public class GroupsComputerTest extends TestCase {
         Iterator<List<Group>> sequences = chain.getSequences().iterator();
         List<Group> sequence = sequences.next();
 
-        assertEquals(Address.class, sequence.get(0).getGroup());
+        assertEquals(Default.class, sequence.get(0).getGroup());
         assertEquals(Address.HighLevelCoherence.class, sequence.get(1).getGroup());
     }
 }

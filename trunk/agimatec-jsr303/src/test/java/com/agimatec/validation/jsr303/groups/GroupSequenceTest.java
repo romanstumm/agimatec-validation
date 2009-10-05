@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Description: <br/>
+ * Description: test of group sequence behavior<br/>
  * User: roman <br/>
  * Date: 25.02.2009 <br/>
  * Time: 16:47:06 <br/>
@@ -167,6 +167,9 @@ public class GroupSequenceTest extends TestCase {
         assertEquals(1, constraintViolations.size());
 
     }
+
+    // enhancement: test Redefining the Default group for a class (spec. chapter 3.4.3)
+    
 
     public Validator getValidator() {
         return AgimatecValidatorFactory.getDefault().getValidator();

@@ -91,5 +91,5 @@ public class ComposedConstraintsTest extends TestCase {
         adr.setZipCode("1234567234567");
         findings = val.validate(adr);
         Assert.assertTrue(findings.size() > 0); // too long
-    }
+    }    
 }

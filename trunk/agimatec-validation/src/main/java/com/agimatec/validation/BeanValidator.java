@@ -154,6 +154,25 @@ public class BeanValidator {
         if (context.getBean() != null) {
             DynamicMetaBean dynamic = context.getMetaBean() instanceof DynamicMetaBean ?
                     (DynamicMetaBean) context.getMetaBean() : null;
+            // TODO RSt - spec: Any object implementing java.lang.Iterable is supported
+//            if(context.getBean() instanceof Iterable) {
+//                Iterator it = ((Iterable) context.getBean()).iterator();
+//                int index = 0;
+//                // spec: Each object provided by the iterator is validated.
+//                // spec: For Map, the value of each Map.Entry is validated (key is not validated).
+//                while(it.hasNext()) {
+//                    Object each = it.next();
+//                    context.setCurrentIndex(index++);
+//                    if (each == null) continue; // enhancement: throw IllegalArgumentException? (=> spec)
+//                    if (dynamic != null) {
+//                        context.setBean(each, dynamic.resolveMetaBean(each));
+//                    } else {
+//                        context.setBean(each);
+//                    }
+//                    validateBeanNet(context);
+//                }
+//            }
+
             if (context.getBean() instanceof Collection) { // to Many
                 int index = 0;
                 for (Object each : ((Collection) context.getBean())) {

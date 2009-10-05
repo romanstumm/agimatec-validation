@@ -179,7 +179,7 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
                 validatorClasses = getDefaultConstraintValidator(annotation);
             } else {
                 validatorClasses = vcAnno.validatedBy();
-                if(validatorClasses == null || validatorClasses.length == 0) {
+                if (validatorClasses == null || validatorClasses.length == 0) {
                     validatorClasses = getDefaultConstraintValidator(annotation);
                 }
             }
@@ -282,37 +282,30 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
         if (annotation == null) {
             groupSeq.add(Default.class);
         } else {
+            boolean containsDefault = false;
             for (Class<?> group : annotation.value()) {
                 if (group.getName().equals(beanClass.getName())) {
                     groupSeq.add(Default.class);
-                /*// TODO RSt - clarify: is this behavior meant by the spec?
+                    containsDefault = true;
                 } else if (group.getName().equals(Default.class.getName())) {
-                    throw new ValidationException(
+                    throw new GroupDefinitionException(
                           "'Default.class' must not appear in @GroupSequence! Use '" +
-                                beanClass.getSimpleName() + ".class' instead."); */
+                                beanClass.getSimpleName() + ".class' instead.");
                 } else {
                     groupSeq.add(group);
                 }
             }
+            if (!containsDefault) {
+                throw new GroupDefinitionException(
+                      "Redefined default group sequence must contain " +
+                            beanClass.getName());
+            }
+            if (log.isDebugEnabled()) {
+                log.debug("Default group sequence for bean " +
+                      beanClass.getName() + " is: " + groupSeq);
+            }
         }
     }
-
-    /*  private Class findBeanType(AnnotatedElement element, MetaBean metabean, MetaProperty prop) {
-  Class clazz;
-  if (element instanceof Field) {
-      clazz = ReflectUtils.getBeanTypeFromField((Field) element);
-  } else if (element instanceof Method) {
-      Method m = (Method) element;
-      if (m.getParameterTypes().length == 0) {
-          clazz = ReflectUtils.getBeanTypeFromGetter(m);
-      } else {
-          clazz = ReflectUtils.getBeanTypeFromSetter(m);
-      }
-  } else {
-      clazz = ReflectUtils.getBeanType(metabean.getBeanClass(), prop.getName());
-  }
-  return clazz;
-}      */
 
     private Object getAnnotationValue(Annotation annotation, String name)
           throws IllegalAccessException, InvocationTargetException {

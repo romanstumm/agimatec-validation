@@ -19,11 +19,12 @@
 package com.agimatec.validation.jsr303.util;
 
 import javax.validation.ValidationException;
+import java.lang.reflect.Constructor;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
 /**
- * Description: <br/>
+ * Description: utility methods to perform actions with AccessController or without.<br/>
  * User: roman <br/>
  * Date: 01.10.2009 <br/>
  * Time: 16:44:09 <br/>
@@ -31,22 +32,57 @@ import java.security.PrivilegedAction;
  */
 public class SecureActions {
 
+    /**
+     * create a new instance of the class using the default no-arg constructor.
+     * perform newInstance() call with AccessController.doPrivileged() if possible.
+     *
+     * @param cls - the class (no interface, non-abstract, has accessible default no-arg-constructor)
+     * @return a new instance
+     */
     public static <T> T newInstance(final Class<T> cls) {
+        return newInstance(cls, ValidationException.class);
+    }
+
+    /**
+     * @param cls - the type to create a new instance from
+     * @param exception - type of exception to throw when newInstance() call fails
+     * @return the new instance of 'cls'
+     */
+    public static <T, E extends RuntimeException> T newInstance(final Class<T> cls,
+                                                                final Class<E> exception) {
         return run(new PrivilegedAction<T>() {
             public T run() {
                 try {
                     return cls.newInstance();
-                } catch (InstantiationException e) {
-                    throw new ValidationException("Cannot instantiate : " + cls, e);
-                } catch (IllegalAccessException e) {
-                    throw new ValidationException("Cannot instantiate " + cls, e);
-                } catch (RuntimeException e) {
-                    throw new ValidationException("Cannot instantiate " + cls, e);
+                } catch (Exception e) {
+                    throw newException("Cannot instantiate : " + cls, e);
+                }
+            }
+
+            private RuntimeException newException(String msg, Throwable e) {
+                try {
+                    Constructor<E> co =
+                          exception.getConstructor(String.class, Throwable.class);
+                    try {
+                        return co.newInstance(msg, e);
+                    } catch (Exception e1) {
+                        //noinspection ThrowableInstanceNeverThrown
+                        return new RuntimeException(msg, e); // fallback
+                    }
+                } catch (NoSuchMethodException e1) {
+                    //noinspection ThrowableInstanceNeverThrown
+                    return new RuntimeException(msg, e); // fallback
                 }
             }
         });
     }
 
+    /**
+     * perform action with AccessController.doPrivileged() if possible.
+     *
+     * @param action - the action to run
+     * @return result of running the action
+     */
     public static <T> T run(PrivilegedAction<T> action) {
         if (System.getSecurityManager() != null) {
             return AccessController.doPrivileged(action);

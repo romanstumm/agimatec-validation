@@ -30,7 +30,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
 
 /**
- * Description: example for composed constraint <br/>
+ * Description: example for composed constraint.
+ * not implemented! simple dummy implemenation for tests only! <br/>
  * User: roman.stumm <br/>
  * Date: 31.10.2008 <br/>
  * Time: 16:34:56 <br/>
@@ -55,5 +56,5 @@ public @interface FrenchZipCode {
 
     String message() default "Wrong zipcode";
 
-    String[] groups() default {};
+    Class<?>[] groups() default {};
 }

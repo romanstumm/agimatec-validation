@@ -34,7 +34,7 @@ import java.util.Set;
 /**
  * API class -
  * Description:
- * instance is able to validate bean instances (and the associated objects).
+ * instance is able to validate bean instances (and the associated object graphs).
  * concurrent, multithreaded access implementation is safe.
  * It is recommended to cache the instance.
  * <br/>
@@ -98,7 +98,11 @@ public class ClassValidator implements Validator {
 
     private ValidationException unrecoverableValidationError(RuntimeException ex,
                                                              Object object) {
-        throw new ValidationException("error during validation of " + object, ex);
+        if (ex instanceof ValidationException) {
+            throw ex; // do not wrap specific ValidationExceptions (or instances from subclasses)
+        } else {
+            throw new ValidationException("error during validation of " + object, ex);
+        }
     }
 
     /**
@@ -226,22 +230,6 @@ public class ClassValidator implements Validator {
     }
 
     /**
-     * @param clazz class type evaluated
-     * @return true if at least one constraint declaration is present for the given bean
-     *         or if one property is marked for validation cascade
-     */
-    /*public boolean hasConstraints(Class<?> clazz) {
-        MetaBean metaBean = factory.getMetaBeanManager().findForClass(clazz);
-        if (metaBean.getValidations().length > 0) return true;
-        for (MetaProperty mprop : metaBean.getProperties()) {
-            if (mprop.getValidations().length > 0) return true;
-            if (mprop.getMetaBean() != null &&
-                  mprop.getFeature(Features.Property.REF_CASCADE, true)) return true;
-        }
-        return false;
-    }*/
-
-    /**
      * Return the descriptor object describing bean constraints
      * The returned object (and associated objects including ConstraintDescriptors)
      * are immutable.
@@ -280,4 +268,20 @@ public class ClassValidator implements Validator {
     public <T> T unwrap(Class<T> type) {
         return SecureActions.newInstance(type);
     }
+
+    /**
+     * @param clazz class type evaluated
+     * @return true if at least one constraint declaration is present for the given bean
+     *         or if one property is marked for validation cascade
+     */
+    /*public boolean hasConstraints(Class<?> clazz) {
+        MetaBean metaBean = factory.getMetaBeanManager().findForClass(clazz);
+        if (metaBean.getValidations().length > 0) return true;
+        for (MetaProperty mprop : metaBean.getProperties()) {
+            if (mprop.getValidations().length > 0) return true;
+            if (mprop.getMetaBean() != null &&
+                  mprop.getFeature(Features.Property.REF_CASCADE, true)) return true;
+        }
+        return false;
+    }*/
 }

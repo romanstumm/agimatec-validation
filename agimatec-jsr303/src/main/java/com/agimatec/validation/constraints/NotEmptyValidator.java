@@ -20,6 +20,7 @@ package com.agimatec.validation.constraints;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import javax.validation.UnexpectedTypeException;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
@@ -45,7 +46,7 @@ public class NotEmptyValidator
         } else if (value instanceof String) {
             return ((String) value).length() > 0;
         } else {
-            throw new IllegalArgumentException(value + " is of unsupported type");
+            throw new UnexpectedTypeException(value + " is of unsupported type");
         }
     }
 }

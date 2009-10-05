@@ -19,7 +19,6 @@ package com.agimatec.validation.jsr303;
 import javax.validation.ConstraintViolation;
 import javax.validation.Path;
 import javax.validation.metadata.ConstraintDescriptor;
-import java.util.Set;
 
 /**
  * Description: Describe a constraint validation defect<br/>
@@ -38,7 +37,6 @@ class ConstraintViolationImpl<T> implements ConstraintViolation<T> {
     private final Object leafBean;
     private final Object value;
     private final Path propertyPath;
-    private final Set<Class<?>> groups;
     private final ConstraintDescriptor constraintDescriptor;
 
     /**
@@ -48,12 +46,10 @@ class ConstraintViolationImpl<T> implements ConstraintViolation<T> {
      * @param leafBean
      * @param propertyPath
      * @param value
-     * @param groups
      * @param constraintDescriptor
      */
     public ConstraintViolationImpl(String messageTemplate, String message, T rootBean, Object leafBean,
                                    Path propertyPath, Object value,
-                                   Set<Class<?>> groups,
                                    ConstraintDescriptor constraintDescriptor) {
         this.messageTemplate = messageTemplate;
         this.message = message;
@@ -61,7 +57,6 @@ class ConstraintViolationImpl<T> implements ConstraintViolation<T> {
         this.propertyPath = propertyPath;
         this.leafBean = leafBean;
         this.value = value;
-        this.groups = groups;
         this.constraintDescriptor = constraintDescriptor;
     }
 
@@ -101,15 +96,6 @@ class ConstraintViolationImpl<T> implements ConstraintViolation<T> {
      */
     public Path getPropertyPath() {
         return propertyPath;
-    }
-
-    /**
-     * return the list of groups that the triggered constraint applies on and witch also are
-     * within the list of groups requested for validation
-     * (directly or through a group sequence)
-     */
-    public Set<Class<?>> getGroups() {
-        return groups;
     }
 
     public ConstraintDescriptor getConstraintDescriptor() {

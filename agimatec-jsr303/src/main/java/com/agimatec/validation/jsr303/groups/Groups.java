@@ -19,10 +19,17 @@
 package com.agimatec.validation.jsr303.groups;
 
 
+import javax.validation.GroupDefinitionException;
+import javax.validation.groups.Default;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-/** defines the order in to validate groups during validation */
+/**
+ * defines the order to validate groups during validation
+ * inspiration by reference implementation (author Hardy Ferentschik)
+ * @author Roman Stumm
+ **/
 public class Groups {
 
     /** The list of single groups. */
@@ -53,5 +60,56 @@ public class Groups {
         if (!sequences.contains(groups)) {
             sequences.add(groups);
         }
+    }
+
+    public void assertDefaultGroupSequenceIsExpandable(
+          List<Class<?>> defaultGroupSequence) {
+        for (List<Group> groupList : sequences) {
+            List<Group> defaultGroupList = buildTempGroupList(defaultGroupSequence);
+            int defaultGroupIndex = containsDefaultGroupAtIndex(groupList);
+            if (defaultGroupIndex != -1) {
+                ensureExpandable(groupList, defaultGroupList, defaultGroupIndex);
+            }
+        }
+    }
+
+    private void ensureExpandable(List<Group> groupList,
+                                                        List<Group> defaultGroupList,
+                                                        int defaultGroupIndex) {
+        for (int i = 0; i < defaultGroupList.size(); i++) {
+            Group group = defaultGroupList.get(i);
+            if (group.isDefault()) {
+                continue; // the default group is the one we want to replace
+            }
+            int index = groupList.indexOf(
+                  group); // sequence contains group of default group sequence
+            if (index == -1) {
+                continue; // if group is not in the sequence
+            }
+
+            if ((i == 0 && index == defaultGroupIndex - 1) ||
+                  (i == defaultGroupList.size() - 1 && index == defaultGroupIndex + 1)) {
+                // if we are at the beginning or end of he defaultGroupSequence and the
+                // matches are either directly before or after we can continue,
+                // since we basically have two groups
+                continue;
+            }
+            throw new GroupDefinitionException("Unable to expand default group list" +
+                  defaultGroupList + " into sequence " + groupList);
+        }
+    }
+
+    private int containsDefaultGroupAtIndex(List<Group> groupList) {
+        Group defaultGroup = new Group(Default.class);
+        return groupList.indexOf(defaultGroup);
+    }
+
+    private List<Group> buildTempGroupList(List<Class<?>> defaultGroupSequence) {
+        List<Group> groupList = new ArrayList<Group>();
+        for (Class<?> clazz : defaultGroupSequence) {
+            Group g = new Group(clazz);
+            groupList.add(g);
+        }
+        return groupList;
     }
 }

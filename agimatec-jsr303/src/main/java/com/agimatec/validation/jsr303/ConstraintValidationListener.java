@@ -16,7 +16,6 @@
  */
 package com.agimatec.validation.jsr303;
 
-import com.agimatec.validation.jsr303.groups.GroupsComputer;
 import com.agimatec.validation.jsr303.util.PathImpl;
 import com.agimatec.validation.model.ValidationContext;
 import com.agimatec.validation.model.ValidationListener;
@@ -50,7 +49,6 @@ class ConstraintValidationListener<T> implements ValidationListener {
         else value = context.getPropertyValue();
 
         final Path propPath;
-        final Set<Class<?>> groups;
         final ConstraintDescriptor constraint;
         String message = reason;
         if (context instanceof GroupValidationContext) {
@@ -62,19 +60,13 @@ class ConstraintValidationListener<T> implements ValidationListener {
                 message = gcontext.getMessageResolver().interpolate(reason, null);
             }
             propPath = gcontext.getPropertyPath();
-            groups = new HashSet(1);
-            groups.add(gcontext.getCurrentGroup().getGroup());
             constraint = gcontext.getConstraintDescriptor();
         } else {
             propPath = PathImpl.fromString(context.getPropertyName());
-            groups = new HashSet(GroupsComputer.DEFAULT_GROUP_ARRAY.length);
-            for (Class<?> each : GroupsComputer.DEFAULT_GROUP_ARRAY) {
-                groups.add(each);
-            }
             constraint = null;
         }
         ConstraintViolationImpl<T> ic = new ConstraintViolationImpl<T>(reason, message,
-              rootBean, context.getBean(), propPath, value, groups, constraint);
+              rootBean, context.getBean(), propPath, value, constraint);
         constaintViolations.add(ic);
     }
 

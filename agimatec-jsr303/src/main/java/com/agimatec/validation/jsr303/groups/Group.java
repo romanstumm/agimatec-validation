@@ -18,6 +18,8 @@
  */
 package com.agimatec.validation.jsr303.groups;
 
+import javax.validation.groups.Default;
+
 /** wrap an interface that represents a single group. */
 public class Group {
     private Class<?> group;
@@ -34,6 +36,10 @@ public class Group {
     public String toString() {
         return "Group{" + "group=" + group + '}';
     }
+
+	public boolean isDefault() {
+		return Default.class.equals(group);
+	}
 
     @Override
     public boolean equals(Object o) {

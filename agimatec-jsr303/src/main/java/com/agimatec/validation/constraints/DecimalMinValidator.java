@@ -18,12 +18,12 @@
  */
 package com.agimatec.validation.constraints;
 
-import java.math.BigDecimal;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import javax.validation.UnexpectedTypeException;
 import javax.validation.ValidationException;
 import javax.validation.constraints.DecimalMin;
+import java.math.BigDecimal;
 
 /**
  * Description: validate that number-value of passed object is >= min-value<br/>
@@ -51,7 +51,7 @@ public class DecimalMinValidator implements ConstraintValidator<DecimalMin, Obje
         } else if (value instanceof Number) {
             bigDec = new BigDecimal(((Number)value).doubleValue());
         } else {
-            throw new IllegalArgumentException("Object must compatiable with BigDecimal");
+            throw new UnexpectedTypeException(value + " is of unexpected type");
         }
         return bigDec != null && bigDec.compareTo(min) != -1;
 

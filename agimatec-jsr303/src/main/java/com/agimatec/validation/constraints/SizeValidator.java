@@ -20,6 +20,7 @@ package com.agimatec.validation.constraints;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import javax.validation.UnexpectedTypeException;
 import javax.validation.ValidationException;
 import javax.validation.constraints.Size;
 import java.lang.reflect.Array;
@@ -74,7 +75,7 @@ public class SizeValidator implements ConstraintValidator<Size, Object> {
         } else if (value instanceof Array) {
             size = Array.getLength(value);
         } else {
-            throw new IllegalArgumentException("Unsupported type :" + value.getClass());
+            throw new UnexpectedTypeException(value + " is of unexpected type");
         }
         return size >= min && size <= max;
     }

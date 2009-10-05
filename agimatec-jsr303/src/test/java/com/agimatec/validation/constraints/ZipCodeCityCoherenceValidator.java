@@ -18,23 +18,23 @@
  */
 package com.agimatec.validation.constraints;
 
-import com.agimatec.validation.jsr303.example.Address;
+import com.agimatec.validation.jsr303.example.ZipCodeCityCarrier;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * Description: Class not implemented! <br/>
+ * Description: Class not implemented! simple dummy implemenation for tests only! <br/>
  * User: roman.stumm <br/>
  * Date: 01.04.2008 <br/>
  * Time: 11:45:22 <br/>
  */
 public class ZipCodeCityCoherenceValidator
-      implements ConstraintValidator<ZipCodeCityCoherence, Address> {
+      implements ConstraintValidator<ZipCodeCityCoherence, ZipCodeCityCarrier> {
     public void initialize(ZipCodeCityCoherence constraintAnnotation) {
     }
 
-    public boolean isValid(Address adr, ConstraintValidatorContext context) {
+    public boolean isValid(ZipCodeCityCarrier adr, ConstraintValidatorContext context) {
         boolean r = true;
         if ("error".equals(adr.getZipCode())) {
             context.disableDefaultError();

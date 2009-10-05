@@ -27,6 +27,7 @@ import java.util.*;
 /**
  * Description: compute group order, based on the hibernate validator algorithm
  * to guarantee compatibility with interpretation of spec by reference implementation <br/>
+ * Implementation is thread-safe.
  * User: roman <br/>
  * Date: 09.04.2009 <br/>
  * Time: 09:15:50 <br/>
@@ -36,9 +37,11 @@ public class GroupsComputer {
     /** The default group array used in case any of the validate methods is called without a group. */
     public static final Class<?>[] DEFAULT_GROUP_ARRAY = new Class<?>[]{Default.class};
 
-
+    /**
+     * caching resolved groups in a thread-safe map.
+     */
     private final Map<Class<?>, List<Group>> resolvedSequences =
-          new HashMap<Class<?>, List<Group>>();
+          Collections.synchronizedMap(new HashMap<Class<?>, List<Group>>());
 
     public Groups computeGroups(Class<?>[] groups) {
         if (groups == null) {

@@ -8,7 +8,7 @@
 
   * For things to be done refer to FeatureRequests.
 
-  * The specification is stable now (since Oct 2010)
+  * The specification is stable now (since Oct 2009)
 
   * Please verify that the version of validation-api.jar you are using
   is compatible with agimatec-validation.jar

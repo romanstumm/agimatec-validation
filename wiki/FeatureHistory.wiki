@@ -7,9 +7,8 @@ The sources in svn are probably newer than the release you find in the "Download
 
 Working on new release 0.9.4 (October 2009)
 -------------------------------------------
-  * XML deployment descriptor [in progress]
-  * Payload [in progress]
-  * various improvements and fixes required by the spec [in progress, see Issues]
+  * XML deployment descriptor 
+  * various improvements and fixes required by the spec, see Issues
 
 1st Oct 2009
 ------------

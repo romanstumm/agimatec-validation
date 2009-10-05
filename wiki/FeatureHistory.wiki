@@ -13,10 +13,10 @@ Working on new release 0.9.4 (October 2009)
 1st Oct 2009
 ------------
   * released jars, version 0.9.3, compilable to validation-api 1.0.CR5
-  * ValidatorContext: ValidatorFactory.usingContext() [done]
-  * TraversableResolver [done]
-  * Path, Node [done]
-  * compiles with new validation-api 1.0.CR5 (or newer) [done]
+  * ValidatorContext: ValidatorFactory.usingContext()
+  * TraversableResolver
+  * Path, Node 
+  * compiles with new validation-api 1.0.CR5 (or newer) 
 
 20.07.2009
 ----------

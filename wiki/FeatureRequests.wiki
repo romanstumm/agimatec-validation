@@ -1,19 +1,42 @@
 #summary TO DOs and missing features
 
 = not-yet-implemented features for JSR 303 support = 
- * @OverridesParameter
- * TraversableResolver
+ * @OverridesAttributes (uniquely identified by constraint, name, constraintIndex)
+ * ~~TraversableResolver~~
  * Method-level validation (currently not implemented in JSR303, exists as proposal only)
- * JSR-303 XML mappings, but proprietary agimatec-validation-XML supported
- * need to improve integration between JSR303 annotations and agimatec-metadata validations. 
+ * JSR-303 XML mappings (xml deployment descriptor)
+ * improve integration between JSR303 annotations and agimatec-metadata validations. 
  * type-safety check when call a constraint-validator implementation's isValid() method
- * use of ConstraintViolationException
- * javax.validation.constraints.[plural forms] not tested
- * difference between ConstraintViolation.getMessageTemplate() and getMessage()
- * ValidatorFactory.usingContext()
+ * ~~ConstraintViolation.getMessageTemplate() and getMessage()~~
+ * ~~ValidatorFactory.usingContext()~~
+ * Object graph validation: Set, Map (value) validation not yet supported
+   (currently only Array and Collection are supported, spec: _Any object implementing java.lang.Iterable must be supported._)
+
+== Exceptions to support properly ==
+ * UnexpectedTypeException – invalid property type 
+   * (spec: _Applying a constraint annotation to an incompatible type will raise an UnexpectedTypeException._)
+   * verifyResolveWasUnique: No validator could be found for type
+   * verifyResolveWasUnique: There are multiple validators which could validate...
+ * ConstraintDefinitionException – illegal constraint
+   * OverrideAttributes: overriding type of a composite constraint must be identical to the overridden one.
+   * OverrideAttributes: Overridden constraint does not define an attribute with name...
+   * assertPayloadParameterExists
+   * assertGroupsParameterExists
+   * assertMessageParameterExists
+   * restrictions to check, assertNoParameterStartsWithValid (spec: _The annotation element names message, groups and payload are considered reserved names; annotation elements starting with valid are not all._)
+ * ConstraintDeclarationException – invalid constraint argument
+ * GroupDefinitionException – cyclic graph, illegal override
+
+== Tests to implement ==
+  * spec: _2.2. Applying multiple constraints of the same type_
+  * javax.validation.constraints.[plural forms] 
+  * 
 
 = Other TO DOs =
   * Improve interaction between annotation based validation (jsr 303) and non-annotation based validations (agimatec)
   * More tests (ongoing)
   * Tutorial / real-world example
   * Clarify access to overwritten getter-methods (private/protected/public)
+
+= Additional features =
+  * proprietary agimatec-validation-XML 

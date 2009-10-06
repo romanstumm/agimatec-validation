@@ -19,6 +19,7 @@
 package com.agimatec.validation.constraints;
 
 import javax.validation.Constraint;
+import javax.validation.Payload;
 import java.lang.annotation.Documented;
 import static java.lang.annotation.ElementType.*;
 import java.lang.annotation.Retention;
@@ -46,4 +47,6 @@ public @interface Email {
     Class<?>[] groups() default {};
 
     String message() default "{com.agimatec.validation.constraints.Email.message}";
+
+    Class<? extends Payload>[] payload() default { };
 }

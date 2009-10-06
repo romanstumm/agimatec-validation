@@ -66,7 +66,7 @@ public class PayloadTest extends TestCase {
         }
 
         @NotNull(message = "the city is mandatory", payload = Severity.Error.class)
-        String getCity() {
+        public String getCity() {
             return city;
         }
     }

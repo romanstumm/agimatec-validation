@@ -20,6 +20,7 @@ package com.agimatec.validation.constraints;
 
 import javax.validation.Constraint;
 import javax.validation.OverridesAttribute;
+import javax.validation.Payload;
 import javax.validation.ReportAsSingleViolation;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -57,4 +58,6 @@ public @interface FrenchZipCode {
     String message() default "Wrong zipcode";
 
     Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default { };
 }

@@ -86,7 +86,7 @@ public class CollectionValidationTest extends TestCase {
         assertNotNull(TestUtils.getViolation(violations, "addresses[2].addressline1"));
     }
 
-    public void testValidateMap() {
+    public void testValidateMapAndRedefinedDefaultGroupOnNonRootBean() {
         Library lib = new Library();
         lib.setLibraryName("Leibnitz Bibliothek");
 

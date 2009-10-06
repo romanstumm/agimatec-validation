@@ -20,16 +20,18 @@ package com.agimatec.validation.jsr303.example;
 
 import com.agimatec.validation.constraints.NotEmpty;
 
+import javax.validation.GroupSequence;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import java.util.List;
 
+@GroupSequence({First.class, Author.class, Last.class})
 public class Author {
-    @NotEmpty
+    @NotEmpty(groups = Last.class)
     private String firstName;
-    @NotEmpty
+    @NotEmpty(groups = First.class)
     private String lastName;
-    @Size(max = 40)
+    @Size(max = 40, groups = First.class)
     private String company;
 
     @Valid

@@ -35,10 +35,13 @@ import java.util.List;
  * Copyright: Agimatec GmbH
  */
 public class ConstraintValidatorContextImpl implements ConstraintValidatorContext {
+    private static final String ANNOTATION_MESSAGE = "message";
     final List<ValidationResults.Error> errorMessages =
           new LinkedList<ValidationResults.Error>();
+
     private final ConstraintValidation constraintDescriptor;
     private final GroupValidationContext validationContext;
+
     private boolean defaultDisabled;
 
     public ConstraintValidatorContextImpl(GroupValidationContext validationContext,
@@ -52,7 +55,7 @@ public class ConstraintValidatorContextImpl implements ConstraintValidatorContex
     }
 
     public String getDefaultErrorMessageTemplate() {
-        return (String) constraintDescriptor.getAttributes().get("message");
+        return (String) constraintDescriptor.getAttributes().get(ANNOTATION_MESSAGE);
     }
 
     public ErrorBuilder buildErrorWithMessageTemplate(String messageTemplate) {

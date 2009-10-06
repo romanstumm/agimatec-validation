@@ -273,4 +273,8 @@ public class BeanValidationContext implements ValidationContext {
         // do nothing
     }
 
+    public void setCurrentKey(Object key) {
+        // do nothing
+    }
+
 }

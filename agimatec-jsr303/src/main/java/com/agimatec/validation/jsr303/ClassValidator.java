@@ -62,25 +62,26 @@ public class ClassValidator implements Validator {
      * @throws javax.validation.ValidationException
      *          if a non recoverable error happens during the validation process
      */
-    public <T> Set<ConstraintViolation<T>> validate(T object, Class<?>... groups) {
+    public <T> Set<ConstraintViolation<T>> validate(T object, Class<?>... groupArray) {
         if (object == null) throw new IllegalArgumentException("cannot validate null");
         try {
-            MetaBean metaBean = context.getFactory().getMetaBeanManager()
+            final MetaBean metaBean = context.getFactory().getMetaBeanManager()
                   .findForClass(object.getClass());
-            GroupValidationContext context = createContext(metaBean, object, groups);
-            ConstraintValidationListener result =
+            final GroupValidationContext context = createContext(metaBean, object, groupArray);
+            final ConstraintValidationListener result =
                   (ConstraintValidationListener) context.getListener();
-            Groups sequence = context.getGroups();
-            // enhancement: need to test and fix default group sequence behavior on non-main-beans
+            final Groups groups = context.getGroups();
+            // TODO RSt - need to fix default group sequence behavior on non-root-beans
             // 1. process groups
-            for (Group current : sequence.getGroups()) {
+            for (Group current : groups.getGroups()) {
                 context.setCurrentGroup(current);
-                List<Group> defaultSequence = expandDefaultGroup(metaBean, context);
-                if (defaultSequence != null) {
-                    for(Group seqGroup : defaultSequence) {
+                List<Group> defaultGroups = expandDefaultGroup(metaBean, context);
+                if (defaultGroups != null) {
+                    for(Group each : defaultGroups) {
                         context.resetValidated();
-                        context.setCurrentGroup(seqGroup);
+                        context.setCurrentGroup(each);
                         this.context.getBeanValidator().validateContext(context);
+                        // continue validation, even if errors already found: if (!result.isEmpty())
                     }
                 } else {
                     context.resetValidated();
@@ -88,7 +89,7 @@ public class ClassValidator implements Validator {
                 }
             }
             // 2. process sequences
-            for (List<Group> eachSeq : sequence.getSequences()) {
+            for (List<Group> eachSeq : groups.getSequences()) {
                 for (Group current : eachSeq) {
                     context.resetValidated();
                     context.setCurrentGroup(current);

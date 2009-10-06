@@ -18,30 +18,75 @@
  */
 package com.agimatec.validation.jsr303;
 
+import com.agimatec.validation.jsr303.util.TestUtils;
 import junit.framework.TestCase;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Payload;
+import javax.validation.Validator;
+import javax.validation.constraints.NotNull;
+import java.util.Set;
+
 /**
- * Description: TODO RSt - nyi<br/>
+ * Description: test that payload information can be retrieved
+ * from error reports via the ConstraintDescriptor either accessed
+ * through the ConstraintViolation objects<br/>
  * User: roman <br/>
  * Date: 05.10.2009 <br/>
  * Time: 09:59:52 <br/>
  * Copyright: Agimatec GmbH
  */
 public class PayloadTest extends TestCase {
-    /*
-    package com.acme.severity;
+    private Validator validator;
 
-    public class Severity {
-        public static class Info implements Payload {};
-        public static class Error implements Payload {};
+    protected void setUp() {
+        validator = AgimatecValidatorFactory.getDefault().getValidator();
     }
 
-    public class Address {
-        @NotNull(message="would be nice if we had one", payload=Severity.Info.class)
-        public String getZipCode() {...}
+    static class Severity {
+        static class Info implements Payload {
+        }
 
-        @NotNull(message="the city is mandatory", payload=Severity.Error.class)
-        String getCity() {...}
+        static class Error implements Payload {
+        }
     }
-     */
+
+    static class Address {
+        private String zipCode;
+        private String city;
+
+        Address(String zipCode, String city) {
+            this.zipCode = zipCode;
+            this.city = city;
+        }
+
+        @NotNull(message = "would be nice if we had one", payload = Severity.Info.class)
+        public String getZipCode() {
+            return zipCode;
+        }
+
+        @NotNull(message = "the city is mandatory", payload = Severity.Error.class)
+        String getCity() {
+            return city;
+        }
+    }
+
+    public void testPayload() {
+        Set<ConstraintViolation<Address>> violations;
+        Address address = new Address(null, null);
+        violations = validator.validate(address);
+        assertEquals(2, violations.size());
+        ConstraintViolation vio;
+        vio = TestUtils.getViolation(violations, "zipCode");
+        assertNotNull(vio);
+        assertEquals(1, vio.getConstraintDescriptor().getPayload().size());
+        assertTrue(
+              vio.getConstraintDescriptor().getPayload().contains(Severity.Info.class));
+
+        vio = TestUtils.getViolation(violations, "city");
+        assertNotNull(vio);
+        assertEquals(1, vio.getConstraintDescriptor().getPayload().size());
+        assertTrue(
+              vio.getConstraintDescriptor().getPayload().contains(Severity.Error.class));
+    }
 }

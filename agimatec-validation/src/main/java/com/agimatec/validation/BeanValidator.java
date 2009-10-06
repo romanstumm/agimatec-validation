@@ -5,6 +5,8 @@ import com.agimatec.validation.model.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Description: Top-Level API-class to validate objects or object-trees.
@@ -26,7 +28,8 @@ public class BeanValidator {
      * @return results - validation results found
      */
     public ValidationResults validate(Object bean) {
-        MetaBean metaBean = MetaBeanManagerFactory.getFinder().findForClass(bean.getClass());
+        MetaBean metaBean =
+              MetaBeanManagerFactory.getFinder().findForClass(bean.getClass());
         return validate(bean, metaBean);
     }
 
@@ -91,10 +94,11 @@ public class BeanValidator {
             } else {
                 beanClass = parameter.getClass();
             }
-            context.setBean(parameter, MetaBeanManagerFactory.getFinder().findForClass(beanClass));
+            context.setBean(parameter,
+                  MetaBeanManagerFactory.getFinder().findForClass(beanClass));
         } else {
             context.setBean(parameter,
-                    MetaBeanManagerFactory.getFinder().findForId(validate.value()));
+                  MetaBeanManagerFactory.getFinder().findForId(validate.value()));
         }
         return true;
     }
@@ -152,57 +156,82 @@ public class BeanValidator {
      */
     public void validateContext(ValidationContext context) {
         if (context.getBean() != null) {
-            DynamicMetaBean dynamic = context.getMetaBean() instanceof DynamicMetaBean ?
-                    (DynamicMetaBean) context.getMetaBean() : null;
-            // TODO RSt - spec: Any object implementing java.lang.Iterable is supported
-//            if(context.getBean() instanceof Iterable) {
-//                Iterator it = ((Iterable) context.getBean()).iterator();
-//                int index = 0;
-//                // spec: Each object provided by the iterator is validated.
-//                // spec: For Map, the value of each Map.Entry is validated (key is not validated).
-//                while(it.hasNext()) {
-//                    Object each = it.next();
-//                    context.setCurrentIndex(index++);
-//                    if (each == null) continue; // enhancement: throw IllegalArgumentException? (=> spec)
-//                    if (dynamic != null) {
-//                        context.setBean(each, dynamic.resolveMetaBean(each));
-//                    } else {
-//                        context.setBean(each);
-//                    }
-//                    validateBeanNet(context);
-//                }
-//            }
-
-            if (context.getBean() instanceof Collection) { // to Many
-                int index = 0;
-                for (Object each : ((Collection) context.getBean())) {
-                    context.setCurrentIndex(index++);
-                    if (each == null) continue; // or throw IllegalArgumentException? (=> spec)
-                    if (dynamic != null) {
-                        context.setBean(each, dynamic.resolveMetaBean(each));
-                    } else {
-                        context.setBean(each);
-                    }
-                    validateBeanNet(context);
-                }
+            if (context.getBean() instanceof Map) {
+                validateMapInContext(context);
+            } else if (context.getBean() instanceof Iterable) {
+                validateIteratableInContext(context);
             } else if (context.getBean() instanceof Object[]) {
-                int index = 0;
-                for (Object each : ((Object[]) context.getBean())) {
-                    context.setCurrentIndex(index++);
-                    if (each == null) continue; // or throw IllegalArgumentException? (=> spec)
-                    if (dynamic != null) {
-                        context.setBean(each, dynamic.resolveMetaBean(each));
-                    } else {
-                        context.setBean(each);
-                    }
-                    validateBeanNet(context);
-                }
+                validateArrayInContext(context);
             } else { // to One
-                if (dynamic != null) {
-                    context.setMetaBean(dynamic.resolveMetaBean(context.getBean()));
-                }
-                validateBeanNet(context);
+                validateBeanInContext(context);
             }
+        }
+    }
+
+    private void validateBeanInContext(ValidationContext context) {
+        if (getDynamicMetaBean(context) != null) {
+            context.setMetaBean(
+                  getDynamicMetaBean(context).resolveMetaBean(context.getBean()));
+        }
+        validateBeanNet(context);
+    }
+
+    private void validateArrayInContext(ValidationContext context) {
+        int index = 0;
+        DynamicMetaBean dyn = getDynamicMetaBean(context);
+        for (Object each : ((Object[]) context.getBean())) {
+            context.setCurrentIndex(index++);
+            if (each == null) continue; // or throw IllegalArgumentException? (=> spec)
+            if (dyn != null) {
+                context.setBean(each, dyn.resolveMetaBean(each));
+            } else {
+                context.setBean(each);
+            }
+            validateBeanNet(context);
+        }
+    }
+
+
+    private DynamicMetaBean getDynamicMetaBean(ValidationContext context) {
+        return context.getMetaBean() instanceof DynamicMetaBean ?
+              (DynamicMetaBean) context.getMetaBean() : null;
+    }
+
+    /** Any object implementing java.lang.Iterable is supported */
+    private void validateIteratableInContext(ValidationContext context) {
+        Iterator it = ((Iterable) context.getBean()).iterator();
+        int index = 0;
+        // jsr303 spec: Each object provided by the iterator is validated.
+        final DynamicMetaBean dyn = getDynamicMetaBean(context);
+        while (it.hasNext()) { // to Many
+            Object each = it.next();
+            context.setCurrentIndex(index++);
+            if (each == null)
+                continue; // enhancement: throw IllegalArgumentException? (=> spec)
+            if (dyn != null) {
+                context.setBean(each, dyn.resolveMetaBean(each));
+            } else {
+                context.setBean(each);
+            }
+            validateBeanNet(context);
+        }
+    }
+
+    private void validateMapInContext(ValidationContext context) {
+        // jsr303 spec: For Map, the value of each Map.Entry is validated (key is not validated).
+        Iterator<Map.Entry> it = ((Map) context.getBean()).entrySet().iterator();
+        final DynamicMetaBean dyn = getDynamicMetaBean(context);
+        while (it.hasNext()) { // to Many
+            Map.Entry entry = it.next();
+            context.setCurrentKey(entry.getKey());
+            if (entry.getValue() == null)
+                continue; // enhancement: throw IllegalArgumentException? (=> spec)
+            if (dyn != null) {
+                context.setBean(entry.getValue(), dyn.resolveMetaBean(entry.getValue()));
+            } else {
+                context.setBean(entry.getValue());
+            }
+            validateBeanNet(context);
         }
     }
 
@@ -214,7 +243,7 @@ public class BeanValidator {
             final MetaBean mbean = context.getMetaBean();
             for (MetaProperty prop : context.getMetaBean().getProperties()) {
                 if (prop.getMetaBean() != null ||
-                        prop.getFeature(Features.Property.REF_CASCADE, false)) {
+                      prop.getFeature(Features.Property.REF_CASCADE, false)) {
                     // modify context state for relationship-target bean
                     context.moveDown(prop);
                     validateContext(context);

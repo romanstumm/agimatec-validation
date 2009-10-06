@@ -20,6 +20,7 @@ package com.agimatec.validation.jsr303;
 
 import com.agimatec.validation.constraints.NotNullValidator;
 import com.agimatec.validation.jsr303.example.*;
+import com.agimatec.validation.jsr303.util.TestUtils;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -198,11 +199,12 @@ public class ValidationTest extends TestCase {
     }
 
     /**
+     * Example 2.14. Using the fluent API to build custom constraint violations.
      * test that:
      * the {@link com.agimatec.validation.constraints.ZipCodeCityCoherenceValidator} adds
      * custom messages to the context and suppresses the default message
      */
-    public void testContextMessages() {
+    public void testConstraintValidatorContextFluentAPI() {
         Address ad = new Address();
         ad.setCity("error");
         ad.setZipCode("error");
@@ -215,6 +217,8 @@ public class ValidationTest extends TestCase {
         for (ConstraintViolation each : violations) {
             Assert.assertTrue(each.getMessage().endsWith(" not OK"));
         }
+        assertNotNull(TestUtils.getViolation(violations, "city"));
+        assertNotNull(TestUtils.getViolation(violations, ""));
     }
 
     public void testValidateNestedPropertyPath() throws InvocationTargetException,

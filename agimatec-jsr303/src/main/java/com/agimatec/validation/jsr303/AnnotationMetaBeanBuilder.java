@@ -19,6 +19,7 @@
 package com.agimatec.validation.jsr303;
 
 import com.agimatec.validation.MetaBeanBuilder;
+import com.agimatec.validation.jsr303.groups.Group;
 import com.agimatec.validation.model.Features;
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.MetaProperty;
@@ -274,25 +275,25 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
 
     private void processGroupSequence(Class<?> beanClass, MetaBean metabean) {
         GroupSequence annotation = beanClass.getAnnotation(GroupSequence.class);
-        List<Class<?>> groupSeq = metabean.getFeature(Jsr303Features.Bean.GROUP_SEQ);
+        List<Group> groupSeq = metabean.getFeature(Jsr303Features.Bean.GROUP_SEQUENCE);
         if (groupSeq == null) {
             groupSeq = new ArrayList(annotation == null ? 1 : annotation.value().length);
-            metabean.putFeature(Jsr303Features.Bean.GROUP_SEQ, groupSeq);
+            metabean.putFeature(Jsr303Features.Bean.GROUP_SEQUENCE, groupSeq);
         }
         if (annotation == null) {
-            groupSeq.add(Default.class);
+            groupSeq.add(Group.DEFAULT);
         } else {
             boolean containsDefault = false;
-            for (Class<?> group : annotation.value()) {
-                if (group.getName().equals(beanClass.getName())) {
-                    groupSeq.add(Default.class);
+            for (Class<?> groupClass : annotation.value()) {
+                if (groupClass.getName().equals(beanClass.getName())) {
+                    groupSeq.add(Group.DEFAULT);
                     containsDefault = true;
-                } else if (group.getName().equals(Default.class.getName())) {
+                } else if (groupClass.getName().equals(Default.class.getName())) {
                     throw new GroupDefinitionException(
                           "'Default.class' must not appear in @GroupSequence! Use '" +
                                 beanClass.getSimpleName() + ".class' instead.");
                 } else {
-                    groupSeq.add(group);
+                    groupSeq.add(new Group(groupClass));
                 }
             }
             if (!containsDefault) {

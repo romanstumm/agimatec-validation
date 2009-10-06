@@ -20,9 +20,17 @@ package com.agimatec.validation.jsr303.groups;
 
 import javax.validation.groups.Default;
 
-/** wrap an interface that represents a single group. */
+/**
+ * immutable object -
+ * wrap an interface that represents a single group.
+ */
 public class Group {
-    private Class<?> group;
+    /**
+     * the Default Group
+     */
+    public static final Group DEFAULT = new Group(Default.class);
+    
+    private final Class<?> group;
 
     public Group(Class<?> group) {
         this.group = group;

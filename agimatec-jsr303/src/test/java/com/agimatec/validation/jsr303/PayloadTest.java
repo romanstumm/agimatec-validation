@@ -18,6 +18,8 @@
  */
 package com.agimatec.validation.jsr303;
 
+import junit.framework.TestCase;
+
 /**
  * Description: TODO RSt - nyi<br/>
  * User: roman <br/>
@@ -25,7 +27,7 @@ package com.agimatec.validation.jsr303;
  * Time: 09:59:52 <br/>
  * Copyright: Agimatec GmbH
  */
-public class PayloadTest {
+public class PayloadTest extends TestCase {
     /*
     package com.acme.severity;
 

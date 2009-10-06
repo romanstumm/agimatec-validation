@@ -18,6 +18,8 @@
  */
 package com.agimatec.validation.jsr303;
 
+import junit.framework.TestCase;
+
 /**
  * Description: TODO RSt - nyi<br/>
  * User: roman <br/>
@@ -25,7 +27,7 @@ package com.agimatec.validation.jsr303;
  * Time: 10:56:12 <br/>
  * Copyright: Agimatec GmbH
  */
-public class ConstraintValidatorContextFluentAPITest {
+public class ConstraintValidatorContextFluentAPITest extends TestCase {
     /*
 Example 2.14. Using the fluent API to build custom constraint violations
 

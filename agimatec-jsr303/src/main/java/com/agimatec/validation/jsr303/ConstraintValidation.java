@@ -21,12 +21,15 @@ package com.agimatec.validation.jsr303;
 import com.agimatec.validation.BeanValidationContext;
 import com.agimatec.validation.ValidationResults;
 import com.agimatec.validation.jsr303.groups.GroupsComputer;
-import com.agimatec.validation.jsr303.util.PathImpl;
 import com.agimatec.validation.jsr303.util.NodeImpl;
+import com.agimatec.validation.jsr303.util.PathImpl;
 import com.agimatec.validation.model.Validation;
 import com.agimatec.validation.model.ValidationContext;
 
-import javax.validation.*;
+import javax.validation.ConstraintValidator;
+import javax.validation.Payload;
+import javax.validation.ReportAsSingleViolation;
+import javax.validation.ValidationException;
 import javax.validation.metadata.ConstraintDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
@@ -119,7 +122,7 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
             }
             // stop validating when already failed and ReportAsSingleInvalidConstraint = true ?
             if (!listener.getConstaintViolations().isEmpty()) {
-                // enhancement: how should the composed constraint error report look like?
+                // TODO RSt - how should the composed constraint error report look like?
                 ConstraintValidatorContextImpl jsrContext =
                       new ConstraintValidatorContextImpl(context, this);
                 addErrors(context, jsrContext); // add defaultErrorMessage only*/

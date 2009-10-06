@@ -28,9 +28,9 @@ public class DefaultGroupSequenceTest extends TestCase {
         chain.insertSequence(sequence);
 
         // create test default sequence
-        List<Class<?>> defaultSequence = new ArrayList<Class<?>>();
-        defaultSequence.add(Default.class);
-        defaultSequence.add(GroupA.class);
+        List<Group> defaultSequence = new ArrayList<Group>();
+        defaultSequence.add(Group.DEFAULT);
+        defaultSequence.add(new Group(GroupA.class));
         try {
             chain.assertDefaultGroupSequenceIsExpandable(defaultSequence);
             fail();
@@ -39,8 +39,8 @@ public class DefaultGroupSequenceTest extends TestCase {
         }
 
         defaultSequence.clear();
-        defaultSequence.add(GroupA.class);
-        defaultSequence.add(Default.class);
+        defaultSequence.add(new Group(GroupA.class));
+        defaultSequence.add(new Group(Default.class));
         try {
             chain.assertDefaultGroupSequenceIsExpandable(defaultSequence);
             fail();
@@ -49,8 +49,8 @@ public class DefaultGroupSequenceTest extends TestCase {
         }
 
         defaultSequence.clear();
-        defaultSequence.add(Default.class);
-        defaultSequence.add(GroupC.class);
+        defaultSequence.add(Group.DEFAULT);
+        defaultSequence.add(new Group(GroupC.class));
         try {
             chain.assertDefaultGroupSequenceIsExpandable(defaultSequence);
             fail();
@@ -59,8 +59,8 @@ public class DefaultGroupSequenceTest extends TestCase {
         }
 
         defaultSequence.clear();
-        defaultSequence.add(GroupC.class);
-        defaultSequence.add(Default.class);
+        defaultSequence.add(new Group(GroupC.class));
+        defaultSequence.add(Group.DEFAULT);
         chain.assertDefaultGroupSequenceIsExpandable(defaultSequence);
     }
 
@@ -81,15 +81,15 @@ public class DefaultGroupSequenceTest extends TestCase {
         chain.insertSequence(sequence);
 
         // create test default sequence
-        List<Class<?>> defaultSequence = new ArrayList<Class<?>>();
-        defaultSequence.add(Default.class);
-        defaultSequence.add(GroupA.class);
+        List<Group> defaultSequence = new ArrayList<Group>();
+        defaultSequence.add(Group.DEFAULT);
+        defaultSequence.add(new Group(GroupA.class));
         chain.assertDefaultGroupSequenceIsExpandable(defaultSequence);
 
 
         defaultSequence.clear();
-        defaultSequence.add(GroupA.class);
-        defaultSequence.add(Default.class);
+        defaultSequence.add(new Group(GroupA.class));
+        defaultSequence.add(Group.DEFAULT);
         try {
             chain.assertDefaultGroupSequenceIsExpandable(defaultSequence);
             fail();
@@ -98,8 +98,8 @@ public class DefaultGroupSequenceTest extends TestCase {
         }
 
         defaultSequence.clear();
-        defaultSequence.add(Default.class);
-        defaultSequence.add(GroupC.class);
+        defaultSequence.add(Group.DEFAULT);
+        defaultSequence.add(new Group(GroupC.class));
         try {
             chain.assertDefaultGroupSequenceIsExpandable(defaultSequence);
             fail();
@@ -108,8 +108,8 @@ public class DefaultGroupSequenceTest extends TestCase {
         }
 
         defaultSequence.clear();
-        defaultSequence.add(GroupC.class);
-        defaultSequence.add(Default.class);
+        defaultSequence.add(new Group(GroupC.class));
+        defaultSequence.add(Group.DEFAULT);
         try {
             chain.assertDefaultGroupSequenceIsExpandable(defaultSequence);
             fail();

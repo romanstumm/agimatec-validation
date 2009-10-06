@@ -27,7 +27,6 @@ import junit.framework.TestCase;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import javax.validation.groups.Default;
 import java.util.List;
 import java.util.Set;
 
@@ -42,39 +41,39 @@ public class GroupSequenceTest extends TestCase {
     public void testGroupSequence1() {
         MetaBean metaBean = AgimatecValidatorFactory.getDefault().getMetaBeanManager()
               .findForClass(GInterface1.class);
-        List<Class> gseq = metaBean.getFeature(Jsr303Features.Bean.GROUP_SEQ);
+        List<Group> gseq = metaBean.getFeature(Jsr303Features.Bean.GROUP_SEQUENCE);
         Assert.assertNotNull(gseq);
         Assert.assertEquals(1, gseq.size());
-        Assert.assertEquals(Default.class, gseq.get(0));
+        Assert.assertEquals(Group.DEFAULT, gseq.get(0));
     }
 
     public void testGroupSequence2() {
         MetaBean metaBean = AgimatecValidatorFactory.getDefault().getMetaBeanManager()
               .findForClass(GClass1.class);
-        List<Class> gseq = metaBean.getFeature(Jsr303Features.Bean.GROUP_SEQ);
+        List<Group> gseq = metaBean.getFeature(Jsr303Features.Bean.GROUP_SEQUENCE);
         Assert.assertNotNull(gseq);
         Assert.assertEquals(1, gseq.size());
-        Assert.assertEquals(Default.class, gseq.get(0));
+        Assert.assertEquals(Group.DEFAULT, gseq.get(0));
     }
 
     public void testGroupSequence3() {
         MetaBean metaBean = AgimatecValidatorFactory.getDefault().getMetaBeanManager()
               .findForClass(GClass2.class);
-        List<Class> gseq = metaBean.getFeature(Jsr303Features.Bean.GROUP_SEQ);
+        List<Group> gseq = metaBean.getFeature(Jsr303Features.Bean.GROUP_SEQUENCE);
         Assert.assertNotNull(gseq);
         Assert.assertEquals(2, gseq.size());
-        Assert.assertEquals(GClass1.class, gseq.get(0));
-        Assert.assertEquals(Default.class, gseq.get(1));
+        Assert.assertEquals(new Group(GClass1.class), gseq.get(0));
+        Assert.assertEquals(Group.DEFAULT, gseq.get(1));
     }
 
     public void testGroupSequence4() {
         MetaBean metaBean = AgimatecValidatorFactory.getDefault().getMetaBeanManager()
               .findForClass(GClass3.class);
-        List<Class> gseq = metaBean.getFeature(Jsr303Features.Bean.GROUP_SEQ);
+        List<Group> gseq = metaBean.getFeature(Jsr303Features.Bean.GROUP_SEQUENCE);
         Assert.assertNotNull(gseq);
         Assert.assertEquals(2, gseq.size());
-        Assert.assertEquals(Default.class, gseq.get(0));
-        Assert.assertEquals(GClass1.class, gseq.get(1));
+        Assert.assertEquals(Group.DEFAULT, gseq.get(0));
+        Assert.assertEquals(new Group(GClass1.class), gseq.get(1));
     }
 
     public void testGroups() {
@@ -165,11 +164,7 @@ public class GroupSequenceTest extends TestCase {
 
         constraintViolations = validator.validate(book, Book.All.class);
         assertEquals(1, constraintViolations.size());
-
     }
-
-    // enhancement: test Redefining the Default group for a class (spec. chapter 3.4.3)
-    
 
     public Validator getValidator() {
         return AgimatecValidatorFactory.getDefault().getValidator();

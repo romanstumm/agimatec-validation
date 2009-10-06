@@ -38,15 +38,18 @@ public interface Jsr303Features {
     }
 
     interface Bean extends Features.Bean {
-        /** INFO: List of Class for {@link javax.validation.GroupSequence#value()} */
-        String GROUP_SEQ = "GroupSequence";
+        /**
+         * INFO: List of Group(Class) for {@link javax.validation.GroupSequence#value()}
+         * (redefined default group)
+         **/
+        String GROUP_SEQUENCE = "GroupSequence";
 
         /** INFO: cached sortied Array with ValidationEntries */
-        String ValidationSequence = "ValidationSequence";
+        String VALIDATION_SEQUENCE = "ValidationSequence";
 
         /**
          * INFO: cached BeanDescriptorImpl of the bean
          */
-        String BeanDescriptor = "BeanDescriptor";
+        String BEAN_DESCRIPTOR = "BeanDescriptor";
     }
 }

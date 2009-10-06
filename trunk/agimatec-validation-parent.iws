@@ -16,29 +16,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/groups/CollectionValidationTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/ComposedConstraintsTest.java" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/ComposedConstraintsTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-validation/src/main/java/com/agimatec/validation/BeanValidationContext.java" afterPath="$PROJECT_DIR$/agimatec-validation/src/main/java/com/agimatec/validation/BeanValidationContext.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-validation/src/main/java/com/agimatec/validation/BeanValidator.java" afterPath="$PROJECT_DIR$/agimatec-validation/src/main/java/com/agimatec/validation/BeanValidator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/ValidationTest.java" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/ValidationTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-validation-parent.iws" afterPath="$PROJECT_DIR$/agimatec-validation-parent.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-validation/src/main/java/com/agimatec/validation/model/ValidationContext.java" afterPath="$PROJECT_DIR$/agimatec-validation/src/main/java/com/agimatec/validation/model/ValidationContext.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/ConstraintValidatorContextFluentAPITest.java" afterPath="" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/example/Library.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/groups/implicit/ImplicitGroupingTest.java" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/groups/implicit/ImplicitGroupingTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/example/Author.java" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/example/Author.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-validation-parent.ipr" afterPath="$PROJECT_DIR$/agimatec-validation-parent.ipr" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/ClassValidator.java" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/ClassValidator.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/example/Employee.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/OverwrittenAttributesTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/MultiValuedConstraintsTest.java" afterPath="" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/constraints/AgimatecEmail.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/AgimatecValidationProvider.java" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/AgimatecValidationProvider.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/constraints/FrenchZipCode.java" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/constraints/FrenchZipCode.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/AnnotationMetaBeanBuilder.java" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/AnnotationMetaBeanBuilder.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/example/Book.java" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/example/Book.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/groups/CollectionValidationTest.java" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/groups/CollectionValidationTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/ConstraintValidatorContextImpl.java" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/ConstraintValidatorContextImpl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/util/SecureActions.java" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/util/SecureActions.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/groups/GroupSequenceTest.java" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/groups/GroupSequenceTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/constraints/NotEmpty.java" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/constraints/NotEmpty.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/constraints/Email.java" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/constraints/Email.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/PayloadTest.java" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/PayloadTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/ConstraintValidation.java" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/ConstraintValidation.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/Jsr303Test.java" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/Jsr303Test.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/util/TestUtils.java" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/util/TestUtils.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/constraints/Password.java" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/constraints/Password.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/constraints/ZipCodeCityCoherence.java" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/constraints/ZipCodeCityCoherence.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/ErrorBuilderImpl.java" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/ErrorBuilderImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/GroupValidationContextImpl.java" afterPath="$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/GroupValidationContextImpl.java" />
     </list>
     <ignored path="agimatec-validation-parent.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -60,6 +55,21 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
+    <line_breakpoints>
+      <breakpoint url="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/groups/GroupSequenceTest.java" line="128" class="com.agimatec.validation.jsr303.groups.GroupSequenceTest" package="com.agimatec.validation.jsr303.groups">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </line_breakpoints>
     <breakpoint_any>
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -121,30 +131,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Jsr303Test.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/Jsr303Test.java">
+      <file leaf-file-name="PayloadTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/PayloadTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="45" column="13" selection-start="1734" selection-end="1734" vertical-scroll-proportion="-1.5680473">
-              <folding>
-                <marker date="1254834957000" expanded="false" signature="858:1579" placeholder="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FrenchZipCode.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/constraints/FrenchZipCode.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="47" column="18" selection-start="1792" selection-end="1792" vertical-scroll-proportion="0.6213018">
+            <state line="39" column="3" selection-start="1448" selection-end="1587" vertical-scroll-proportion="0.6838906">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FrenchAddress.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/example/FrenchAddress.java">
+      <file leaf-file-name="GroupSequenceTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/groups/GroupSequenceTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="29" column="16" selection-start="1069" selection-end="1069" vertical-scroll-proportion="0.35502958">
+            <state line="41" column="13" selection-start="1530" selection-end="1530" vertical-scroll-proportion="0.59210527">
               <folding />
             </state>
           </provider>
@@ -153,7 +152,36 @@
       <file leaf-file-name="ComposedConstraintsTest.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/ComposedConstraintsTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="75" column="8" selection-start="3020" selection-end="3020" vertical-scroll-proportion="0.51282054">
+            <state line="41" column="4" selection-start="1502" selection-end="1615" vertical-scroll-proportion="0.5927052">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CollectionValidationTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/groups/CollectionValidationTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="87" column="68" selection-start="2995" selection-end="2995" vertical-scroll-proportion="-1.5805471">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ConstraintValidation.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/ConstraintValidation.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="189" column="76" selection-start="7887" selection-end="7887" vertical-scroll-proportion="0.3617021">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GroupValidationContextImpl.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/GroupValidationContextImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="44" column="7" selection-start="1844" selection-end="1844" vertical-scroll-proportion="0.7294833">
               <folding />
             </state>
           </provider>
@@ -162,34 +190,16 @@
       <file leaf-file-name="ErrorBuilderImpl.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/ErrorBuilderImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="62" column="0" selection-start="2240" selection-end="2240" vertical-scroll-proportion="1.2130177">
+            <state line="58" column="46" selection-start="2184" selection-end="2184" vertical-scroll-proportion="0.68085104">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GroupValidationContextImpl.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/GroupValidationContextImpl.java">
+      <file leaf-file-name="ImplicitGroupingTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/groups/implicit/ImplicitGroupingTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="152" column="11" selection-start="5838" selection-end="5838" vertical-scroll-proportion="0.234714">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Person.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/example/Person.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="17" selection-start="930" selection-end="930" vertical-scroll-proportion="0.147929">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AgimatecEmail.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/constraints/AgimatecEmail.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="18" selection-start="730" selection-end="730" vertical-scroll-proportion="0.65088755">
+            <state line="64" column="25" selection-start="2741" selection-end="2741" vertical-scroll-proportion="2.0212767">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -197,22 +207,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Constraint.class" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar://$MAVEN_REPOSITORY$/javax/validation/validation-api/1.0.CR5/validation-api-1.0.CR5.jar!/javax/validation/Constraint.class">
+      <file leaf-file-name="Order.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/groups/implicit/Order.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="0" selection-start="141" selection-end="141" vertical-scroll-proportion="0.12269939">
+            <state line="26" column="13" selection-start="1009" selection-end="1009" vertical-scroll-proportion="-0.075987846">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Password.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/constraints/Password.java">
+      <file leaf-file-name="Auditable.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/groups/implicit/Auditable.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="35" column="18" selection-start="1231" selection-end="1231" vertical-scroll-proportion="0.5325444">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state line="26" column="17" selection-start="1029" selection-end="1029" vertical-scroll-proportion="0.41033435">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -362,108 +370,6 @@
         </PATH_ELEMENT>
         <PATH_ELEMENT>
           <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-validation/src/main/java/com/agimatec/validation" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-      </PATH>
-      <PATH>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="agimatec-validation-parent" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="agimatec-validation" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-validation" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-validation/src" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-validation/src/main" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-validation/src/main/java" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-validation/src/main/java/com/agimatec/validation" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-validation/src/main/java/com/agimatec/validation/xml" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-      </PATH>
-      <PATH>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="agimatec-validation-parent" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="agimatec-validation" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-validation" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-validation/src" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-validation/src/main" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-validation/src/main/java" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-validation/src/main/java/com/agimatec/validation" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-validation/src/main/java/com/agimatec/validation/model" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-      </PATH>
-      <PATH>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="agimatec-validation-parent" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="agimatec-validation" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-validation" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-validation/src" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-validation/src/main" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-validation/src/main/java" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-validation/src/main/java/com/agimatec/validation" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-validation/src/main/java/com/agimatec/validation/integration" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
       </PATH>
@@ -654,8 +560,34 @@
           <option name="myItemId" value="PsiDirectory:/usr/lib/jvm/java-6-sun/jre/lib/rt.jar!/java" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
+      </PATH>
+      <PATH>
         <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:/usr/lib/jvm/java-6-sun/jre/lib/rt.jar!/java/util" />
+          <option name="myItemId" value="agimatec-validation-parent" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="agimatec-jsr303" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Libraries" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.LibraryGroupNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="&lt; 1.6 &gt;" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/usr/lib/jvm/java-6-sun/jre/lib/rt.jar" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/usr/lib/jvm/java-6-sun/jre/lib/rt.jar!/java" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/usr/lib/jvm/java-6-sun/jre/lib/rt.jar!/java/security" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
       </PATH>
@@ -682,6 +614,44 @@
         </PATH_ELEMENT>
         <PATH_ELEMENT>
           <option name="myItemId" value="PsiDirectory:/usr/lib/jvm/java-6-sun/jre/lib/rt.jar!/java" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/usr/lib/jvm/java-6-sun/jre/lib/rt.jar!/java/lang" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="agimatec-validation-parent" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="agimatec-jsr303" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Libraries" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.LibraryGroupNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="&lt; 1.6 &gt;" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/usr/lib/jvm/java-6-sun/jre/lib/rt.jar" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/usr/lib/jvm/java-6-sun/jre/lib/rt.jar!/java" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/usr/lib/jvm/java-6-sun/jre/lib/rt.jar!/java/lang" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/usr/lib/jvm/java-6-sun/jre/lib/rt.jar!/java/lang/annotation" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
       </PATH>
@@ -790,6 +760,86 @@
         </PATH_ELEMENT>
         <PATH_ELEMENT>
           <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/util" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="agimatec-validation-parent" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="agimatec-jsr303" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-jsr303" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-jsr303/src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-jsr303/src/test" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-jsr303/src/test/java" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-jsr303/src/test/java/com/agimatec/validation" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/groups" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="agimatec-validation-parent" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="agimatec-jsr303" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-jsr303" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-jsr303/src" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-jsr303/src/test" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-jsr303/src/test/java" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-jsr303/src/test/java/com/agimatec/validation" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/groups" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="PsiDirectory:/home/roman/dev/google-code/agimatec-validation/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/groups/implicit" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
       </PATH>
@@ -1051,10 +1101,10 @@
     </navigator>
   </component>
   <component name="PropertiesComponent">
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth1" value="95" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth1" value="94" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth0" value="62" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth3" value="34" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth2" value="90" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth2" value="89" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder1" value="1" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder0" value="0" />
     <property name="RunManagerConfig.showSettingsBeforeRunnig" value="false" />
@@ -1063,13 +1113,13 @@
     <property name="MemberChooser.sorted" value="false" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth2" value="84" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatOrder4" value="4" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth1" value="91" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth1" value="90" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth0" value="73" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth4" value="873" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth4" value="866" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeWidth3" value="73" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
-    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth4" value="913" />
+    <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_flatWidth4" value="907" />
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="FileHistory.org.jetbrains.idea.svn.history.SvnHistoryProvider_treeOrder3" value="3" />
@@ -1080,6 +1130,9 @@
     <property name="MemberChooser.copyJavadoc" value="false" />
   </component>
   <component name="RecentsManager">
+    <key name="IntroduceConstantDialog.RECENTS_KEY">
+      <recent name="" />
+    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.agimatec.validation.constraints" />
       <recent name="com.agimatec.validation.util" />
@@ -1088,15 +1141,15 @@
       <recent name="com.agimatec.validation.jsr303.context" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.ValidationTest.testContextMessages">
-    <tempConfiguration default="false" name="ValidationTest.testContextMessages" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
-      <pattern value="com.agimatec.validation.jsr303.*" />
+  <component name="RunManager" selected="JUnit.ImplicitGroupingTest.testValidateImplicitGrouping">
+    <tempConfiguration default="false" name="ImplicitGroupingTest.testValidateImplicitGrouping" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
+      <pattern value="com.agimatec.validation.jsr303.groups.implicit.*" />
       <module name="agimatec-jsr303" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="com.agimatec.validation.jsr303" />
-      <option name="MAIN_CLASS_NAME" value="com.agimatec.validation.jsr303.ValidationTest" />
-      <option name="METHOD_NAME" value="testContextMessages" />
+      <option name="PACKAGE_NAME" value="com.agimatec.validation.jsr303.groups.implicit" />
+      <option name="MAIN_CLASS_NAME" value="com.agimatec.validation.jsr303.groups.implicit.ImplicitGroupingTest" />
+      <option name="METHOD_NAME" value="testValidateImplicitGrouping" />
       <option name="TEST_OBJECT" value="method" />
       <option name="VM_PARAMETERS" />
       <option name="PARAMETERS" />
@@ -1109,7 +1162,7 @@
       </option>
       <envs />
       <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="53312" />
+        <option name="DEBUG_PORT" value="57722" />
         <option name="TRANSPORT" value="0" />
         <option name="LOCAL" value="true" />
       </RunnerSettings>
@@ -1231,7 +1284,7 @@
     </configuration>
     <list size="2">
       <item index="0" class="java.lang.String" itemvalue="JUnit.GroupInheritanceTest.testValidGroupBuyInOneClick" />
-      <item index="1" class="java.lang.String" itemvalue="JUnit.ValidationTest.testContextMessages" />
+      <item index="1" class="java.lang.String" itemvalue="JUnit.ImplicitGroupingTest.testValidateImplicitGrouping" />
     </list>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -1288,9 +1341,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="6" width="1280" height="991" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32798165" order="8" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32798165" order="8" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="Maven-2 Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32951757" order="3" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="1" />
@@ -1299,15 +1352,15 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5286697" order="3" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.809633" order="8" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328" order="8" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32798165" order="8" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4162844" order="8" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5" order="7" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.5" order="7" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="1" />
       <window_info id="Maven projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2845462" order="0" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24856909" order="2" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5494685" order="2" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" order="6" />
       <window_info id="Duplicates" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.46100917" order="2" />
@@ -1327,7 +1380,7 @@
     <option name="PERFORM_EDIT_IN_BACKGROUND" value="true" />
     <option name="PERFORM_ADD_REMOVE_IN_BACKGROUND" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="+ more tests for Payload, redefined DefaultGroup, ComposedConstraints, some still fail ..." />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="REFORMAT_BEFORE_FILE_COMMIT" value="false" />
@@ -1383,90 +1436,102 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/example/Author.java">
+    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/ClassValidator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="16" selection-start="1026" selection-end="1026" vertical-scroll-proportion="0.09715026">
+        <state line="87" column="0" selection-start="3733" selection-end="3733" vertical-scroll-proportion="0.8089172">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/constraints/ZipCodeCityCoherence.java">
+    <entry file="file://$PROJECT_DIR$/agimatec-validation/src/main/java/com/agimatec/validation/BeanValidator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="21" selection-start="1324" selection-end="1324" vertical-scroll-proportion="0.23316061">
+        <state line="260" column="0" selection-start="10097" selection-end="10097" vertical-scroll-proportion="0.64375">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/example/Address.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="14" selection-start="1159" selection-end="1159" vertical-scroll-proportion="0.1125">
+        <state line="29" column="13" selection-start="1158" selection-end="1158" vertical-scroll-proportion="-0.39375">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/ValidationTest.java">
+    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/example/Book.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="202" column="80" selection-start="7686" selection-end="7686" vertical-scroll-proportion="0.14375">
+        <state line="28" column="13" selection-start="1152" selection-end="1152" vertical-scroll-proportion="0.1125">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/constraints/FrenchZipcodeValidator.java">
+    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/AgimatecFactoryContext.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="13" selection-start="1129" selection-end="1129" vertical-scroll-proportion="0.41860464">
+        <state line="64" column="0" selection-start="2210" selection-end="2210" vertical-scroll-proportion="1.3313253">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/groups/BuyInOneClick.java">
+    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/example/Author.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="17" selection-start="977" selection-end="977" vertical-scroll-proportion="0.24418604">
+        <state line="28" column="13" selection-start="1118" selection-end="1118" vertical-scroll-proportion="0.1125">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/Jsr303Test.java">
+    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/groups/implicit/Order.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="45" column="13" selection-start="1734" selection-end="1734" vertical-scroll-proportion="-1.5680473">
-          <folding>
-            <marker date="1254834957000" expanded="false" signature="858:1579" placeholder="..." />
-          </folding>
+        <state line="26" column="13" selection-start="1009" selection-end="1009" vertical-scroll-proportion="-0.075987846">
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/constraints/Password.java">
+    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/groups/GroupSequenceTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="18" selection-start="1231" selection-end="1231" vertical-scroll-proportion="0.5325444">
+        <state line="41" column="13" selection-start="1530" selection-end="1530" vertical-scroll-proportion="0.59210527">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/ComposedConstraintsTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="41" column="4" selection-start="1502" selection-end="1615" vertical-scroll-proportion="0.5927052">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/PayloadTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="39" column="3" selection-start="1448" selection-end="1587" vertical-scroll-proportion="0.6838906">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/groups/implicit/Auditable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="17" selection-start="1029" selection-end="1029" vertical-scroll-proportion="0.41033435">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/groups/implicit/ImplicitGroupingTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="64" column="25" selection-start="2741" selection-end="2741" vertical-scroll-proportion="2.0212767">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/example/Person.java">
+    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/groups/CollectionValidationTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="17" selection-start="930" selection-end="930" vertical-scroll-proportion="0.147929">
+        <state line="87" column="68" selection-start="2995" selection-end="2995" vertical-scroll-proportion="-1.5805471">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/javax/validation/validation-api/1.0.CR5/validation-api-1.0.CR5.jar!/javax/validation/Constraint.class">
+    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/ConstraintValidation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="0" selection-start="141" selection-end="141" vertical-scroll-proportion="0.12269939">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/constraints/FrenchZipCode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="47" column="18" selection-start="1792" selection-end="1792" vertical-scroll-proportion="0.6213018">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/constraints/AgimatecEmail.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="18" selection-start="730" selection-end="730" vertical-scroll-proportion="0.65088755">
+        <state line="189" column="76" selection-start="7887" selection-end="7887" vertical-scroll-proportion="0.3617021">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1475,28 +1540,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/GroupValidationContextImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="152" column="11" selection-start="5838" selection-end="5838" vertical-scroll-proportion="0.234714">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/example/FrenchAddress.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="16" selection-start="1069" selection-end="1069" vertical-scroll-proportion="0.35502958">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/test/java/com/agimatec/validation/jsr303/ComposedConstraintsTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="75" column="8" selection-start="3020" selection-end="3020" vertical-scroll-proportion="0.51282054">
+        <state line="44" column="7" selection-start="1844" selection-end="1844" vertical-scroll-proportion="0.7294833">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/agimatec-jsr303/src/main/java/com/agimatec/validation/jsr303/ErrorBuilderImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="62" column="0" selection-start="2240" selection-end="2240" vertical-scroll-proportion="1.2130177">
+        <state line="58" column="46" selection-start="2184" selection-end="2184" vertical-scroll-proportion="0.68085104">
           <folding />
         </state>
       </provider>

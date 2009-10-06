@@ -21,6 +21,7 @@ package com.agimatec.validation.jsr303.groups;
 import com.agimatec.validation.jsr303.AgimatecValidatorFactory;
 import com.agimatec.validation.jsr303.Jsr303Features;
 import com.agimatec.validation.jsr303.example.*;
+import com.agimatec.validation.jsr303.util.TestUtils;
 import com.agimatec.validation.model.MetaBean;
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -89,6 +90,9 @@ public class GroupSequenceTest extends TestCase {
         Set<ConstraintViolation<Book>> constraintViolations =
               validator.validate(book, First.class, Second.class, Last.class);
         assertEquals("Wrong number of constraints", 3, constraintViolations.size());
+        assertNotNull(TestUtils.getViolation(constraintViolations, "title"));
+        assertNotNull(TestUtils.getViolation(constraintViolations, "author.firstName"));
+        assertNotNull(TestUtils.getViolation(constraintViolations, "author.lastName"));
 
         author.setFirstName("Gavin");
         author.setLastName("King");
@@ -120,7 +124,7 @@ public class GroupSequenceTest extends TestCase {
         author.setCompany("1234567890ß9876543212578909876542245678987432");
 
         constraintViolations =
-              validator.validate(book, First.class, Second.class, Last.class);
+              validator.validate(book);
         constraintViolation = constraintViolations.iterator().next();
         assertEquals(1, constraintViolations.size());
         assertEquals("size must be between 0 and 40", constraintViolation.getMessage());

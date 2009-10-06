@@ -19,6 +19,7 @@
 package com.agimatec.validation.constraints;
 
 import javax.validation.Constraint;
+import javax.validation.Payload;
 import java.lang.annotation.Documented;
 import static java.lang.annotation.ElementType.*;
 import java.lang.annotation.Retention;
@@ -39,4 +40,6 @@ public @interface NotEmpty {
     Class<?>[] groups() default {};
 
     String message() default "{com.agimatec.validation.constraints.NotEmpty.message}";
+
+    Class<? extends Payload>[] payload() default { };
 }

@@ -19,7 +19,10 @@
 package com.agimatec.validation.jsr303.util;
 
 import javax.validation.ValidationException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
@@ -44,7 +47,7 @@ public class SecureActions {
     }
 
     /**
-     * @param cls - the type to create a new instance from
+     * @param cls       - the type to create a new instance from
      * @param exception - type of exception to throw when newInstance() call fails
      * @return the new instance of 'cls'
      */
@@ -89,5 +92,25 @@ public class SecureActions {
         } else {
             return action.run();
         }
+    }
+
+    public static Object getAnnotationValue(final Annotation annotation, final String name)
+          throws IllegalAccessException, InvocationTargetException {
+        return run(new PrivilegedAction() {
+            public Object run() {
+                Method valueMethod = null;
+                try {
+                    valueMethod = annotation.annotationType().getDeclaredMethod(name);
+                } catch (NoSuchMethodException ex) { /* do nothing */ }
+                if (null != valueMethod) {
+                    try {
+                        return valueMethod.invoke(annotation);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                return null;
+            }
+        });
     }
 }

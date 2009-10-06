@@ -20,6 +20,7 @@ package com.agimatec.validation.jsr303;
 
 import com.agimatec.validation.MetaBeanBuilder;
 import com.agimatec.validation.jsr303.groups.Group;
+import com.agimatec.validation.jsr303.util.SecureActions;
 import com.agimatec.validation.model.Features;
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.MetaProperty;
@@ -50,10 +51,13 @@ import java.util.*;
  */
 public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
     private static final Log log = LogFactory.getLog(AnnotationMetaBeanBuilder.class);
-    private final ConstraintValidatorFactory constraintFactory;
+    private static final String ANNOTATION_VALUE = "value";
     private static final String DEFAULT_CONSTAINTS =
-          "com/agimatec/validation/jsr303/DefaultConstraints.properties";
+              "com/agimatec/validation/jsr303/DefaultConstraints.properties";
+
+    private final ConstraintValidatorFactory constraintFactory;
     protected Map<String, Class[]> defaultConstraints;
+
 
     public AnnotationMetaBeanBuilder(ConstraintValidatorFactory constraintFactory) {
         this.constraintFactory = constraintFactory;
@@ -199,7 +203,7 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
                  * This means that each constraint specified in
                  * the value element is applied to the target.
                  */
-                Object result = getAnnotationValue(annotation, "value");
+                Object result = SecureActions.getAnnotationValue(annotation, ANNOTATION_VALUE);
                 if (result != null && result instanceof Annotation[]) {
                     for (Annotation each : (Annotation[]) result) {
                         processAnnotation(each, prop, metabean, element, validation);
@@ -308,18 +312,6 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
         }
     }
 
-    private Object getAnnotationValue(Annotation annotation, String name)
-          throws IllegalAccessException, InvocationTargetException {
-        Method valueMethod = null;
-        try {
-            valueMethod = annotation.annotationType().getDeclaredMethod(name);
-        } catch (NoSuchMethodException ex) { /* do nothing */ }
-        if (null != valueMethod) {
-            return valueMethod.invoke(annotation);
-        }
-        return null;
-    }
-
     /**
      * @param parentValidation - null or the parent validation when it is a composed validation
      * @throws IllegalAccessException
@@ -336,16 +328,9 @@ public class AnnotationMetaBeanBuilder extends MetaBeanBuilder {
             ConstraintValidator constraint =
                   constraintFactory.getInstance(constraintClass);
             constraint.initialize(annotation);
-            Object groups = getAnnotationValue(annotation, "groups");
-            if (groups instanceof Class<?>) {
-                groups = new Class<?>[]{(Class<?>) groups};
-            }
-            if (!(groups instanceof Class<?>[])) {
-                groups = null;
-            }
+
             ConstraintValidation validation = new ConstraintValidation(
-                  new ConstraintValidator[]{constraint}, (Class<?>[]) groups, annotation,
-                  element);
+                  new ConstraintValidator[]{constraint}, annotation, element);
             if (parentValidation == null) {
                 if (prop != null) {
                     prop.addValidation(validation);

@@ -18,6 +18,7 @@
  */
 package com.agimatec.validation.constraints;
 
+import javax.validation.Payload;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.lang.annotation.Retention;
@@ -37,4 +38,6 @@ public @interface Password {
     String[] groups() default {};
 
     int robustness() default 8;
+
+    Class<? extends Payload>[] payload() default { };
 }

@@ -23,8 +23,11 @@ import com.agimatec.validation.ValidationResults;
 import com.agimatec.validation.jsr303.groups.GroupsComputer;
 import com.agimatec.validation.jsr303.util.NodeImpl;
 import com.agimatec.validation.jsr303.util.PathImpl;
+import com.agimatec.validation.jsr303.util.SecureActions;
 import com.agimatec.validation.model.Validation;
 import com.agimatec.validation.model.ValidationContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.Payload;
@@ -35,7 +38,9 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.PrivilegedAction;
 import java.util.*;
 
 /**
@@ -47,27 +52,30 @@ import java.util.*;
  * Copyright: Agimatec GmbH 2008
  */
 public class ConstraintValidation implements Validation, ConstraintDescriptor {
+    private static final Log log = LogFactory.getLog(ConstraintValidation.class);
+    private static final String ANNOTATION_PAYLOAD = "payload";
+    private static final String ANNOTATION_GROUPS = "groups";
+
     private final ConstraintValidator[] constraints;
-    private final Set<Class<?>> groups;
     private final Annotation annotation; // for metadata request API
-    private Set<ConstraintValidation> composedConstraints;
     private final Field field;
     private final boolean reportFromComposite;
-    private Map<String, Object> parameters;
+    private final Map<String, Object> attributes;
+
+    private Set<ConstraintValidation> composedConstraints;
+
+    private Set<Class<?>> groups;
+    private Set<Class<? extends Payload>> payload;
 
     protected ConstraintValidation(ConstraintValidator[] constraints,
-                                   Class<?>[] groupsArray, Annotation annotation,
-                                   AnnotatedElement element) {
+                                   Annotation annotation, AnnotatedElement element) {
+        this.attributes = new HashMap();
         this.constraints = constraints;
-
-        groupsArray = (groupsArray == null || groupsArray.length == 0) ?
-              GroupsComputer.DEFAULT_GROUP_ARRAY : groupsArray;
-        this.groups = new HashSet(Arrays.asList(groupsArray));
-
         this.annotation = annotation;
         this.field = element instanceof Field ? (Field) element : null;
-        this.reportFromComposite = annotation.annotationType()
+        this.reportFromComposite = annotation != null && annotation.annotationType()
               .isAnnotationPresent(ReportAsSingleViolation.class);
+        buildFromAnnotation();
     }
 
     public boolean isReportAsSingleViolation() {
@@ -178,7 +186,7 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
                            ConstraintValidatorContextImpl jsrContext) {
         context.setConstraintDescriptor(this);
         for (ValidationResults.Error each : jsrContext.getErrorMessages()) {
-            // TODO RSt - fix
+            // TODO RSt - fix: jsrContexts errors are lost (path info etc...)
             context.getListener().addError(each.getReason(), context);
         }
     }
@@ -206,27 +214,73 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
 
     /////////////////////////// ConstraintDescriptor implementation
 
-    /*   public boolean isFieldAccess() {
-        return constraintValidation.getField() instanceof Field;
-    }*/
 
     public Map<String, Object> getAttributes() {
-        if (parameters == null) {
-            parameters = new HashMap();
-            if (getAnnotation() != null) {
-                for (Method method : getAnnotation().annotationType()
-                      .getDeclaredMethods()) {
-                    if (method.getParameterTypes().length == 0) {
-                        try {
-                            parameters
-                                  .put(method.getName(), method.invoke(getAnnotation()));
-                        } catch (Exception e) { // do nothing
+        return attributes;
+    }
+
+    /** build attributes, payload, groups from 'annotation' */
+    private void buildFromAnnotation() {
+        if (annotation != null) {
+            SecureActions.run(new PrivilegedAction<Object>() {
+                public Object run() {
+                    for (Method method : annotation.annotationType()
+                          .getDeclaredMethods()) {
+                        // enhancement: clarify: should groups + payload also appear in attributes?
+                        if (method.getParameterTypes().length == 0) {
+                            try {
+                                if (ANNOTATION_PAYLOAD.equals(method.getName())) {
+                                    buildPayload(method);
+                                } else if (ANNOTATION_GROUPS.equals(method.getName())) {
+                                    buildGroups(method);
+                                } else {
+                                    attributes
+                                          .put(method.getName(),
+                                                method.invoke(annotation));
+                                }
+                            } catch (Exception e) { // do nothing
+                                log.warn("error processing annotation: " + annotation, e);
+                            }
                         }
                     }
+                    return null;
                 }
-            }
+            });
         }
-        return parameters;
+        try {
+            if (groups == null) buildGroups(null);
+            if (payload == null) buildPayload(null);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e); // execution never reaches this point
+        }
+    }
+
+    private void buildGroups(Method method)
+          throws IllegalAccessException, InvocationTargetException {
+        Object raw = method == null ? null : method.invoke(annotation);
+        Class<?>[] garr;
+        if (raw instanceof Class) {
+            garr = new Class<?>[]{(Class) raw};
+        } else if (raw instanceof Class<?>[]) {
+            garr = (Class<?>[]) raw;
+        } else {
+            garr = null;
+        }
+        garr = (garr == null || garr.length == 0) ? GroupsComputer.DEFAULT_GROUP_ARRAY :
+              garr;
+        this.groups = new HashSet(Arrays.asList(garr));
+    }
+
+    private void buildPayload(Method method)
+          throws IllegalAccessException, InvocationTargetException {
+        Class<Payload>[] payload_raw =
+              (Class<Payload>[]) (method == null ? null : method.invoke(annotation));
+        if (payload_raw == null) {
+            payload = Collections.emptySet();
+        } else {
+            payload = new HashSet(payload_raw.length);
+            payload.addAll(Arrays.asList(payload_raw));
+        }
     }
 
     public Set<ConstraintDescriptor> getComposingConstraints() {
@@ -242,7 +296,7 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
     }
 
     public Set<Class<? extends Payload>> getPayload() {
-        return Collections.EMPTY_SET; // TODO RSt - nyi Payload support
+        return payload;
     }
 
     public List<Class<? extends ConstraintValidator<?, ?>>> getConstraintValidatorClasses() {

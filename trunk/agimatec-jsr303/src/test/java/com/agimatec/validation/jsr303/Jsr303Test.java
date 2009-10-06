@@ -23,9 +23,11 @@ import com.agimatec.validation.jsr303.example.Address;
 import com.agimatec.validation.jsr303.example.Book;
 import com.agimatec.validation.jsr303.example.Engine;
 import com.agimatec.validation.jsr303.example.Second;
+import com.agimatec.validation.jsr303.util.TestUtils;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.ConstraintDescriptor;
@@ -123,10 +125,21 @@ public class Jsr303Test extends TestCase {
 
     }
 
-    public void testEngine() {
+    public void testValidateMultiValuedConstraints() {
         Validator validator = getValidator();
         Engine engine = new Engine();
-        validator.validate(engine);
+        engine.serialNumber = "abcd-defg-0123";
+        Set<ConstraintViolation<Engine>> violations;
+        violations = validator.validate(engine);
+        assertEquals(0, violations.size());
+        
+        engine.serialNumber = "!)/(/()";
+        violations = validator.validate(engine);
+        assertEquals(2, violations.size());
+        for(String msg : new String[] {"must contain alphabetical characters only",
+              "must match ....-....-...."}) {
+            assertNotNull(TestUtils.getViolationWithMessage(violations, msg));
+        }
     }
 
     private Validator getValidator() {

@@ -25,11 +25,11 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 public class Author {
-    @NotEmpty(groups = Last.class)
+    @NotEmpty
     private String firstName;
-    @NotEmpty(groups = First.class)
+    @NotEmpty
     private String lastName;
-    @Size(max = 40, groups = First.class)
+    @Size(max = 40)
     private String company;
 
     @Valid

@@ -45,4 +45,9 @@ public interface ValidationContext {
      * used to create the propertyPath with [index] information for collections.
      */
     void setCurrentIndex(int index);
+    /**
+     * set the key of the object in a map currently validated into the context.
+     * used to create the propertyPath with [key] information for maps.
+     */
+    void setCurrentKey(Object key);
 }

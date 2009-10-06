@@ -42,15 +42,12 @@ class GroupValidationContextImpl extends BeanValidationContext
       implements GroupValidationContext, MessageInterpolator.Context {
 
     private final MessageInterpolator messageResolver;
+    // TODO RSt - replace propertyStack by PathImpl (performance improvement)
     private final LinkedList propertyStack = new LinkedList();
     private final MetaBean rootMetaBean;
-    /**
-     * the groups in the sequence of validation to take place
-     */
+    /** the groups in the sequence of validation to take place */
     private Groups groups;
-    /**
-     * the current group during the validation process
-     */
+    /** the current group during the validation process */
     private Group currentGroup;
 
     /**
@@ -75,12 +72,20 @@ class GroupValidationContextImpl extends BeanValidationContext
 
     @Override
     public void setCurrentIndex(int index) {
-        super.setCurrentIndex(index);   // call super!
         Object last = propertyStack.getLast();
         if (last instanceof Integer) {
             propertyStack.removeLast();
         }
         propertyStack.addLast(index);
+    }
+
+    @Override
+    public void setCurrentKey(Object key) {
+        Object last = propertyStack.getLast();
+//        if (last instanceof Key) {
+            propertyStack.removeLast();
+//        }
+        propertyStack.addLast(key);
     }
 
     @Override

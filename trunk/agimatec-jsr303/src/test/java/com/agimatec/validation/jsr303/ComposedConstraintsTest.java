@@ -48,15 +48,15 @@ public class ComposedConstraintsTest extends TestCase {
     public void testMetaDataAPI_ComposedConstraints() {
         Validator addressValidator = factory.getValidator();
         ElementDescriptor ed =
-                addressValidator.getConstraintsForClass(FrenchAddress.class)
-                        .getConstraintsForProperty("zipCode");
+              addressValidator.getConstraintsForClass(FrenchAddress.class)
+                    .getConstraintsForProperty("zipCode");
         Assert.assertEquals(1, ed.getConstraintDescriptors().size());
         for (ConstraintDescriptor cd : ed.getConstraintDescriptors()) {
             Assert.assertTrue(cd.isReportAsSingleViolation());
             Assert.assertEquals(3, cd.getComposingConstraints().size());
             System.out.println("params: " + cd.getAttributes());
             Assert.assertTrue("no composing constraints found!!",
-                    !cd.getComposingConstraints().isEmpty());
+                  !cd.getComposingConstraints().isEmpty());
             processConstraintDescriptor(cd); //check all constraints on zip code
         }
     }
@@ -73,11 +73,13 @@ public class ComposedConstraintsTest extends TestCase {
         }
     }
 
+    /** TODO RSt - test use of @OverridesAttribute */
     public void testValidateComposed() {
         FrenchAddress adr = new FrenchAddress();
         Validator val = factory.getValidator();
         Set<ConstraintViolation<FrenchAddress>> findings = val.validate(adr);
-        Assert.assertEquals(1, findings.size()); // with @ReportAsSingleConstraintViolation
+        Assert.assertEquals(1,
+              findings.size()); // with @ReportAsSingleConstraintViolation
 
 //        assertEquals(3, findings.size()); // without @ReportAsSingleConstraintViolation
 
@@ -91,5 +93,13 @@ public class ComposedConstraintsTest extends TestCase {
         adr.setZipCode("1234567234567");
         findings = val.validate(adr);
         Assert.assertTrue(findings.size() > 0); // too long
-    }    
+    }
+
+
+    /** TODO RSt - add a test for Example 2.11. Use of constraintIndex in @OverridesAttribute */
+    public void testOverridesAttributeConstraintIndex() {
+
+        fail("test using @AgimatecEmail not implemented");
+    }
+
 }

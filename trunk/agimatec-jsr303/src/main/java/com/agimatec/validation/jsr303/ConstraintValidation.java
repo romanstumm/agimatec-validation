@@ -62,8 +62,7 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
 
         groupsArray = (groupsArray == null || groupsArray.length == 0) ?
               GroupsComputer.DEFAULT_GROUP_ARRAY : groupsArray;
-        this.groups = new HashSet(groupsArray.length);
-        this.groups.addAll(Arrays.asList(groupsArray));
+        this.groups = new HashSet(Arrays.asList(groupsArray));
 
         this.annotation = annotation;
         this.field = element instanceof Field ? (Field) element : null;
@@ -179,6 +178,7 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
                            ConstraintValidatorContextImpl jsrContext) {
         context.setConstraintDescriptor(this);
         for (ValidationResults.Error each : jsrContext.getErrorMessages()) {
+            // TODO RSt - fix
             context.getListener().addError(each.getReason(), context);
         }
     }
@@ -192,10 +192,7 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
     }
 
     protected boolean isMemberOf(Class<?> reqGroup) {
-        for (Class<?> group : groups) {
-            if (group.equals(reqGroup)) return true;
-        }
-        return false;
+        return groups.contains(reqGroup);
     }
 
     /** TODO RSt - generate annotation when descriptor is based on XML */

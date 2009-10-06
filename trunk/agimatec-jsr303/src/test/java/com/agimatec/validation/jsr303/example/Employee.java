@@ -16,26 +16,40 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.agimatec.validation.jsr303;
-
-import junit.framework.TestCase;
+package com.agimatec.validation.jsr303.example;
 
 /**
- * Description: TODO RSt - nyi<br/>
+ * Description: <br/>
  * User: roman <br/>
- * Date: 05.10.2009 <br/>
- * Time: 09:59:02 <br/>
+ * Date: 06.10.2009 <br/>
+ * Time: 13:41:43 <br/>
  * Copyright: Agimatec GmbH
  */
-public class MultiValuedConstraintsTest extends TestCase {
-    /*
-    public class Address {
-    @ZipCode.List( {
-            @ZipCode(countryCode="fr", groups=Default.class
-                     message = "zip code is not valid"),
-            @ZipCode(countryCode="fr", groups=SuperUser.class
-                     message = "zip code invalid. Requires overriding before saving.")
-            } )
-    private String zipcode;
-     */
+public class Employee implements Person {
+    private String firstName, lastName;
+
+    public Employee(String firstN, String lastN) {
+        this.firstName = firstN;
+        this.lastName = lastN;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getMiddleName() {
+        return null;  // not supported
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 }

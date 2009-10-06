@@ -23,4 +23,12 @@ public class TestUtils {
         }
         return null;
     }
+
+    public static ConstraintViolation getViolationWithMessage(Set violations, String message)
+    {
+        for(ConstraintViolation each : (Set<ConstraintViolation>)violations) {
+            if(each.getMessage().equals(message)) return each;
+        }
+        return null;
+    }
 }

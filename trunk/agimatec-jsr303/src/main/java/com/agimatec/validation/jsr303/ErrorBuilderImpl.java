@@ -55,6 +55,7 @@ final class ErrorBuilderImpl implements ConstraintValidatorContext.ErrorBuilder 
     }
 
     public ConstraintValidatorContext addError() {
+        // TODO RSt - fix
         parent.errorMessages.add(new ValidationResults.Error(messageTemplate, null,
               propertyPath.toString()));
         return parent;

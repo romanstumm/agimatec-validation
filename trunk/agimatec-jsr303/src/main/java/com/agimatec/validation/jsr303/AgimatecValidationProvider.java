@@ -37,7 +37,6 @@ import javax.validation.spi.ValidationProvider;
  *   * type-safety check when call a constraint-validator implementation's isValid() method
  *   * use of ConstraintViolationException (not clear in spec...?)
  *   * javax.validation.constraints.[plural forms] not tested
- *   * difference between ConstraintViolation.getMessageTemplate() and getMessage()
  *   * Object graph validation: Set, Map (value) validation not yet supported
  *     (currently only Array and Collection are supported)
  * </pre>

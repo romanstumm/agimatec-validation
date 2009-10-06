@@ -71,11 +71,21 @@ public class ClassValidator implements Validator {
             ConstraintValidationListener result =
                   (ConstraintValidationListener) context.getListener();
             Groups sequence = context.getGroups();
+            // enhancement: need to test and fix default group sequence behavior on non-main-beans
             // 1. process groups
             for (Group current : sequence.getGroups()) {
-                context.resetValidated();
                 context.setCurrentGroup(current);
-                this.context.getBeanValidator().validateContext(context);
+                List<Group> defaultSequence = expandDefaultGroup(metaBean, context);
+                if (defaultSequence != null) {
+                    for(Group seqGroup : defaultSequence) {
+                        context.resetValidated();
+                        context.setCurrentGroup(seqGroup);
+                        this.context.getBeanValidator().validateContext(context);
+                    }
+                } else {
+                    context.resetValidated();
+                    this.context.getBeanValidator().validateContext(context);
+                }
             }
             // 2. process sequences
             for (List<Group> eachSeq : sequence.getSequences()) {
@@ -93,6 +103,21 @@ public class ClassValidator implements Validator {
             return result.getConstaintViolations();
         } catch (RuntimeException ex) {
             throw unrecoverableValidationError(ex, object);
+        }
+    }
+
+    private List<Group> expandDefaultGroup(MetaBean metaBean,
+                                              GroupValidationContext context) {
+        if (context.getCurrentGroup().isDefault()) {
+            // mention if metaBean redefines the default group
+            List<Group> groupSeq =
+                  metaBean.getFeature(Jsr303Features.Bean.GROUP_SEQUENCE);
+            if (groupSeq != null) {
+                context.getGroups().assertDefaultGroupSequenceIsExpandable(groupSeq);
+            }
+            return groupSeq;
+        } else {
+            return null;
         }
     }
 
@@ -242,10 +267,10 @@ public class ClassValidator implements Validator {
         try {
             MetaBean metaBean = context.getMetaBeanManager().findForClass(clazz);
             BeanDescriptorImpl edesc =
-                  metaBean.getFeature(Jsr303Features.Bean.BeanDescriptor);
+                  metaBean.getFeature(Jsr303Features.Bean.BEAN_DESCRIPTOR);
             if (edesc == null) {
                 edesc = new BeanDescriptorImpl(metaBean, metaBean.getValidations());
-                metaBean.putFeature(Jsr303Features.Bean.BeanDescriptor, edesc);
+                metaBean.putFeature(Jsr303Features.Bean.BEAN_DESCRIPTOR, edesc);
             }
             return edesc;
         } catch (RuntimeException ex) {

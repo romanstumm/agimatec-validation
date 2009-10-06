@@ -25,7 +25,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@GroupSequence(value = {First.class, Second.class, Last.class})
+@GroupSequence(value = {First.class, Second.class, Book.class, Last.class})
 public class Book {
     @NotNull(groups = First.class)
     @NotEmpty(groups = First.class)

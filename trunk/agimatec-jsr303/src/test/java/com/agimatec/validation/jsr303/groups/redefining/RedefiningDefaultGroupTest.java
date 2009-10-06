@@ -28,7 +28,7 @@ import javax.validation.Validator;
 import java.util.Set;
 
 /**
- * Description: <br/>
+ * Description: test Redefining the Default group for a class (spec. chapter 3.4.3)<br/>
  * User: roman <br/>
  * Date: 05.10.2009 <br/>
  * Time: 12:42:40 <br/>

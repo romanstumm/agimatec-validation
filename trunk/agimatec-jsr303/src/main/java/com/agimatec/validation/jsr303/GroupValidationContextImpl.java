@@ -44,7 +44,13 @@ class GroupValidationContextImpl extends BeanValidationContext
     private final MessageInterpolator messageResolver;
     private final LinkedList propertyStack = new LinkedList();
     private final MetaBean rootMetaBean;
+    /**
+     * the groups in the sequence of validation to take place
+     */
     private Groups groups;
+    /**
+     * the current group during the validation process
+     */
     private Group currentGroup;
 
     /**

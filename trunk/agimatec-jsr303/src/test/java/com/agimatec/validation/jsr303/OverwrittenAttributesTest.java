@@ -18,6 +18,8 @@
  */
 package com.agimatec.validation.jsr303;
 
+import junit.framework.TestCase;
+
 /**
  * Description: TODO RSt - nyi <br/>
  * User: roman <br/>
@@ -25,7 +27,7 @@ package com.agimatec.validation.jsr303;
  * Time: 10:02:12 <br/>
  * Copyright: Agimatec GmbH
  */
-public class OverwrittenAttributesTest {
+public class OverwrittenAttributesTest extends TestCase {
     /*
     @Pattern(regexp="[0-9]*")
 @Size

@@ -20,18 +20,16 @@ package com.agimatec.validation.jsr303.groups;
 
 
 import javax.validation.GroupDefinitionException;
-import javax.validation.groups.Default;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * defines the order to validate groups during validation
- * inspiration by reference implementation (author Hardy Ferentschik)
+ * defines the order to validate groups during validation.
+ * with some inspiration from reference implementation
+ *
  * @author Roman Stumm
- **/
+ */
 public class Groups {
-
     /** The list of single groups. */
     protected List<Group> groups = new LinkedList<Group>();
 
@@ -62,27 +60,24 @@ public class Groups {
         }
     }
 
-    public void assertDefaultGroupSequenceIsExpandable(
-          List<Class<?>> defaultGroupSequence) {
+    public void assertDefaultGroupSequenceIsExpandable(List<Group> defaultGroups) {
         for (List<Group> groupList : sequences) {
-            List<Group> defaultGroupList = buildTempGroupList(defaultGroupSequence);
-            int defaultGroupIndex = containsDefaultGroupAtIndex(groupList);
-            if (defaultGroupIndex != -1) {
-                ensureExpandable(groupList, defaultGroupList, defaultGroupIndex);
+            int idx = groupList.indexOf(Group.DEFAULT);
+            if (idx != -1) {
+                ensureExpandable(groupList, defaultGroups, idx);
             }
         }
     }
 
-    private void ensureExpandable(List<Group> groupList,
-                                                        List<Group> defaultGroupList,
-                                                        int defaultGroupIndex) {
+    private void ensureExpandable(List<Group> groupList, List<Group> defaultGroupList,
+                                  int defaultGroupIndex) {
         for (int i = 0; i < defaultGroupList.size(); i++) {
             Group group = defaultGroupList.get(i);
             if (group.isDefault()) {
                 continue; // the default group is the one we want to replace
             }
-            int index = groupList.indexOf(
-                  group); // sequence contains group of default group sequence
+            int index = groupList
+                  .indexOf(group); // sequence contains group of default group sequence
             if (index == -1) {
                 continue; // if group is not in the sequence
             }
@@ -99,17 +94,4 @@ public class Groups {
         }
     }
 
-    private int containsDefaultGroupAtIndex(List<Group> groupList) {
-        Group defaultGroup = new Group(Default.class);
-        return groupList.indexOf(defaultGroup);
-    }
-
-    private List<Group> buildTempGroupList(List<Class<?>> defaultGroupSequence) {
-        List<Group> groupList = new ArrayList<Group>();
-        for (Class<?> clazz : defaultGroupSequence) {
-            Group g = new Group(clazz);
-            groupList.add(g);
-        }
-        return groupList;
-    }
 }

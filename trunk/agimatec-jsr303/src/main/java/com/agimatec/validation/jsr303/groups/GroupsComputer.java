@@ -36,10 +36,14 @@ import java.util.*;
 public class GroupsComputer {
     /** The default group array used in case any of the validate methods is called without a group. */
     public static final Class<?>[] DEFAULT_GROUP_ARRAY = new Class<?>[]{Default.class};
+    private static final Groups DEFAULT_GROUPS;
 
-    /**
-     * caching resolved groups in a thread-safe map.
-     */
+    static {
+        DEFAULT_GROUPS =
+              new GroupsComputer().computeGroups(Arrays.asList(DEFAULT_GROUP_ARRAY));
+    }
+
+    /** caching resolved groups in a thread-safe map. */
     private final Map<Class<?>, List<Group>> resolvedSequences =
           Collections.synchronizedMap(new HashMap<Class<?>, List<Group>>());
 
@@ -50,17 +54,16 @@ public class GroupsComputer {
 
         // if no groups is specified use the default
         if (groups.length == 0) {
-            groups = DEFAULT_GROUP_ARRAY;
+            return DEFAULT_GROUPS;
         }
 
         return computeGroups(Arrays.asList(groups));
     }
 
 
-    public Groups computeGroups(Collection<Class<?>> groups) {
+    protected Groups computeGroups(Collection<Class<?>> groups) {
         if (groups == null || groups.size() == 0) {
-            throw new IllegalArgumentException(
-                  "At least one group has to be specified.");
+            throw new IllegalArgumentException("At least one group has to be specified.");
         }
 
         for (Class<?> clazz : groups) {

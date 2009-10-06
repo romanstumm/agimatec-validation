@@ -25,7 +25,6 @@ import com.agimatec.validation.model.Validation;
 
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.ElementDescriptor;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -75,7 +74,7 @@ abstract class ElementDescriptorImpl implements ElementDescriptor {
           Class<?>... groups) {
         Set<ConstraintDescriptor<?>> matchingDescriptors =
               new HashSet<ConstraintDescriptor<?>>();
-        Groups groupChain = new GroupsComputer().computeGroups(Arrays.asList(groups));
+        Groups groupChain = new GroupsComputer().computeGroups(groups);
         for (Group group : groupChain.getGroups()) {
             for (ConstraintDescriptor<?> descriptor : constraintDescriptors) {
                 if (descriptor.getGroups().contains(group.getGroup())) {

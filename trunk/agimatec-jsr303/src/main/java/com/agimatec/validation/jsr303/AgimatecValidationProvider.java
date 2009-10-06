@@ -36,7 +36,6 @@ import javax.validation.spi.ValidationProvider;
  *   * need to improve integration between JSR303 annotations and agimatec-metadata validations.
  *   * type-safety check when call a constraint-validator implementation's isValid() method
  *   * use of ConstraintViolationException (not clear in spec...?)
- *   * javax.validation.constraints.[plural forms] not tested
  * </pre>
  * <br/>
  * User: roman.stumm <br/>

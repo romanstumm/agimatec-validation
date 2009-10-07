@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Description: internal implementation class to construct metabeans from xml model<br/>
+ * Description: internal implementation class to construct metabeans with factories<br/>
  * User: roman.stumm <br/>
  * Date: 05.07.2007 <br/>
  * Time: 16:26:30 <br/>

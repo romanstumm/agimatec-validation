@@ -64,14 +64,29 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
 
     private Set<ConstraintValidation> composedConstraints;
 
+    /**
+     * the owner is the type where the validation comes from.
+     * it is used to support implicit grouping.
+     */
+    private final Class owner;
     private Set<Class<?>> groups;
     private Set<Class<? extends Payload>> payload;
 
+
+    /**
+     * @param constraints - the constraint validators
+     * @param annotation  - the annotation of the constraint
+     * @param owner       - the type where the annotated element is placed
+     *                    (class, interface, annotation type)
+     * @param element     - the annotated element, field, method, class, ...
+     */
     protected ConstraintValidation(ConstraintValidator[] constraints,
-                                   Annotation annotation, AnnotatedElement element) {
+                                   Annotation annotation, Class owner,
+                                   AnnotatedElement element) {
         this.attributes = new HashMap();
         this.constraints = constraints;
         this.annotation = annotation;
+        this.owner = owner;
         this.field = element instanceof Field ? (Field) element : null;
         this.reportFromComposite = annotation != null && annotation.annotationType()
               .isAnnotationPresent(ReportAsSingleViolation.class);
@@ -200,7 +215,11 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
     }
 
     protected boolean isMemberOf(Class<?> reqGroup) {
-        return groups.contains(reqGroup);
+        /**
+         * owner: implicit grouping support:
+         * owner is reqGroup or a superclass/superinterface of reqGroup
+         */
+        return owner.isAssignableFrom(reqGroup) || groups.contains(reqGroup);
     }
 
     /** TODO RSt - generate annotation when descriptor is based on XML */

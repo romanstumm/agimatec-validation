@@ -37,6 +37,8 @@ import javax.validation.spi.ValidationProvider;
  *   * type-safety check when call a constraint-validator implementation's isValid() method
  *   * use of ConstraintViolationException (not clear in spec...?)
  * </pre>
+ * <p/>
+ * <p/>
  * <br/>
  * User: roman.stumm <br/>
  * Date: 29.10.2008 <br/>
@@ -67,8 +69,9 @@ public class AgimatecValidationProvider
         try {
             ConfigurationImpl builder = (ConfigurationImpl) configuration;
             AgimatecValidatorFactory factory = new AgimatecValidatorFactory();
-            MetaBeanManager metaBeanManager = new MetaBeanManager(
-                  new AnnotationMetaBeanBuilder(builder.getConstraintValidatorFactory()));
+            MetaBeanManager metaBeanManager = new MetaBeanManager();
+            metaBeanManager.getBuilder().addFactory(
+                  new AnnotationMetaBeanFactory(builder.getConstraintValidatorFactory()));
             factory.setMetaBeanManager(metaBeanManager);
             factory.setMessageInterpolator(builder.getMessageInterpolator());
             factory.setTraversableResolver(builder.getTraversableResolver());

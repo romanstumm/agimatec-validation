@@ -19,6 +19,7 @@ package com.agimatec.validation.jsr303;
 import com.agimatec.validation.BeanValidationContext;
 import com.agimatec.validation.jsr303.groups.Group;
 import com.agimatec.validation.jsr303.groups.Groups;
+import com.agimatec.validation.jsr303.util.NodeImpl;
 import com.agimatec.validation.jsr303.util.PathImpl;
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.MetaProperty;
@@ -29,7 +30,6 @@ import javax.validation.MessageInterpolator;
 import javax.validation.TraversableResolver;
 import javax.validation.metadata.ConstraintDescriptor;
 import java.util.IdentityHashMap;
-import java.util.LinkedList;
 
 /**
  * Description: instance per validation process, not thread-safe<br/>
@@ -42,8 +42,7 @@ class GroupValidationContextImpl extends BeanValidationContext
       implements GroupValidationContext, MessageInterpolator.Context {
 
     private final MessageInterpolator messageResolver;
-    // TODO RSt - replace propertyStack by PathImpl (performance improvement)
-    private final LinkedList propertyStack = new LinkedList();
+    private final PathImpl path;
     private final MetaBean rootMetaBean;
     /** the groups in the sequence of validation to take place */
     private Groups groups;
@@ -68,37 +67,28 @@ class GroupValidationContextImpl extends BeanValidationContext
         this.messageResolver = aMessageResolver;
         this.traversableResolver = traversableResolver;
         this.rootMetaBean = rootMetaBean;
+        this.path = PathImpl.create(null);
     }
 
     @Override
     public void setCurrentIndex(int index) {
-        Object last = propertyStack.getLast();
-        if (last instanceof Integer) {
-            propertyStack.removeLast();
-        }
-        propertyStack.addLast(index);
+        path.getLeafNode().setIndex(index);
     }
 
     @Override
     public void setCurrentKey(Object key) {
-        Object last = propertyStack.getLast();
-//        if (last instanceof Key) {
-            propertyStack.removeLast();
-//        }
-        propertyStack.addLast(key);
+        path.getLeafNode().setKey(key);
     }
 
     @Override
     public void moveDown(MetaProperty prop) {
-        propertyStack.addLast(prop.getName());
+        path.addNode(new NodeImpl(prop.getName()));
         super.moveDown(prop);   // call super!
     }
 
     @Override
     public void moveUp(Object bean, MetaBean metaBean) {
-        if (propertyStack.removeLast() instanceof Integer) {
-            propertyStack.removeLast();
-        }
+        path.removeLeafNode();
         super.moveUp(bean, metaBean); // call super!
     }
 
@@ -132,26 +122,11 @@ class GroupValidationContextImpl extends BeanValidationContext
      * @return the path in dot notation
      */
     public PathImpl getPropertyPath() {
-        StringBuilder sb = new StringBuilder();
-        boolean dot = false;
-        for (Object prop : propertyStack) {
-            if (prop instanceof String) {
-                if (dot) sb.append('.');
-                sb.append(prop);
-                dot = true;
-            } else if (prop instanceof Integer) {
-                sb.append('[');
-                sb.append(prop);
-                sb.append(']');
-                dot = true;
-            }
-        }
+        PathImpl currentPath = PathImpl.copy(path);
         if (getMetaProperty() != null) {
-            if (dot) sb.append('.');
-            sb.append(getMetaProperty().getName());
+            currentPath.addNode(new NodeImpl(getMetaProperty().getName()));
         }
-        // TODO RSt - use path internally (optimize)
-        return PathImpl.fromString(sb.toString());
+        return currentPath;        
     }
 
     public MetaBean getRootMetaBean() {

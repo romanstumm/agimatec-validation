@@ -26,7 +26,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Description: <br/>
+ * Description: object holding the property path as a list of nodes<br/>
  * User: roman <br/>
  * Date: 28.09.2009 <br/>
  * Time: 11:21:33 <br/>
@@ -34,9 +34,7 @@ import java.util.regex.Pattern;
  */
 public final class PathImpl implements Path {
 
-    /**
-     * Regular expression used to split a string path into its elements.
-     */
+    /** Regular expression used to split a string path into its elements. */
     private static final Pattern pathPattern =
           Pattern.compile("(\\w+)(\\[(\\w+)\\])?(\\.(.*))*");
 
@@ -45,18 +43,14 @@ public final class PathImpl implements Path {
     private final List<Node> nodeList;
 
     /**
-     * Returns a {@code Path} instance representing the path described by the given string. To create a root node the empty string should be passed.
+     * Returns a {@code Path} instance representing the path described
+     * by the given string. To create a root node empty string or null should be passed.
      *
      * @param propertyPath the path as string representation.
      * @return a {@code Path} instance representing the path described by the given string.
-     * @throws IllegalArgumentException in case 'property' is null or cannot be parsed.
      */
     public static PathImpl fromString(String propertyPath) {
-        if (propertyPath == null) {
-            throw new IllegalArgumentException("null is not allowed as property path.");
-        }
-
-        if (propertyPath.length() == 0) {
+        if (propertyPath == null || propertyPath.length() == 0) {
             return create(null);
         }
 
@@ -89,8 +83,10 @@ public final class PathImpl implements Path {
 
     public static PathImpl create(String name) {
         PathImpl path = new PathImpl();
-        NodeImpl node = new NodeImpl(name);
-        path.addNode(node);
+        if (name != null) {
+            NodeImpl node = new NodeImpl(name);
+            path.addNode(node);
+        }
         return path;
     }
 
@@ -117,7 +113,7 @@ public final class PathImpl implements Path {
     }
 
     public boolean isRootPath() {
-        return nodeList.size() == 1 && nodeList.get(0).getName() == null;
+        return nodeList.isEmpty();
     }
 
     public PathImpl getPathWithoutLeafNode() {
@@ -137,9 +133,6 @@ public final class PathImpl implements Path {
     public Node removeLeafNode() {
         if (nodeList.size() == 0) {
             throw new IllegalStateException("No nodes in path!");
-        }
-        if (nodeList.size() == 1) {
-            throw new IllegalStateException("Root node cannot be removed!");
         }
         return nodeList.remove(nodeList.size() - 1);
     }
@@ -162,7 +155,7 @@ public final class PathImpl implements Path {
 
     public NodeImpl getLeafNode() {
         if (nodeList.size() == 0) {
-            throw new IllegalStateException("No nodes in path!");
+            return null;
         }
         return (NodeImpl) nodeList.get(nodeList.size() - 1);
     }

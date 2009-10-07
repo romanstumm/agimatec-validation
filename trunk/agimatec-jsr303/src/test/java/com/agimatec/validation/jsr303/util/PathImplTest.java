@@ -66,11 +66,9 @@ public class PathImplTest extends TestCase {
     }
 
     public void testNull() {
-        try {
-            PathImpl.fromString(null);
-            fail();
-        } catch (IllegalArgumentException ex) {
-        }
+        assertEquals(PathImpl.fromString(null), PathImpl.create(null));
+        Path path = PathImpl.create(null);
+        assertFalse(path.iterator().hasNext());
     }
 
     public void testUnbalancedBraces() {
@@ -107,7 +105,7 @@ public class PathImplTest extends TestCase {
 
     public void testEmptyString() {
         Path path = PathImpl.fromString("");
-        assertTrue(path.iterator().hasNext());
+        assertFalse(path.iterator().hasNext());
     }
 
     public static Test suite() {

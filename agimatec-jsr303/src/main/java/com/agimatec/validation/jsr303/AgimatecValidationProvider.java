@@ -18,6 +18,9 @@
  */
 package com.agimatec.validation.jsr303;
 
+import com.agimatec.validation.IntrospectorMetaBeanFactory;
+import com.agimatec.validation.MetaBeanBuilder;
+import com.agimatec.validation.MetaBeanFactory;
 import com.agimatec.validation.MetaBeanManager;
 
 import javax.validation.Configuration;
@@ -69,9 +72,18 @@ public class AgimatecValidationProvider
         try {
             ConfigurationImpl builder = (ConfigurationImpl) configuration;
             AgimatecValidatorFactory factory = new AgimatecValidatorFactory();
-            MetaBeanManager metaBeanManager = new MetaBeanManager();
+            // Create MetaBeanManager that uses Introspector + Annotations for meta-data
+            MetaBeanManager metaBeanManager = new MetaBeanManager(new MetaBeanBuilder(
+                  new MetaBeanFactory[]{new IntrospectorMetaBeanFactory(),
+                        new AnnotationMetaBeanFactory(
+                              builder.getConstraintValidatorFactory())}));
+
+            // when you want to combine Introspector, agimatec-XML and Annotations
+            // you can simply add the AnnotationMetaBeanFactory:
+            /*MetaBeanManager metaBeanManager = new MetaBeanManager();
             metaBeanManager.getBuilder().addFactory(
                   new AnnotationMetaBeanFactory(builder.getConstraintValidatorFactory()));
+            */
             factory.setMetaBeanManager(metaBeanManager);
             factory.setMessageInterpolator(builder.getMessageInterpolator());
             factory.setTraversableResolver(builder.getTraversableResolver());

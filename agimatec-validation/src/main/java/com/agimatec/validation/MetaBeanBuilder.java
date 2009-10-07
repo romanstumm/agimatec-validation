@@ -1,6 +1,6 @@
 package com.agimatec.validation;
 
-import static com.agimatec.validation.model.Features.Property.*;
+import static com.agimatec.validation.model.Features.Property.JAVASCRIPT_VALIDATION_FUNCTIONS;
 import com.agimatec.validation.model.FeaturesCapable;
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.MetaProperty;
@@ -10,10 +10,6 @@ import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.util.*;
 
@@ -31,6 +27,18 @@ public class MetaBeanBuilder {
           new LinkedHashMap();
 
     private StandardValidation standardValidation = StandardValidation.getInstance();
+    /**
+     * here you can install different kinds of factories to create MetaBeans from
+     */
+    private MetaBeanFactory[] factories;
+
+    public MetaBeanBuilder() {
+        addFactory(new IntrospectorMetaBeanFactory());
+    }
+
+    public MetaBeanBuilder(MetaBeanFactory[] factories) {
+        this.factories = factories;
+    }
 
     /** XMLMetaBeanLoader are used to know "locations" where to get BeanInfos from. */
     public Collection<XMLMetaBeanLoader> getLoaders() {
@@ -43,6 +51,24 @@ public class MetaBeanBuilder {
 
     public StandardValidation getStandardValidation() {
         return standardValidation;
+    }
+
+    public void setFactories(MetaBeanFactory[] factories) {
+        this.factories = factories;
+    }
+
+    /**
+     * convenience method
+     * @param metaBeanFactory
+     */
+    public void addFactory(MetaBeanFactory metaBeanFactory) {
+        if(factories == null) factories = new MetaBeanFactory[1];
+        else {
+            MetaBeanFactory[] facold = factories;
+            factories = new MetaBeanFactory[facold.length+1];
+            System.arraycopy(facold, 0, factories, 0, facold.length);
+        }
+        factories[factories.length-1] = metaBeanFactory;
     }
 
     /** customize the implementation of standardValidation for this builder. */
@@ -147,13 +173,19 @@ public class MetaBeanBuilder {
         return v.getMetaBean();
     }
 
-    private MetaBean createMetaBean(XMLMetaBean xmlMeta) throws IntrospectionException {
-        final Class clazz = findLocalClass(xmlMeta.getImpl());
-        if (clazz != null) {
-            return buildMetaBean(Introspector.getBeanInfo(clazz));
-        } else { // no local class here
-            return new MetaBean();
+    private MetaBean createMetaBean(XMLMetaBean xmlMeta) throws Exception {
+        return buildMetaBean(findLocalClass(xmlMeta.getImpl()));
+    }
+
+    private MetaBean buildMetaBean(Class clazz) throws Exception {
+        MetaBean meta = new MetaBean();
+        if (clazz != null) { // local class here?
+            meta.setBeanClass(clazz);
         }
+        for(MetaBeanFactory factory : factories) {
+            factory.buildMetaBean(meta);
+        }
+        return meta;
     }
 
     protected Class findLocalClass(String className) {
@@ -168,7 +200,7 @@ public class MetaBeanBuilder {
     }
 
     public MetaBean buildForClass(Class clazz) throws Exception {
-        final MetaBean metaBean = buildMetaBean(Introspector.getBeanInfo(clazz));
+        final MetaBean metaBean = buildMetaBean(clazz);
         visitXMLBeanMeta(metaBean.getId(), new Visitor() {
             public void visit(XMLMetaBean xmlMeta, XMLMetaBeanInfos xmlInfos)
                   throws Exception {
@@ -180,42 +212,6 @@ public class MetaBeanBuilder {
             }
         });
         return metaBean;
-    }
-
-    protected MetaBean buildMetaBean(BeanInfo info) {
-        MetaBean meta = new MetaBean();
-        if (info.getBeanDescriptor() != null) {
-            meta.setId(info.getBeanDescriptor()
-                  .getBeanClass().getName()); // id = full class name!
-            meta.setName(
-                  info.getBeanDescriptor().getName()); // (display?)name = simple class name!
-            meta.setBeanClass(info.getBeanDescriptor().getBeanClass());
-        }
-        for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
-            if (!pd.getName().equals("class")) { // except this one!
-                MetaProperty metaProp = buildMetaProperty(pd);
-                meta.putProperty(pd.getName(), metaProp);
-            }
-        }
-        return meta;
-    }
-
-    protected MetaProperty buildMetaProperty(PropertyDescriptor pd) {
-        MetaProperty meta = new MetaProperty();
-        meta.setName(pd.getName());
-//        meta.setDisplayName(pd.getDisplayName());
-        meta.setType(pd.getPropertyType());
-        if (pd.isHidden()) meta.putFeature(HIDDEN, Boolean.TRUE);
-        if (pd.isPreferred()) meta.putFeature(PREFERRED, Boolean.TRUE);
-        if (pd.isConstrained()) meta.putFeature(READONLY, Boolean.TRUE);
-
-        Enumeration<String> enumeration = pd.attributeNames();
-        while (enumeration.hasMoreElements()) {
-            String key = enumeration.nextElement();
-            Object value = pd.getValue(key);
-            meta.putFeature(key, value);
-        }
-        return meta;
     }
 
     /**

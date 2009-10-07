@@ -21,7 +21,7 @@ package com.agimatec.validation.jsr303.util;
 import javax.validation.Path;
 
 /**
- * Description: <br/>
+ * Description: a node (property) as part of a Path <br/>
  * User: roman <br/>
  * Date: 28.09.2009 <br/>
  * Time: 11:56:35 <br/>

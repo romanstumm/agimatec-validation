@@ -26,15 +26,15 @@ import com.agimatec.validation.model.MetaBean;
  * Time: 14:17:56 <br/>
  * Copyright: Agimatec GmbH
  */
-public class XMLMetaBeanFactory implements MetaBeanFactory {
+public class ValidationMappingMetaBeanFactory implements MetaBeanFactory {
     /*
     suggestion to integrate the validation.xml MappingParser with the
     agimatec MetaBeanManager:
 
     in AgimatecValiationProvider, change buildValidatorFactory():
 
-       XMLMetaBeanFactory
-        xmlMetaBeanFactory = new com.agimatec.validation.jsr303.xml.XMLMetaBeanFactory();
+       ValidationMappingMetaBeanFactory
+        xmlMetaBeanFactory = new ValidationMappingMetaBeanFactory();
 
       // provide whatever is required ...
       xmlMetaBeanFactory.setMappingParser(new ValidationMappingParser());

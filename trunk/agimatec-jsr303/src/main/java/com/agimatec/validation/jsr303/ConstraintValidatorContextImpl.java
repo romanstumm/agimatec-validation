@@ -59,7 +59,7 @@ public class ConstraintValidatorContextImpl implements ConstraintValidatorContex
     }
 
     public ConstraintViolationBuilder buildConstraintViolationWithTemplate(String messageTemplate) {
-        return new ErrorBuilderImpl(this, messageTemplate,
+        return new ConstraintViolationBuilderImpl(this, messageTemplate,
               validationContext.getPropertyPath());
     }
 

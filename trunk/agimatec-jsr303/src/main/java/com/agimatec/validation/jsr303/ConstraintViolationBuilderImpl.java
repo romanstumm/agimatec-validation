@@ -31,13 +31,14 @@ import javax.validation.ConstraintValidatorContext;
  * Time: 15:28:11 <br/>
  * Copyright: Agimatec GmbH
  */
-final class ErrorBuilderImpl implements ConstraintValidatorContext.ConstraintViolationBuilder {
+final class ConstraintViolationBuilderImpl
+      implements ConstraintValidatorContext.ConstraintViolationBuilder {
     private final ConstraintValidatorContextImpl parent;
     private final String messageTemplate;
     private final PathImpl propertyPath;
 
-    ErrorBuilderImpl(ConstraintValidatorContextImpl contextImpl, String template,
-                     PathImpl path) {
+    ConstraintViolationBuilderImpl(ConstraintValidatorContextImpl contextImpl,
+                                   String template, PathImpl path) {
         parent = contextImpl;
         messageTemplate = template;
         propertyPath = path;

@@ -10,11 +10,8 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/xsd" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/target/gen-src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/com" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/jaxb" isTestSource="false" />
-      <excludeFolder url="file://$MODULE_DIR$/target/maven-archiver" />
-      <excludeFolder url="file://$MODULE_DIR$/target/surefire-reports" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -124,15 +121,28 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="javax.validation:validation-api:1.0.CR5">
+      <library name="javax.validation:validation-api:1.0.0.GA-SNAPSHOT">
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/javax/validation/validation-api/1.0.CR5/validation-api-1.0.CR5.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/javax/validation/validation-api/1.0.0.GA-SNAPSHOT/validation-api-1.0.0.GA-SNAPSHOT.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$MAVEN_REPOSITORY$/javax/validation/validation-api/1.0.CR5/validation-api-1.0.CR5-javadoc.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/javax/validation/validation-api/1.0.0.GA-SNAPSHOT/validation-api-1.0.0.GA-SNAPSHOT-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$MAVEN_REPOSITORY$/javax/validation/validation-api/1.0.CR5/validation-api-1.0.CR5-sources.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/javax/validation/validation-api/1.0.0.GA-SNAPSHOT/validation-api-1.0.0.GA-SNAPSHOT-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="org.apache.geronimo.specs:geronimo-jpa_2.0_spec:1.0-PFD2">
+        <CLASSES>
+          <root url="jar://$MAVEN_REPOSITORY$/org/apache/geronimo/specs/geronimo-jpa_2.0_spec/1.0-PFD2/geronimo-jpa_2.0_spec-1.0-PFD2.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MAVEN_REPOSITORY$/org/apache/geronimo/specs/geronimo-jpa_2.0_spec/1.0-PFD2/geronimo-jpa_2.0_spec-1.0-PFD2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MAVEN_REPOSITORY$/org/apache/geronimo/specs/geronimo-jpa_2.0_spec/1.0-PFD2/geronimo-jpa_2.0_spec-1.0-PFD2-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -186,15 +196,6 @@
         <SOURCES>
           <root url="jar://$MAVEN_REPOSITORY$/com/sun/xml/bind/jaxb-impl/2.1.3/jaxb-impl-2.1.3-sources.jar!/" />
         </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/org/apache/geronimo/specs/geronimo-jpa_2.0_spec/1.0-EA8-SNAPSHOT/geronimo-jpa_2.0_spec-1.0-EA8-SNAPSHOT.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
       </library>
     </orderEntry>
     <orderEntryProperties />

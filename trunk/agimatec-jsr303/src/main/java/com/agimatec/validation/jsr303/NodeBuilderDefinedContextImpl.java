@@ -14,7 +14,7 @@ import javax.validation.ConstraintValidatorContext;
  * Copyright: Agimatec GmbH
  */
 final class NodeBuilderDefinedContextImpl
-      implements ConstraintValidatorContext.ErrorBuilder.NodeBuilderDefinedContext {
+      implements ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderDefinedContext {
     private final ConstraintValidatorContextImpl parent;
     private final String messageTemplate;
     private final PathImpl propertyPath;
@@ -26,14 +26,14 @@ final class NodeBuilderDefinedContextImpl
         propertyPath = path;
     }
 
-    public ConstraintValidatorContext.ErrorBuilder.NodeBuilderCustomizableContext addSubNode(
+    public ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderCustomizableContext addNode(
           String name) {
         NodeImpl node = new NodeImpl(name);
         propertyPath.addNode(node);
         return new NodeBuilderCustomizableContextImpl(parent, messageTemplate, propertyPath);
     }
 
-    public ConstraintValidatorContext addError() {
+    public ConstraintValidatorContext addConstraintViolation() {
         parent.errorMessages.add(new ValidationResults.Error(messageTemplate, null,
               propertyPath.toString()));
         return parent;

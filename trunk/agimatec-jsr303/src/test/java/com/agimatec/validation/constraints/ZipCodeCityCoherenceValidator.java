@@ -37,13 +37,13 @@ public class ZipCodeCityCoherenceValidator
     public boolean isValid(ZipCodeCityCarrier adr, ConstraintValidatorContext context) {
         boolean r = true;
         if ("error".equals(adr.getZipCode())) {
-            context.disableDefaultError();
-            context.buildErrorWithMessageTemplate("zipcode not OK").addError();
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("zipcode not OK").addConstraintViolation();
             r = false;
         }
         if ("error".equals(adr.getCity())) {
-            context.disableDefaultError();
-            context.buildErrorWithMessageTemplate("city not OK").addSubNode("city").addError();
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("city not OK").addNode("city").addConstraintViolation();
             r = false;
         }
         return r;

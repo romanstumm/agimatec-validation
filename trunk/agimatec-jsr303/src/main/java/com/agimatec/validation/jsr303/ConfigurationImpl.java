@@ -152,6 +152,7 @@ public class ConfigurationImpl
         return traversableResolver;
     }
 
+    // TODO RSt - not used yet
     public ConstraintValidatorFactory getDefaultConstraintValidatorFactory() {
         return constraintFactory;
     }
@@ -169,6 +170,8 @@ public class ConfigurationImpl
         }
     }
 
+    // TODO RSt - clarify usage, see AgimatecFactoryContext.getConstraintValidatorFactory()
+    //                           and AgimatecValidatorFactory.getConstraintValidatorFactory()
     public ConstraintValidatorFactory getConstraintValidatorFactory() {
         return constraintFactory;
     }

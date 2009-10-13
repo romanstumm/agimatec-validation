@@ -31,7 +31,7 @@ import javax.validation.ConstraintValidatorContext;
  * Time: 15:28:11 <br/>
  * Copyright: Agimatec GmbH
  */
-final class ErrorBuilderImpl implements ConstraintValidatorContext.ErrorBuilder {
+final class ErrorBuilderImpl implements ConstraintValidatorContext.ConstraintViolationBuilder {
     private final ConstraintValidatorContextImpl parent;
     private final String messageTemplate;
     private final PathImpl propertyPath;
@@ -43,7 +43,7 @@ final class ErrorBuilderImpl implements ConstraintValidatorContext.ErrorBuilder 
         propertyPath = path;
     }
 
-    public NodeBuilderDefinedContext addSubNode(String name) {
+    public NodeBuilderDefinedContext addNode(String name) {
         PathImpl path;
         if (propertyPath.isRootPath()) {
             path = PathImpl.create(name);
@@ -54,7 +54,7 @@ final class ErrorBuilderImpl implements ConstraintValidatorContext.ErrorBuilder 
         return new NodeBuilderDefinedContextImpl(parent, messageTemplate, path);
     }
 
-    public ConstraintValidatorContext addError() {
+    public ConstraintValidatorContext addConstraintViolation() {
         parent.errorMessages.add(new ValidationResults.Error(messageTemplate, null,
               propertyPath.toString()));
         return parent;

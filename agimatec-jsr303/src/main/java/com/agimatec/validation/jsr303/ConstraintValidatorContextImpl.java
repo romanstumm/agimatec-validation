@@ -50,15 +50,15 @@ public class ConstraintValidatorContextImpl implements ConstraintValidatorContex
         this.constraintDescriptor = aConstraintValidation;
     }
 
-    public void disableDefaultError() {
+    public void disableDefaultConstraintViolation() {
         defaultDisabled = true;
     }
 
-    public String getDefaultErrorMessageTemplate() {
+    public String getDefaultConstraintMessageTemplate() {
         return (String) constraintDescriptor.getAttributes().get(ANNOTATION_MESSAGE);
     }
 
-    public ErrorBuilder buildErrorWithMessageTemplate(String messageTemplate) {
+    public ConstraintViolationBuilder buildConstraintViolationWithTemplate(String messageTemplate) {
         return new ErrorBuilderImpl(this, messageTemplate,
               validationContext.getPropertyPath());
     }
@@ -73,7 +73,7 @@ public class ConstraintValidatorContextImpl implements ConstraintValidatorContex
               new ArrayList<ValidationResults.Error>(errorMessages);
         if (!defaultDisabled) {
             returnedErrorMessages.add(new ValidationResults.Error(
-                  getDefaultErrorMessageTemplate(), null,
+                  getDefaultConstraintMessageTemplate(), null,
                   validationContext.getPropertyPath().toString()));
         }
         return returnedErrorMessages;

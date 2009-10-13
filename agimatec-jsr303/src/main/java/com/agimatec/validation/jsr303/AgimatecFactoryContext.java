@@ -21,10 +21,7 @@ package com.agimatec.validation.jsr303;
 import com.agimatec.validation.BeanValidator;
 import com.agimatec.validation.MetaBeanFinder;
 
-import javax.validation.MessageInterpolator;
-import javax.validation.TraversableResolver;
-import javax.validation.Validator;
-import javax.validation.ValidatorContext;
+import javax.validation.*;
 
 /**
  * Description: Represents the context that is used to create <code>ClassValidator</code>
@@ -38,6 +35,7 @@ class AgimatecFactoryContext implements ValidatorContext {
     private MessageInterpolator messageInterpolator;
     private TraversableResolver traversableResolver;
     private AgimatecValidatorFactory factory;
+    private ConstraintValidatorFactory constraintValidatorFactory;
 
     public AgimatecFactoryContext(AgimatecValidatorFactory factory) {
         this.factory = factory;
@@ -55,6 +53,18 @@ class AgimatecFactoryContext implements ValidatorContext {
     public ValidatorContext traversableResolver(TraversableResolver traversableResolver) {
         this.traversableResolver = traversableResolver;
         return this;
+    }
+
+    // TODO RSt - not used yet
+    public ValidatorContext constraintValidatorFactory(
+          ConstraintValidatorFactory constraintValidatorFactory) {
+        this.constraintValidatorFactory = constraintValidatorFactory;
+        return this;
+    }
+
+    public ConstraintValidatorFactory getConstraintValidatorFactory() {
+        return constraintValidatorFactory == null ?
+              factory.getConstraintValidatorFactory() : constraintValidatorFactory;
     }
 
     public Validator getValidator() {

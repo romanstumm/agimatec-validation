@@ -68,9 +68,8 @@ public class AgimatecValidationProvider
      *          if the ValidatorFactory cannot be built
      */
     public AgimatecValidatorFactory buildValidatorFactory(
-          ConfigurationState configuration) {
+          ConfigurationState builder) {
         try {
-            ConfigurationImpl builder = (ConfigurationImpl) configuration;
             AgimatecValidatorFactory factory = new AgimatecValidatorFactory();
             // Create MetaBeanManager that uses Introspector + Annotations for meta-data
             MetaBeanManager metaBeanManager = new MetaBeanManager(new MetaBeanBuilder(
@@ -88,8 +87,8 @@ public class AgimatecValidationProvider
             factory.setMessageInterpolator(builder.getMessageInterpolator());
             factory.setTraversableResolver(builder.getTraversableResolver());
             factory.setConstraintValidatorFactory(
-                  configuration.getConstraintValidatorFactory());
-            factory.setBeanValidator(builder.getBeanValidator());
+                  builder.getConstraintValidatorFactory());
+            factory.setBeanValidator(((ConfigurationImpl) builder).getBeanValidator());
             return factory;
         } catch (RuntimeException ex) {
             throw new ValidationException("error building ValidatorFactory", ex);

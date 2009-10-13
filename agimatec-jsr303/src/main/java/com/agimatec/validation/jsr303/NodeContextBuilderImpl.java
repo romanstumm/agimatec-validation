@@ -15,7 +15,7 @@ import javax.validation.Path;
  * Copyright: Agimatec GmbH
  */
 final class NodeContextBuilderImpl
-      implements ConstraintValidatorContext.ErrorBuilder.NodeContextBuilder {
+      implements ConstraintValidatorContext.ConstraintViolationBuilder.NodeContextBuilder {
     private final ConstraintValidatorContextImpl parent;
     private final String messageTemplate;
     private final PathImpl propertyPath;
@@ -28,26 +28,26 @@ final class NodeContextBuilderImpl
         propertyPath.getLeafNode().setInIterable(true);
     }
 
-    public ConstraintValidatorContext.ErrorBuilder.NodeBuilderDefinedContext atKey(
+    public ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderDefinedContext atKey(
           Object key) {
         propertyPath.getLeafNode().setKey(key);
         return new NodeBuilderDefinedContextImpl(parent, messageTemplate, propertyPath);
     }
 
-    public ConstraintValidatorContext.ErrorBuilder.NodeBuilderDefinedContext atIndex(
+    public ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderDefinedContext atIndex(
           Integer index) {
         propertyPath.getLeafNode().setIndex(index);
         return new NodeBuilderDefinedContextImpl(parent, messageTemplate, propertyPath);
     }
 
-    public ConstraintValidatorContext.ErrorBuilder.NodeBuilderCustomizableContext addSubNode(
+    public ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderCustomizableContext addNode(
           String name) {
         Path.Node node = new NodeImpl(name);
         propertyPath.addNode(node);
         return new NodeBuilderCustomizableContextImpl(parent, messageTemplate, propertyPath);
     }
 
-    public ConstraintValidatorContext addError() {
+    public ConstraintValidatorContext addConstraintViolation() {
         parent.errorMessages.add(new ValidationResults.Error(messageTemplate, null,
               propertyPath.toString()));
         return parent;

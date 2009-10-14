@@ -169,50 +169,49 @@ public class BeanValidator {
     }
 
     private void validateBeanInContext(ValidationContext context) {
-//        if (getDynamicMetaBean(context) != null) {
+        if (getDynamicMetaBean(context) != null) {
             context.setMetaBean(
-                   context.getMetaBean().resolveMetaBean(context.getBean()));
-//        }
+                  getDynamicMetaBean(context).resolveMetaBean(context.getBean()));
+        }
         validateBeanNet(context);
     }
 
     private void validateArrayInContext(ValidationContext context) {
         int index = 0;
-//        DynamicMetaBean dyn = getDynamicMetaBean(context);
+        DynamicMetaBean dyn = getDynamicMetaBean(context);
         for (Object each : ((Object[]) context.getBean())) {
             context.setCurrentIndex(index++);
             if (each == null) continue; // or throw IllegalArgumentException? (=> spec)
-//            if (dyn != null) {
-                context.setBean(each, context.getMetaBean().resolveMetaBean(each));
-//            } else {
-//                context.setBean(each);
-//            }
+            if (dyn != null) {
+                context.setBean(each, dyn.resolveMetaBean(each));
+            } else {
+                context.setBean(each);
+            }
             validateBeanNet(context);
         }
     }
 
-
-/*    private DynamicMetaBean getDynamicMetaBean(ValidationContext context) {
+    private DynamicMetaBean getDynamicMetaBean(ValidationContext context) {
         return context.getMetaBean() instanceof DynamicMetaBean ?
               (DynamicMetaBean) context.getMetaBean() : null;
-    }*/
+    }
 
     /** Any object implementing java.lang.Iterable is supported */
     private void validateIteratableInContext(ValidationContext context) {
         Iterator it = ((Iterable) context.getBean()).iterator();
         int index = 0;
         // jsr303 spec: Each object provided by the iterator is validated.
-//        final DynamicMetaBean dyn = getDynamicMetaBean(context);
+        final DynamicMetaBean dyn = getDynamicMetaBean(context);
         while (it.hasNext()) { // to Many
             Object each = it.next();
             context.setCurrentIndex(index++);
             if (each == null)
                 continue; // enhancement: throw IllegalArgumentException? (=> spec)
-//            if (dyn != null) {
-                context.setBean(each, context.getMetaBean().resolveMetaBean(each));
-//            } else {
-//                context.setBean(each);
-//            }
+            if (dyn != null) {
+                context.setBean(each, dyn.resolveMetaBean(each));
+            } else {
+                context.setBean(each);
+            }
             validateBeanNet(context);
         }
     }
@@ -220,18 +219,17 @@ public class BeanValidator {
     private void validateMapInContext(ValidationContext context) {
         // jsr303 spec: For Map, the value of each Map.Entry is validated (key is not validated).
         Iterator<Map.Entry> it = ((Map) context.getBean()).entrySet().iterator();
-//        final DynamicMetaBean dyn = getDynamicMetaBean(context);
+        final DynamicMetaBean dyn = getDynamicMetaBean(context);
         while (it.hasNext()) { // to Many
             Map.Entry entry = it.next();
             context.setCurrentKey(entry.getKey());
             if (entry.getValue() == null)
                 continue; // enhancement: throw IllegalArgumentException? (=> spec)
-//            if (dyn != null) {
-                context.setBean(entry.getValue(),
-                      context.getMetaBean().resolveMetaBean(entry.getValue()));
-//            } else {
-//                context.setBean(entry.getValue());
-//            }
+            if (dyn != null) {
+                context.setBean(entry.getValue(), dyn.resolveMetaBean(entry.getValue()));
+            } else {
+                context.setBean(entry.getValue());
+            }
             validateBeanNet(context);
         }
     }

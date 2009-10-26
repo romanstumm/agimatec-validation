@@ -54,7 +54,7 @@ abstract class ElementDescriptorImpl implements ElementDescriptor {
     }
 
     public ElementDescriptor.ConstraintFinder findConstraints() {
-        return new ConstraintFinderImpl(constraintDescriptors);
+        return new ConstraintFinderImpl(metaBean, constraintDescriptors);
     }
 
     public Set<ConstraintDescriptor<?>> getConstraintDescriptors() {

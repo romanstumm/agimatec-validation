@@ -222,6 +222,10 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
         return owner.isAssignableFrom(reqGroup) || groups.contains(reqGroup);
     }
 
+    public Class getOwner() {
+        return owner;
+    }
+
     /** TODO RSt - generate annotation when descriptor is based on XML */
     public Annotation getAnnotation() {
         return annotation;

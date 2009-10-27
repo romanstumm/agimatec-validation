@@ -88,7 +88,6 @@ public class AgimatecValidationProvider
             factory.setTraversableResolver(builder.getTraversableResolver());
             factory.setConstraintValidatorFactory(
                   builder.getConstraintValidatorFactory());
-            factory.setBeanValidator(((ConfigurationImpl) builder).getBeanValidator());
             return factory;
         } catch (RuntimeException ex) {
             throw new ValidationException("error building ValidatorFactory", ex);

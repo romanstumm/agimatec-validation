@@ -131,10 +131,10 @@ public class CollectionValidationTest extends TestCase {
         assertTrue(violations.isEmpty());
 
         book2.setTitle(null);
-        book3.getAuthor().setFirstName(null);
+        book3.getAuthor().setFirstName(""); // violate NotEmpty validation
         book1.getAuthor().getAddresses().get(0).setCity(null);
         /*
-        This, by the way, tests redefined default group sequence on behavior
+        This, by the way, tests redefined default group sequence behavior
         on non-root-beans (Library.Book)!!
          */
         violations = validator.validate(lib);

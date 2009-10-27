@@ -18,7 +18,6 @@
  */
 package com.agimatec.validation.jsr303;
 
-import com.agimatec.validation.BeanValidator;
 import com.agimatec.validation.MetaBeanManager;
 import com.agimatec.validation.jsr303.util.SecureActions;
 
@@ -37,7 +36,6 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
 
     private MetaBeanManager metaBeanManager;
     private MessageInterpolator messageResolver;
-    private BeanValidator beanValidator;
     private TraversableResolver traversableResolver;
     private ConstraintValidatorFactory constraintValidatorFactory;
 
@@ -98,14 +96,6 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
 
     public MetaBeanManager getMetaBeanManager() {
         return metaBeanManager;
-    }
-
-    public void setBeanValidator(BeanValidator beanValidator) {
-        this.beanValidator = beanValidator;
-    }
-
-    public BeanValidator getBeanValidator() {
-        return beanValidator;
     }
 
     public void setTraversableResolver(TraversableResolver traversableResolver) {

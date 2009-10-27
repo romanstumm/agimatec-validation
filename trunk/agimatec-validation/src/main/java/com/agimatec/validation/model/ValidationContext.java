@@ -29,7 +29,7 @@ public interface ValidationContext {
 
     void setBean(Object bean);
 
-    boolean collectValidated(Object object);
+    boolean collectValidated();
 
     void setBean(Object aBean, MetaBean aMetaBean);
 

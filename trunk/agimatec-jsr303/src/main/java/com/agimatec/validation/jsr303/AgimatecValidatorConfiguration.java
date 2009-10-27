@@ -18,8 +18,6 @@
  */
 package com.agimatec.validation.jsr303;
 
-import com.agimatec.validation.BeanValidator;
-
 import javax.validation.Configuration;
 
 /**
@@ -32,9 +30,4 @@ import javax.validation.Configuration;
  */
 public interface AgimatecValidatorConfiguration
         extends Configuration<AgimatecValidatorConfiguration> {
-    /**
-     * set the implementation class for bean validation. the implementation
-     * is responsible to provide a validation context.
-     */
-    AgimatecValidatorConfiguration beanValidator(BeanValidator beanValidator);
 }

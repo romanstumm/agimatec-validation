@@ -53,12 +53,6 @@ interface GroupValidationContext extends ValidationContext {
     public ConstraintDescriptor getConstraintDescriptor();
 
     public Object getValidatedValue();
-    
-    /**
-     * Clear map of validated objects (invoke when you want to 'reuse' the
-     * context for different validations)
-     */
-    void resetValidated();
 
     void setFixedValue(Object value);
 

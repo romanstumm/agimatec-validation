@@ -18,7 +18,6 @@
  */
 package com.agimatec.validation.jsr303;
 
-import com.agimatec.validation.BeanValidator;
 import com.agimatec.validation.MetaBeanFinder;
 
 import javax.validation.*;
@@ -69,10 +68,6 @@ class AgimatecFactoryContext implements ValidatorContext {
 
     public Validator getValidator() {
         return new ClassValidator(this);
-    }
-
-    public BeanValidator getBeanValidator() {
-        return factory.getBeanValidator();
     }
 
     public MetaBeanFinder getMetaBeanManager() {

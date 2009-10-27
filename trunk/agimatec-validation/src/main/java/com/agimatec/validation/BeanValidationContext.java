@@ -41,7 +41,7 @@ public class BeanValidationContext implements ValidationContext {
     private AnnotatedElement valueOrigin;
 
     /** set of objects already validated to avoid endless loops. */
-    private IdentityHashMap validatedObjects = new IdentityHashMap();
+    protected IdentityHashMap validatedObjects = new IdentityHashMap();
 
     /**
      * true when value is fixed, so that it will NOT be dynamically
@@ -72,8 +72,8 @@ public class BeanValidationContext implements ValidationContext {
      *
      * @return true when the object was not already validated in this context
      */
-    public boolean collectValidated(Object object) {
-        return validatedObjects.put(object, Boolean.TRUE) == null;
+    public boolean collectValidated() {
+        return validatedObjects.put(getBean(), Boolean.TRUE) == null;
     }
 
     /** @return true when the object has already been validated in this context */

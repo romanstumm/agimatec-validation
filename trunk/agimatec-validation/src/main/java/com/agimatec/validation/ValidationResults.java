@@ -36,7 +36,7 @@ public class ValidationResults implements ValidationListener, Serializable {
      *
      * @param error       - holding the description of reason and object to describe
       *                     the validation error
-     * @param context     - not used here, context can provide additional information
+     * @param context     - null or the context to provide additional information
      */
     public void addError(Error error, ValidationContext context) {
         if (errorsByReason == null) {
@@ -45,6 +45,18 @@ public class ValidationResults implements ValidationListener, Serializable {
         addToReasonBucket(error);
         addToOwnerBucket(error);
     }
+
+    /**
+     * Old API to add an error to the validation results when no context is available.
+     *
+     * @param reason       - Features from {@link com.agimatec.validation.routines.Reasons} or custom validation reason
+     * @param bean         - (optional) owner bean or null
+     * @param propertyName - (optional) propertyName where valiation error occurred or null
+     */
+    public void addError(String reason, Object bean, String propertyName) {
+        addError(createError(reason, bean, propertyName), null);
+    }
+
 
     protected Error createError(String reason, Object owner, String propertyName) {
         return new Error(reason, owner, propertyName);

@@ -18,11 +18,13 @@
  */
 package com.agimatec.validation.jsr303;
 
+import com.agimatec.validation.BeanValidator;
 import com.agimatec.validation.jsr303.groups.Group;
 import com.agimatec.validation.jsr303.groups.Groups;
 import com.agimatec.validation.jsr303.groups.GroupsComputer;
 import com.agimatec.validation.jsr303.util.SecureActions;
 import com.agimatec.validation.model.MetaBean;
+import com.agimatec.validation.model.ValidationContext;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ValidationException;
@@ -43,12 +45,12 @@ import java.util.Set;
  * Time: 13:36:33 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-public class ClassValidator implements Validator {
-    protected final AgimatecFactoryContext context;
+public class ClassValidator extends BeanValidator implements Validator {
+    protected final AgimatecFactoryContext factoryContext;
     protected final GroupsComputer groupsComputer = new GroupsComputer();
 
     public ClassValidator(AgimatecFactoryContext factoryContext) {
-        this.context = factoryContext;
+        this.factoryContext = factoryContext;
     }
 
     /** @deprecated provided for backward compatibility */
@@ -65,35 +67,22 @@ public class ClassValidator implements Validator {
     public <T> Set<ConstraintViolation<T>> validate(T object, Class<?>... groupArray) {
         if (object == null) throw new IllegalArgumentException("cannot validate null");
         try {
-            final MetaBean metaBean = context.getFactory().getMetaBeanManager()
-                  .findForClass(object.getClass());
-            final GroupValidationContext context = createContext(metaBean, object, groupArray);
+            final GroupValidationContext context =
+                  createContext(factoryContext.getFactory().getMetaBeanManager()
+                        .findForClass(object.getClass()), object, groupArray);
             final ConstraintValidationListener result =
                   (ConstraintValidationListener) context.getListener();
             final Groups groups = context.getGroups();
-            // TODO RSt - need to fix default group sequence behavior on non-root-beans
             // 1. process groups
             for (Group current : groups.getGroups()) {
                 context.setCurrentGroup(current);
-                List<Group> defaultGroups = expandDefaultGroup(metaBean, context);
-                if (defaultGroups != null) {
-                    for(Group each : defaultGroups) {
-                        context.resetValidated();
-                        context.setCurrentGroup(each);
-                        this.context.getBeanValidator().validateContext(context);
-                        // continue validation, even if errors already found: if (!result.isEmpty())
-                    }
-                } else {
-                    context.resetValidated();
-                    this.context.getBeanValidator().validateContext(context);
-                }
+                validateContext(context);
             }
             // 2. process sequences
             for (List<Group> eachSeq : groups.getSequences()) {
                 for (Group current : eachSeq) {
-                    context.resetValidated();
                     context.setCurrentGroup(current);
-                    this.context.getBeanValidator().validateContext(context);
+                    validateContext(context);
                     /**
                      * if one of the group process in the sequence leads to one or more validation failure,
                      * the groups following in the sequence must not be processed
@@ -107,12 +96,34 @@ public class ClassValidator implements Validator {
         }
     }
 
-    private List<Group> expandDefaultGroup(MetaBean metaBean,
-                                              GroupValidationContext context) {
+    @Override
+    public void validateBeanNet(ValidationContext vcontext) {
+        GroupValidationContext context = (GroupValidationContext) vcontext;
+        List<Group> defaultGroups = expandDefaultGroup(context);
+        if (defaultGroups != null) {
+            Group currentGroup = context.getCurrentGroup();
+            for (Group each : defaultGroups) {
+                context.setCurrentGroup(each);
+                super.validateBeanNet(context);
+                // continue validation, even if errors already found: if (!result.isEmpty())
+            }
+            context.setCurrentGroup(currentGroup); // restore  (finally{} not required)
+        } else {
+            super.validateBeanNet(context);
+        }
+    }
+
+    /**
+     * in case of a default group return the list of groups
+     * for a redefined default GroupSequence
+     *
+     * @return null when no in default group or default group sequence not redefined
+     */
+    private List<Group> expandDefaultGroup(GroupValidationContext context) {
         if (context.getCurrentGroup().isDefault()) {
             // mention if metaBean redefines the default group
             List<Group> groupSeq =
-                  metaBean.getFeature(Jsr303Features.Bean.GROUP_SEQUENCE);
+                  context.getMetaBean().getFeature(Jsr303Features.Bean.GROUP_SEQUENCE);
             if (groupSeq != null) {
                 context.getGroups().assertDefaultGroupSequenceIsExpandable(groupSeq);
             }
@@ -144,7 +155,7 @@ public class ClassValidator implements Validator {
         if (object == null) throw new IllegalArgumentException("cannot validate null");
         try {
             MetaBean metaBean =
-                  context.getMetaBeanManager().findForClass(object.getClass());
+                  factoryContext.getMetaBeanManager().findForClass(object.getClass());
             GroupValidationContext context = createContext(metaBean, object, groups);
             ConstraintValidationListener result =
                   (ConstraintValidationListener) context.getListener();
@@ -161,16 +172,14 @@ public class ClassValidator implements Validator {
             Groups sequence = context.getGroups();
             // 1. process groups
             for (Group current : sequence.getGroups()) {
-                context.resetValidated();
                 context.setCurrentGroup(current);
-                this.context.getBeanValidator().validateProperty(context);
+                validatePropertyInGroup(context);
             }
             // 2. process sequences
             for (List<Group> eachSeq : sequence.getSequences()) {
                 for (Group current : eachSeq) {
-                    context.resetValidated();
                     context.setCurrentGroup(current);
-                    this.context.getBeanValidator().validateProperty(context);
+                    validatePropertyInGroup(context);
                     /**
                      * if one of the group process in the sequence leads to one or more validation failure,
                      * the groups following in the sequence must not be processed
@@ -181,6 +190,21 @@ public class ClassValidator implements Validator {
             return result.getConstaintViolations();
         } catch (RuntimeException ex) {
             throw unrecoverableValidationError(ex, object);
+        }
+    }
+
+    private void validatePropertyInGroup(GroupValidationContext context) {
+        Group currentGroup = context.getCurrentGroup();
+        List<Group> defaultGroups = expandDefaultGroup(context);
+        if (defaultGroups != null) {
+            for (Group each : defaultGroups) {
+                context.setCurrentGroup(each);
+                validateProperty(context);
+                // continue validation, even if errors already found: if (!result.isEmpty())
+            }
+            context.setCurrentGroup(currentGroup); // restore
+        } else {
+            validateProperty(context);
         }
     }
 
@@ -210,7 +234,8 @@ public class ClassValidator implements Validator {
                                                          Object value,
                                                          Class<?>... groups) {
         try {
-            MetaBean metaBean = context.getMetaBeanManager().findForClass(beanType);
+            MetaBean metaBean =
+                  factoryContext.getMetaBeanManager().findForClass(beanType);
             GroupValidationContext context = createContext(metaBean, null, groups);
             ConstraintValidationListener result =
                   (ConstraintValidationListener) context.getListener();
@@ -220,16 +245,14 @@ public class ClassValidator implements Validator {
             Groups sequence = context.getGroups();
             // 1. process groups
             for (Group current : sequence.getGroups()) {
-                context.resetValidated();
                 context.setCurrentGroup(current);
-                this.context.getBeanValidator().validateProperty(context);
+                validatePropertyInGroup(context);
             }
             // 2. process sequences
             for (List<Group> eachSeq : sequence.getSequences()) {
                 for (Group current : eachSeq) {
-                    context.resetValidated();
                     context.setCurrentGroup(current);
-                    this.context.getBeanValidator().validateProperty(context);
+                    validatePropertyInGroup(context);
                     /**
                      * if one of the group process in the sequence leads to one or more validation failure,
                      * the groups following in the sequence must not be processed
@@ -248,8 +271,8 @@ public class ClassValidator implements Validator {
         ConstraintValidationListener<T> listener =
               new ConstraintValidationListener<T>(object);
         GroupValidationContextImpl context = new GroupValidationContextImpl(listener,
-              this.context.getMessageInterpolator(),
-              this.context.getTraversableResolver(), metaBean);
+              this.factoryContext.getMessageInterpolator(),
+              this.factoryContext.getTraversableResolver(), metaBean);
         context.setBean(object, metaBean);
         context.setGroups(groupsComputer.computeGroups(groups));
         return context;
@@ -266,7 +289,7 @@ public class ClassValidator implements Validator {
      */
     public BeanDescriptor getConstraintsForClass(Class<?> clazz) {
         try {
-            MetaBean metaBean = context.getMetaBeanManager().findForClass(clazz);
+            MetaBean metaBean = factoryContext.getMetaBeanManager().findForClass(clazz);
             BeanDescriptorImpl edesc =
                   metaBean.getFeature(Jsr303Features.Bean.BEAN_DESCRIPTOR);
             if (edesc == null) {

@@ -47,7 +47,7 @@ final class ConstraintValidationListener<T> implements ValidationListener {
         addError(reason, null, context);
     }
 
-    public void addError(ValidationListener.Error error, ValidationContext context) {
+    public void addError(Error error, ValidationContext context) {
         if (error.getOwner() instanceof Path) {
             addError(error.getReason(), (Path) error.getOwner(), context);
         } else {

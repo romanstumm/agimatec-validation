@@ -234,9 +234,9 @@ public class BeanValidator {
         }
     }
 
-    /** internal  validate a bean (=not a collection of beans) and its related beans */
+    /** internal validate a bean (=not a collection of beans) and its related beans */
     protected void validateBeanNet(ValidationContext context) {
-        if (context.collectValidated(context.getBean())) {
+        if (context.collectValidated()) {
             validateBean(context);
             final Object bean = context.getBean();
             final MetaBean mbean = context.getMetaBean();

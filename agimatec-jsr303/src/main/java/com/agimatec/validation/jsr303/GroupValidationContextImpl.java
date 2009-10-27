@@ -29,7 +29,9 @@ import javax.validation.ConstraintValidator;
 import javax.validation.MessageInterpolator;
 import javax.validation.TraversableResolver;
 import javax.validation.metadata.ConstraintDescriptor;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.Set;
 
 /**
  * Description: instance per validation process, not thread-safe<br/>
@@ -38,7 +40,7 @@ import java.util.IdentityHashMap;
  * Time: 16:32:35 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-class GroupValidationContextImpl extends BeanValidationContext
+final class GroupValidationContextImpl extends BeanValidationContext
       implements GroupValidationContext, MessageInterpolator.Context {
 
     private final MessageInterpolator messageResolver;
@@ -90,6 +92,23 @@ class GroupValidationContextImpl extends BeanValidationContext
     public void moveUp(Object bean, MetaBean metaBean) {
         path.removeLeafNode();
         super.moveUp(bean, metaBean); // call super!
+    }
+
+    /**
+     * add the object in the current group
+     * to the collection of validated objects to keep
+     * track of them to avoid endless loops during validation.
+     *
+     * @return true when the object was not already validated in this context
+     */
+    @Override
+    public boolean collectValidated() {
+        Set<Group> groupSet = (Set<Group>) validatedObjects.get(getBean());
+        if(groupSet == null) {
+            groupSet = new HashSet(10);
+            validatedObjects.put(getBean(), groupSet);
+        }
+        return groupSet.add(getCurrentGroup());
     }
 
     /** @return true when the constraint for this object was not already validated in this context */

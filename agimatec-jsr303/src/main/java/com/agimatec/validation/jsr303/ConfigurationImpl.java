@@ -18,8 +18,6 @@
  */
 package com.agimatec.validation.jsr303;
 
-import com.agimatec.validation.BeanValidator;
-
 import javax.validation.*;
 import javax.validation.spi.BootstrapState;
 import javax.validation.spi.ConfigurationState;
@@ -45,7 +43,6 @@ public class ConfigurationImpl
     protected Class<? extends Configuration<?>> providerClass;
     protected MessageInterpolator messageInterpolator, defaultMessageResolver;
     protected ConstraintValidatorFactory constraintFactory;
-    private BeanValidator beanValidator;
     private TraversableResolver traversableResolver;
 
     public ConfigurationImpl(BootstrapState aState, ValidationProvider aProvider) {
@@ -76,7 +73,6 @@ public class ConfigurationImpl
         messageInterpolator = new DefaultMessageInterpolator();
         defaultMessageResolver = messageInterpolator;
         traversableResolver = new DefaultTraversableResolver();
-        setBeanValidator(new BeanValidator());
     }
 
     public AgimatecValidatorConfiguration ignoreXmlConfiguration() {
@@ -119,11 +115,6 @@ public class ConfigurationImpl
      */
     public Map<String, String> getProperties() {
         return null;  // do nothing
-    }
-
-    public AgimatecValidatorConfiguration beanValidator(BeanValidator beanValidator) {
-        setBeanValidator(beanValidator);
-        return this;
     }
 
     /**
@@ -217,14 +208,6 @@ public class ConfigurationImpl
     /** used by XStream to set values from configuration file */
     public void setProviderClass(Class<? extends Configuration<?>> providerClass) {
         this.providerClass = providerClass;
-    }
-
-    public void setBeanValidator(BeanValidator beanValidator) {
-        this.beanValidator = beanValidator;
-    }
-
-    public BeanValidator getBeanValidator() {
-        return beanValidator;
     }
 
     public void setConstraintFactory(ConstraintValidatorFactory constraintFactory) {

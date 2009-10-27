@@ -201,7 +201,6 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
                            ConstraintValidatorContextImpl jsrContext) {
         context.setConstraintDescriptor(this);
         for (ValidationResults.Error each : jsrContext.getErrorMessages()) {
-            // TODO RSt - fix: jsrContexts errors are lost (path info etc...)
             context.getListener().addError(each, context);
         }
     }

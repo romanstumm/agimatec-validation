@@ -18,9 +18,10 @@
  */
 package com.agimatec.validation.jsr303;
 
-import com.agimatec.validation.ValidationResults;
+import com.agimatec.validation.model.ValidationListener;
 
 import javax.validation.ConstraintValidatorContext;
+import javax.validation.Path;
 import javax.validation.ValidationException;
 import javax.validation.metadata.ConstraintDescriptor;
 import java.util.ArrayList;
@@ -36,8 +37,8 @@ import java.util.List;
  */
 public class ConstraintValidatorContextImpl implements ConstraintValidatorContext {
     private static final String ANNOTATION_MESSAGE = "message";
-    final List<ValidationResults.Error> errorMessages =
-          new LinkedList<ValidationResults.Error>();
+    private final List<ValidationListener.Error> errorMessages =
+          new LinkedList<ValidationListener.Error>();
 
     private final ConstraintValidation constraintDescriptor;
     private final GroupValidationContext validationContext;
@@ -63,18 +64,17 @@ public class ConstraintValidatorContextImpl implements ConstraintValidatorContex
               validationContext.getPropertyPath());
     }
 
-    public List<ValidationResults.Error> getErrorMessages() {
+    public List<ValidationListener.Error> getErrorMessages() {
         if (defaultDisabled && errorMessages.isEmpty()) {
             throw new ValidationException(
                   "At least one custom message must be created if the default error message gets disabled.");
         }
 
-        List<ValidationResults.Error> returnedErrorMessages =
-              new ArrayList<ValidationResults.Error>(errorMessages);
+        List<ValidationListener.Error> returnedErrorMessages =
+              new ArrayList<ValidationListener.Error>(errorMessages);
         if (!defaultDisabled) {
-            returnedErrorMessages.add(new ValidationResults.Error(
-                  getDefaultConstraintMessageTemplate(), null,
-                  validationContext.getPropertyPath().toString()));
+            returnedErrorMessages.add(new ValidationListener.Error(
+                  getDefaultConstraintMessageTemplate(), validationContext.getPropertyPath(), null));
         }
         return returnedErrorMessages;
     }
@@ -87,4 +87,8 @@ public class ConstraintValidatorContextImpl implements ConstraintValidatorContex
         return validationContext;
     }
 
+    public void addError(String messageTemplate, Path propertyPath) {
+        errorMessages.add(new ValidationListener.Error(messageTemplate,
+              propertyPath, null));
+    }
 }

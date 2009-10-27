@@ -1,6 +1,5 @@
 package com.agimatec.validation.jsr303;
 
-import com.agimatec.validation.ValidationResults;
 import com.agimatec.validation.jsr303.util.NodeImpl;
 import com.agimatec.validation.jsr303.util.PathImpl;
 
@@ -34,8 +33,7 @@ final class NodeBuilderDefinedContextImpl
     }
 
     public ConstraintValidatorContext addConstraintViolation() {
-        parent.errorMessages.add(new ValidationResults.Error(messageTemplate, null,
-              propertyPath.toString()));
+        parent.addError(messageTemplate, propertyPath);
         return parent;
     }
 }

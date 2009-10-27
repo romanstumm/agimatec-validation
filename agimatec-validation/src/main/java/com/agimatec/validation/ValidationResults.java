@@ -17,23 +17,31 @@ public class ValidationResults implements ValidationListener, Serializable {
     private Map<String, List<Error>> errorsByReason;
     private Map<Object, Map<String, List<Error>>> errorsByOwner;
 
-    public void addError(String reason, ValidationContext context) {
-        addError(reason, context.getBean(), context.getPropertyName());
-    }
 
     /**
      * API to add an error to the validation results.
      *
-     * @param reason       - Features from {@link com.agimatec.validation.routines.Reasons} or custom validation reason
-     * @param bean         - (optional) owner bean or null
-     * @param propertyName - (optional) propertyName where valiation error occurred or null
+     * @param reason       - Features from {@link com.agimatec.validation.routines.Reasons}
+     *                       or custom reason of validation error
+     * @param context        - context information (bean, propertyName, value, ...)
      */
-    public void addError(String reason, Object bean, String propertyName) {
+    public void addError(String reason, ValidationContext context) {
+        Error error = createError(reason, context.getBean(), context.getPropertyName());
+        addError(error, context);
+    }
+
+
+     /**
+     * API to add an error to the validation results.
+     *
+     * @param error       - holding the description of reason and object to describe
+      *                     the validation error
+     * @param context     - not used here, context can provide additional information
+     */
+    public void addError(Error error, ValidationContext context) {
         if (errorsByReason == null) {
             initialize();
         }
-        Error error = createError(reason, bean, propertyName);
-
         addToReasonBucket(error);
         addToOwnerBucket(error);
     }
@@ -52,28 +60,28 @@ public class ValidationResults implements ValidationListener, Serializable {
     }
 
     protected void addToReasonBucket(Error error) {
-        if (error.reason == null) return;
+        if (error.getReason() == null) return;
 
-        List<Error> errors = errorsByReason.get(error.reason);
+        List<Error> errors = errorsByReason.get(error.getReason());
         if (errors == null) {
             errors = new ArrayList<Error>();
-            errorsByReason.put(error.reason, errors);
+            errorsByReason.put(error.getReason(), errors);
         }
         errors.add(error);
     }
 
     protected void addToOwnerBucket(Error error) {
-        if (error.owner == null) return;
+        if (error.getOwner() == null) return;
 
-        Map<String, List<Error>> errors = errorsByOwner.get(error.owner);
+        Map<String, List<Error>> errors = errorsByOwner.get(error.getOwner());
         if (errors == null) {
             errors = new HashMap<String, List<Error>>();
-            errorsByOwner.put(error.owner, errors);
+            errorsByOwner.put(error.getOwner(), errors);
         }
-        List<Error> list = errors.get(error.propertyName);
+        List<Error> list = errors.get(error.getPropertyName());
         if (list == null) {
             list = new ArrayList<Error>();
-            errors.put(error.propertyName, list);
+            errors.put(error.getPropertyName(), list);
         }
         list.add(error);
     }
@@ -96,7 +104,7 @@ public class ValidationResults implements ValidationListener, Serializable {
     /** @return true when there are NO errors in this validation result */
     public boolean isEmpty() {
         if (errorsByReason == null ||
-                (errorsByReason.isEmpty() && errorsByOwner.isEmpty())) return true;
+              (errorsByReason.isEmpty() && errorsByOwner.isEmpty())) return true;
         for (List<Error> list : errorsByReason.values()) {
             if (!list.isEmpty()) return false;
         }
@@ -136,34 +144,4 @@ public class ValidationResults implements ValidationListener, Serializable {
     public String toString() {
         return "ValidationResults{" + errorsByOwner + "}";
     }
-
-    public static class Error implements Serializable {
-        final String reason;
-        final Object owner;
-        final String propertyName;
-
-        public Error(String aReason, Object aOwner, String aPropertyName) {
-            this.reason = aReason;
-            this.owner = aOwner;
-            this.propertyName = aPropertyName;
-        }
-
-        public String getReason() {
-            return reason;
-        }
-
-        public Object getOwner() {
-            return owner;
-        }
-
-        public String getPropertyName() {
-            return propertyName;
-        }
-
-        public String toString() {
-            return "Error{" + "reason='" + reason + '\'' + ", propertyName='" +
-                    propertyName + '\'' + '}';
-        }
-    }
-
 }

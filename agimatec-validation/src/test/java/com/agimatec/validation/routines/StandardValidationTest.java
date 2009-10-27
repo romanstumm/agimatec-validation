@@ -162,4 +162,8 @@ public class StandardValidationTest extends TestCase implements ValidationListen
         reasons.add(reason);
     }
 
+    public void addError(ValidationListener.Error error, ValidationContext context) {
+        reasons.add(error.getReason());
+    }
+
 }

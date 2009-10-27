@@ -34,7 +34,7 @@ import java.util.Set;
  * Time: 14:52:19 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-class ConstraintValidationListener<T> implements ValidationListener {
+final class ConstraintValidationListener<T> implements ValidationListener {
     private final Set<ConstraintViolation<T>> constaintViolations = new HashSet();
     private final T rootBean;
 
@@ -44,29 +44,46 @@ class ConstraintValidationListener<T> implements ValidationListener {
 
     @SuppressWarnings({"ManualArrayToCollectionCopy"})
     public void addError(String reason, ValidationContext context) {
+        addError(reason, null, context);
+    }
+
+    public void addError(ValidationListener.Error error, ValidationContext context) {
+        if (error.getOwner() instanceof Path) {
+            addError(error.getReason(), (Path) error.getOwner(), context);
+        } else {
+            addError(error.getReason(), null, context);
+        }
+    }
+
+    private void addError(String messageTemplate, Path propPath,
+                          ValidationContext context) {
         final Object value;
         if (context.getMetaProperty() == null) value = context.getBean();
         else value = context.getPropertyValue();
 
-        final Path propPath;
         final ConstraintDescriptor constraint;
-        String message = reason;
+        final String message;
         if (context instanceof GroupValidationContext) {
             GroupValidationContext gcontext = (GroupValidationContext) context;
             if (gcontext instanceof MessageInterpolator.Context) {
                 message = gcontext.getMessageResolver()
-                      .interpolate(reason, (MessageInterpolator.Context) gcontext);
+                      .interpolate(messageTemplate,
+                            (MessageInterpolator.Context) gcontext);
             } else {
-                message = gcontext.getMessageResolver().interpolate(reason, null);
+                message =
+                      gcontext.getMessageResolver().interpolate(messageTemplate, null);
             }
-            propPath = gcontext.getPropertyPath();
             constraint = gcontext.getConstraintDescriptor();
+            if (propPath == null) propPath = gcontext.getPropertyPath();
+
         } else {
-            propPath = PathImpl.fromString(context.getPropertyName());
+            message = messageTemplate;
+            if (propPath == null)
+                propPath = PathImpl.fromString(context.getPropertyName());
             constraint = null;
         }
-        ConstraintViolationImpl<T> ic = new ConstraintViolationImpl<T>(reason, message,
-              rootBean, context.getBean(), propPath, value, constraint);
+        ConstraintViolationImpl<T> ic = new ConstraintViolationImpl<T>(messageTemplate,
+              message, rootBean, context.getBean(), propPath, value, constraint);
         constaintViolations.add(ic);
     }
 

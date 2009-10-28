@@ -46,7 +46,6 @@ import java.util.*;
  * Date: 01.04.2008 <br/>
  * Time: 14:12:51 <br/>
  * Copyright: Agimatec GmbH 2008
- * TODO RSt - overrides attribute not yet implemented
  */
 public class AnnotationMetaBeanFactory implements MetaBeanFactory {
     private static final Log log = LogFactory.getLog(AnnotationMetaBeanFactory.class);
@@ -77,7 +76,7 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
             // process class, superclasses and interfaces
             List<Class> classSequence = new ArrayList<Class>();
             Class theClass = beanClass;
-            while (theClass != null) {
+            while (theClass != null && theClass != Object.class) {
                 classSequence.add(theClass);
                 theClass = theClass.getSuperclass();
             }
@@ -146,7 +145,7 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
 
     private boolean processAnnotations(MetaBean metabean, MetaProperty prop, Class owner,
                                        AnnotatedElement element,
-                                       ConstraintValidation validation)
+                                       AnnotationConstraintBuilder validation)
           throws IllegalAccessException, InvocationTargetException {
         boolean changed = false;
         for (Annotation annotation : element.getDeclaredAnnotations()) {
@@ -159,7 +158,7 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
     private boolean processAnnotation(Annotation annotation, MetaProperty prop,
                                       MetaBean metabean, Class owner,
                                       AnnotatedElement element,
-                                      ConstraintValidation validation)
+                                      AnnotationConstraintBuilder validation)
           throws IllegalAccessException, InvocationTargetException {
         if (annotation instanceof Valid) {
             return processValid(/*element, metabean, */prop);
@@ -316,7 +315,7 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
                                  Class<? extends ConstraintValidator>[] constraintClasses,
                                  MetaBean metabean, MetaProperty prop, Class owner,
                                  AnnotatedElement element,
-                                 ConstraintValidation parentValidation)
+                                 AnnotationConstraintBuilder parentValidation)
           throws IllegalAccessException, InvocationTargetException {
         // The lifetime of a constraint validation implementation instance is undefined.
         for (Class constraintClass : constraintClasses) {
@@ -324,21 +323,22 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
                   constraintFactory.getInstance(constraintClass);
             constraint.initialize(annotation);
 
-            ConstraintValidation validation = new ConstraintValidation(
-                  new ConstraintValidator[]{constraint}, annotation, owner, element);
+            AnnotationConstraintBuilder builder = new AnnotationConstraintBuilder(
+                  new ConstraintValidator[]{constraint}, annotation, owner, element
+            );
             if (parentValidation == null) {
                 if (prop != null) {
-                    prop.addValidation(validation);
+                    prop.addValidation(builder.getConstraintValidation());
                 } else {
-                    metabean.addValidation(validation);
+                    metabean.addValidation(builder.getConstraintValidation());
                 }
             } else {
-                parentValidation.addComposed(validation);
+                parentValidation.addComposed(builder.getConstraintValidation());
             }
             // process composed constraints:
             // here are not other superclasses possible, because annotations do not inherit!
             processAnnotations(metabean, prop, owner, annotation.annotationType(),
-                  validation); // recursion!
+                  builder); // recursion!
         }
     }
 }

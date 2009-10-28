@@ -18,6 +18,7 @@
  */
 package com.agimatec.validation.jsr303;
 
+import com.agimatec.validation.jsr303.example.AgimatecAddress;
 import com.agimatec.validation.jsr303.example.FrenchAddress;
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -64,7 +65,7 @@ public class ComposedConstraintsTest extends TestCase {
         //Size.class is understood by the tool
         if (cd.getAnnotation().annotationType().equals(Size.class)) {
             Size m = (Size) cd.getAnnotation();
-            System.out.println("size.max = " + m.max());  //read and use the metadata
+//            System.out.println("size.max = " + m.max());  //read and use the metadata
         }
         for (Object composingCd : cd.getComposingConstraints()) {
             processConstraintDescriptor((ConstraintDescriptor) composingCd);
@@ -72,15 +73,11 @@ public class ComposedConstraintsTest extends TestCase {
         }
     }
 
-    /** TODO RSt - test use of @OverridesAttribute */
     public void testValidateComposed() {
         FrenchAddress adr = new FrenchAddress();
         Validator val = factory.getValidator();
         Set<ConstraintViolation<FrenchAddress>> findings = val.validate(adr);
-        Assert.assertEquals(1,
-              findings.size()); // with @ReportAsSingleConstraintViolation
-
-//        assertEquals(3, findings.size()); // without @ReportAsSingleConstraintViolation
+        Assert.assertEquals(1, findings.size()); // with @ReportAsSingleConstraintViolation
 
         ConstraintViolation<FrenchAddress> finding = findings.iterator().next();
         Assert.assertEquals("Wrong zipcode", finding.getMessage());
@@ -94,11 +91,20 @@ public class ComposedConstraintsTest extends TestCase {
         Assert.assertTrue(findings.size() > 0); // too long
     }
 
-
-    /** TODO RSt - add a test for Example 2.11. Use of constraintIndex in @OverridesAttribute */
     public void testOverridesAttributeConstraintIndex() {
+        AgimatecAddress adr = new AgimatecAddress();
+        adr.setZipCode("invalid-string");
+        Validator val = factory.getValidator();
+        Set<ConstraintViolation<AgimatecAddress>> findings = val.validate(adr);
+        assertEquals(2, findings.size()); // without @ReportAsSingleConstraintViolation
 
-        fail("test using @AgimatecEmail not implemented");
+        adr.setZipCode("ROMAN@GMX.DE");
+        findings = val.validate(adr);
+        assertEquals(1, findings.size());
+
+        adr.setZipCode("ROMAN@AGIMATEC.DE");
+        findings = val.validate(adr);
+        Assert.assertTrue(findings.isEmpty());
     }
 
 }

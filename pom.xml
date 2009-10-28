@@ -73,12 +73,6 @@
 
   <developers>
     <developer>
-      <id>fabian.crabus</id>
-      <name>Fabian Crabus</name>
-      <email>fabian.crabus@agimatec.com</email>
-      <organization>agimatec</organization>
-    </developer>
-    <developer>
       <id>roman.stumm</id>
       <name>Roman Stumm</name>
       <email>roman.stumm@agimatec.de</email>

@@ -32,9 +32,9 @@ import java.lang.annotation.Target;
     // email
     @Pattern(regexp = "[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}"),
     // agimatec
-    @Pattern(regexp = ".*?agimatec.*?")
+    @Pattern(regexp = ".*?AGIMATEC.*?")
 })
-@Constraint(validatedBy = {})
+@Constraint(validatedBy = {AgimatecEmailValidator.class})
 @Documented
 @Target({ANNOTATION_TYPE, METHOD, FIELD, CONSTRUCTOR, PARAMETER})
 @Retention(RUNTIME)

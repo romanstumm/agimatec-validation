@@ -28,7 +28,7 @@ import javax.validation.OverridesAttribute;
 import javax.validation.Payload;
 import javax.validation.ReportAsSingleViolation;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.PrivilegedAction;
@@ -53,12 +53,12 @@ final class AnnotationConstraintBuilder {
 
     public AnnotationConstraintBuilder(ConstraintValidator[] constraintValidators,
                                        Annotation annotation, Class owner,
-                                       AnnotatedElement element) {
+                                       Field field) {
         boolean reportFromComposite = annotation != null && annotation.annotationType()
               .isAnnotationPresent(ReportAsSingleViolation.class);
 
         constraintValidation = new ConstraintValidation(constraintValidators, annotation,
-              owner, element, reportFromComposite);
+              owner, field, reportFromComposite);
 
         buildFromAnnotation();
     }

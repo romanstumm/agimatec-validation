@@ -25,7 +25,6 @@ import com.agimatec.validation.model.ValidationContext;
 import javax.validation.ConstraintValidator;
 import javax.validation.MessageInterpolator;
 import javax.validation.TraversableResolver;
-import javax.validation.metadata.ConstraintDescriptor;
 
 /**
  * Description: <br/>
@@ -48,9 +47,9 @@ interface GroupValidationContext extends ValidationContext {
     PathImpl getPropertyPath();
     MetaBean getRootMetaBean();
 
-    void setConstraintDescriptor(ConstraintDescriptor constraint);
+    void setConstraintDescriptor(ConstraintValidation constraint);
     
-    public ConstraintDescriptor getConstraintDescriptor();
+    public ConstraintValidation getConstraintDescriptor();
 
     public Object getValidatedValue();
 

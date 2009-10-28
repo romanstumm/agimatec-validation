@@ -20,6 +20,7 @@ package com.agimatec.validation.jsr303;
 
 import com.agimatec.validation.jsr303.example.AgimatecAddress;
 import com.agimatec.validation.jsr303.example.FrenchAddress;
+import com.agimatec.validation.jsr303.util.TestUtils;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -97,10 +98,13 @@ public class ComposedConstraintsTest extends TestCase {
         Validator val = factory.getValidator();
         Set<ConstraintViolation<AgimatecAddress>> findings = val.validate(adr);
         assertEquals(2, findings.size()); // without @ReportAsSingleConstraintViolation
+        assertNotNull(TestUtils.getViolationWithMessage(findings, "Not Agimatec"));
+        assertNotNull(TestUtils.getViolationWithMessage(findings, "Not an email"));
 
         adr.setZipCode("ROMAN@GMX.DE");
         findings = val.validate(adr);
         assertEquals(1, findings.size());
+        assertNotNull(TestUtils.getViolationWithMessage(findings, "Not Agimatec"));
 
         adr.setZipCode("ROMAN@AGIMATEC.DE");
         findings = val.validate(adr);

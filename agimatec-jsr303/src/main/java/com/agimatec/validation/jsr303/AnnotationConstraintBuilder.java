@@ -142,17 +142,25 @@ final class AnnotationConstraintBuilder {
      */
     public void addComposed(ConstraintValidation composite) {
         applyOverridesAttributes(composite);
-
-        constraintValidation.addComposed(composite);
+        constraintValidation.addComposed(composite); // add AFTER apply()
     }
 
     private void applyOverridesAttributes(ConstraintValidation composite) {
         if (null == overrides) buildOverridesAttributes();
         if (!overrides.isEmpty()) {
-            int index = computeIndex(composite);
-            ConstraintOverrides override =
-                  findOverride(composite.getAnnotation().annotationType(), index);
-            if(override != null) override.applyOn(composite);
+            int index = computeIndex(composite); // assume composite not yet added! (+1)
+            if (index < 0) {
+                ConstraintOverrides override = // search for constraintIndex = -1
+                      findOverride(composite.getAnnotation().annotationType(), -1);
+                if (override != null) override.applyOn(composite);
+                else override = // search for constraintIndex == 0
+                      findOverride(composite.getAnnotation().annotationType(), 0);
+                if (override != null) override.applyOn(composite);
+            } else { // search for constraintIndex > 0
+                ConstraintOverrides override =
+                      findOverride(composite.getAnnotation().annotationType(), index + 1);
+                if (override != null) override.applyOn(composite);
+            }
         }
     }
 

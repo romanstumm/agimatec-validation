@@ -34,7 +34,13 @@ import java.lang.annotation.Target;
     // agimatec
     @Pattern(regexp = ".*?AGIMATEC.*?")
 })
-@Constraint(validatedBy = {AgimatecEmailValidator.class})
+/**
+ * test a constraint WITHOUT an own ConstraintValidator implementation.
+ * the validations, that must be processed are in the combined constraints only!!
+ * the @Constraint annotation is nevertheless required so that the framework searches
+ * for combined constraints.  
+ */
+@Constraint(validatedBy = {})
 @Documented
 @Target({ANNOTATION_TYPE, METHOD, FIELD, CONSTRUCTOR, PARAMETER})
 @Retention(RUNTIME)

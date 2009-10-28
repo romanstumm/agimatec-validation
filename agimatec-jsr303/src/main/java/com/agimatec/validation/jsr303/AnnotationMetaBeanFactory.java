@@ -102,7 +102,7 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
      */
     private void processClass(Class<?> beanClass, MetaBean metabean)
           throws IllegalAccessException, InvocationTargetException {
-        processAnnotations(metabean, null, beanClass, beanClass, null);
+        processAnnotations(metabean, null, beanClass, beanClass, null, null);
 
         Field[] fields = beanClass.getDeclaredFields();
         for (Field field : fields) {
@@ -112,11 +112,11 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
                 metaProperty = new MetaProperty();
                 metaProperty.setName(field.getName());
                 metaProperty.setType(field.getType());
-                if (processAnnotations(metabean, metaProperty, beanClass, field, null)) {
+                if (processAnnotations(metabean, metaProperty, beanClass, field, field, null)) {
                     metabean.putProperty(metaProperty.getName(), metaProperty);
                 }
             } else {
-                processAnnotations(metabean, metaProperty, beanClass, field, null);
+                processAnnotations(metabean, metaProperty, beanClass, field, field, null);
             }
         }
         Method[] methods = beanClass.getDeclaredMethods();
@@ -137,72 +137,64 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
                 MetaProperty metaProperty = metabean.getProperty(propName);
                 // only those methods, for which we have a MetaProperty
                 if (metaProperty != null) {
-                    processAnnotations(metabean, metaProperty, beanClass, method, null);
+                    processAnnotations(metabean, metaProperty, beanClass, method, null, null);
                 }
             }
         }
     }
 
     private boolean processAnnotations(MetaBean metabean, MetaProperty prop, Class owner,
-                                       AnnotatedElement element,
+                                       AnnotatedElement element, Field field,
                                        AnnotationConstraintBuilder validation)
           throws IllegalAccessException, InvocationTargetException {
         boolean changed = false;
         for (Annotation annotation : element.getDeclaredAnnotations()) {
-            changed |= processAnnotation(annotation, prop, metabean, owner, element,
-                  validation);
+            changed |= processAnnotation(annotation, prop, metabean,
+                  owner, field, validation);
         }
         return changed;
     }
 
     private boolean processAnnotation(Annotation annotation, MetaProperty prop,
                                       MetaBean metabean, Class owner,
-                                      AnnotatedElement element,
+                                      Field field,
                                       AnnotationConstraintBuilder validation)
           throws IllegalAccessException, InvocationTargetException {
         if (annotation instanceof Valid) {
-            return processValid(/*element, metabean, */prop);
+            return processValid(prop);
         } else {
-            /*
-            * An annotation is considered a constraint
-            * definition if its retention policy contains RUNTIME and if
-            * the annotation itself is annotated with javax.validation.Constraint.
-            * or if it is a defaultConstraint
-            */
+            /**
+             * An annotation is considered a constraint definition if its retention
+             * policy contains RUNTIME and if the annotation itself is annotated with
+             * javax.validation.Constraint.
+             */
             Constraint vcAnno =
                   annotation.annotationType().getAnnotation(Constraint.class);
             Class<? extends ConstraintValidator<?, ?>>[] validatorClasses;
-            if (vcAnno == null) {
-                validatorClasses = getDefaultConstraintValidator(annotation);
-            } else {
+            if (vcAnno != null) {
                 validatorClasses = vcAnno.validatedBy();
-                if (validatorClasses == null || validatorClasses.length == 0) {
+                if (validatorClasses.length == 0) {
                     validatorClasses = getDefaultConstraintValidator(annotation);
                 }
-            }
-            if (validatorClasses != null) {
-                applyConstraint(annotation, validatorClasses, metabean, prop, owner,
-                      element, validation);
-                return true;
+                return applyConstraint(annotation, validatorClasses, metabean, prop,
+                      owner, field, validation);
             } else {
                 /**
                  * Multi-valued constraints:
-                 * To support this, the bean validation provider treats annotations
-                 * with a value annotation element
-                 * with a return type of an array of constraint annotations
-                 * and whose retention is RUNTIME as a list of
-                 * annotations that are processed by the Bean Validation implementation.
-                 * This means that each constraint specified in
-                 * the value element is applied to the target.
+                 * To support this requirement, the bean validation provider treats
+                 * regular annotations (annotations not annotated by @Constraint)
+                 * whose value element has a return type of an array of
+                 * constraint annotations in a special way.
                  */
                 Object result =
                       SecureActions.getAnnotationValue(annotation, ANNOTATION_VALUE);
                 if (result != null && result instanceof Annotation[]) {
+                    boolean changed = false;
                     for (Annotation each : (Annotation[]) result) {
-                        processAnnotation(each, prop, metabean, owner, element,
-                              validation);
+                        changed |= processAnnotation(each, prop, metabean, owner,
+                              field, validation);
                     }
-                    return ((Annotation[]) result).length > 0;
+                    return changed;
                 }
             }
         }
@@ -258,14 +250,6 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
                                  MetaProperty prop) {
         if (prop != null && prop.getMetaBean() == null) {
             prop.putFeature(Features.Property.REF_CASCADE, Boolean.TRUE);
-            // support for runtime type determination: therefore here no action to find the bean type
-            /*   if (Collection.class.isAssignableFrom(prop.getType())) { // determine beanType
-         Class clazz;
-         clazz = findBeanType(element, metabean, prop);
-         if (clazz != null) {
-             prop.putFeature(Features.Property.REF_BEAN_TYPE, clazz);
-         }
-     }       */
             return true;
         }
         return false;
@@ -311,21 +295,32 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
      * @throws IllegalAccessException
      * @throws InvocationTargetException
      */
-    private void applyConstraint(Annotation annotation,
-                                 Class<? extends ConstraintValidator>[] constraintClasses,
-                                 MetaBean metabean, MetaProperty prop, Class owner,
-                                 AnnotatedElement element,
-                                 AnnotationConstraintBuilder parentValidation)
+    private boolean applyConstraint(Annotation annotation,
+                                    Class<? extends ConstraintValidator>[] constraintClasses,
+                                    MetaBean metabean, MetaProperty prop, Class owner,
+                                    Field field,
+                                    AnnotationConstraintBuilder parentValidation)
           throws IllegalAccessException, InvocationTargetException {
-        // The lifetime of a constraint validation implementation instance is undefined.
-        for (Class constraintClass : constraintClasses) {
-            ConstraintValidator constraint =
-                  constraintFactory.getInstance(constraintClass);
-            constraint.initialize(annotation);
 
-            AnnotationConstraintBuilder builder = new AnnotationConstraintBuilder(
-                  new ConstraintValidator[]{constraint}, annotation, owner, element
-            );
+        final ConstraintValidator[] validators;
+        if (constraintClasses != null) {
+            validators = new ConstraintValidator[constraintClasses.length];
+            int idx = 0;
+            for (Class constraintClass : constraintClasses) {
+                ConstraintValidator validator =
+                      constraintFactory.getInstance(constraintClass);
+                validator.initialize(annotation);
+                validators[idx++] = validator;
+            }
+        } else {
+            validators = new ConstraintValidator[0];
+        }
+        final AnnotationConstraintBuilder builder =
+              new AnnotationConstraintBuilder(validators, annotation, owner, field);
+        // process composed constraints:
+        // here are not other superclasses possible, because annotations do not inherit!
+        if (processAnnotations(metabean, prop, owner, annotation.annotationType(), field,
+              builder) || validators.length > 0) {  // recursion!
             if (parentValidation == null) {
                 if (prop != null) {
                     prop.addValidation(builder.getConstraintValidation());
@@ -335,10 +330,9 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
             } else {
                 parentValidation.addComposed(builder.getConstraintValidation());
             }
-            // process composed constraints:
-            // here are not other superclasses possible, because annotations do not inherit!
-            processAnnotations(metabean, prop, owner, annotation.annotationType(),
-                  builder); // recursion!
+            return true;
+        } else {
+            return false;
         }
     }
 }

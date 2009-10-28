@@ -58,13 +58,12 @@ final class ConstraintValidationListener<T> implements ValidationListener {
     private void addError(String messageTemplate, Path propPath,
                           ValidationContext context) {
         final Object value;
-        if (context.getMetaProperty() == null) value = context.getBean();
-        else value = context.getPropertyValue();
 
         final ConstraintDescriptor constraint;
         final String message;
         if (context instanceof GroupValidationContext) {
             GroupValidationContext gcontext = (GroupValidationContext) context;
+            value = gcontext.getValidatedValue();
             if (gcontext instanceof MessageInterpolator.Context) {
                 message = gcontext.getMessageResolver()
                       .interpolate(messageTemplate,
@@ -75,8 +74,9 @@ final class ConstraintValidationListener<T> implements ValidationListener {
             }
             constraint = gcontext.getConstraintDescriptor();
             if (propPath == null) propPath = gcontext.getPropertyPath();
-
         } else {
+            if (context.getMetaProperty() == null) value = context.getBean();
+            else value = context.getPropertyValue();                        
             message = messageTemplate;
             if (propPath == null)
                 propPath = PathImpl.fromString(context.getPropertyName());

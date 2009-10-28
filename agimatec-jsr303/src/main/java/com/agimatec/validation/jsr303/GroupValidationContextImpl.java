@@ -28,7 +28,6 @@ import com.agimatec.validation.model.ValidationListener;
 import javax.validation.ConstraintValidator;
 import javax.validation.MessageInterpolator;
 import javax.validation.TraversableResolver;
-import javax.validation.metadata.ConstraintDescriptor;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Set;
@@ -57,7 +56,7 @@ final class GroupValidationContextImpl extends BeanValidationContext
      */
     private IdentityHashMap<Object, IdentityHashMap<ConstraintValidator, Object>> validatedConstraints =
           new IdentityHashMap();
-    private ConstraintDescriptor currentConstraint;
+    private ConstraintValidation currentConstraint;
     private TraversableResolver traversableResolver;
 
 
@@ -168,18 +167,22 @@ final class GroupValidationContextImpl extends BeanValidationContext
         this.currentGroup = currentGroup;
     }
 
-    public void setConstraintDescriptor(ConstraintDescriptor constraint) {
+    public void setConstraintDescriptor(ConstraintValidation constraint) {
         currentConstraint = constraint;
     }
 
-    public ConstraintDescriptor getConstraintDescriptor() {
+    public ConstraintValidation getConstraintDescriptor() {
         return currentConstraint;
     }
 
     /** @return value being validated */
     public Object getValidatedValue() {
         if (getMetaProperty() != null) {
-            return getPropertyValue();
+            if(currentConstraint != null && currentConstraint.getField() != null) {
+                return getPropertyValue(currentConstraint.getField());
+            } else {
+                return getPropertyValue();
+            }
         } else {
             return getBean();
         }

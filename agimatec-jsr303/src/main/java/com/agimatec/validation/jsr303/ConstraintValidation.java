@@ -31,7 +31,6 @@ import javax.validation.ValidationException;
 import javax.validation.metadata.ConstraintDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -66,17 +65,18 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
      * @param annotation  - the annotation of the constraint
      * @param owner       - the type where the annotated element is placed
      *                    (class, interface, annotation type)
-     * @param element     - the annotated element, field, method, class, ...
+     * @param field     - the field to access the value,
+     *                    or null when annotation on method, class, ...
      */
     protected ConstraintValidation(ConstraintValidator[] constraints,
                                    Annotation annotation, Class owner,
-                                   AnnotatedElement element,
+                                   Field field,
                                    boolean reportFromComposite) {
         this.attributes = new HashMap();
         this.constraints = constraints;
         this.annotation = annotation;
         this.owner = owner;
-        this.field = element instanceof Field ? (Field) element : null;
+        this.field = field;
         this.reportFromComposite = reportFromComposite;
     }
 
@@ -104,6 +104,7 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
     }
 
     public void validate(GroupValidationContext context) {
+        context.setConstraintDescriptor(this);
         /**
          * execute unless the given validation constraint has already been processed
          * during this validation routine (as part of a previous group match)
@@ -194,7 +195,6 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
 
     private void addErrors(GroupValidationContext context,
                            ConstraintValidatorContextImpl jsrContext) {
-        context.setConstraintDescriptor(this);
         for (ValidationResults.Error each : jsrContext.getErrorMessages()) {
             context.getListener().addError(each, context);
         }
@@ -225,7 +225,7 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
         return annotation;
     }
 
-    public AnnotatedElement getField() {
+    public Field getField() {
         return field;
     }
 

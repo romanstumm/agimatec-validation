@@ -3,7 +3,6 @@ package com.agimatec.validation;
 import com.agimatec.validation.model.*;
 import org.apache.commons.beanutils.PropertyUtils;
 
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.util.IdentityHashMap;
 
@@ -37,8 +36,8 @@ public class BeanValidationContext implements ValidationContext {
      */
     private Object propertyValue = UNKNOWN;
 
-    /** element to retrieve value from (field or method). */
-    private AnnotatedElement valueOrigin;
+    /** field to retrieve value, if null use method or find field dynamically */
+    private Field field;
 
     /** set of objects already validated to avoid endless loops. */
     protected IdentityHashMap validatedObjects = new IdentityHashMap();
@@ -96,37 +95,6 @@ public class BeanValidationContext implements ValidationContext {
         unknownValue();
     }
 
-    /** get the value from the given reflection element */
-    public Object getPropertyValue(Field field) {
-        if (propertyValue == UNKNOWN || (valueOrigin != field && !fixed)) {
-            if (metaProperty == null) throw new IllegalStateException();
-            try {
-                //if (element instanceof Field) {
-                if (field != null) {
-                    //  Field f = (Field) element;
-                    if (!field.isAccessible()) {
-                        field.setAccessible(
-                                true); // enable access of private/protected field
-                    }
-                    propertyValue = field.get(bean);
-                    valueOrigin = field;
-                } /*else if (element instanceof Method) {
-                    propertyValue = ((Method) element).invoke(bean);
-                    valueOrigin = element;
-                } */
-                else {
-                    getPropertyValue();
-                    valueOrigin = field;
-                }
-            } catch (Exception e) {
-                throw new IllegalArgumentException(
-                        "cannot access " + metaProperty + " on " + bean,
-                        e);
-            }
-        }
-        return propertyValue;
-    }
-
     /**
      * get the cached value or access it somehow (via field or method)
      *
@@ -134,41 +102,62 @@ public class BeanValidationContext implements ValidationContext {
      * @throws IllegalArgumentException - error accessing attribute (config error, reflection problem)
      * @throws IllegalStateException    - when no property is currently set in the context (application logic bug)
      */
-    public Object getPropertyValue()
-            throws IllegalArgumentException, IllegalStateException {
-        if (propertyValue == UNKNOWN || (valueOrigin != null && !fixed)) {
+    public Object getPropertyValue() {
+        return getPropertyValue(field);
+    }
+
+    /** get the value from the given reflection element */
+    public Object getPropertyValue(Field theField)
+          throws IllegalArgumentException, IllegalStateException {
+        if (propertyValue == UNKNOWN || (this.field != theField && !fixed)) {
             if (metaProperty == null) throw new IllegalStateException();
-            valueOrigin = null;
-            try {
-                try {   // try public method
-                    propertyValue = PropertyUtils
-                            .getSimpleProperty(bean, metaProperty.getName());
-                } catch (NoSuchMethodException ex) {
-                    try { // try public field
-                        propertyValue = bean.getClass()
-                                .getField(metaProperty.getName()).get(bean);
-                    } catch (NoSuchFieldException ex2) {
-                        // search for private/protected field up the hierarchy
-                        Class theClass = bean.getClass();
-                        while (theClass != null) {
-                            try {
-                                Field f = theClass.getDeclaredField(
-                                        metaProperty.getName());
-                                if (!f.isAccessible()) {
-                                    f.setAccessible(true);
+            this.field = theField;
+            if (theField != null) {
+                try {
+                    if (!theField.isAccessible()) {
+                        // enable access of private/protected field
+                        theField.setAccessible(true);
+                    }
+                    propertyValue = theField.get(bean);
+                } catch (Exception e) {
+                    throw new IllegalArgumentException(
+                          "cannot access " + metaProperty + " on " + bean, e);
+                }
+                return propertyValue;
+            } else {
+                try {
+                    try {   // try public method
+                        propertyValue = PropertyUtils
+                              .getSimpleProperty(bean, metaProperty.getName());
+                    } catch (NoSuchMethodException ex) {
+                        try { // try public field
+                            Field aField = bean.getClass().getField(metaProperty.getName());
+                            propertyValue = aField.get(bean);
+                            this.field = aField;
+                        } catch (NoSuchFieldException ex2) {
+                            // search for private/protected field up the hierarchy
+                            Class theClass = bean.getClass();
+                            while (theClass != null) {
+                                try {
+                                    Field aField = theClass
+                                          .getDeclaredField(metaProperty.getName());
+                                    if (!aField.isAccessible()) {
+                                        aField.setAccessible(true);
+                                    }
+                                    propertyValue = aField.get(bean);
+                                    this.field = aField;
+                                    break;
+                                } catch (NoSuchFieldException ex3) {
+                                    // do nothing
                                 }
-                                propertyValue = f.get(bean);
-                                break;
-                            } catch (NoSuchFieldException ex3) {
-                                // do nothing
+                                theClass = theClass.getSuperclass();
                             }
-                            theClass = theClass.getSuperclass();
                         }
                     }
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("cannot access " + metaProperty,
+                          e);
                 }
-            } catch (Exception e) {
-                throw new IllegalArgumentException(
-                        "cannot access " + metaProperty, e);
             }
         }
         return propertyValue;
@@ -200,11 +189,6 @@ public class BeanValidationContext implements ValidationContext {
         this.fixed = fixed;
     }
 
-    /** object from where the propertyValue came from. */
-    public void setValueOrigin(AnnotatedElement valueOrigin) {
-        this.valueOrigin = valueOrigin;
-    }
-
     /**
      * depending on whether we have a metaProperty or not,
      * this returns the metaProperty or otherwise the metaBean.
@@ -226,6 +210,15 @@ public class BeanValidationContext implements ValidationContext {
      */
     public void unknownValue() {
         propertyValue = UNKNOWN;
+        field = null;
+    }
+
+    public Field getField() {
+        return field;
+    }
+
+    public void setField(Field field) {
+        this.field = field;
     }
 
     public MetaBean getMetaBean() {
@@ -255,13 +248,13 @@ public class BeanValidationContext implements ValidationContext {
     }
 
     public String toString() {
-        return "BeanValidationContext{ bean=" + bean + ", metaProperty=" +
-                metaProperty +
-                ", propertyValue=" + propertyValue + '}';
+        return "BeanValidationContext{ bean=" + bean + ", metaProperty=" + metaProperty +
+              ", propertyValue=" + propertyValue + '}';
     }
 
     public void moveDown(MetaProperty prop) {
         setMetaProperty(prop);
+        // TODO RSt - Fix bug: field-based access depending on element annotated with @Valid
         setBean(getPropertyValue(), prop.getMetaBean());
     }
 

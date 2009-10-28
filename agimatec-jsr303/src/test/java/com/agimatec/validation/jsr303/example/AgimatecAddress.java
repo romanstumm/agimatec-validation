@@ -11,20 +11,15 @@ import com.agimatec.validation.constraints.AgimatecEmail;
  */
 public class AgimatecAddress {
     @AgimatecEmail
-    String zipCode;
+    private String email;
 
     public AgimatecAddress() {
     }
 
-    public AgimatecAddress(String zipCode) {
-        this.zipCode = zipCode;
+    public AgimatecAddress(String email) {
+        this.email = email;
     }
 
-    public String getZipCode() {
-        return zipCode;
-    }
-
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
+    // do not provided getters & setters to test that value access
+    // of combined constraints directly use the private field 'email'
 }

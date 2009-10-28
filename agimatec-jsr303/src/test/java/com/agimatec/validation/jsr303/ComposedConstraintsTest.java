@@ -93,20 +93,19 @@ public class ComposedConstraintsTest extends TestCase {
     }
 
     public void testOverridesAttributeConstraintIndex() {
-        AgimatecAddress adr = new AgimatecAddress();
-        adr.setZipCode("invalid-string");
+        AgimatecAddress adr = new AgimatecAddress("invalid-string");
         Validator val = factory.getValidator();
         Set<ConstraintViolation<AgimatecAddress>> findings = val.validate(adr);
         assertEquals(2, findings.size()); // without @ReportAsSingleConstraintViolation
         assertNotNull(TestUtils.getViolationWithMessage(findings, "Not Agimatec"));
         assertNotNull(TestUtils.getViolationWithMessage(findings, "Not an email"));
 
-        adr.setZipCode("ROMAN@GMX.DE");
+        adr =  new AgimatecAddress("ROMAN@GMX.DE");
         findings = val.validate(adr);
         assertEquals(1, findings.size());
         assertNotNull(TestUtils.getViolationWithMessage(findings, "Not Agimatec"));
 
-        adr.setZipCode("ROMAN@AGIMATEC.DE");
+        adr =  new AgimatecAddress("ROMAN@AGIMATEC.DE");
         findings = val.validate(adr);
         Assert.assertTrue(findings.isEmpty());
     }

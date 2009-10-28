@@ -216,7 +216,7 @@ final class AnnotationConstraintBuilder {
         final Class<? extends Annotation> constraintType;
         final int constraintIndex;
 
-        /** key = attriubuteName, value = overridden value */
+        /** key = attributeName, value = overridden value */
         final Map<String, Object> values;
 
         private ConstraintOverrides(Class<? extends Annotation> constraintType,
@@ -226,11 +226,7 @@ final class AnnotationConstraintBuilder {
             values = new HashMap();
         }
 
-        public String toString() {
-            return constraintType.getSimpleName() + '#' + constraintIndex;
-        }
-
-        public void applyOn(ConstraintValidation composite) {            
+        public void applyOn(ConstraintValidation composite) {
             composite.getAttributes().putAll(values);
         }
     }

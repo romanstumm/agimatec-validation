@@ -1,14 +1,14 @@
 #summary TO DOs and missing features
 
 = not-yet-implemented features for JSR 303 support = 
- * @OverridesAttributes (uniquely identified by constraint, name, constraintIndex)
- * ~~TraversableResolver~~
+ * ~~@OverridesAttributes~~ OK
+ * ~~TraversableResolver~~  OK
  * Method-level validation (currently not implemented in JSR303, exists as proposal only)
  * JSR-303 XML mappings (xml deployment descriptor)
  * improve integration between JSR303 annotations and agimatec-metadata validations. 
  * type-safety check when call a constraint-validator implementation's isValid() method
- * ~~ConstraintViolation.getMessageTemplate() and getMessage()~~
- * ~~ValidatorFactory.usingContext()~~
+ * ~~ConstraintViolation.getMessageTemplate() and getMessage()~~ OK
+ * ~~ValidatorFactory.usingContext()~~ OK
  * Object graph validation: Set, Map (value) validation not yet supported
    (currently only Array and Collection are supported, spec: _Any object implementing java.lang.Iterable must be supported._)
 
@@ -25,7 +25,7 @@
    * assertMessageParameterExists
    * restrictions to check, assertNoParameterStartsWithValid (spec: _The annotation element names message, groups and payload are considered reserved names; annotation elements starting with valid are not all._)
  * ConstraintDeclarationException – invalid constraint argument
- * GroupDefinitionException – cyclic graph, illegal override
+ * ~~GroupDefinitionException – cyclic graph, illegal override~~ OK
 
 == Tests to implement ==
   * spec: _2.2. Applying multiple constraints of the same type_

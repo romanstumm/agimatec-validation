@@ -21,8 +21,7 @@ Working on new release 0.9.4 (October 2009)
   * released jars, version 0.9.3, compilable to validation-api 1.0.CR5
   * ValidatorContext: ValidatorFactory.usingContext()
   * TraversableResolver
-  * Path, Node 
-  * compiles with new validation-api 1.0.CR5 
+  * Path, Node  
 
 20.07.2009
 ----------

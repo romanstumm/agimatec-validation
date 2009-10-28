@@ -15,6 +15,7 @@ Working on new release 0.9.4 (October 2009)
   * redefined default Group with @GroupSequence implemented
   * support for @OverridesAttribute implemented
   * ConstraintFinder support implemented
+  * compiled with valiation-api 1.0.0.GA
 
 1st Oct 2009
 ------------
@@ -22,7 +23,7 @@ Working on new release 0.9.4 (October 2009)
   * ValidatorContext: ValidatorFactory.usingContext()
   * TraversableResolver
   * Path, Node 
-  * compiles with new validation-api 1.0.CR5 (or newer) 
+  * compiles with new validation-api 1.0.CR5 
 
 20.07.2009
 ----------

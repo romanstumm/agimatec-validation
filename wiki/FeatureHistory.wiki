@@ -7,15 +7,14 @@ The sources in svn are probably newer than the release you find in the "Download
 
 Working on new release 0.9.4 (October 2009)
 -------------------------------------------
-  * XML deployment descriptor 
+  * XML deployment descriptor (under construction)
+  * compiled with validation-api 1.0.0.GA
   * Validation of Maps, Sets implemented
   * Annotation.payload implemented
-  * definition of default group implemented
-  * various improvements and fixes required by the spec, see Issues
   * redefined default Group with @GroupSequence implemented
   * support for @OverridesAttribute implemented
   * ConstraintFinder support implemented
-  * compiled with valiation-api 1.0.0.GA
+  * various improvements and fixes required by the spec, see Issues
 
 1st Oct 2009
 ------------

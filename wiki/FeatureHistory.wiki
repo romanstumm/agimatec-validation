@@ -12,6 +12,9 @@ Working on new release 0.9.4 (October 2009)
   * Annotation.payload implemented
   * definition of default group implemented
   * various improvements and fixes required by the spec, see Issues
+  * redefined default Group with @GroupSequence implemented
+  * support for @OverridesAttribute implemented
+  * ConstraintFinder support implemented
 
 1st Oct 2009
 ------------

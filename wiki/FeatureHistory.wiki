@@ -23,6 +23,7 @@ Working on new release 0.9.4 (October 2009)
   * ValidatorContext: ValidatorFactory.usingContext()
   * TraversableResolver
   * Path, Node  
+  * Object graph validation: Array, Collection, Set, Map (value) validation supported (any object implementing Iterable)
 
 20.07.2009
 ----------

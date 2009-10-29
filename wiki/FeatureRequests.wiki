@@ -9,8 +9,7 @@
  * type-safety check when call a constraint-validator implementation's isValid() method
  * ~~ConstraintViolation.getMessageTemplate() and getMessage()~~ OK
  * ~~ValidatorFactory.usingContext()~~ OK
- * Object graph validation: Set, Map (value) validation not yet supported
-   (currently only Array and Collection are supported, spec: _Any object implementing java.lang.Iterable must be supported._)
+ * ~~Object graph validation: Set, Map (value) validation not yet supported (currently only Array and Collection are supported, spec: _Any object implementing java.lang.Iterable must be supported._)~~ OK
 
 == Exceptions to support properly ==
  * UnexpectedTypeException – invalid property type 

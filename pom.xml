@@ -370,6 +370,7 @@
 
               <!-- generated content -->
               <exclude>**/.*/**</exclude>
+              <exclude>**/*.ftl</exclude>
               <exclude>**/*.iml</exclude>
               <exclude>**/*.log</exclude>
               <exclude>**/maven-eclipse.xml</exclude>

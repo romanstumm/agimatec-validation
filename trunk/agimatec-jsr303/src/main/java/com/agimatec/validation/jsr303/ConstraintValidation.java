@@ -24,14 +24,13 @@ import com.agimatec.validation.jsr303.util.NodeImpl;
 import com.agimatec.validation.jsr303.util.PathImpl;
 import com.agimatec.validation.model.Validation;
 import com.agimatec.validation.model.ValidationContext;
+import com.agimatec.validation.util.AccessStrategy;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.Payload;
 import javax.validation.ValidationException;
 import javax.validation.metadata.ConstraintDescriptor;
 import java.lang.annotation.Annotation;
-import java.lang.annotation.ElementType;
-import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -43,9 +42,10 @@ import java.util.*;
  * Copyright: Agimatec GmbH 2008
  */
 public class ConstraintValidation implements Validation, ConstraintDescriptor {
+    private static final String ANNOTATION_MESSAGE = "message";
     private final ConstraintValidator[] constraints;
     private final Annotation annotation; // for metadata request API
-    private final Field field;
+    private final AccessStrategy access;
     private final boolean reportFromComposite;
     private final Map<String, Object> attributes;
 
@@ -65,18 +65,16 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
      * @param annotation  - the annotation of the constraint
      * @param owner       - the type where the annotated element is placed
      *                    (class, interface, annotation type)
-     * @param field     - the field to access the value,
-     *                    or null when annotation on method, class, ...
+     * @param access      - how to access the value
      */
     protected ConstraintValidation(ConstraintValidator[] constraints,
                                    Annotation annotation, Class owner,
-                                   Field field,
-                                   boolean reportFromComposite) {
+                                   AccessStrategy access, boolean reportFromComposite) {
         this.attributes = new HashMap();
         this.constraints = constraints;
         this.annotation = annotation;
         this.owner = owner;
-        this.field = field;
+        this.access = access;
         this.reportFromComposite = reportFromComposite;
     }
 
@@ -117,10 +115,8 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
                 return; // already done
         }
 
-        if (context.getMetaProperty() != null) {
-            if (!isCascadeEnabled(context)) return;
-            // compute and cache propertyValue from field
-            context.getPropertyValue(field);
+        if (context.getMetaProperty() != null && !isCascadeEnabled(context)) {
+            return;
         }
 
         // process composed constraints
@@ -162,7 +158,6 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
     }
 
     private boolean isCascadeEnabled(GroupValidationContext context) {
-        ElementType etype = field != null ? ElementType.FIELD : ElementType.METHOD;
         PathImpl path = context.getPropertyPath();
         NodeImpl node = path.getLeafNode();
         PathImpl beanPath = path.getPathWithoutLeafNode();
@@ -172,8 +167,8 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
         try {
             if (!context.getTraversableResolver()
                   .isReachable(context.getBean(), node,
-                        context.getRootMetaBean().getBeanClass(), beanPath, etype))
-                return false;
+                        context.getRootMetaBean().getBeanClass(), beanPath,
+                        access.getElementType())) return false;
         } catch (RuntimeException e) {
             throw new ValidationException(
                   "Error in TraversableResolver.isReachable() for " + context.getBean(),
@@ -183,8 +178,8 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
         try {
             if (!context.getTraversableResolver()
                   .isCascadable(context.getBean(), node,
-                        context.getRootMetaBean().getBeanClass(), beanPath, etype))
-                return false;
+                        context.getRootMetaBean().getBeanClass(), beanPath,
+                        access.getElementType())) return false;
         } catch (RuntimeException e) {
             throw new ValidationException(
                   "Error TraversableResolver.isCascadable() for " + context.getBean(), e);
@@ -202,6 +197,10 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
 
     public String toString() {
         return "ConstraintValidation{" + Arrays.toString(constraints) + '}';
+    }
+    
+    public String getMessageTemplate() {
+        return (String) attributes.get(ANNOTATION_MESSAGE);
     }
 
     public ConstraintValidator[] getConstraintValidators() {
@@ -225,8 +224,8 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
         return annotation;
     }
 
-    public Field getField() {
-        return field;
+    public AccessStrategy getAccess() {
+        return access;
     }
 
     /////////////////////////// ConstraintDescriptor implementation

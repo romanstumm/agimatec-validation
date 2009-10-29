@@ -1,6 +1,8 @@
 package com.agimatec.validation;
 
 import com.agimatec.validation.model.*;
+import com.agimatec.validation.util.AccessStrategy;
+import com.agimatec.validation.util.PropertyAccess;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -238,16 +240,33 @@ public class BeanValidator {
     protected void validateBeanNet(ValidationContext context) {
         if (context.collectValidated()) {
             validateBean(context);
+            for (MetaProperty prop : context.getMetaBean().getProperties()) {
+                validateRelatedBean(context, prop);
+            }
+        }
+    }
+
+    private void validateRelatedBean(ValidationContext context, MetaProperty prop) {
+        AccessStrategy[] access = prop.getFeature(Features.Property.REF_CASCADE);
+        if (access == null && prop.getMetaBean() != null) { // single property access strategy
+            // save old values from context
             final Object bean = context.getBean();
             final MetaBean mbean = context.getMetaBean();
-            for (MetaProperty prop : context.getMetaBean().getProperties()) {
-                if (prop.getMetaBean() != null ||
-                      prop.getFeature(Features.Property.REF_CASCADE, false)) {
-                    // modify context state for relationship-target bean
-                    context.moveDown(prop);
-                    validateContext(context);
-                    context.moveUp(bean, mbean); // reset context state
-                }
+            // modify context state for relationship-target bean
+            context.moveDown(prop, new PropertyAccess(prop.getName()));
+            validateContext(context);
+            // restore old values in context
+            context.moveUp(bean, mbean);
+        } else if (access != null) { // different accesses to relation
+            // save old values from context
+            final Object bean = context.getBean();
+            final MetaBean mbean = context.getMetaBean();
+            for (AccessStrategy each : access) {
+                // modify context state for relationship-target bean
+                context.moveDown(prop, each);
+                validateContext(context);
+                // restore old values in context
+                context.moveUp(bean, mbean);
             }
         }
     }

@@ -45,6 +45,7 @@ public class EmailValidatorTest extends TestCase {
         customer.setCustomerId("id-1");
         customer.setFirstName("Mary");
         customer.setLastName("Do");
+        customer.setPassword("12345");
 
         Assert.assertEquals(0, validator.validate(customer).size());
 

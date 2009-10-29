@@ -20,7 +20,7 @@ public interface Features {
         /** INFO: category/domain to which the metaBean belongs to */
         String DOMAIN = "domain";
 
-//        String DISPLAY_NAME = "displayName";
+        //        String DISPLAY_NAME = "displayName";
         String UNIQUE_KEY = "uniqueKey";
     }
 
@@ -84,11 +84,14 @@ public interface Features {
         String REF_BEAN_TYPE = "refBeanType";
 
         /**
-         * INFO: Boolean<br>
-         * true when validation should cascade into relationship target beans<br>
-         * false when validation should NOT cascade into relationship target beans<br>
+         * INFO: AccessStrategy[]<br>
+         * an array of accessStrategies
+         * how validation should cascade into relationship target beans<br>
+         * null when validation should NOT cascade into relationship target
+         * beans<br>
          * <p/>
-         * Default: true, when MetaProperty.metaBean is != null
+         * Default: {PropertyAccess(metaProperty.name)},
+         * when MetaProperty.metaBean is != null
          */
         String REF_CASCADE = "refCascade";
 

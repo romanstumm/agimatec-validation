@@ -24,6 +24,10 @@ import com.agimatec.validation.jsr303.util.SecureActions;
 import com.agimatec.validation.model.Features;
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.MetaProperty;
+import com.agimatec.validation.util.AccessStrategy;
+import com.agimatec.validation.util.FieldAccess;
+import com.agimatec.validation.util.MethodAccess;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -112,11 +116,13 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
                 metaProperty = new MetaProperty();
                 metaProperty.setName(field.getName());
                 metaProperty.setType(field.getType());
-                if (processAnnotations(metabean, metaProperty, beanClass, field, field, null)) {
+                if (processAnnotations(metabean, metaProperty, beanClass, field,
+                      new FieldAccess(field), null)) {
                     metabean.putProperty(metaProperty.getName(), metaProperty);
                 }
             } else {
-                processAnnotations(metabean, metaProperty, beanClass, field, field, null);
+                processAnnotations(metabean, metaProperty, beanClass, field,
+                      new FieldAccess(field), null);
             }
         }
         Method[] methods = beanClass.getDeclaredMethods();
@@ -137,31 +143,32 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
                 MetaProperty metaProperty = metabean.getProperty(propName);
                 // only those methods, for which we have a MetaProperty
                 if (metaProperty != null) {
-                    processAnnotations(metabean, metaProperty, beanClass, method, null, null);
+                    processAnnotations(metabean, metaProperty, beanClass, method,
+                          new MethodAccess(method), null);
                 }
             }
         }
     }
 
     private boolean processAnnotations(MetaBean metabean, MetaProperty prop, Class owner,
-                                       AnnotatedElement element, Field field,
+                                       AnnotatedElement element, AccessStrategy access,
                                        AnnotationConstraintBuilder validation)
           throws IllegalAccessException, InvocationTargetException {
         boolean changed = false;
         for (Annotation annotation : element.getDeclaredAnnotations()) {
-            changed |= processAnnotation(annotation, prop, metabean,
-                  owner, field, validation);
+            changed |= processAnnotation(annotation, prop, metabean, owner, access,
+                  validation);
         }
         return changed;
     }
 
     private boolean processAnnotation(Annotation annotation, MetaProperty prop,
                                       MetaBean metabean, Class owner,
-                                      Field field,
+                                      AccessStrategy access,
                                       AnnotationConstraintBuilder validation)
           throws IllegalAccessException, InvocationTargetException {
         if (annotation instanceof Valid) {
-            return processValid(prop);
+            return processValid(prop, access);
         } else {
             /**
              * An annotation is considered a constraint definition if its retention
@@ -177,7 +184,7 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
                     validatorClasses = getDefaultConstraintValidator(annotation);
                 }
                 return applyConstraint(annotation, validatorClasses, metabean, prop,
-                      owner, field, validation);
+                      owner, access, validation);
             } else {
                 /**
                  * Multi-valued constraints:
@@ -191,8 +198,8 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
                 if (result != null && result instanceof Annotation[]) {
                     boolean changed = false;
                     for (Annotation each : (Annotation[]) result) {
-                        changed |= processAnnotation(each, prop, metabean, owner,
-                              field, validation);
+                        changed |= processAnnotation(each, prop, metabean, owner, access,
+                              validation);
                     }
                     return changed;
                 }
@@ -246,10 +253,21 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
         return defaultConstraints;
     }
 
-    private boolean processValid(/*AnnotatedElement element, MetaBean metabean, */
-                                 MetaProperty prop) {
-        if (prop != null && prop.getMetaBean() == null) {
-            prop.putFeature(Features.Property.REF_CASCADE, Boolean.TRUE);
+    private boolean processValid(MetaProperty prop, AccessStrategy access) {
+        if (prop != null/* && prop.getMetaBean() == null*/) {
+            AccessStrategy[] strategies = prop.getFeature(Features.Property.REF_CASCADE);
+            if (strategies == null) {
+                strategies = new AccessStrategy[]{access};
+                prop.putFeature(Features.Property.REF_CASCADE, strategies);
+            } else {
+                if (!ArrayUtils.contains(strategies, access)) {
+                    AccessStrategy[] strategies_new =
+                          new AccessStrategy[strategies.length + 1];
+                    System.arraycopy(strategies, 0, strategies_new, 0, strategies.length);
+                    strategies_new[strategies.length] = access;
+                    prop.putFeature(Features.Property.REF_CASCADE, strategies_new);
+                }
+            }
             return true;
         }
         return false;
@@ -298,7 +316,7 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
     private boolean applyConstraint(Annotation annotation,
                                     Class<? extends ConstraintValidator>[] constraintClasses,
                                     MetaBean metabean, MetaProperty prop, Class owner,
-                                    Field field,
+                                    AccessStrategy access,
                                     AnnotationConstraintBuilder parentValidation)
           throws IllegalAccessException, InvocationTargetException {
 
@@ -316,10 +334,10 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
             validators = new ConstraintValidator[0];
         }
         final AnnotationConstraintBuilder builder =
-              new AnnotationConstraintBuilder(validators, annotation, owner, field);
+              new AnnotationConstraintBuilder(validators, annotation, owner, access);
         // process composed constraints:
         // here are not other superclasses possible, because annotations do not inherit!
-        if (processAnnotations(metabean, prop, owner, annotation.annotationType(), field,
+        if (processAnnotations(metabean, prop, owner, annotation.annotationType(), access,
               builder) || validators.length > 0) {  // recursion!
             if (parentValidation == null) {
                 if (prop != null) {

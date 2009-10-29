@@ -36,7 +36,7 @@ import java.util.Set;
  * Copyright: Agimatec GmbH
  */
 class BeanDescriptorImpl extends ElementDescriptorImpl implements BeanDescriptor {
-    
+
     BeanDescriptorImpl(MetaBean metaBean, Validation[] validations) {
         super(metaBean, validations);
     }
@@ -52,8 +52,8 @@ class BeanDescriptorImpl extends ElementDescriptorImpl implements BeanDescriptor
     public boolean isBeanConstrained() {
         if (hasConstraints()) return true;
         for (MetaProperty mprop : metaBean.getProperties()) {
-            if (mprop.getMetaBean() != null &&
-                  mprop.getFeature(Features.Property.REF_CASCADE, true)) return true;
+            if (mprop.getMetaBean() != null ||
+                  mprop.getFeature(Features.Property.REF_CASCADE) != null) return true;
         }
         return false;
     }
@@ -79,7 +79,8 @@ class BeanDescriptorImpl extends ElementDescriptorImpl implements BeanDescriptor
             edesc = new PropertyDescriptorImpl();
             edesc.setElementClass(
                   prop.getFeature(Features.Property.REF_BEAN_TYPE, prop.getTypeClass()));
-            edesc.setCascaded(prop.getFeature(Features.Property.REF_CASCADE, false));
+            edesc.setCascaded((prop.getMetaBean() != null ||
+                  prop.getFeature(Features.Property.REF_CASCADE) != null));
             edesc.setPropertyPath(prop.getName());
             edesc.createConstraintDescriptors(prop.getValidations());
             prop.putFeature(Jsr303Features.Property.PropertyDescriptor, edesc);
@@ -91,8 +92,8 @@ class BeanDescriptorImpl extends ElementDescriptorImpl implements BeanDescriptor
     public Set<PropertyDescriptor> getConstrainedProperties() {
         Set<PropertyDescriptor> validatedProperties = new HashSet();
         for (MetaProperty prop : metaBean.getProperties()) {
-            if (prop.getValidations().length > 0 || (prop.getMetaBean() != null &&
-                  prop.getFeature(Features.Property.REF_CASCADE, true))) {
+            if (prop.getValidations().length > 0 || (prop.getMetaBean() != null ||
+                  prop.getFeature(Features.Property.REF_CASCADE) != null)) {
                 validatedProperties.add(getPropertyDescriptor(prop));
             }
         }

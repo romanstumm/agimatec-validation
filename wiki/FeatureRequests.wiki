@@ -20,9 +20,9 @@
  * ConstraintDefinitionException – illegal constraint
    * OverrideAttributes: overriding type of a composite constraint must be identical to the overridden one.
    * OverrideAttributes: Overridden constraint does not define an attribute with name...
-   * assertPayloadParameterExists
-   * assertGroupsParameterExists
-   * assertMessageParameterExists
+   * ~~assertPayloadParameterExists~~ OK
+   * ~~assertGroupsParameterExists~~ OK
+   * ~~assertMessageParameterExists~~ OK
    * restrictions to check, assertNoParameterStartsWithValid (spec: _The annotation element names message, groups and payload are considered reserved names; annotation elements starting with valid are not all._)
  * ConstraintDeclarationException – invalid constraint argument
  * ~~GroupDefinitionException – cyclic graph, illegal override~~ OK

@@ -193,6 +193,7 @@ public class MetaBeanBuilder {
         MetaBean meta = new MetaBean();
         if (clazz != null) { // local class here?
             meta.setBeanClass(clazz);
+            meta.setId(clazz.getName()); // default id = full class name!
         }
         for (MetaBeanFactory factory : factories) {
             factory.buildMetaBean(meta);

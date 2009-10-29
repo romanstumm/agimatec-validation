@@ -141,8 +141,16 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
             } */
             if (propName != null) {
                 MetaProperty metaProperty = metabean.getProperty(propName);
-                // only those methods, for which we have a MetaProperty
-                if (metaProperty != null) {
+                // create a property for those methods for which there is not yet a MetaProperty
+                if (metaProperty == null) {
+                    metaProperty = new MetaProperty();
+                    metaProperty.setName(propName);
+                    metaProperty.setType(method.getReturnType());
+                    if (processAnnotations(metabean, metaProperty, beanClass, method,
+                          new MethodAccess(method), null)) {
+                        metabean.putProperty(propName, metaProperty);
+                    }
+                } else {
                     processAnnotations(metabean, metaProperty, beanClass, method,
                           new MethodAccess(method), null);
                 }

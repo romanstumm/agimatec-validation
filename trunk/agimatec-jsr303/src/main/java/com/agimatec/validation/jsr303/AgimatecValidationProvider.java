@@ -18,7 +18,6 @@
  */
 package com.agimatec.validation.jsr303;
 
-import com.agimatec.validation.IntrospectorMetaBeanFactory;
 import com.agimatec.validation.MetaBeanBuilder;
 import com.agimatec.validation.MetaBeanFactory;
 import com.agimatec.validation.MetaBeanManager;
@@ -72,7 +71,8 @@ public class AgimatecValidationProvider
             AgimatecValidatorFactory factory = new AgimatecValidatorFactory();
             // Create MetaBeanManager that uses Introspector + Annotations for meta-data
             MetaBeanManager metaBeanManager = new MetaBeanManager(new MetaBeanBuilder(
-                  new MetaBeanFactory[]{new IntrospectorMetaBeanFactory(),
+                  new MetaBeanFactory[]{
+                        /*optional: new IntrospectorMetaBeanFactory(),*/
                         new AnnotationMetaBeanFactory(
                               builder.getConstraintValidatorFactory())}));
 

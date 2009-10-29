@@ -25,8 +25,6 @@ public final class IntrospectorMetaBeanFactory implements MetaBeanFactory {
 
         BeanInfo info = Introspector.getBeanInfo(meta.getBeanClass());
         if (info.getBeanDescriptor() != null) {
-            meta.setId(info.getBeanDescriptor()
-                  .getBeanClass().getName()); // id = full class name!
             meta.setName(
                   info.getBeanDescriptor().getName()); // (display?)name = simple class name!
         }

@@ -35,7 +35,7 @@
   * Improve interaction between annotation based validation (jsr 303) and non-annotation based validations (agimatec)
   * More tests (ongoing)
   * Tutorial / real-world example
-  * Clarify access to overwritten getter-methods (private/protected/public)
+  * ~~Clarify access to overwritten getter-methods (private/protected/public)~~ OK, tested
 
 = Additional features =
   * proprietary agimatec-validation-XML 

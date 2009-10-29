@@ -6,7 +6,7 @@
   * you might need some of the following jars in the classpath, that agimatec-validation depends upon (for a current list refer to the dependencies list of the project [http://www.agimatec.de/documentation/public/agimatec-validation/site/dependencies.html Maven-Dependencies])
 
 || *!GroupId* || *!ArtifactId* || *Version* || *Optional* ||
-|| javax.validation ||	[http://anonsvn.jboss.org/repos/hibernate/validator/trunk/ validation-api] || 1.0.CR1 || required (for agimatec-jsr303*.jar) ||
+|| javax.validation ||	[http://anonsvn.jboss.org/repos/hibernate/validator/trunk/ validation-api] || 1.0.CR1 || required (for agimatec-jsr303.jar) ||
 || commons-beanutils || [http://commons.apache.org/beanutils/ commons-beanutils] || 1.8.1|| required ||
 || commons-collections || [http://commons.apache.org/collections/ commons-collections] || 3.2.1 || required ||
 || commons-lang || [http://commons.apache.org/lang/ commons-lang] || 2.4 || required ||

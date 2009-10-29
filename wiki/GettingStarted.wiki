@@ -7,7 +7,7 @@
 
 || *!GroupId* || *!ArtifactId* || *Version* || *Optional* ||
 || javax.validation ||	[http://anonsvn.jboss.org/repos/hibernate/validator/trunk/ validation-api] || 1.0.CR1 || required (since agimatec-jsr303-0.9.1-SNAPSHOT) ||
-|| commons-beanutils || [http://commons.apache.org/beanutils/ commons-beanutils] || 1.8.0 || required ||
+|| commons-beanutils || [http://commons.apache.org/beanutils/ commons-beanutils] || 1.8.1|| required ||
 || commons-collections || [http://commons.apache.org/collections/ commons-collections] || 3.2.1 || required ||
 || commons-lang || [http://commons.apache.org/lang/ commons-lang] || 2.4 || required ||
 || com.thoughtworks.xstream || [http://xstream.codehaus.org/download.html xstream ] || 1.3.1 || optional, for XML processing  ||

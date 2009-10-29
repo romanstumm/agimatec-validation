@@ -15,8 +15,7 @@ Working on new release 0.9.4 (October 2009)
   * support for @OverridesAttribute implemented
   * ConstraintFinder support implemented
   * various improvements and fixes required by the spec, see Issues
-  * ConstraintDefinitionException when payload, groups or message parameter
-    is missing on annotations annotated with @Constraint
+  * ConstraintDefinitionException when payload, groups or message parameter is missing on annotations annotated with @Constraint
 
 1st Oct 2009
 ------------

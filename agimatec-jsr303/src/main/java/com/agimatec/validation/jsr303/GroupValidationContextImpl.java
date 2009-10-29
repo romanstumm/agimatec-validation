@@ -24,6 +24,7 @@ import com.agimatec.validation.jsr303.util.PathImpl;
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.MetaProperty;
 import com.agimatec.validation.model.ValidationListener;
+import com.agimatec.validation.util.AccessStrategy;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.MessageInterpolator;
@@ -82,9 +83,9 @@ final class GroupValidationContextImpl extends BeanValidationContext
     }
 
     @Override
-    public void moveDown(MetaProperty prop) {
+    public void moveDown(MetaProperty prop, AccessStrategy access) {
         path.addNode(new NodeImpl(prop.getName()));
-        super.moveDown(prop);   // call super!
+        super.moveDown(prop, access);
     }
 
     @Override
@@ -103,7 +104,7 @@ final class GroupValidationContextImpl extends BeanValidationContext
     @Override
     public boolean collectValidated() {
         Set<Group> groupSet = (Set<Group>) validatedObjects.get(getBean());
-        if(groupSet == null) {
+        if (groupSet == null) {
             groupSet = new HashSet(10);
             validatedObjects.put(getBean(), groupSet);
         }
@@ -144,7 +145,7 @@ final class GroupValidationContextImpl extends BeanValidationContext
         if (getMetaProperty() != null) {
             currentPath.addNode(new NodeImpl(getMetaProperty().getName()));
         }
-        return currentPath;        
+        return currentPath;
     }
 
     public MetaBean getRootMetaBean() {
@@ -178,11 +179,7 @@ final class GroupValidationContextImpl extends BeanValidationContext
     /** @return value being validated */
     public Object getValidatedValue() {
         if (getMetaProperty() != null) {
-            if(currentConstraint != null && currentConstraint.getField() != null) {
-                return getPropertyValue(currentConstraint.getField());
-            } else {
-                return getPropertyValue();
-            }
+            return getPropertyValue(currentConstraint.getAccess());
         } else {
             return getBean();
         }

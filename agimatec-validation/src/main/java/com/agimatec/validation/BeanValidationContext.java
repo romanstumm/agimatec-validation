@@ -1,7 +1,9 @@
 package com.agimatec.validation;
 
 import com.agimatec.validation.model.*;
-import org.apache.commons.beanutils.PropertyUtils;
+import com.agimatec.validation.util.AccessStrategy;
+import com.agimatec.validation.util.FieldAccess;
+import com.agimatec.validation.util.PropertyAccess;
 
 import java.lang.reflect.Field;
 import java.util.IdentityHashMap;
@@ -36,8 +38,8 @@ public class BeanValidationContext implements ValidationContext {
      */
     private Object propertyValue = UNKNOWN;
 
-    /** field to retrieve value, if null use method or find field dynamically */
-    private Field field;
+    /** access strategy used for previous access */
+    private AccessStrategy access;
 
     /** set of objects already validated to avoid endless loops. */
     protected IdentityHashMap validatedObjects = new IdentityHashMap();
@@ -96,69 +98,39 @@ public class BeanValidationContext implements ValidationContext {
     }
 
     /**
-     * get the cached value or access it somehow (via field or method)
+     * get the cached value or access it somehow (via field or method)<br>
+     * <b>you should prefer getPropertyValue(AccessStrategy) instead of this method</b>
      *
      * @return the current value of the property accessed by reflection
      * @throws IllegalArgumentException - error accessing attribute (config error, reflection problem)
      * @throws IllegalStateException    - when no property is currently set in the context (application logic bug)
      */
     public Object getPropertyValue() {
-        return getPropertyValue(field);
+        if(access == null) { // undefined access strategy
+            return getPropertyValue(new PropertyAccess(metaProperty.getName()));
+        } else {
+            return getPropertyValue(access);
+        }
     }
 
-    /** get the value from the given reflection element */
+    /**
+     * @deprecated backward compatibility, do not use in newer code
+     **/
     public Object getPropertyValue(Field theField)
           throws IllegalArgumentException, IllegalStateException {
-        if (propertyValue == UNKNOWN || (this.field != theField && !fixed)) {
-            if (metaProperty == null) throw new IllegalStateException();
-            this.field = theField;
-            if (theField != null) {
-                try {
-                    if (!theField.isAccessible()) {
-                        // enable access of private/protected field
-                        theField.setAccessible(true);
-                    }
-                    propertyValue = theField.get(bean);
-                } catch (Exception e) {
-                    throw new IllegalArgumentException(
-                          "cannot access " + metaProperty + " on " + bean, e);
-                }
-                return propertyValue;
-            } else {
-                try {
-                    try {   // try public method
-                        propertyValue = PropertyUtils
-                              .getSimpleProperty(bean, metaProperty.getName());
-                    } catch (NoSuchMethodException ex) {
-                        try { // try public field
-                            Field aField = bean.getClass().getField(metaProperty.getName());
-                            propertyValue = aField.get(bean);
-                            this.field = aField;
-                        } catch (NoSuchFieldException ex2) {
-                            // search for private/protected field up the hierarchy
-                            Class theClass = bean.getClass();
-                            while (theClass != null) {
-                                try {
-                                    Field aField = theClass
-                                          .getDeclaredField(metaProperty.getName());
-                                    if (!aField.isAccessible()) {
-                                        aField.setAccessible(true);
-                                    }
-                                    propertyValue = aField.get(bean);
-                                    this.field = aField;
-                                    break;
-                                } catch (NoSuchFieldException ex3) {
-                                    // do nothing
-                                }
-                                theClass = theClass.getSuperclass();
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    throw new IllegalArgumentException("cannot access " + metaProperty,
-                          e);
-                }
-            }
+        if(theField != null) {
+            return getPropertyValue(new FieldAccess(theField));
+        } else {
+            return getPropertyValue(new PropertyAccess(metaProperty.getName()));
+        }
+    }
+
+    /** get the value by using the given access strategy and cache it */
+    public Object getPropertyValue(AccessStrategy access)
+          throws IllegalArgumentException, IllegalStateException {
+        if (propertyValue == UNKNOWN || (this.access != access && !fixed)) {
+            propertyValue = access.get(bean);
+            this.access = access;
         }
         return propertyValue;
     }
@@ -202,6 +174,7 @@ public class BeanValidationContext implements ValidationContext {
     }
 
     /**
+     * drop cached value.
      * mark the internal cachedValue as UNKNOWN.
      * This forces the BeanValidationContext to recompute the value
      * the next time it is accessed.
@@ -210,15 +183,7 @@ public class BeanValidationContext implements ValidationContext {
      */
     public void unknownValue() {
         propertyValue = UNKNOWN;
-        field = null;
-    }
-
-    public Field getField() {
-        return field;
-    }
-
-    public void setField(Field field) {
-        this.field = field;
+        access = null;
     }
 
     public MetaBean getMetaBean() {
@@ -252,10 +217,9 @@ public class BeanValidationContext implements ValidationContext {
               ", propertyValue=" + propertyValue + '}';
     }
 
-    public void moveDown(MetaProperty prop) {
+    public void moveDown(MetaProperty prop, AccessStrategy access) {
         setMetaProperty(prop);
-        // TODO RSt - Fix bug: field-based access depending on element annotated with @Valid
-        setBean(getPropertyValue(), prop.getMetaBean());
+        setBean(getPropertyValue(access), prop.getMetaBean());
     }
 
     public void moveUp(Object bean, MetaBean aMetaBean) {

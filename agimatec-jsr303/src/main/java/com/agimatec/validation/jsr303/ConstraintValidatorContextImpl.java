@@ -36,7 +36,6 @@ import java.util.List;
  * Copyright: Agimatec GmbH
  */
 public class ConstraintValidatorContextImpl implements ConstraintValidatorContext {
-    private static final String ANNOTATION_MESSAGE = "message";
     private final List<ValidationListener.Error> errorMessages =
           new LinkedList<ValidationListener.Error>();
 
@@ -56,7 +55,7 @@ public class ConstraintValidatorContextImpl implements ConstraintValidatorContex
     }
 
     public String getDefaultConstraintMessageTemplate() {
-        return (String) constraintDescriptor.getAttributes().get(ANNOTATION_MESSAGE);
+        return constraintDescriptor.getMessageTemplate();
     }
 
     public ConstraintViolationBuilder buildConstraintViolationWithTemplate(String messageTemplate) {

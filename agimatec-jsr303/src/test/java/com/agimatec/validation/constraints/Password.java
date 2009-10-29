@@ -18,6 +18,7 @@
  */
 package com.agimatec.validation.constraints;
 
+import javax.validation.Constraint;
 import javax.validation.Payload;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -34,8 +35,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @NotNull
 @Size(min = 4, max = 5)
 @Retention(RUNTIME)
+@Constraint(validatedBy = {})
+// test that Password is validated although only combined constraints exists, no own implementation 
 public @interface Password {
     String[] groups() default {};
+
+    String message() default "Wrong password";
 
     int robustness() default 8;
 

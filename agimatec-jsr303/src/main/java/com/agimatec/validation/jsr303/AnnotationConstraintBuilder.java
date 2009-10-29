@@ -20,15 +20,12 @@ package com.agimatec.validation.jsr303;
 
 import com.agimatec.validation.jsr303.groups.GroupsComputer;
 import com.agimatec.validation.jsr303.util.SecureActions;
+import com.agimatec.validation.util.AccessStrategy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.OverridesAttribute;
-import javax.validation.Payload;
-import javax.validation.ReportAsSingleViolation;
+import javax.validation.*;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.PrivilegedAction;
@@ -53,12 +50,12 @@ final class AnnotationConstraintBuilder {
 
     public AnnotationConstraintBuilder(ConstraintValidator[] constraintValidators,
                                        Annotation annotation, Class owner,
-                                       Field field) {
+                                       AccessStrategy access) {
         boolean reportFromComposite = annotation != null && annotation.annotationType()
               .isAnnotationPresent(ReportAsSingleViolation.class);
 
         constraintValidation = new ConstraintValidation(constraintValidators, annotation,
-              owner, field, reportFromComposite);
+              owner, access, reportFromComposite);
 
         buildFromAnnotation();
     }
@@ -94,8 +91,27 @@ final class AnnotationConstraintBuilder {
             });
         }
         try {
-            if (constraintValidation.getGroups() == null) buildGroups(null);
-            if (constraintValidation.getPayload() == null) buildPayload(null);
+            /*
+           spec: Invalid constraint definitions causes are multiple but include missing or illegal message
+           or groups elements
+            */
+            if (constraintValidation.getGroups() == null) {
+                throw new ConstraintDefinitionException(
+                      constraintValidation.getAnnotation().annotationType()
+                            .getName() + " does not contain a groups parameter.");
+            }
+            if (constraintValidation.getMessageTemplate() == null) {
+                throw new ConstraintDefinitionException(
+                      constraintValidation.getAnnotation().annotationType()
+                            .getName() + " does not contain a message parameter.");
+            }
+            if (constraintValidation.getPayload() == null) {
+                throw new ConstraintDefinitionException(
+                      constraintValidation.getAnnotation().annotationType()
+                            .getName() + " does not contain a payload parameter.");
+            }
+        } catch (ConstraintDefinitionException e) {
+            throw e;
         } catch (Exception e) {
             throw new IllegalArgumentException(e); // execution never reaches this point
         }
@@ -103,8 +119,7 @@ final class AnnotationConstraintBuilder {
 
     private void buildGroups(Method method)
           throws IllegalAccessException, InvocationTargetException {
-        Object raw =
-              method == null ? null : method.invoke(constraintValidation.getAnnotation());
+        Object raw = method.invoke(constraintValidation.getAnnotation());
         Class<?>[] garr;
         if (raw instanceof Class) {
             garr = new Class<?>[]{(Class) raw};
@@ -120,8 +135,8 @@ final class AnnotationConstraintBuilder {
 
     private void buildPayload(Method method)
           throws IllegalAccessException, InvocationTargetException {
-        Class<Payload>[] payload_raw = (Class<Payload>[]) (method == null ? null :
-              method.invoke(constraintValidation.getAnnotation()));
+        Class<Payload>[] payload_raw =
+              (Class<Payload>[]) method.invoke(constraintValidation.getAnnotation());
         if (payload_raw == null) {
             constraintValidation
                   .setPayload(Collections.<Class<? extends Payload>>emptySet());

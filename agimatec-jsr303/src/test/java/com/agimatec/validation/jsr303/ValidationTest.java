@@ -45,9 +45,61 @@ import java.util.Set;
  * Copyright: Agimatec GmbH 2008
  */
 public class ValidationTest extends TestCase {
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();   // call super!
+    public void testAccessStrategies_field_method() {
+        AccessTestBusinessObject o1 = new AccessTestBusinessObject("1");
+        AccessTestBusinessObjectSub o2 = new AccessTestBusinessObjectSub("3");
+        Validator validator = getValidator();
+        Set<ConstraintViolation<AccessTestBusinessObject>> errors =
+              validator.validate(o1);
+        assertTrue(errors.isEmpty());
+        Set<ConstraintViolation<AccessTestBusinessObjectSub>> errors2 =
+              validator.validate(o2);
+        assertTrue(errors2.isEmpty());
+
+        o2 = new AccessTestBusinessObjectSub("1");
+        errors2 = validator.validate(o2);
+        assertEquals(1, errors2.size());
+
+        // assert, that getvar2() and getVar2() are both validated with their getter method
+        o2 = new AccessTestBusinessObjectSub("3");
+        o2.setVar2("1");
+        o2.setvar2("2");
+        errors2 = validator.validate(o2);
+        assertEquals(2, errors2.size());
+
+        o2.setvar2("5");
+        o2.setVar2("6");
+        errors2 = validator.validate(o2);
+        assertEquals(0, errors2.size());
+
+        o2.setvar2("5");
+        o2.setVar2("-1");
+        errors2 = validator.validate(o2);
+        assertEquals(1, errors2.size());
+    }
+
+    public void testAccessStrategies_on_children() {
+        AccessTestBusinessObject o1 = new AccessTestBusinessObject("1");
+        AccessTestBusinessObject o2 = new AccessTestBusinessObject("2");
+        o1.next(o2);
+        Validator validator = getValidator();
+        Set<ConstraintViolation<AccessTestBusinessObject>> errors =
+              validator.validate(o1);
+        // assert, that field access 'next' is used and not getNext() is called!!!
+        assertEquals(1, errors.size());
+        o2 = new AccessTestBusinessObject("1");
+        o1.next(o2);
+        errors = validator.validate(o1);
+        assertEquals(0, errors.size());
+
+        // assert that toBeIgnored not validated, because not annotated with @Valid
+        o1.setToBeIgnored(new AccessTestBusinessObject("99"));
+        errors = validator.validate(o1);
+        assertEquals(0, errors.size());
+
+        o1.setNext(new AccessTestBusinessObject("99"));
+        errors = validator.validate(o1);
+        assertEquals(1, errors.size());
     }
 
     public void testBook() {

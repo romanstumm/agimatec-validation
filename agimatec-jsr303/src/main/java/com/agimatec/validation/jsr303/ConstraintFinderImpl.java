@@ -86,19 +86,7 @@ final class ConstraintFinderImpl implements ElementDescriptor.ConstraintFinder {
     }
 
     private boolean isAtElement(ConstraintValidation descriptor, ElementType each) {
-        switch (each) {
-            case FIELD:
-                if (descriptor.getField() != null) {
-                    return true;
-                }
-                break;
-            case METHOD:
-                if (descriptor.getField() == null) {
-                    return true;
-                }
-                break;
-        }
-        return false;
+        return descriptor.getAccess().getElementType() == each;
     }
 
     private boolean isInScope(ConstraintValidation descriptor) {

@@ -16,29 +16,46 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.agimatec.validation.jsr303.util;
+package com.agimatec.validation.jsr303.example;
 
-import com.agimatec.validation.util.PrivilegedActions;
-
-import javax.validation.ValidationException;
+import com.agimatec.validation.constraints.HasValue;
 
 /**
- * Description: utility methods to perform actions with AccessController or without.<br/>
+ * Description: <br/>
  * User: roman <br/>
- * Date: 01.10.2009 <br/>
- * Time: 16:44:09 <br/>
+ * Date: 29.10.2009 <br/>
+ * Time: 14:27:06 <br/>
  * Copyright: Agimatec GmbH
  */
-public class SecureActions extends PrivilegedActions {
+public class AccessTestBusinessObjectSub extends AccessTestBusinessObject {
+    private String var2, _var2;
 
-    /**
-     * create a new instance of the class using the default no-arg constructor.
-     * perform newInstance() call with AccessController.doPrivileged() if possible.
-     *
-     * @param cls - the class (no interface, non-abstract, has accessible default no-arg-constructor)
-     * @return a new instance
-     */
-    public static <T> T newInstance(final Class<T> cls) {
-        return newInstance(cls, ValidationException.class);
+    public void setVar2(String var2) {
+        this.var2 = var2;
+    }
+
+    public void setvar2(String _var2) {
+        this._var2 = _var2;
+    }
+
+    public AccessTestBusinessObjectSub(String var1) {
+        super(var1);
+    }
+
+    // getVar1() is called on subclass, although annotated on superclass    
+    public String getVar1() {
+        return var1;
+    }
+
+    //// test that getvar2() is called, not getVar2()
+
+    @HasValue("5")
+    public String getvar2() {
+        return _var2;
+    }
+
+    @HasValue("6")
+    public String getVar2() {
+        return var2;
     }
 }

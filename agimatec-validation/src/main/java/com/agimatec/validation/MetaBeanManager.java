@@ -172,7 +172,7 @@ public class MetaBeanManager
                 if (beanType != null) {
                     prop.setMetaBean(findForClass(beanType));
                 } // dynamic type resolution:
-                else if (prop.getFeature(REF_CASCADE, false)) {
+                else if (prop.getFeature(REF_CASCADE) != null) {
                     prop.setMetaBean(new DynamicMetaBean(this));
 //                            findForClass(prop.getType()));
                 }

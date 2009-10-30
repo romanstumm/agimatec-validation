@@ -4,6 +4,8 @@ import org.apache.commons.beanutils.PropertyUtils;
 
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 
 /**
  * Description: Undefined dynamic strategy. Uses PropertyUtils or tries to determine
@@ -27,6 +29,15 @@ public class PropertyAccess extends AccessStrategy {
         return ElementType.METHOD;
     }
 
+    public static Object getProperty(Object bean, String property) throws
+          InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        if (bean instanceof Map) {
+            return ((Map) bean).get(property);
+        } else { // supports DynaBean and standard Objects
+            return PropertyUtils.getSimpleProperty(bean, property);
+        }
+    }
+
     public Object get(Object bean) {
         try {
             if (rememberField != null) {  // cache field of previous access
@@ -34,8 +45,7 @@ public class PropertyAccess extends AccessStrategy {
             }
 
             try {   // try public method
-                return PropertyUtils
-                      .getSimpleProperty(bean, propertyName);
+                return getProperty(bean, propertyName);
             } catch (NoSuchMethodException ex) {
                 Object value;
                 try { // try public field

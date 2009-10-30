@@ -39,6 +39,27 @@ import java.util.Map;
  * Copyright: Agimatec GmbH 2008
  */
 public class BeanValidator {
+    private boolean treatMapsLikeBeans = false;
+    
+    /**
+     * Behavior configuration -
+     * <pre>
+     * parameter: treatMapsLikeBeans - true (validate maps like beans, so that
+     *                             you can use Maps to validate dynamic classes or
+     *                             beans for which you have the MetaBean but no instances)
+     *                           - false (default), validate maps like collections
+     *                             (validating the values only)
+     * </pre>
+     * (is still configuration to better in BeanValidationContext?)
+     */
+    public boolean isTreatMapsLikeBeans() {
+        return treatMapsLikeBeans;
+    }
+
+    public void setTreatMapsLikeBeans(boolean treatMapsLikeBeans) {
+        this.treatMapsLikeBeans = treatMapsLikeBeans;
+    }
+
     /**
      * convenience API. validate a root object with all related objects
      * with its default metaBean definition.
@@ -174,13 +195,13 @@ public class BeanValidator {
      */
     public void validateContext(ValidationContext context) {
         if (context.getBean() != null) {
-            if (context.getBean() instanceof Map) {
+            if (!treatMapsLikeBeans && context.getBean() instanceof Map) {
                 validateMapInContext(context);
             } else if (context.getBean() instanceof Iterable) {
                 validateIteratableInContext(context);
             } else if (context.getBean() instanceof Object[]) {
                 validateArrayInContext(context);
-            } else { // to One
+            } else { // to One Bean (or Map like Bean) 
                 validateBeanInContext(context);
             }
         }

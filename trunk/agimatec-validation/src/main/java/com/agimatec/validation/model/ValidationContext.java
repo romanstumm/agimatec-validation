@@ -18,8 +18,6 @@ package com.agimatec.validation.model;
 
 import com.agimatec.validation.util.AccessStrategy;
 
-import java.lang.reflect.Field;
-
 /**
  * Description: Interface of the context that holds all state information
  * during the validation process<br/>
@@ -30,9 +28,6 @@ import java.lang.reflect.Field;
  */
 public interface ValidationContext {
     Object getPropertyValue();
-
-    @Deprecated
-    Object getPropertyValue(Field field);
 
     /** get the value by using the given access strategy and cache it */
     Object getPropertyValue(AccessStrategy access);

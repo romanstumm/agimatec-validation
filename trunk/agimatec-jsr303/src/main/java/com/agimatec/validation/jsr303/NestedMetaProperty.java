@@ -20,7 +20,7 @@ package com.agimatec.validation.jsr303;
 
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.MetaProperty;
-import org.apache.commons.beanutils.PropertyUtils;
+import com.agimatec.validation.util.PropertyAccess;
 import org.apache.commons.lang.StringUtils;
 
 import javax.validation.ValidationException;
@@ -69,7 +69,7 @@ final class NestedMetaProperty {
                     }
                     if (getValue() != null) {
                         setValue(
-                                PropertyUtils.getSimpleProperty(getValue(), token));
+                              PropertyAccess.getProperty(getValue(), token));
                     }
                     setMetaProperty(mp);
                     resolveMetaBean();

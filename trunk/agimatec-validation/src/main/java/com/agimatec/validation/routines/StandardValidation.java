@@ -54,10 +54,9 @@ public class StandardValidation implements Validation {
     }
 
     protected void validateTimeLag(ValidationContext context) {
-        if (context.getPropertyValue() == null) return;
-
         String lag = (String) context.getMetaProperty().getFeature(TIME_LAG);
         if (lag == null) return;
+        if (context.getPropertyValue() == null) return;
         long date = ((Date) context.getPropertyValue()).getTime();
         long now = System.currentTimeMillis();
         if (XMLMetaValue.TIMELAG_Future.equals(lag)) {
@@ -76,11 +75,10 @@ public class StandardValidation implements Validation {
     private static final String REG_EXP_PATTERN = "cachedRegExpPattern";
 
     protected void validateRegExp(ValidationContext context) {
-        if (context.getPropertyValue() == null) return;
-
         final MetaProperty meta = context.getMetaProperty();
         final String regExp = (String) meta.getFeature(REG_EXP);
         if (regExp == null) return;
+        if (context.getPropertyValue() == null) return;
 
         final String value = String.valueOf(context.getPropertyValue());
         try {
@@ -99,9 +97,9 @@ public class StandardValidation implements Validation {
     }
 
     protected void validateMinValue(ValidationContext context) {
-        if (context.getPropertyValue() == null) return;
         Comparable minValue = (Comparable) context.getMetaProperty().getFeature(MIN_VALUE);
         if (minValue == null) return;
+        if (context.getPropertyValue() == null) return;
         int r = minValue.compareTo(context.getPropertyValue());
         if (r > 0) {
             context.getListener().addError(MIN_VALUE, context);
@@ -109,9 +107,9 @@ public class StandardValidation implements Validation {
     }
 
     protected void validateMaxValue(ValidationContext context) {
-        if (context.getPropertyValue() == null) return;
         Comparable maxValue = (Comparable) context.getMetaProperty().getFeature(MAX_VALUE);
         if (maxValue == null) return;
+        if (context.getPropertyValue() == null) return;
         int r = maxValue.compareTo(context.getPropertyValue());
         if (r < 0) {
             context.getListener().addError(MAX_VALUE, context);
@@ -119,10 +117,10 @@ public class StandardValidation implements Validation {
     }
 
     protected void validateMaxLength(ValidationContext context) {
-        if (context.getPropertyValue() == null) return;
         Integer maxLength = (Integer) context.getMetaProperty()
                 .getFeature(Features.Property.MAX_LENGTH);
         if (maxLength == null) return;
+        if (context.getPropertyValue() == null) return;
 
         final Object value = context.getPropertyValue();
         int length = 0;
@@ -137,10 +135,10 @@ public class StandardValidation implements Validation {
     }
 
     protected void validateMinLength(ValidationContext context) {
-        if (context.getPropertyValue() == null) return;
         Integer maxLength = (Integer) context.getMetaProperty()
                 .getFeature(Features.Property.MIN_LENGTH);
         if (maxLength == null) return;
+        if (context.getPropertyValue() == null) return;
 
         final Object value = context.getPropertyValue();
         int length = 0;

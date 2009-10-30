@@ -14,17 +14,19 @@ import java.lang.reflect.Field;
  * Copyright: Agimatec GmbH
  */
 public class PropertyAccess extends AccessStrategy {
+    private final Class beanClass;
     private final String propertyName;
     private Field rememberField;
 
-    public PropertyAccess(String propertyName) {
+    public PropertyAccess(Class clazz, String propertyName) {
+        this.beanClass = clazz;
         this.propertyName = propertyName;
     }
 
     public ElementType getElementType() {
         return ElementType.METHOD;
     }
-    
+
     public Object get(Object bean) {
         try {
             if (rememberField != null) {  // cache field of previous access
@@ -63,10 +65,26 @@ public class PropertyAccess extends AccessStrategy {
                           "cannot access field " + propertyName);
                 }
             }
+        } catch (IllegalArgumentException e) {
+            throw e;
         } catch (Exception e) {
             throw new IllegalArgumentException("cannot access " + propertyName, e);
         }
     }
 
-    // no equals() hashCode() methods by purpose (because rememberField is not final!) 
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PropertyAccess that = (PropertyAccess) o;
+
+        return beanClass.equals(that.beanClass) && propertyName.equals(that.propertyName);
+    }
+
+    public int hashCode() {
+        int result;
+        result = beanClass.hashCode();
+        result = 31 * result + propertyName.hashCode();
+        return result;
+    }
 }

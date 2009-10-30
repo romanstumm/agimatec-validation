@@ -269,7 +269,7 @@ public class BeanValidator {
             final Object bean = context.getBean();
             final MetaBean mbean = context.getMetaBean();
             // modify context state for relationship-target bean
-            context.moveDown(prop, new PropertyAccess(prop.getName()));
+            context.moveDown(prop, new PropertyAccess(bean.getClass(), prop.getName()));
             validateContext(context);
             // restore old values in context
             context.moveUp(bean, mbean);

@@ -18,10 +18,8 @@ package com.agimatec.validation;
 
 import com.agimatec.validation.model.*;
 import com.agimatec.validation.util.AccessStrategy;
-import com.agimatec.validation.util.FieldAccess;
 import com.agimatec.validation.util.PropertyAccess;
 
-import java.lang.reflect.Field;
 import java.util.IdentityHashMap;
 
 /**
@@ -123,21 +121,10 @@ public class BeanValidationContext implements ValidationContext {
      */
     public Object getPropertyValue() {
         if(access == null) { // undefined access strategy
-            return getPropertyValue(new PropertyAccess(metaProperty.getName()));
+            return getPropertyValue(
+                  new PropertyAccess(bean.getClass(), metaProperty.getName()));
         } else {
             return getPropertyValue(access);
-        }
-    }
-
-    /**
-     * @deprecated backward compatibility, do not use in newer code
-     **/
-    public Object getPropertyValue(Field theField)
-          throws IllegalArgumentException, IllegalStateException {
-        if(theField != null) {
-            return getPropertyValue(new FieldAccess(theField));
-        } else {
-            return getPropertyValue(new PropertyAccess(metaProperty.getName()));
         }
     }
 

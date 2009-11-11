@@ -50,6 +50,8 @@ public class MethodValidatorImplTest extends TestCase {
         assertNotNull(mvi);  
         MethodValidator mv = v.unwrap(MethodValidator.class);
         assertNotNull(mv);
+        assertTrue(mv == mv.unwrap(MethodValidatorImpl.class));
+        assertTrue(mv == mv.unwrap(ClassValidator.class));
     }
 
     private Validator getValidator() {

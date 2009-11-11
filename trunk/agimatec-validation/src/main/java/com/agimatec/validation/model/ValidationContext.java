@@ -26,7 +26,7 @@ import com.agimatec.validation.util.AccessStrategy;
  * Time: 09:36:02 <br/>
  * Copyright: Agimatec GmbH
  */
-public interface ValidationContext {
+public interface ValidationContext<T extends ValidationListener> {
     Object getPropertyValue();
 
     /** get the value by using the given access strategy and cache it */
@@ -34,7 +34,7 @@ public interface ValidationContext {
 
     String getPropertyName();
 
-    ValidationListener getListener();
+    T getListener();
 
     Object getBean();
 

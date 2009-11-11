@@ -34,7 +34,7 @@ import java.util.Set;
  * Time: 14:52:19 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-final class ConstraintValidationListener<T> implements ValidationListener {
+public final class ConstraintValidationListener<T> implements ValidationListener {
     private final Set<ConstraintViolation<T>> constaintViolations = new HashSet();
     private final T rootBean;
 

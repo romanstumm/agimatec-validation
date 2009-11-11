@@ -41,4 +41,9 @@ public class SecureActions extends PrivilegedActions {
     public static <T> T newInstance(final Class<T> cls) {
         return newInstance(cls, ValidationException.class);
     }
+
+    public static <T> T newInstance(final Class<T> cls, final Class[] paramTypes,
+                                    final Object[] values) {
+        return newInstance(cls, ValidationException.class, paramTypes, values);
+    }
 }

@@ -33,11 +33,9 @@ import javax.validation.TraversableResolver;
  * Time: 10:15:08 <br/>
  * Copyright: Agimatec GmbH
  */
-interface GroupValidationContext extends ValidationContext {
-    /**
-     * the groups in their sequence for validation
-     * @return
-     */
+public interface GroupValidationContext
+      extends ValidationContext<ConstraintValidationListener> {
+    /** the groups in their sequence for validation */
     Groups getGroups();
 
     void setCurrentGroup(Group group);
@@ -45,10 +43,11 @@ interface GroupValidationContext extends ValidationContext {
     Group getCurrentGroup();
 
     PathImpl getPropertyPath();
+
     MetaBean getRootMetaBean();
 
     void setConstraintDescriptor(ConstraintValidation constraint);
-    
+
     public ConstraintValidation getConstraintDescriptor();
 
     public Object getValidatedValue();
@@ -57,7 +56,7 @@ interface GroupValidationContext extends ValidationContext {
 
     MessageInterpolator getMessageResolver();
 
-    TraversableResolver getTraversableResolver();    
+    TraversableResolver getTraversableResolver();
 
     boolean collectValidated(Object bean, ConstraintValidator constraint);
 

@@ -42,6 +42,25 @@ public class PrivilegedActions {
         return newInstance(cls, IllegalArgumentException.class);
     }
 
+    public static <T, E extends RuntimeException> T newInstance(final Class<T> cls,
+                                                                final Class<E> exception,
+                                                                final Class[] paramTypes,
+                                                                final Object[] values) {
+        return run(new PrivilegedAction<T>() {
+            public T run() {
+                try {
+                    Constructor<T> cons = cls.getConstructor(paramTypes);
+                    if(!cons.isAccessible()) {
+                        cons.setAccessible(true);
+                    }
+                    return cons.newInstance(values);
+                } catch (Exception e) {
+                    throw newException("Cannot instantiate : " + cls, exception, e);
+                }
+            }
+        });
+    }
+
     /**
      * create a new instance of the class using the default no-arg constructor.
      * perform newInstance() call with AccessController.doPrivileged() if possible.
@@ -57,26 +76,29 @@ public class PrivilegedActions {
                 try {
                     return cls.newInstance();
                 } catch (Exception e) {
-                    throw newException("Cannot instantiate : " + cls, e);
+                    throw newException("Cannot instantiate : " + cls, exception, e);
                 }
             }
 
-            private RuntimeException newException(String msg, Throwable e) {
-                try {
-                    Constructor<E> co =
-                          exception.getConstructor(String.class, Throwable.class);
-                    try {
-                        return co.newInstance(msg, e);
-                    } catch (Exception e1) {
-                        //noinspection ThrowableInstanceNeverThrown
-                        return new RuntimeException(msg, e); // fallback
-                    }
-                } catch (NoSuchMethodException e1) {
-                    //noinspection ThrowableInstanceNeverThrown
-                    return new RuntimeException(msg, e); // fallback
-                }
-            }
+
         });
+    }
+
+    private static <E extends RuntimeException> RuntimeException newException(String msg,
+                                                                              final Class<E> exception,
+                                                                              Throwable e) {
+        try {
+            Constructor<E> co = exception.getConstructor(String.class, Throwable.class);
+            try {
+                return co.newInstance(msg, e);
+            } catch (Exception e1) {
+                //noinspection ThrowableInstanceNeverThrown
+                return new RuntimeException(msg, e); // fallback
+            }
+        } catch (NoSuchMethodException e1) {
+            //noinspection ThrowableInstanceNeverThrown
+            return new RuntimeException(msg, e); // fallback
+        }
     }
 
     /**

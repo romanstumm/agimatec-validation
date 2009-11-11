@@ -25,6 +25,7 @@ import com.agimatec.validation.jsr303.groups.GroupsComputer;
 import com.agimatec.validation.jsr303.util.SecureActions;
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.ValidationContext;
+import org.apache.commons.lang.ClassUtils;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ValidationException;
@@ -70,8 +71,7 @@ public class ClassValidator extends BeanValidator implements Validator {
             final GroupValidationContext context =
                   createContext(factoryContext.getFactory().getMetaBeanManager()
                         .findForClass(object.getClass()), object, groupArray);
-            final ConstraintValidationListener result =
-                  (ConstraintValidationListener) context.getListener();
+            final ConstraintValidationListener result = context.getListener();
             final Groups groups = context.getGroups();
             // 1. process groups
             for (Group current : groups.getGroups()) {
@@ -89,6 +89,7 @@ public class ClassValidator extends BeanValidator implements Validator {
                      */
                     if (!result.isEmpty()) break;
                 }
+//                if (!result.isEmpty()) break; // ?? TODO RSt - clarify!
             }
             return result.getConstaintViolations();
         } catch (RuntimeException ex) {
@@ -133,8 +134,8 @@ public class ClassValidator extends BeanValidator implements Validator {
         }
     }
 
-    private ValidationException unrecoverableValidationError(RuntimeException ex,
-                                                             Object object) {
+    protected ValidationException unrecoverableValidationError(RuntimeException ex,
+                                                               Object object) {
         if (ex instanceof ValidationException) {
             throw ex; // do not wrap specific ValidationExceptions (or instances from subclasses)
         } else {
@@ -157,8 +158,7 @@ public class ClassValidator extends BeanValidator implements Validator {
             MetaBean metaBean =
                   factoryContext.getMetaBeanManager().findForClass(object.getClass());
             GroupValidationContext context = createContext(metaBean, object, groups);
-            ConstraintValidationListener result =
-                  (ConstraintValidationListener) context.getListener();
+            ConstraintValidationListener result = context.getListener();
             NestedMetaProperty nestedProp =
                   getNestedProperty(metaBean, object, propertyName);
             context.setMetaProperty(nestedProp.getMetaProperty());
@@ -186,6 +186,7 @@ public class ClassValidator extends BeanValidator implements Validator {
                      */
                     if (!result.isEmpty()) break;
                 }
+//                if (!result.isEmpty()) break; // ?? TODO RSt - clarify!
             }
             return result.getConstaintViolations();
         } catch (RuntimeException ex) {
@@ -237,8 +238,7 @@ public class ClassValidator extends BeanValidator implements Validator {
             MetaBean metaBean =
                   factoryContext.getMetaBeanManager().findForClass(beanType);
             GroupValidationContext context = createContext(metaBean, null, groups);
-            ConstraintValidationListener result =
-                  (ConstraintValidationListener) context.getListener();
+            ConstraintValidationListener result = context.getListener();
             context.setMetaProperty(
                   getNestedProperty(metaBean, null, propertyName).getMetaProperty());
             context.setFixedValue(value);
@@ -259,10 +259,11 @@ public class ClassValidator extends BeanValidator implements Validator {
                      */
                     if (!result.isEmpty()) break;
                 }
+//                if (!result.isEmpty()) break; // ?? TODO RSt - clarify!
             }
             return result.getConstaintViolations();
         } catch (RuntimeException ex) {
-            throw unrecoverableValidationError(ex, beanType);
+            throw unrecoverableValidationError(ex, value);
         }
     }
 
@@ -293,7 +294,7 @@ public class ClassValidator extends BeanValidator implements Validator {
             BeanDescriptorImpl edesc =
                   metaBean.getFeature(Jsr303Features.Bean.BEAN_DESCRIPTOR);
             if (edesc == null) {
-                edesc = new BeanDescriptorImpl(metaBean, metaBean.getValidations());
+                edesc = createBeanDescriptor(metaBean);
                 metaBean.putFeature(Jsr303Features.Bean.BEAN_DESCRIPTOR, edesc);
             }
             return edesc;
@@ -301,6 +302,10 @@ public class ClassValidator extends BeanValidator implements Validator {
             throw new ValidationException("error retrieving constraints for " + clazz,
                   ex);
         }
+    }
+
+    protected BeanDescriptorImpl createBeanDescriptor(MetaBean metaBean) {
+        return new BeanDescriptorImpl(metaBean, metaBean.getValidations());
     }
 
     /**
@@ -315,22 +320,22 @@ public class ClassValidator extends BeanValidator implements Validator {
      *                             support the call.
      */
     public <T> T unwrap(Class<T> type) {
-        return SecureActions.newInstance(type);
+        if (type.isAssignableFrom(getClass())) {
+            return (T) this;
+        } else if (!type.isInterface()) {
+            return SecureActions.newInstance(type,
+                  new Class[]{AgimatecFactoryContext.class},
+                  new Object[]{factoryContext});
+        } else {
+            try {
+                Class<T> cls = ClassUtils.getClass(type.getName() + "Impl");
+                return SecureActions.newInstance(cls,
+                      new Class[]{AgimatecFactoryContext.class},
+                      new Object[]{factoryContext});
+            } catch (ClassNotFoundException e) {
+                throw new ValidationException("Type " + type + " not supported");
+            }
+        }
     }
 
-    /**
-     * @param clazz class type evaluated
-     * @return true if at least one constraint declaration is present for the given bean
-     *         or if one property is marked for validation cascade
-     */
-    /*public boolean hasConstraints(Class<?> clazz) {
-        MetaBean metaBean = factory.getMetaBeanManager().findForClass(clazz);
-        if (metaBean.getValidations().length > 0) return true;
-        for (MetaProperty mprop : metaBean.getProperties()) {
-            if (mprop.getValidations().length > 0) return true;
-            if (mprop.getMetaBean() != null &&
-                  mprop.getFeature(Features.Property.REF_CASCADE, true)) return true;
-        }
-        return false;
-    }*/
 }

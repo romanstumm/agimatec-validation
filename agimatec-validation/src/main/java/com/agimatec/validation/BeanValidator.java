@@ -80,10 +80,10 @@ public class BeanValidator {
      * @return results - validation results found
      */
     public ValidationResults validate(Object bean, MetaBean metaBean) {
-        ValidationContext context = createContext();
+        ValidationContext<ValidationResults> context = createContext();
         context.setBean(bean, metaBean);
         validateContext(context);
-        return (ValidationResults) context.getListener();
+        return context.getListener();
     }
 
     /**
@@ -102,18 +102,19 @@ public class BeanValidator {
         if (parameters.length > 0) {
             // shortcut (for performance!)
             if (method.getAnnotation(Validate.class) == null) return null;
-            ValidationContext context = createContext();
+            ValidationContext<ValidationResults> context = createContext();
             Annotation[][] annotations = method.getParameterAnnotations();
             for (int i = 0; i < parameters.length; i++) {
                 for (Annotation anno : annotations[i]) {
                     if (anno instanceof Validate) {
                         if (determineMetaBean((Validate) anno, parameters[i], context)) {
                             validateContext(context);
+                            break; // next parameter
                         }
                     }
                 }
             }
-            return (ValidationResults) context.getListener();
+            return context.getListener();
         }
         return null;
     }
@@ -154,8 +155,8 @@ public class BeanValidator {
      * factory method -
      * overwrite in subclasses
      */
-    protected ValidationContext createContext() {
-        return new BeanValidationContext(createResults());
+    protected ValidationContext<ValidationResults> createContext() {
+        return new BeanValidationContext<ValidationResults>(createResults());
     }
 
     /**
@@ -166,11 +167,11 @@ public class BeanValidator {
      * @return validation results
      */
     public ValidationResults validateProperty(Object bean, MetaProperty metaProperty) {
-        ValidationContext context = createContext();
+        ValidationContext<ValidationResults> context = createContext();
         context.setBean(bean);
         context.setMetaProperty(metaProperty);
         validateProperty(context);
-        return (ValidationResults) context.getListener();
+        return context.getListener();
     }
 
     /**

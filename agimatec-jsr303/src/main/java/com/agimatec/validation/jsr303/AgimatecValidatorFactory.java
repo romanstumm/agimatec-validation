@@ -20,6 +20,7 @@ package com.agimatec.validation.jsr303;
 
 import com.agimatec.validation.MetaBeanManager;
 import com.agimatec.validation.jsr303.util.SecureActions;
+import org.apache.commons.lang.ClassUtils;
 
 import javax.validation.*;
 
@@ -58,15 +59,14 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
 
     /**
      * shortcut method to create a new Validator instance with factory's settings
+     *
      * @return the new validator instance
      */
     public Validator getValidator() {
         return usingContext().getValidator();
     }
 
-    /**
-     * @return the validator factory's context 
-     */
+    /** @return the validator factory's context */
     public AgimatecFactoryContext usingContext() {
         return new AgimatecFactoryContext(this);
     }
@@ -115,7 +115,29 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
         this.constraintValidatorFactory = constraintValidatorFactory;
     }
 
+    /**
+     * Return an object of the specified type to allow access to the
+     * provider-specific API.  If the Bean Validation provider
+     * implementation does not support the specified class, the
+     * ValidationException is thrown.
+     *
+     * @param type the class of the object to be returned.
+     * @return an instance of the specified class
+     * @throws ValidationException if the provider does not
+     *                             support the call.
+     */
     public <T> T unwrap(Class<T> type) {
-        return SecureActions.newInstance(type);
+        if (type.isAssignableFrom(getClass())) {
+            return (T) this;
+        } else if (!type.isInterface()) {
+            return SecureActions.newInstance(type);
+        } else {
+            try {
+                Class<T> cls = ClassUtils.getClass(type.getName() + "Impl");
+                return SecureActions.newInstance(cls);
+            } catch (ClassNotFoundException e) {
+                throw new ValidationException("Type " + type + " not supported");
+            }
+        }
     }
 }

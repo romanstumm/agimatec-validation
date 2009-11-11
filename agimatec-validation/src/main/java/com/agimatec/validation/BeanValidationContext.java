@@ -36,7 +36,8 @@ import java.util.IdentityHashMap;
  * Time: 12:30:01 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-public class BeanValidationContext implements ValidationContext {
+public class BeanValidationContext<T extends ValidationListener>
+      implements ValidationContext<T> {
     /** represent an unknown propertyValue. */
     private static final Object UNKNOWN = new Object();
 
@@ -67,17 +68,17 @@ public class BeanValidationContext implements ValidationContext {
     private boolean fixed;
 
     /** listener notified of validation constraint violations. */
-    private ValidationListener listener;
+    private T listener;
 
-    public BeanValidationContext(ValidationListener listener) {
+    public BeanValidationContext(T listener) {
         this.listener = listener;
     }
 
-    public ValidationListener getListener() {
+    public T getListener() {
         return listener;
     }
 
-    public void setListener(ValidationListener listener) {
+    public void setListener(T listener) {
         this.listener = listener;
     }
 
@@ -120,7 +121,7 @@ public class BeanValidationContext implements ValidationContext {
      * @throws IllegalStateException    - when no property is currently set in the context (application logic bug)
      */
     public Object getPropertyValue() {
-        if(access == null) { // undefined access strategy
+        if (access == null) { // undefined access strategy
             return getPropertyValue(
                   new PropertyAccess(bean.getClass(), metaProperty.getName()));
         } else {

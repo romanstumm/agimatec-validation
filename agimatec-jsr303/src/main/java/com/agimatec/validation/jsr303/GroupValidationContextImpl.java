@@ -23,7 +23,6 @@ import com.agimatec.validation.jsr303.util.NodeImpl;
 import com.agimatec.validation.jsr303.util.PathImpl;
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.MetaProperty;
-import com.agimatec.validation.model.ValidationListener;
 import com.agimatec.validation.util.AccessStrategy;
 
 import javax.validation.ConstraintValidator;
@@ -40,7 +39,7 @@ import java.util.Set;
  * Time: 16:32:35 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-final class GroupValidationContextImpl extends BeanValidationContext
+final class GroupValidationContextImpl extends BeanValidationContext<ConstraintValidationListener>
       implements GroupValidationContext, MessageInterpolator.Context {
 
     private final MessageInterpolator messageResolver;
@@ -61,7 +60,7 @@ final class GroupValidationContextImpl extends BeanValidationContext
     private TraversableResolver traversableResolver;
 
 
-    public GroupValidationContextImpl(ValidationListener listener,
+    public GroupValidationContextImpl(ConstraintValidationListener listener,
                                       MessageInterpolator aMessageResolver,
                                       TraversableResolver traversableResolver,
                                       MetaBean rootMetaBean) {

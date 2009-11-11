@@ -30,7 +30,7 @@ import javax.validation.*;
  * Time: 16:35:25 <br/>
  * Copyright: Agimatec GmbH
  */
-class AgimatecFactoryContext implements ValidatorContext {
+public class AgimatecFactoryContext implements ValidatorContext {
     private MessageInterpolator messageInterpolator;
     private TraversableResolver traversableResolver;
     private AgimatecValidatorFactory factory;

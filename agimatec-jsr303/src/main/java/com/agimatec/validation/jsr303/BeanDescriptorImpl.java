@@ -35,9 +35,9 @@ import java.util.Set;
  * Time: 16:54:16 <br/>
  * Copyright: Agimatec GmbH
  */
-class BeanDescriptorImpl extends ElementDescriptorImpl implements BeanDescriptor {
+public class BeanDescriptorImpl extends ElementDescriptorImpl implements BeanDescriptor {
 
-    BeanDescriptorImpl(MetaBean metaBean, Validation[] validations) {
+    protected BeanDescriptorImpl(MetaBean metaBean, Validation[] validations) {
         super(metaBean, validations);
     }
 

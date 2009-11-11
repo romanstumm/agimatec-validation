@@ -84,7 +84,7 @@ public class DefaultMessageInterpolatorTest extends TestCase {
         };
 
 
-        msg = interpolator.interpolate("{constraint.notEmpty}", ctx);
+        msg = interpolator.interpolate("{com.agimatec.validation.constraints.NotEmpty.message}", ctx);
         Assert.assertEquals("may not be empty", msg);
     }
 

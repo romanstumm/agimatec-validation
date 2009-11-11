@@ -28,7 +28,7 @@ import java.util.Set;
  * It can be removed as soon as the Validator interface contains these methods.
  * The extension is not a part of the JSR303 core specification yet, but could
  * be in a future revision.<br/>
- * You can access the extension vai the use of the Validator.unwrap() method.<br/>
+ * You can access the extension via the use of the Validator.unwrap() method.<br/>
  * User: roman <br/>
  * Date: 11.11.2009 <br/>
  * Time: 11:04:56 <br/>

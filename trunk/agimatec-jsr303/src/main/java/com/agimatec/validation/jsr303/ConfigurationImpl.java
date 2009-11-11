@@ -30,6 +30,9 @@ import java.util.Set;
 /**
  * Description:
  * TODO RSt - split implementation of interface Configuration and ConfigurationState as soon as JSR303-XML configuration is supported
+ * ----> think about this. Spec says:
+ * "A typical implementation of Configuration also implements ConfigurationState,
+ * hence this  can be passed to buildValidatorFactory(ConfigurationState)."
  * <br/>
  * User: roman.stumm <br/>
  * Date: 29.10.2008 <br/>

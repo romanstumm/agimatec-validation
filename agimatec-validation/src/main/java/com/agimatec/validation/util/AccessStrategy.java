@@ -17,6 +17,7 @@
 package com.agimatec.validation.util;
 
 import java.lang.annotation.ElementType;
+import java.lang.reflect.Type;
 
 /**
  * Description: abstract class to encapsulate different strategies
@@ -35,5 +36,7 @@ public abstract class AccessStrategy {
      */
     public abstract Object get(Object instance);
 
-    public abstract ElementType getElementType(); 
+    public abstract ElementType getElementType();
+
+    public abstract Type getJavaType();
 }

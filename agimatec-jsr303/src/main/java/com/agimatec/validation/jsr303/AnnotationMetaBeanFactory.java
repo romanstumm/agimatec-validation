@@ -21,6 +21,7 @@ package com.agimatec.validation.jsr303;
 import com.agimatec.validation.MetaBeanFactory;
 import com.agimatec.validation.jsr303.groups.Group;
 import com.agimatec.validation.jsr303.util.SecureActions;
+import com.agimatec.validation.jsr303.util.TypeUtils;
 import com.agimatec.validation.model.Features;
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.MetaProperty;
@@ -28,6 +29,7 @@ import com.agimatec.validation.util.AccessStrategy;
 import com.agimatec.validation.util.FieldAccess;
 import com.agimatec.validation.util.MethodAccess;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -37,10 +39,7 @@ import java.beans.Introspector;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.*;
 
 /**
@@ -322,31 +321,42 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
      * @throws InvocationTargetException
      */
     private boolean applyConstraint(Annotation annotation,
-                                    Class<? extends ConstraintValidator>[] constraintClasses,
+                                    Class<? extends ConstraintValidator<?, ?>>[] constraintClasses,
                                     MetaBean metabean, MetaProperty prop, Class owner,
                                     AccessStrategy access,
                                     AnnotationConstraintBuilder parentValidation)
           throws IllegalAccessException, InvocationTargetException {
 
-        final ConstraintValidator[] validators;
+        final ConstraintValidator validator;
         if (constraintClasses != null) {
-            validators = new ConstraintValidator[constraintClasses.length];
-            int idx = 0;
-            for (Class constraintClass : constraintClasses) {
-                ConstraintValidator validator =
-                      constraintFactory.getInstance(constraintClass);
-                validator.initialize(annotation);
-                validators[idx++] = validator;
-            }
+            Type type = determineTargetedType(owner, access);
+            /**
+             * spec says in chapter 3.5.3.:
+             * The ConstraintValidator chosen to validate a
+             * declared type T is the one where the type supported by the
+             * ConstraintValidator is a supertype of T and where
+             * there is no other ConstraintValidator whose supported type is a
+             * supertype of T and not a supertype of the chosen
+             * ConstraintValidator supported type.
+             */
+            List<Type> assignableTypes = new ArrayList(constraintClasses.length);
+            Map<Type, Class<? extends ConstraintValidator<?, ?>>> validatorTypes =
+                  TypeUtils.getValidatorsTypes(constraintClasses);
+            fillAssignableTypes(type, validatorTypes.keySet(), assignableTypes);
+            reduceAssignableTypes(assignableTypes);
+            checkOneType(annotation, owner, type, assignableTypes);
+            validator = constraintFactory
+                  .getInstance(validatorTypes.get(assignableTypes.get(0)));
+            validator.initialize(annotation);
         } else {
-            validators = new ConstraintValidator[0];
+            validator = null;
         }
-        final AnnotationConstraintBuilder builder =
-              new AnnotationConstraintBuilder(validators, annotation, owner, access);
+        final AnnotationConstraintBuilder builder = new AnnotationConstraintBuilder(
+              constraintClasses, validator, annotation, owner, access);
         // process composed constraints:
         // here are not other superclasses possible, because annotations do not inherit!
         if (processAnnotations(metabean, prop, owner, annotation.annotationType(), access,
-              builder) || validators.length > 0) {  // recursion!
+              builder) || validator != null) {  // recursion!
             if (parentValidation == null) {
                 if (prop != null) {
                     prop.addValidation(builder.getConstraintValidation());
@@ -360,5 +370,89 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
         } else {
             return false;
         }
+    }
+
+    /** implements spec chapter 3.5.3. ConstraintValidator resolution algorithm. */
+    private Type determineTargetedType(Class owner, AccessStrategy access) {
+        // if the constraint declaration is hosted on a class or an interface,
+        // the targeted type is the class or the interface.
+        if (access == null) return owner;
+        Type type = access.getJavaType();
+        if (type == null) return Object.class;
+        if (type instanceof Class) type = ClassUtils.primitiveToWrapper((Class) type);
+        return type;
+    }
+
+    private void checkOneType(Annotation anno, Class owner, Type clazz,
+                              Collection<Type> types) {
+        if (types.isEmpty()) {
+            throw new UnexpectedTypeException("No validator could be found for " +
+                  typeName(clazz) + ". See: " + owner.getName() + " @" +
+                  anno.annotationType().getSimpleName());
+        } else if (types.size() > 1) {
+            StringBuilder builder = new StringBuilder();
+            builder.append("Ambiguous validators for ");
+            builder.append(typeName(clazz));
+            builder.append(". See: ").append(owner.getName()).append(" @")
+                  .append(anno.annotationType().getSimpleName());
+            builder.append(". Validators are: ");
+            boolean comma = false;
+            for (Type each : types) {
+                if (comma) builder.append(", ");
+                comma = true;
+                builder.append(each);
+            }
+            throw new UnexpectedTypeException(builder.toString());
+        }
+    }
+
+    private Object typeName(Type clazz) {
+        if (clazz instanceof Class) {
+            if(((Class)clazz).isArray()) {
+                return ((Class)clazz).getComponentType().getName() + "[]";
+            } else {
+                return ((Class)clazz).getName();
+            }
+        } else {
+            return clazz.toString();
+        }
+    }
+
+    private void fillAssignableTypes(Type type, Set<Type> validatorsTypes,
+                                     List<Type> suitableTypes) {
+        for (Type validatorType : validatorsTypes) {
+            if (TypeUtils.isAssignable(validatorType, type) &&
+                  !suitableTypes.contains(validatorType)) {
+                suitableTypes.add(validatorType);
+            }
+        }
+    }
+
+    /**
+     * Tries to reduce all assignable classes down to a single class.
+     *
+     * @param assignableTypes The set of all classes which are assignable to the class of the value to be validated and
+     *                        which are handled by at least one of the validators for the specified constraint.
+     */
+    private void reduceAssignableTypes(List<Type> assignableTypes) {
+        if (assignableTypes.size() <= 1) {
+            return; // no need to reduce
+        }
+        boolean removed;
+        do {
+            removed = false;
+            final Type type = assignableTypes.get(0);
+            for (int i = 1; i < assignableTypes.size(); i++) {
+                Type nextType = assignableTypes.get(i);
+                if (TypeUtils.isAssignable(type, nextType)) {
+                    assignableTypes.remove(0);
+                    i--;
+                    removed = true;
+                } else if (TypeUtils.isAssignable(nextType, type)) {
+                    assignableTypes.remove(i--);
+                    removed = true;
+                }
+            }
+        } while (removed && assignableTypes.size() > 1);
     }
 }

@@ -18,21 +18,22 @@
  */
 package com.agimatec.validation.jsr303;
 
-import com.agimatec.validation.constraints.SizeValidator;
-import com.agimatec.validation.jsr303.example.Address;
-import com.agimatec.validation.jsr303.example.Book;
-import com.agimatec.validation.jsr303.example.Engine;
-import com.agimatec.validation.jsr303.example.Second;
+import com.agimatec.validation.constraints.SizeValidatorForString;
+import com.agimatec.validation.jsr303.example.*;
 import com.agimatec.validation.jsr303.util.TestUtils;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import javax.validation.ConstraintViolation;
+import javax.validation.UnexpectedTypeException;
 import javax.validation.Validator;
 import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.ElementDescriptor;
 import javax.validation.metadata.PropertyDescriptor;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -115,7 +116,7 @@ public class Jsr303Test extends TestCase {
         Assert.assertNotNull(desc);
         boolean found = false;
         for (ConstraintDescriptor each : desc.getConstraintDescriptors()) {
-            if (each.getConstraintValidatorClasses().get(0).equals(SizeValidator.class)) {
+            if (each.getConstraintValidatorClasses().get(0).equals(SizeValidatorForString.class)) {
                 Assert.assertTrue(each.getAttributes().containsKey("max"));
                 assertEquals(30, each.getAttributes().get("max"));
                 found = true;
@@ -140,6 +141,48 @@ public class Jsr303Test extends TestCase {
               "must match ....-....-...."}) {
             assertNotNull(TestUtils.getViolationWithMessage(violations, msg));
         }
+    }
+
+    public void testConstraintValidatorResolutionAlgorithm() {
+        MaxTestEntity entity = new MaxTestEntity();
+        entity.setText("101");
+        entity.setProperty("201");
+        entity.setLongValue(301);
+        entity.setDecimalValue(new BigDecimal(401));
+        Validator validator = getValidator();
+        Set<ConstraintViolation<MaxTestEntity>> violations = validator.validate(entity);
+        assertEquals(4, violations.size());
+
+        NoValidatorTestEntity entity2 = new NoValidatorTestEntity();
+        try {
+            validator.validate(entity2);
+            fail("UnexpectedTypeException expected but not thrown");
+        } catch(UnexpectedTypeException ex) {
+            // we expected this
+            assertEquals("No validator could be found for java.lang.Object. See: com.agimatec.validation.jsr303.example.NoValidatorTestEntity @Max", ex.getMessage());
+        }
+    }
+
+    public void testSizeValidation() {
+        SizeTestEntity en = new SizeTestEntity();
+        en.ba = new byte[3];
+        en.ca = new char[3];
+        en.boa = new boolean[3];
+        en.coll = Arrays.asList("1", "2", "3");
+        en.da = new double[3];
+        en.fa = new float[3];
+        en.it = new int[3];
+        en.la = new long[3];
+        en.map = new HashMap();
+        en.map.put("1", "1");
+        en.map.put("3", "3");
+        en.map.put("2", "2");
+        en.oa = new Integer[3];;
+        en.oa2 = new Integer[3];
+        en.sa  = new short[3];
+        en.text = "123";
+        Set<ConstraintViolation<SizeTestEntity>> vi = getValidator().validate(en);
+        assertEquals(13, vi.size());
     }
 
     private Validator getValidator() {

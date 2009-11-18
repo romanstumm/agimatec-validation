@@ -32,10 +32,8 @@ import javax.validation.spi.ValidationProvider;
  * Description: Implementation of {@link ValidationProvider} for jsr303 implementation of
  * the agimatec-validation framework.<pre>
  * TODO RSt - Not yet implemented features:
- *   * Method-level validation (added in JSR303 1.0.CR3)
  *   * JSR-303 XML mappings (validation.xml), but proprietary agimatec-validation-XML supported
  *   * need to improve integration between JSR303 annotations and agimatec-metadata validations.
- *   * type-safety check when call a constraint-validator implementation's isValid() method
  *   * use of ConstraintViolationException (not clear in spec...?)
  * </pre>
  * <p/>

@@ -14,28 +14,32 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 package com.agimatec.validation.constraints;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Size;
+import java.lang.reflect.Array;
 
-/**
- * Description: assert that value is true<br/>
- * User: roman <br/>
- * Date: 03.02.2009 <br/>
- * Time: 12:48:21 <br/>
- * Copyright: Agimatec GmbH
- */
-public class AssertTrueValidator implements ConstraintValidator<AssertTrue, Boolean> {
+public class SizeValidatorForArrayOfFloat extends SizeValidator
+      implements ConstraintValidator<Size, float[]> {
 
-    public void initialize(AssertTrue annotation) {
-    }
-
-    public boolean isValid(Boolean value, ConstraintValidatorContext context) {
-        return value == null || value;
-    }
-
+    /**
+     * Checks the number of entries in an array.
+     *
+     * @param array   The array to validate.
+     * @param context context in which the constraint is evaluated.
+     * @return Returns <code>true</code> if the array is <code>null</code> or the number of entries in
+     *         <code>array</code> is between the specified <code>min</code> and <code>max</code> values (inclusive),
+     *         <code>false</code> otherwise.
+     */
+    public boolean isValid(float[] array, ConstraintValidatorContext context) {
+        if (array == null) {
+            return true;
+        }
+        int length = Array.getLength(array);
+        return length >= min && length <= max;
+	}
 }

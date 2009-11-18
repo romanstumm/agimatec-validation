@@ -38,7 +38,7 @@ public class DigitsValidatorTest extends TestCase {
     }
 
     public void testValidateNumber() {
-        DigitsValidator validator = new DigitsValidator();
+        DigitsValidatorForNumber validator = new DigitsValidatorForNumber();
         validator.setFractional(4);
         validator.setIntegral(2);
         BigDecimal val = new BigDecimal("100.12345");
@@ -48,7 +48,7 @@ public class DigitsValidatorTest extends TestCase {
     }
 
     public void testValidateString() {
-        DigitsValidator validator = new DigitsValidator();
+        DigitsValidatorForString validator = new DigitsValidatorForString();
         validator.setFractional(4);
         validator.setIntegral(2);
         String val = "100.12345";
@@ -58,7 +58,7 @@ public class DigitsValidatorTest extends TestCase {
     }
 
     public void testValidateNumber2() {
-        DigitsValidator validator = new DigitsValidator();
+        DigitsValidatorForNumber validator = new DigitsValidatorForNumber();
         validator.setFractional(4);
         validator.setIntegral(2);
         Long val = new Long("100");
@@ -68,7 +68,7 @@ public class DigitsValidatorTest extends TestCase {
     }
 
     public void testValidateString2() {
-        DigitsValidator validator = new DigitsValidator();
+        DigitsValidatorForString validator = new DigitsValidatorForString();
         validator.setFractional(0);
         validator.setIntegral(2);
         String val = "99.5";

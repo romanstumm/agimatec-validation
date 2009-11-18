@@ -14,48 +14,37 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 package com.agimatec.validation.constraints;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import javax.validation.constraints.Future;
-import java.util.Calendar;
-import java.util.Date;
+import javax.validation.constraints.Max;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
- * Description: validate a date or calendar representing a date in the future <br/>
- * User: roman <br/>
- * Date: 03.02.2009 <br/>
- * Time: 12:48:43 <br/>
- * Copyright: Agimatec GmbH
+ * Check that the number being validated is less than or equal to the maximum
+ * value specified.
  */
-public class FutureValidator implements ConstraintValidator<Future, Object> {
+public class MaxValidatorForNumber implements ConstraintValidator<Max, Number> {
 
-    public void initialize(Future constraintAnnotation) {
+    private long max;
+
+    public void initialize(Max annotation) {
+        this.max = annotation.value();
     }
 
-    public boolean isValid(Object value,
-                           ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(Number value, ConstraintValidatorContext context) {
         if (value == null) {
             return true;
-        }
-        if (value instanceof Date) {
-            return ((Date) value).after(now());
-        } else if (value instanceof Calendar) {
-            return ((Calendar) value).getTime().after(now());
+        } else if (value instanceof BigDecimal) {
+            return ((BigDecimal) value).compareTo(BigDecimal.valueOf(max)) != 1;
+        } else if (value instanceof BigInteger) {
+            return ((BigInteger) value).compareTo(BigInteger.valueOf(max)) != 1;
         } else {
-            return false;
+            return value.doubleValue() <= max;
         }
-    }
-
-    /**
-     * overwrite when you need a different algorithm for 'now'.
-     *
-     * @return current date/time
-     */
-    protected Date now() {
-        return new Date();
     }
 }

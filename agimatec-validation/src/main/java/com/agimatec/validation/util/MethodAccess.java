@@ -19,6 +19,7 @@ package com.agimatec.validation.util;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.security.PrivilegedAction;
 
 /**
@@ -30,6 +31,10 @@ import java.security.PrivilegedAction;
  */
 public class MethodAccess extends AccessStrategy {
     private final Method method;
+
+    public Type getJavaType() {
+        return method.getGenericReturnType();
+    }
 
     public MethodAccess(Method method) {
         this.method = method;
@@ -57,7 +62,7 @@ public class MethodAccess extends AccessStrategy {
     }
 
     public String toString() {
-        return "MethodAccess{" + "method=" + method + '}';
+        return method.toString();
     }
 
     public boolean equals(Object o) {

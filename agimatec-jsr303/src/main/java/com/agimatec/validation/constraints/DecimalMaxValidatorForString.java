@@ -14,48 +14,41 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 package com.agimatec.validation.constraints;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import javax.validation.constraints.Past;
-import java.util.Calendar;
-import java.util.Date;
+import javax.validation.constraints.DecimalMax;
+import java.math.BigDecimal;
 
 /**
- * Description: validate a date or calendar representing a date in the past<br/>
- * User: roman <br/>
- * Date: 03.02.2009 <br/>
- * Time: 12:49:16 <br/>
- * Copyright: Agimatec GmbH
+ * Check that the String being validated represents a number, and has a value
+ * <= maxvalue
  */
-public class PastValidator implements ConstraintValidator<Past, Object> {
+public class DecimalMaxValidatorForString
+      implements ConstraintValidator<DecimalMax, String> {
 
-    public void initialize(Past constraintAnnotation) {
+    private BigDecimal maxValue;
+
+    public void initialize(DecimalMax annotation) {
+        try {
+            this.maxValue = new BigDecimal(annotation.value());
+        } catch (NumberFormatException nfe) {
+            throw new IllegalArgumentException(
+                  annotation.value() + " does not represent a valid BigDecimal format");
+        }
     }
 
-    public boolean isValid(Object value,
-                           ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null) {
             return true;
         }
-        if (value instanceof Date) {
-            return ((Date) value).before(now());
-        } else if (value instanceof Calendar) {
-            return ((Calendar) value).getTime().before(now());
-        } else {
+        try {
+            return new BigDecimal(value).compareTo(maxValue) != 1;
+        } catch (NumberFormatException nfe) {
             return false;
         }
-    }
-
-    /**
-     * overwrite when you need a different algorithm for 'now'.
-     *
-     * @return current date/time
-     */
-    protected Date now() {
-        return new Date();
     }
 }

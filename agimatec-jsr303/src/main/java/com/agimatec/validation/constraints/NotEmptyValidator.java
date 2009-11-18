@@ -25,11 +25,8 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
 
-/**
- * Description:  Check the non emptyness of the element (array, collection, map, string) 
- **/
-public class NotEmptyValidator
-      implements ConstraintValidator<NotEmpty, Object> {
+/** Description:  Check the non emptyness of the element (array, collection, map, string) */
+public class NotEmptyValidator implements ConstraintValidator<NotEmpty, Object> {
     public void initialize(NotEmpty constraintAnnotation) {
         // do nothing
     }

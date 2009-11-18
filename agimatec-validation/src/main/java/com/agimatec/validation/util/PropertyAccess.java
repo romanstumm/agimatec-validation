@@ -57,7 +57,7 @@ public class PropertyAccess extends AccessStrategy {
     }
 
     public String toString() {
-        return "Property{" + propertyName + '}';
+        return "Property{" + beanClass.getName() + '.' + propertyName + '}';
     }
 
     public Type getJavaType() {

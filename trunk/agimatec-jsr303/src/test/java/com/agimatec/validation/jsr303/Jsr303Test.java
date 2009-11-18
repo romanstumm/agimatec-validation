@@ -184,7 +184,6 @@ public class Jsr303Test extends TestCase {
         en.map.put("3", "3");
         en.map.put("2", "2");
         en.oa = new Integer[3];
-        ;
         en.oa2 = new Integer[3];
         en.sa = new short[3];
         en.text = "123";

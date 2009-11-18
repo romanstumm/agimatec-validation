@@ -16,6 +16,7 @@ Working on new release 0.9.4 (October 2009)
   * ConstraintFinder support implemented
   * various improvements and fixes required by the spec, see Issues
   * ConstraintDefinitionException when payload, groups or message parameter is missing on annotations annotated with @Constraint
+  * type-safety check when call a constraint-validator implementation's isValid() method (chapter 3.5.3. ConstraintValidator resolution algorithm)
 
 1st Oct 2009
 ------------

@@ -20,30 +20,32 @@ package com.agimatec.validation.constraints;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import javax.validation.UnexpectedTypeException;
 import java.lang.reflect.Array;
-import java.util.Collection;
-import java.util.Map;
+import java.lang.reflect.Method;
 
-/** Description:  Check the non emptyness of the element (array, collection, map, string) */
+/**
+ * Description:  Check the non emptyness of an
+ * any object that has a public isEmpty():boolean or a valid toString() method
+ */
 public class NotEmptyValidator implements ConstraintValidator<NotEmpty, Object> {
     public void initialize(NotEmpty constraintAnnotation) {
         // do nothing
     }
 
-    // enhancement: extend to support any object that has a public isEmpty():boolean method?
     public boolean isValid(Object value, ConstraintValidatorContext context) {
         if (value == null) return true;
         if (value.getClass().isArray()) {
             return Array.getLength(value) > 0;
-        } else if (value instanceof Collection) {
-            return !((Collection) value).isEmpty();
-        } else if (value instanceof Map) {
-            return !((Map) value).isEmpty();
-        } else if (value instanceof String) {
-            return ((String) value).length() > 0;
         } else {
-            throw new UnexpectedTypeException(value + " is of unsupported type");
+            try {
+                Method isEmptyMethod = value.getClass().getMethod("isEmpty");
+                if (isEmptyMethod != null) {
+                    return !((Boolean) isEmptyMethod.invoke(value)).booleanValue();
+                }
+            } catch (Exception ex) {
+                // do nothing
+            }
+            return value.toString().length() > 0;
         }
     }
 }

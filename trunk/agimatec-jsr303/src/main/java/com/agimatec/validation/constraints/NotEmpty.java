@@ -33,7 +33,9 @@ import java.lang.annotation.Target;
  * </pre>
  */
 @Documented
-@Constraint(validatedBy = NotEmptyValidator.class)
+@Constraint(
+      validatedBy = {NotEmptyValidatorForCollection.class, NotEmptyValidatorForMap.class,
+            NotEmptyValidatorForString.class, NotEmptyValidator.class})
 @Target({METHOD, FIELD, ANNOTATION_TYPE})
 @Retention(RUNTIME)
 public @interface NotEmpty {

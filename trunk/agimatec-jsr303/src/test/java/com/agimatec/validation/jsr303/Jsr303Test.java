@@ -116,7 +116,8 @@ public class Jsr303Test extends TestCase {
         Assert.assertNotNull(desc);
         boolean found = false;
         for (ConstraintDescriptor each : desc.getConstraintDescriptors()) {
-            if (each.getConstraintValidatorClasses().get(0).equals(SizeValidatorForString.class)) {
+            if (each.getConstraintValidatorClasses().get(0)
+                  .equals(SizeValidatorForString.class)) {
                 Assert.assertTrue(each.getAttributes().containsKey("max"));
                 assertEquals(30, each.getAttributes().get("max"));
                 found = true;
@@ -133,11 +134,11 @@ public class Jsr303Test extends TestCase {
         Set<ConstraintViolation<Engine>> violations;
         violations = validator.validate(engine);
         assertEquals(0, violations.size());
-        
+
         engine.serialNumber = "!)/(/()";
         violations = validator.validate(engine);
         assertEquals(2, violations.size());
-        for(String msg : new String[] {"must contain alphabetical characters only",
+        for (String msg : new String[]{"must contain alphabetical characters only",
               "must match ....-....-...."}) {
             assertNotNull(TestUtils.getViolationWithMessage(violations, msg));
         }
@@ -157,9 +158,14 @@ public class Jsr303Test extends TestCase {
         try {
             validator.validate(entity2);
             fail("UnexpectedTypeException expected but not thrown");
-        } catch(UnexpectedTypeException ex) {
+        } catch (UnexpectedTypeException ex) {
             // we expected this
-            assertEquals("No validator could be found for java.lang.Object. See: com.agimatec.validation.jsr303.example.NoValidatorTestEntity @Max", ex.getMessage());
+            assertEquals(
+                  "No validator could be found for type java.lang.Object. " +
+                        "See: @Max at private java.lang.Object " +
+                        "com.agimatec.validation.jsr303.example." +
+                        "NoValidatorTestEntity.anything",
+                  ex.getMessage());
         }
     }
 
@@ -177,9 +183,10 @@ public class Jsr303Test extends TestCase {
         en.map.put("1", "1");
         en.map.put("3", "3");
         en.map.put("2", "2");
-        en.oa = new Integer[3];;
+        en.oa = new Integer[3];
+        ;
         en.oa2 = new Integer[3];
-        en.sa  = new short[3];
+        en.sa = new short[3];
         en.text = "123";
         Set<ConstraintViolation<SizeTestEntity>> vi = getValidator().validate(en);
         assertEquals(13, vi.size());

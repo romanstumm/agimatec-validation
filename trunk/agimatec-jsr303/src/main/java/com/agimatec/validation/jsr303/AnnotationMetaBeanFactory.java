@@ -344,7 +344,7 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
                   TypeUtils.getValidatorsTypes(constraintClasses);
             fillAssignableTypes(type, validatorTypes.keySet(), assignableTypes);
             reduceAssignableTypes(assignableTypes);
-            checkOneType(annotation, owner, type, assignableTypes);
+            checkOneType(assignableTypes, type, owner, annotation, access);
             validator = constraintFactory
                   .getInstance(validatorTypes.get(assignableTypes.get(0)));
             validator.initialize(annotation);
@@ -372,6 +372,35 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
         }
     }
 
+    private void checkOneType(List<Type> types, Type targetType, Class owner,
+                              Annotation anno, AccessStrategy access) {
+
+        if (types.isEmpty()) {
+            StringBuilder buf = new StringBuilder()
+                  .append("No validator could be found for type ")
+                  .append(stringForType(targetType))
+                  .append(". See: @")
+                  .append(anno.annotationType().getSimpleName())
+                  .append(" at ").append(stringForLocation(owner, access));
+            throw new UnexpectedTypeException(buf.toString());
+        } else if (types.size() > 1) {
+            StringBuilder buf = new StringBuilder();
+            buf.append("Ambiguous validators for type ");
+            buf.append(stringForType(targetType));
+            buf.append(". See: @")
+                  .append(anno.annotationType().getSimpleName())
+                  .append(" at ").append(stringForLocation(owner, access));
+            buf.append(". Validators are: ");
+            boolean comma = false;
+            for (Type each : types) {
+                if (comma) buf.append(", ");
+                comma = true;
+                buf.append(each);
+            }
+            throw new UnexpectedTypeException(buf.toString());
+        }
+    }
+
     /** implements spec chapter 3.5.3. ConstraintValidator resolution algorithm. */
     private Type determineTargetedType(Class owner, AccessStrategy access) {
         // if the constraint declaration is hosted on a class or an interface,
@@ -383,38 +412,23 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
         return type;
     }
 
-    private void checkOneType(Annotation anno, Class owner, Type clazz,
-                              Collection<Type> types) {
-        if (types.isEmpty()) {
-            throw new UnexpectedTypeException("No validator could be found for " +
-                  typeName(clazz) + ". See: " + owner.getName() + " @" +
-                  anno.annotationType().getSimpleName());
-        } else if (types.size() > 1) {
-            StringBuilder builder = new StringBuilder();
-            builder.append("Ambiguous validators for ");
-            builder.append(typeName(clazz));
-            builder.append(". See: ").append(owner.getName()).append(" @")
-                  .append(anno.annotationType().getSimpleName());
-            builder.append(". Validators are: ");
-            boolean comma = false;
-            for (Type each : types) {
-                if (comma) builder.append(", ");
-                comma = true;
-                builder.append(each);
-            }
-            throw new UnexpectedTypeException(builder.toString());
-        }
-    }
-
-    private Object typeName(Type clazz) {
+    private String stringForType(Type clazz) {
         if (clazz instanceof Class) {
-            if(((Class)clazz).isArray()) {
-                return ((Class)clazz).getComponentType().getName() + "[]";
+            if (((Class) clazz).isArray()) {
+                return ((Class) clazz).getComponentType().getName() + "[]";
             } else {
-                return ((Class)clazz).getName();
+                return ((Class) clazz).getName();
             }
         } else {
             return clazz.toString();
+        }
+    }
+
+    private String stringForLocation(Class owner, AccessStrategy access) {
+        if (access != null) {
+            return access.toString();
+        } else {
+            return owner.getName();
         }
     }
 

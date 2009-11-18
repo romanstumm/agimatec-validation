@@ -14,28 +14,33 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 package com.agimatec.validation.constraints;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Size;
+import java.util.Map;
 
-/**
- * Description: assert that value is true<br/>
- * User: roman <br/>
- * Date: 03.02.2009 <br/>
- * Time: 12:48:21 <br/>
- * Copyright: Agimatec GmbH
- */
-public class AssertTrueValidator implements ConstraintValidator<AssertTrue, Boolean> {
-
-    public void initialize(AssertTrue annotation) {
-    }
-
-    public boolean isValid(Boolean value, ConstraintValidatorContext context) {
-        return value == null || value;
-    }
+/** Check that a Map's size is between min and max. */
+public class SizeValidatorForMap extends SizeValidator
+      implements ConstraintValidator<Size, Map> {
+    /**
+     * Checks the number of entries in a map.
+     *
+     * @param map     The map to validate.
+     * @param context context in which the constraint is evaluated.
+     * @return Returns <code>true</code> if the map is <code>null</code> or the number of entries in <code>map</code>
+     *         is between the specified <code>min</code> and <code>max</code> values (inclusive),
+     *         <code>false</code> otherwise.
+     */
+    public boolean isValid(Map map, ConstraintValidatorContext context) {
+        if (map == null) {
+            return true;
+        }
+        int size = map.size();
+        return size >= min && size <= max;
+	}
 
 }

@@ -18,6 +18,7 @@ package com.agimatec.validation.util;
 
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.security.PrivilegedAction;
 
 /**
@@ -30,6 +31,10 @@ import java.security.PrivilegedAction;
 public class FieldAccess extends AccessStrategy {
 
     private final Field field;
+
+    public Type getJavaType() {
+        return field.getGenericType();
+    }
 
     public FieldAccess(Field field) {
         this.field = field;
@@ -55,7 +60,7 @@ public class FieldAccess extends AccessStrategy {
     }
 
     public String toString() {
-        return "FieldAccess{" + "field=" + field + '}';
+        return field.toString();
     }
 
     public boolean equals(Object o) {

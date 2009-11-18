@@ -48,15 +48,14 @@ final class AnnotationConstraintBuilder {
     private final ConstraintValidation constraintValidation;
     private List<ConstraintOverrides> overrides;
 
-    public AnnotationConstraintBuilder(ConstraintValidator[] constraintValidators,
-                                       Annotation annotation, Class owner,
-                                       AccessStrategy access) {
+    public AnnotationConstraintBuilder(
+          Class<? extends ConstraintValidator<?, ?>>[] validatorClasses,
+          ConstraintValidator constraintValidator, Annotation annotation, Class owner,
+          AccessStrategy access) {
         boolean reportFromComposite = annotation != null && annotation.annotationType()
               .isAnnotationPresent(ReportAsSingleViolation.class);
-
-        constraintValidation = new ConstraintValidation(constraintValidators, annotation,
-              owner, access, reportFromComposite);
-
+        constraintValidation = new ConstraintValidation(validatorClasses,
+              constraintValidator, annotation, owner, access, reportFromComposite);
         buildFromAnnotation();
     }
 

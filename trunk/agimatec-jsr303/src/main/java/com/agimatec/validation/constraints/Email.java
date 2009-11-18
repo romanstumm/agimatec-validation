@@ -48,5 +48,5 @@ public @interface Email {
 
     String message() default "{com.agimatec.validation.constraints.Email.message}";
 
-    Class<? extends Payload>[] payload() default { };
+    Class<? extends Payload>[] payload() default {};
 }

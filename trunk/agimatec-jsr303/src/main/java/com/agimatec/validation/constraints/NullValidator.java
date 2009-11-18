@@ -31,11 +31,11 @@ import javax.validation.constraints.Null;
  */
 public class NullValidator implements ConstraintValidator<Null, Object> {
 
-	public void initialize(Null constraintAnnotation) {
+    public void initialize(Null annotation) {
         // do nothing
     }
 
-	public boolean isValid(Object object, ConstraintValidatorContext constraintValidatorContext) {
-		return object == null;
-	}
+    public boolean isValid(Object object, ConstraintValidatorContext context) {
+        return object == null;
+    }
 }

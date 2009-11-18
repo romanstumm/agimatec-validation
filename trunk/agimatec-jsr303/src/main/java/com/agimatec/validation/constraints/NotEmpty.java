@@ -41,5 +41,5 @@ public @interface NotEmpty {
 
     String message() default "{com.agimatec.validation.constraints.NotEmpty.message}";
 
-    Class<? extends Payload>[] payload() default { };
+    Class<? extends Payload>[] payload() default {};
 }

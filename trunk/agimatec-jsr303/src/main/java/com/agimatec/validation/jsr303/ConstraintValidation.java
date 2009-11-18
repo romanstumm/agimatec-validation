@@ -43,7 +43,7 @@ import java.util.*;
  */
 public class ConstraintValidation implements Validation, ConstraintDescriptor {
     private static final String ANNOTATION_MESSAGE = "message";
-    private final ConstraintValidator[] constraints;
+    private final ConstraintValidator validator;
     private final Annotation annotation; // for metadata request API
     private final AccessStrategy access;
     private final boolean reportFromComposite;
@@ -58,20 +58,23 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
     private final Class owner;
     private Set<Class<?>> groups;
     private Set<Class<? extends Payload>> payload;
+    private Class<? extends ConstraintValidator<?, ?>>[] validatorClasses;
 
 
     /**
-     * @param constraints - the constraint validators
-     * @param annotation  - the annotation of the constraint
-     * @param owner       - the type where the annotated element is placed
-     *                    (class, interface, annotation type)
-     * @param access      - how to access the value
+     * @param validator  - the constraint validator
+     * @param annotation - the annotation of the constraint
+     * @param owner      - the type where the annotated element is placed
+     *                   (class, interface, annotation type)
+     * @param access     - how to access the value
      */
-    protected ConstraintValidation(ConstraintValidator[] constraints,
-                                   Annotation annotation, Class owner,
-                                   AccessStrategy access, boolean reportFromComposite) {
+    protected ConstraintValidation(
+          Class<? extends ConstraintValidator<?, ?>>[] validatorClasses,
+          ConstraintValidator validator, Annotation annotation, Class owner,
+          AccessStrategy access, boolean reportFromComposite) {
         this.attributes = new HashMap();
-        this.constraints = constraints;
+        this.validatorClasses = validatorClasses;
+        this.validator = validator;
         this.annotation = annotation;
         this.owner = owner;
         this.access = access;
@@ -110,10 +113,8 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
         if (!isMemberOf(context.getCurrentGroup().getGroup())) {
             return; // do not validate in the current group
         }
-        for (ConstraintValidator constraint : constraints) {
-            if (!context.collectValidated(context.getBean(), constraint))
-                return; // already done
-        }
+        if (validator != null && !context.collectValidated(context.getBean(), validator))
+            return; // already done
 
         if (context.getMetaProperty() != null && !isCascadeEnabled(context)) {
             return;
@@ -148,10 +149,10 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
             }
         }
 
-        for (ConstraintValidator constraint : constraints) {
+        if (validator != null) {
             ConstraintValidatorContextImpl jsrContext =
                   new ConstraintValidatorContextImpl(context, this);
-            if (!constraint.isValid(context.getValidatedValue(), jsrContext)) {
+            if (!validator.isValid(context.getValidatedValue(), jsrContext)) {
                 addErrors(context, jsrContext);
             }
         }
@@ -196,15 +197,15 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
     }
 
     public String toString() {
-        return "ConstraintValidation{" + Arrays.toString(constraints) + '}';
+        return "ConstraintValidation{" + validator + '}';
     }
-    
+
     public String getMessageTemplate() {
         return (String) attributes.get(ANNOTATION_MESSAGE);
     }
 
-    public ConstraintValidator[] getConstraintValidators() {
-        return constraints;
+    public ConstraintValidator getValidator() {
+        return validator;
     }
 
     protected boolean isMemberOf(Class<?> reqGroup) {
@@ -252,13 +253,7 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
     }
 
     public List<Class<? extends ConstraintValidator<?, ?>>> getConstraintValidatorClasses() {
-        List<Class<? extends ConstraintValidator<?, ?>>> classes =
-              new ArrayList(constraints.length);
-        for (ConstraintValidator constraint : constraints) {
-            classes.add((Class<? extends ConstraintValidator<?, ?>>) constraint
-                  .getClass());
-        }
-        return classes;
+        return Arrays.asList(validatorClasses);
     }
 
 }

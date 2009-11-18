@@ -14,28 +14,35 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 package com.agimatec.validation.constraints;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Max;
+import java.math.BigDecimal;
 
 /**
- * Description: assert that value is true<br/>
- * User: roman <br/>
- * Date: 03.02.2009 <br/>
- * Time: 12:48:21 <br/>
- * Copyright: Agimatec GmbH
+ * Check that the String being validated represents a number, and has a value
+ * less than or equal to the maximum value specified.
  */
-public class AssertTrueValidator implements ConstraintValidator<AssertTrue, Boolean> {
+public class MaxValidatorForString implements ConstraintValidator<Max, String> {
 
-    public void initialize(AssertTrue annotation) {
+    private long max;
+
+    public void initialize(Max annotation) {
+        this.max = annotation.value();
     }
 
-    public boolean isValid(Boolean value, ConstraintValidatorContext context) {
-        return value == null || value;
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+        if (value == null) {
+            return true;
+        }
+        try {
+            return new BigDecimal(value).compareTo(BigDecimal.valueOf(max)) != 1;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
     }
-
 }

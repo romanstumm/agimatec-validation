@@ -14,28 +14,38 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 package com.agimatec.validation.constraints;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Past;
+import java.util.Calendar;
 
 /**
- * Description: assert that value is true<br/>
+ * Description: validate a date or calendar representing a date in the past<br/>
  * User: roman <br/>
  * Date: 03.02.2009 <br/>
- * Time: 12:48:21 <br/>
+ * Time: 12:49:16 <br/>
  * Copyright: Agimatec GmbH
  */
-public class AssertTrueValidator implements ConstraintValidator<AssertTrue, Boolean> {
+public class PastValidatorForCalendar implements ConstraintValidator<Past, Calendar> {
 
-    public void initialize(AssertTrue annotation) {
+    public void initialize(Past annotation) {
     }
 
-    public boolean isValid(Boolean value, ConstraintValidatorContext context) {
-        return value == null || value;
+    public boolean isValid(Calendar cal, ConstraintValidatorContext context) {
+        return cal == null || cal.before(now());
     }
 
+
+    /**
+     * overwrite when you need a different algorithm for 'now'.
+     *
+     * @return current date/time
+     */
+    protected Calendar now() {
+        return Calendar.getInstance();
+    }
 }

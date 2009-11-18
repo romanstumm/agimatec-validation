@@ -18,9 +18,11 @@ package com.agimatec.validation.util;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
+import java.beans.PropertyDescriptor;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
@@ -52,6 +54,39 @@ public class PropertyAccess extends AccessStrategy {
         } else { // supports DynaBean and standard Objects
             return PropertyUtils.getSimpleProperty(bean, property);
         }
+    }
+
+    public String toString() {
+        return "Property{" + propertyName + '}';
+    }
+
+    public Type getJavaType() {
+        /*if(Map.class.isAssignableFrom(beanClass)) {
+            return beanClass. 
+        }*/
+        if (rememberField != null) {  // use cached field of previous access
+            return rememberField.getGenericType();
+        }
+        for (PropertyDescriptor each : PropertyUtils.getPropertyDescriptors(beanClass)) {
+            if (each.getName().equals(propertyName) && each.getReadMethod() != null) {
+                return each.getReadMethod().getGenericReturnType();
+            }
+        }
+        try { // try public field
+            return beanClass.getField(propertyName).getGenericType();
+        } catch (NoSuchFieldException ex2) {
+            // search for private/protected field up the hierarchy
+            Class theClass = beanClass;
+            while (theClass != null) {
+                try {
+                    return theClass.getDeclaredField(propertyName).getGenericType();
+                } catch (NoSuchFieldException ex3) {
+                    // do nothing
+                }
+                theClass = theClass.getSuperclass();
+            }
+        }
+        return Object.class; // unknown type: allow any type?? 
     }
 
     public Object get(Object bean) {

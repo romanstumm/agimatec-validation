@@ -14,41 +14,31 @@
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 package com.agimatec.validation.constraints;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import javax.validation.constraints.Max;
-import java.math.BigDecimal;
+import javax.validation.constraints.Size;
 
-/**
- * Description: validate that number-value of passed object is <= max-value<br/>
- * User: roman <br/>
- * Date: 03.02.2009 <br/>
- * Time: 12:48:54 <br/>
- * Copyright: Agimatec GmbH
- */
-public class MaxValidator implements ConstraintValidator<Max, Object> {
-    private long max;
-
-    public void initialize(Max constraintAnnotation) {
-        max = constraintAnnotation.value();
-    }
-
-    public boolean isValid(Object value, ConstraintValidatorContext context) {
-        if (value == null) {
+/** Check that a string's length is between min and max. */
+public class SizeValidatorForString extends SizeValidator
+      implements ConstraintValidator<Size, String> {
+    /**
+     * Checks the length of the specified string.
+     *
+     * @param s       The string to validate.
+     * @param context context in which the constraint is evaluated.
+     * @return Returns <code>true</code> if the string is <code>null</code> or the length of <code>s</code> between the specified
+     *         <code>min</code> and <code>max</code> values (inclusive), <code>false</code> otherwise.
+     */
+    public boolean isValid(String s, ConstraintValidatorContext context) {
+        if (s == null) {
             return true;
         }
-        if (value instanceof Number) {
-            return ((Number) value).longValue() <= max;
-        } else {
-            try {
-                return new BigDecimal(String.valueOf(value)).longValue() <= max;
-            } catch ( NumberFormatException nfe ) {
-                return false;
-            }
-        }
+        int length = s.length();
+        return length >= min && length <= max;
     }
+
 }

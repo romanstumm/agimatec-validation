@@ -22,9 +22,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.constraints.NotNull;
 
-/**
- * valid when object is NOT null
- */
+/** valid when object is NOT null */
 public class NotNullValidator implements ConstraintValidator<NotNull, Object> {
     public void initialize(NotNull constraintAnnotation) {
         // do nothing

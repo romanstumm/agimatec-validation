@@ -6,7 +6,7 @@
  * Method-level validation (currently not implemented in JSR303, exists as proposal only)
  * JSR-303 XML mappings (xml deployment descriptor)
  * improve integration between JSR303 annotations and agimatec-metadata validations. 
- * type-safety check when call a constraint-validator implementation's isValid() method
+ * ~~type-safety check when call a constraint-validator implementation's isValid() method~~ OK
  * ~~ConstraintViolation.getMessageTemplate() and getMessage()~~ OK
  * ~~ValidatorFactory.usingContext()~~ OK
  * ~~Object graph validation: Set, Map (value) validation not yet supported (currently only Array and Collection are supported, spec: _Any object implementing java.lang.Iterable must be supported._)~~ OK

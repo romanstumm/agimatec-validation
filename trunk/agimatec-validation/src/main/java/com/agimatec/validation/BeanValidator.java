@@ -89,9 +89,7 @@ public class BeanValidator {
     /**
      * validate the method parameters based on @Validate annotations.
      * Requirements:
-     * 1. Method must be annotated with @Valiadate
-     * (otherwise this method returns and no current validation context is created)
-     * 2. Parameter, that are to be validated must also be annotated with @Validate
+     * Parameter, that are to be validated must be annotated with @Validate
      *
      * @param method     -  a method
      * @param parameters - the parameters suitable to the method
@@ -101,12 +99,12 @@ public class BeanValidator {
     public ValidationResults validateCall(Method method, Object[] parameters) {
         if (parameters.length > 0) {
             // shortcut (for performance!)
-            if (method.getAnnotation(Validate.class) == null) return null;
-            ValidationContext<ValidationResults> context = createContext();
             Annotation[][] annotations = method.getParameterAnnotations();
+            ValidationContext<ValidationResults> context = null;
             for (int i = 0; i < parameters.length; i++) {
                 for (Annotation anno : annotations[i]) {
                     if (anno instanceof Validate) {
+                        if(context == null) context = createContext();
                         if (determineMetaBean((Validate) anno, parameters[i], context)) {
                             validateContext(context);
                             break; // next parameter

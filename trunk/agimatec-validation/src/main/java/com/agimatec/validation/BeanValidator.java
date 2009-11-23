@@ -93,7 +93,7 @@ public class BeanValidator {
      *
      * @param method     -  a method
      * @param parameters - the parameters suitable to the method
-     * @return a validation result
+     * @return a validation result or null when there was nothing to validate
      * @see Validate
      */
     public ValidationResults validateCall(Method method, Object[] parameters) {
@@ -112,7 +112,7 @@ public class BeanValidator {
                     }
                 }
             }
-            return context.getListener();
+            return context != null ? context.getListener() : null;
         }
         return null;
     }

@@ -1,0 +1,6 @@
+.settings
+.project
+.classpath
+target
+*.log
+maven-eclipse.xml

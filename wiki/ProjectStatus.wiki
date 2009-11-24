@@ -2,7 +2,7 @@
 
 = Project status =
 
-  * The agimatec-validation framework is older than the JSR 303 specification, but the similarities were striking so that the adaption to the standard was possible withing a short time. 
+  * The base of the agimatec-validation framework is older than the JSR 303 specification.  JSR303 support could be built on top of the core framework.
 
   * You can find features and news at FeatureHistory.
 
@@ -11,7 +11,7 @@
   * The specification is stable now (since Oct 2009)
 
   * Please verify that the version of validation-api.jar you are using
-  is compatible with agimatec-validation.jar
+  is compatible with agimatec-jsr303.jar and agimatec-validation.jar
 
   * You can use the framework with the JSR303 interfaces if you want to strictly use the standard.
   Refer to classes in packages javax.validation and com.agimatec.validation.jsr303

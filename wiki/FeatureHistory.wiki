@@ -5,7 +5,7 @@ The sources in svn are probably newer than the release you find in the "Download
 
 = History =
 
-Working on new release 0.9.4 (October 2009)
+Working on new release 0.9.4 (October, November 2009)
 -------------------------------------------
   * XML deployment descriptor (under construction)
   * compiled with validation-api 1.0.0.GA

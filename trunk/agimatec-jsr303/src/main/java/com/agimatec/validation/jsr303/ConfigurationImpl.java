@@ -44,11 +44,11 @@ public class ConfigurationImpl
     protected ConstraintValidatorFactory constraintFactory;
     private TraversableResolver traversableResolver;
 
-    // BEGIN Bootstrap parameters
+    // BEGIN Bootstrap parameters for XML
     private Set<InputStream> mappingStreams = new HashSet<InputStream>();
     private Map<String, String> properties = new HashMap<String,String>();
     private boolean ignoreXmlConfiguration = false;
-    // END Bootstrap parameters
+    // END Bootstrap parameters for XML
 
     public ConfigurationImpl(BootstrapState aState, ValidationProvider aProvider) {
         if (aState != null) {

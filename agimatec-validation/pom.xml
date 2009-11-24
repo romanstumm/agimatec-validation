@@ -26,7 +26,7 @@
   <parent>
     <groupId>com.agimatec</groupId>
     <artifactId>agimatec-validation-parent</artifactId>
-    <version>0.9.4</version>
+    <version>0.9.5-SNAPSHOT</version>
   </parent>
 
   <artifactId>agimatec-validation</artifactId>

@@ -50,7 +50,7 @@ public class PrivilegedActions {
             public T run() {
                 try {
                     Constructor<T> cons = cls.getConstructor(paramTypes);
-                    if(!cons.isAccessible()) {
+                    if (!cons.isAccessible()) {
                         cons.setAccessible(true);
                     }
                     return cons.newInstance(values);
@@ -115,8 +115,7 @@ public class PrivilegedActions {
         }
     }
 
-    public static Object getAnnotationValue(final Annotation annotation,
-                                            final String name)
+    public static Object getAnnotationValue(final Annotation annotation, final String name)
           throws IllegalAccessException, InvocationTargetException {
         return run(new PrivilegedAction() {
             public Object run() {
@@ -132,6 +131,18 @@ public class PrivilegedActions {
                     }
                 }
                 return null;
+            }
+        });
+    }
+
+    public static ClassLoader getClassLoader(final Class clazz) {
+        return run(new PrivilegedAction<ClassLoader>() {
+            public ClassLoader run() {
+                ClassLoader cl = Thread.currentThread().getContextClassLoader();
+                if (cl == null) {
+                    cl = clazz.getClassLoader();
+                }
+                return cl;
             }
         });
     }

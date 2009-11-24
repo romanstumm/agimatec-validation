@@ -23,16 +23,12 @@ import javax.validation.spi.BootstrapState;
 import javax.validation.spi.ConfigurationState;
 import javax.validation.spi.ValidationProvider;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
- * Description:
- * TODO RSt - split implementation of interface Configuration and ConfigurationState as soon as JSR303-XML configuration is supported
- * ----> think about this. Spec says:
- * "A typical implementation of Configuration also implements ConfigurationState,
- * hence this  can be passed to buildValidatorFactory(ConfigurationState)."
+ * Description: used to configure agimatec-validation for jsr303.
+ * Implementation of Configuration that also implements ConfigurationState,
+ * hence this can be passed to buildValidatorFactory(ConfigurationState).
  * <br/>
  * User: roman.stumm <br/>
  * Date: 29.10.2008 <br/>
@@ -48,11 +44,17 @@ public class ConfigurationImpl
     protected ConstraintValidatorFactory constraintFactory;
     private TraversableResolver traversableResolver;
 
+    // BEGIN Bootstrap parameters
+    private Set<InputStream> mappingStreams = new HashSet<InputStream>();
+    private Map<String, String> properties = new HashMap<String,String>();
+    private boolean ignoreXmlConfiguration = false;
+    // END Bootstrap parameters
+
     public ConfigurationImpl(BootstrapState aState, ValidationProvider aProvider) {
         if (aState != null) {
             this.provider = null;
             if (aState.getValidationProviderResolver() == null) {
-                providerResolver = new DefaultValidationProviderResolver();
+                providerResolver = aState.getDefaultValidationProviderResolver();
             } else {
                 providerResolver = aState.getValidationProviderResolver();
             }
@@ -78,8 +80,14 @@ public class ConfigurationImpl
         traversableResolver = new DefaultTraversableResolver();
     }
 
+    /**
+     * Ignore data from the <i>META-INF/validation.xml</i> file if this
+	 * method is called.
+     * @return this
+     */
     public AgimatecValidatorConfiguration ignoreXmlConfiguration() {
-        return this;  // TODO RSt - nyi
+        ignoreXmlConfiguration = true;
+        return this;
     }
 
     public ConfigurationImpl messageInterpolator(MessageInterpolator resolver) {
@@ -94,44 +102,47 @@ public class ConfigurationImpl
     }
 
     /**
-     * TODO RSt - not yet implemented
-     *
+     * Add a stream describing constraint mapping in the Bean Validation
+	 * XML format.
      * @return this
      */
     public AgimatecValidatorConfiguration addMapping(InputStream stream) {
+        mappingStreams.add(stream);
         return this;
     }
 
     /**
-     * TODO RSt - not yet implemented
+     * Add a provider specific property. This property is equivalent to
+	 * XML configuration properties.
+	 * If we do not know how to handle the property, we silently ignore it.
      *
      * @return this
      */
     public AgimatecValidatorConfiguration addProperty(String name, String value) {
+        properties.put(name, value);
         return this;
     }
 
     /**
-     * TODO RSt - not yet implemented
+     * Return a map of non type-safe custom properties.
      *
      * @return null
      */
     public Map<String, String> getProperties() {
-        return null;  // do nothing
+        return properties;
     }
 
     /**
-     * TODO RSt - not yet implemented
-     *
+     * Returns true if Configuration.ignoreXMLConfiguration() has been called.
+	 * In this case, we ignore META-INF/validation.xml
      * @return true
      */
     public boolean isIgnoreXmlConfiguration() {
-        return true;
+        return ignoreXmlConfiguration;
     }
 
-    // TODO RSt - nyi
     public Set<InputStream> getMappingStreams() {
-        return null;  // do nothing
+        return mappingStreams;
     }
 
     public MessageInterpolator getMessageInterpolator() {

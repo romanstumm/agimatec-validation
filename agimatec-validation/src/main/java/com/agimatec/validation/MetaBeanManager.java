@@ -19,6 +19,7 @@ package com.agimatec.validation;
 import static com.agimatec.validation.model.Features.Property.*;
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.MetaProperty;
+import com.agimatec.validation.util.PrivilegedActions;
 import com.agimatec.validation.xml.XMLMetaBeanInfos;
 import com.agimatec.validation.xml.XMLMetaBeanLoader;
 import com.agimatec.validation.xml.XMLMetaBeanRegistry;
@@ -36,8 +37,7 @@ import java.util.Map;
  * Time: 16:19:43 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-public class MetaBeanManager
-      implements MetaBeanFinder, XMLMetaBeanRegistry, MetaBeanEnricher {
+public class MetaBeanManager implements MetaBeanFinder, XMLMetaBeanRegistry, MetaBeanEnricher {
 
     protected final MetaBeanCache cache = new MetaBeanCache();
     protected final MetaBeanBuilder builder;
@@ -52,9 +52,8 @@ public class MetaBeanManager
     }
 
     public void addResourceLoader(String resource) {
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        if (classloader == null) classloader = getClass().getClassLoader();
-        addLoader(new XMLMetaBeanURLLoader(classloader.getResource(resource)));
+        addLoader(new XMLMetaBeanURLLoader(
+              PrivilegedActions.getClassLoader(getClass()).getResource(resource)));
     }
 
     public synchronized void addLoader(XMLMetaBeanLoader loader) {
@@ -143,7 +142,7 @@ public class MetaBeanManager
     }
 
     public MetaBean findForClass(Class clazz) {
-        if(clazz == null) return null;
+        if (clazz == null) return null;
         MetaBean beanInfo = cache.findForClass(clazz);
         if (beanInfo != null) return beanInfo;
         try {

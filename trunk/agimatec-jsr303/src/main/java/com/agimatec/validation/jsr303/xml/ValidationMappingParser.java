@@ -16,9 +16,8 @@
  */
 package com.agimatec.validation.jsr303.xml;
 
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Set;
+import com.agimatec.validation.util.PrivilegedActions;
+import org.xml.sax.SAXException;
 
 import javax.validation.ValidationException;
 import javax.xml.bind.JAXBContext;
@@ -28,72 +27,61 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-
-import org.xml.sax.SAXException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Set;
 
 
 /**
- * Uses JAXB to parse constraints.xml based on validation-mapping-1.0.xsd
- *
- * @version $Rev$ $Date$
+ * Uses JAXB to parse constraints.xml based on validation-mapping-1.0.xsd.<br>
+ * Copyright: Agimatec GmbH, 2009
  */
 public class ValidationMappingParser {
 
-    private static final String VALIDATION_MAPPING_XSD =
-        "META-INF/validation-mapping-1.0.xsd";
-    
-    /**
-     * @param xmlStreams One or more contraints.xml file streams to parse
-     */
+    private static final String VALIDATION_MAPPING_XSD = "META-INF/validation-mapping-1.0.xsd";
+
+    /** @param xmlStreams One or more contraints.xml file streams to parse */
     public void parse(Set<InputStream> xmlStreams) throws ValidationException {
         for (InputStream in : xmlStreams) {
             ConstraintMappingsType mappings = getMappings(in);
             // TODO - finish
-            
+
         }
     }
-    
-    /**
-     * @param in XML stream to parse using the validation-mapping-1.0.xsd
-     * @return
-     */
+
+    /** @param in XML stream to parse using the validation-mapping-1.0.xsd */
     private ConstraintMappingsType getMappings(InputStream in) {
-        ConstraintMappingsType mappings = null;
+        ConstraintMappingsType mappings;
         try {
             JAXBContext jc = JAXBContext.newInstance(ConstraintMappingsType.class);
             Unmarshaller unmarshaller = jc.createUnmarshaller();
             unmarshaller.setSchema(getSchema());
             StreamSource stream = new StreamSource(in);
-            JAXBElement<ConstraintMappingsType> root = 
-                unmarshaller.unmarshal(stream, ConstraintMappingsType.class);
+            JAXBElement<ConstraintMappingsType> root =
+                  unmarshaller.unmarshal(stream, ConstraintMappingsType.class);
             mappings = root.getValue();
         } catch (JAXBException e) {
-            throw new ValidationException("Failed to parse XML deployment descriptor file.", e );
+            throw new ValidationException("Failed to parse XML deployment descriptor file.",
+                  e);
         }
         return mappings;
     }
 
-    /**
-     * @return validation-mapping-1.0.xsd based schema
-     */
+    /** @return validation-mapping-1.0.xsd based schema */
     private Schema getSchema() {
-        Schema schema = null;
-        // TODO - java.security.AccessController
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        if (loader == null)
-            loader = ValidationMappingParser.class.getClassLoader();
-        
-        URL schemaUrl = loader.getResource(VALIDATION_MAPPING_XSD);
-        SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        Schema schema;
+        URL schemaUrl =
+              PrivilegedActions.getClassLoader(getClass()).getResource(VALIDATION_MAPPING_XSD);
+        SchemaFactory sf =
+              SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
         try {
             schema = sf.newSchema(schemaUrl);
-        } catch ( SAXException e ) {
-             throw new ValidationException("Failed to parse schema.", e);
+        } catch (SAXException e) {
+            throw new ValidationException("Failed to parse schema.", e);
         }
         return schema;
     }
 
-    
     // TODO - finish....
 
 }

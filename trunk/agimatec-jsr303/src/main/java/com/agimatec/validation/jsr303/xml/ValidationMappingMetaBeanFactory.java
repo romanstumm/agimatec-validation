@@ -19,6 +19,8 @@ package com.agimatec.validation.jsr303.xml;
 import com.agimatec.validation.MetaBeanFactory;
 import com.agimatec.validation.model.MetaBean;
 
+import javax.validation.spi.ConfigurationState;
+
 /**
  * Description: TODO RSt - not yet implemented: jsr303-xml support<br/>
  * User: roman <br/>
@@ -27,29 +29,21 @@ import com.agimatec.validation.model.MetaBean;
  * Copyright: Agimatec GmbH
  */
 public class ValidationMappingMetaBeanFactory implements MetaBeanFactory {
-    /*
-    suggestion to integrate the validation.xml MappingParser with the
-    agimatec MetaBeanManager:
+    private ConfigurationState config;
 
-    in AgimatecValiationProvider, change buildValidatorFactory():
+    public ValidationMappingMetaBeanFactory(ConfigurationState configurationState) {
+        this.config = configurationState;
+    }
 
-       ValidationMappingMetaBeanFactory
-        xmlMetaBeanFactory = new ValidationMappingMetaBeanFactory();
-
-      // provide whatever is required ...
-      xmlMetaBeanFactory.setMappingParser(new ValidationMappingParser());
-
-
-      // add factory to MetaBeanManager
-      // (sequence matters: xml-first or annotations-first?)
-
-      MetaBeanManager metaBeanManager = new MetaBeanManager(new MetaBeanBuilder(
-                  new MetaBeanFactory[]{new IntrospectorMetaBeanFactory(),
-                        new AnnotationMetaBeanFactory(
-                              builder.getConstraintValidatorFactory()),
-                        xmlMetaBeanFactory}));
+    /**
+     * add the information from validation.xml to the metaBean.
+     * @param metaBean
+     * @throws Exception
      */
     public void buildMetaBean(MetaBean metaBean) throws Exception {
-        // TODO - add information from validation.xml to the metaBean
+        if(config.isIgnoreXmlConfiguration()) return;
+        
+        // TODO RSt - add information from validation.xml to the metaBean
+
     }
 }

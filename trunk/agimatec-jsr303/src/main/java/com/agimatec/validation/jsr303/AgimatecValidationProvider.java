@@ -21,6 +21,7 @@ package com.agimatec.validation.jsr303;
 import com.agimatec.validation.MetaBeanBuilder;
 import com.agimatec.validation.MetaBeanFactory;
 import com.agimatec.validation.MetaBeanManager;
+import com.agimatec.validation.jsr303.xml.ValidationMappingMetaBeanFactory;
 
 import javax.validation.Configuration;
 import javax.validation.ValidationException;
@@ -63,16 +64,18 @@ public class AgimatecValidationProvider
      * @throws javax.validation.ValidationException
      *          if the ValidatorFactory cannot be built
      */
-    public AgimatecValidatorFactory buildValidatorFactory(
-          ConfigurationState builder) {
+    public AgimatecValidatorFactory buildValidatorFactory(ConfigurationState builder) {
         try {
             AgimatecValidatorFactory factory = new AgimatecValidatorFactory();
             // Create MetaBeanManager that uses Introspector + Annotations for meta-data
-            MetaBeanManager metaBeanManager = new MetaBeanManager(new MetaBeanBuilder(
-                  new MetaBeanFactory[]{
+            ValidationMappingMetaBeanFactory xmlMetaBeanFactory =
+                  new ValidationMappingMetaBeanFactory(builder);
+            // enhancement: xml-first or annotations-first, is jsr-spec unclear on this issue?
+            MetaBeanManager metaBeanManager =
+                  new MetaBeanManager(new MetaBeanBuilder(new MetaBeanFactory[]{
                         /*optional: new IntrospectorMetaBeanFactory(),*/
-                        new AnnotationMetaBeanFactory(
-                              builder.getConstraintValidatorFactory())}));
+                        new AnnotationMetaBeanFactory(builder.getConstraintValidatorFactory()),
+                        xmlMetaBeanFactory}));
 
             // when you want to combine Introspector, agimatec-XML and Annotations
             // you can simply add the AnnotationMetaBeanFactory:
@@ -83,8 +86,7 @@ public class AgimatecValidationProvider
             factory.setMetaBeanManager(metaBeanManager);
             factory.setMessageInterpolator(builder.getMessageInterpolator());
             factory.setTraversableResolver(builder.getTraversableResolver());
-            factory.setConstraintValidatorFactory(
-                  builder.getConstraintValidatorFactory());
+            factory.setConstraintValidatorFactory(builder.getConstraintValidatorFactory());
             return factory;
         } catch (RuntimeException ex) {
             throw new ValidationException("error building ValidatorFactory", ex);

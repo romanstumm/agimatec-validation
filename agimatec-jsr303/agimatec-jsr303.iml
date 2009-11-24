@@ -127,11 +127,9 @@
         <CLASSES>
           <root url="jar://$MAVEN_REPOSITORY$/javax/validation/validation-api/1.0.0.GA/validation-api-1.0.0.GA.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$MAVEN_REPOSITORY$/javax/validation/validation-api/1.0.0.GA/validation-api-1.0.0.GA-javadoc.jar!/" />
-        </JAVADOC>
+        <JAVADOC />
         <SOURCES>
-          <root url="jar://$MAVEN_REPOSITORY$/javax/validation/validation-api/1.0.0.GA/validation-api-1.0.0.GA-sources.jar!/" />
+          <root url="file://$MODULE_DIR$/../../beanvalidation-api/src/main/java" />
         </SOURCES>
       </library>
     </orderEntry>

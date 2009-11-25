@@ -18,11 +18,6 @@
  */
 package com.agimatec.validation.jsr303;
 
-import com.agimatec.validation.MetaBeanBuilder;
-import com.agimatec.validation.MetaBeanFactory;
-import com.agimatec.validation.MetaBeanManager;
-import com.agimatec.validation.jsr303.xml.ValidationMappingMetaBeanFactory;
-
 import javax.validation.Configuration;
 import javax.validation.ValidationException;
 import javax.validation.spi.BootstrapState;
@@ -45,8 +40,7 @@ public class AgimatecValidationProvider
         return AgimatecValidatorConfiguration.class == builderClass;
     }
 
-    public ConfigurationImpl createSpecializedConfiguration(
-          BootstrapState state) {
+    public ConfigurationImpl createSpecializedConfiguration(BootstrapState state) {
         return new ConfigurationImpl(state, this);
     }
 
@@ -58,27 +52,9 @@ public class AgimatecValidationProvider
      * @throws javax.validation.ValidationException
      *          if the ValidatorFactory cannot be built
      */
-    public AgimatecValidatorFactory buildValidatorFactory(ConfigurationState builder) {
+    public AgimatecValidatorFactory buildValidatorFactory(ConfigurationState configuration) {
         try {
-            AgimatecValidatorFactory factory = new AgimatecValidatorFactory();
-            /*
-             * Create MetaBeanManager that
-             * uses JSR303-XML + JSR303-Annotations
-             * to build meta-data from
-             */
-            // this is relevant: xml before annotations
-            // (because ignore-annotations settings in xml)
-            MetaBeanManager metaBeanManager =
-                  new MetaBeanManager(new MetaBeanBuilder(new MetaBeanFactory[]{
-                        /*optional: new IntrospectorMetaBeanFactory(),*/
-                        /*optional: new XMLMetaBeanFactory(),*/
-                        new ValidationMappingMetaBeanFactory(builder),
-                        new AnnotationMetaBeanFactory(builder.getConstraintValidatorFactory())}));
-            factory.setMetaBeanManager(metaBeanManager);
-            factory.setMessageInterpolator(builder.getMessageInterpolator());
-            factory.setTraversableResolver(builder.getTraversableResolver());
-            factory.setConstraintValidatorFactory(builder.getConstraintValidatorFactory());
-            return factory;
+            return new AgimatecValidatorFactory(configuration);
         } catch (RuntimeException ex) {
             throw new ValidationException("error building ValidatorFactory", ex);
         }

@@ -18,6 +18,7 @@
  */
 package com.agimatec.validation.jsr303;
 
+import com.agimatec.validation.jsr303.resolver.DefaultTraversableResolver;
 import com.agimatec.validation.jsr303.xml.ValidationParser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -180,9 +181,9 @@ public class ConfigurationImpl implements AgimatecValidatorConfiguration, Config
             return findProvider().buildValidatorFactory(this);
         }
     }
-    
+
     void prepare() {
-        if(prepared) return;
+        if (prepared) return;
         parseValidationXml();
         applyDefaults();
         prepared = true;
@@ -194,7 +195,7 @@ public class ConfigurationImpl implements AgimatecValidatorConfiguration, Config
         if (ignoreXmlConfiguration) {
             log.info("ignoreXmlConfiguration == true");
         } else {
-            new ValidationParser(getProperties().get(PROPERTY_VALIDATION_XML_PATH))
+            new ValidationParser(getProperties().get(Properties.VALIDATION_XML_PATH))
                   .processValidationConfig(this);
         }
     }

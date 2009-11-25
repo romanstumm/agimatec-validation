@@ -1,0 +1,82 @@
+<constraint-mappings
+    xmlns="http://jboss.org/xml/ns/javax/validation/mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation=
+        "http://jboss.org/xml/ns/javax/validation/mapping validation-mapping-1.0.xsd">
+  <default-package>com.acme.app.domain</default-package>
+  <bean class="Customer" ignore-annotations="false">
+    <class ignore-annotations="true">
+      [...]
+    </class>
+
+    <constraint-definition annotation="javax.validation.constraint.Size">
+        <validated-by include-existing-validators="true">
+            <value>com.acme.app.constraint.SizeValidatorForDictionary</value>
+        </validated-by>
+    </constraint-definition>
+    <constraint-definition annotation="AcmeOrderNumber">
+      [...]
+    </constraint-definition>      
+
+    <field name="firstName">
+      <!-- @LooksLike(patterns={
+                 @Pattern(value="myRegExp", flag=PatternFlag.INSENSITIVE),
+                 @Pattern(value="my2ndRegExp")}
+             )
+       -->
+      <constraint annotation="com.acme.app.constraint.LooksLike">
+        <element name="patterns">
+          <annotation>
+            <element name="value">myRegExp</element>
+            <element name="flag">
+              <value>INSENSITIVE</value>
+            </element>
+          </annotation>
+          <annotation>
+            <element name="value">my2ndRegExp</element>
+          </annotation>
+        </element>
+      </constraint>
+
+    </field>
+    <field name="orders">
+      <valid/>
+      <!-- @DiscreteSize(value={ 0, 20 } )
+       -->
+      <constraint annotation="com.acme.app.constraint.DiscreteSize">
+        <element name="value">
+          <value>0</value>
+          <value>20</value>
+        </element>
+      </constraint>
+
+    </field>
+    <getter name="firstName">
+      [...]
+
+    </getter>
+    <getter name="orders">
+      <valid/>
+      <!-- @Size(message="Size is limited",
+                 groups={Default.class, LightValidation.class},
+                 max=30
+           )
+      -->
+      <constraint annotation="javax.validation.constraint.Size">
+        <message>Size is limited</message>
+        <groups>
+          <value>com.acme.app.model.LightValidation</value>
+          <value>javax.persistence.Default</value>
+        </groups>
+        <element name="max">30</element>
+      </constraint>
+
+    </getter>
+
+  </bean>
+  <bean class="com.acme.common.model.Address">
+    <class>
+      [...]
+    </class>
+  </bean>
+</constraint-mappings>

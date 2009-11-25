@@ -18,6 +18,10 @@
  */
 package com.agimatec.validation.jsr303;
 
+import com.agimatec.validation.jsr303.xml.ValidationParser;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import javax.validation.*;
 import javax.validation.spi.BootstrapState;
 import javax.validation.spi.ConfigurationState;
@@ -35,20 +39,28 @@ import java.util.*;
  * Time: 14:47:44 <br/>
  * Copyright: Agimatec GmbH
  */
-public class ConfigurationImpl
-      implements AgimatecValidatorConfiguration, ConfigurationState {
-    protected final ValidationProvider provider;
+public class ConfigurationImpl implements AgimatecValidatorConfiguration, ConfigurationState {
+    private static final Log log = LogFactory.getLog(ConfigurationImpl.class);
+    protected ValidationProvider provider;
     protected final ValidationProviderResolver providerResolver;
-    protected Class<? extends Configuration<?>> providerClass;
-    protected MessageInterpolator messageInterpolator, defaultMessageResolver;
-    protected ConstraintValidatorFactory constraintFactory;
+    protected Class<? extends ValidationProvider<?>> providerClass;
+    protected MessageInterpolator messageInterpolator;
+    protected ConstraintValidatorFactory constraintValidatorFactory;
     private TraversableResolver traversableResolver;
 
-    // BEGIN Bootstrap parameters for XML
+    private boolean prepared = false;
+    // BEGIN DEFAULTS
+    private final TraversableResolver defaultTraversableResolver =
+          new DefaultTraversableResolver();
+    protected final MessageInterpolator defaultMessageInterpolator =
+          new DefaultMessageInterpolator();
+    private final ConstraintValidatorFactory defaultConstraintValidatorFactory =
+          new DefaultConstraintValidatorFactory();
+    // END DEFAULTS
+
     private Set<InputStream> mappingStreams = new HashSet<InputStream>();
-    private Map<String, String> properties = new HashMap<String,String>();
+    private Map<String, String> properties = new HashMap<String, String>();
     private boolean ignoreXmlConfiguration = false;
-    // END Bootstrap parameters for XML
 
     public ConfigurationImpl(BootstrapState aState, ValidationProvider aProvider) {
         if (aState != null) {
@@ -64,25 +76,17 @@ public class ConfigurationImpl
         } else {
             throw new ValidationException("either provider or state are required");
         }
-        initializeDefaults();
     }
 
-    public AgimatecValidatorConfiguration traversableResolver(
-          TraversableResolver resolver) {
+    public AgimatecValidatorConfiguration traversableResolver(TraversableResolver resolver) {
         traversableResolver = resolver;
         return this;
     }
 
-    private void initializeDefaults() {
-        constraintFactory = new DefaultConstraintValidatorFactory();
-        messageInterpolator = new DefaultMessageInterpolator();
-        defaultMessageResolver = messageInterpolator;
-        traversableResolver = new DefaultTraversableResolver();
-    }
-
     /**
      * Ignore data from the <i>META-INF/validation.xml</i> file if this
-	 * method is called.
+     * method is called.
+     *
      * @return this
      */
     public AgimatecValidatorConfiguration ignoreXmlConfiguration() {
@@ -97,13 +101,14 @@ public class ConfigurationImpl
 
     public ConfigurationImpl constraintValidatorFactory(
           ConstraintValidatorFactory constraintFactory) {
-        setConstraintFactory(constraintFactory);
+        this.constraintValidatorFactory = constraintFactory;
         return this;
     }
 
     /**
      * Add a stream describing constraint mapping in the Bean Validation
-	 * XML format.
+     * XML format.
+     *
      * @return this
      */
     public AgimatecValidatorConfiguration addMapping(InputStream stream) {
@@ -113,8 +118,8 @@ public class ConfigurationImpl
 
     /**
      * Add a provider specific property. This property is equivalent to
-	 * XML configuration properties.
-	 * If we do not know how to handle the property, we silently ignore it.
+     * XML configuration properties.
+     * If we do not know how to handle the property, we silently ignore it.
      *
      * @return this
      */
@@ -134,7 +139,8 @@ public class ConfigurationImpl
 
     /**
      * Returns true if Configuration.ignoreXMLConfiguration() has been called.
-	 * In this case, we ignore META-INF/validation.xml
+     * In this case, we ignore META-INF/validation.xml
+     *
      * @return true
      */
     public boolean isIgnoreXmlConfiguration() {
@@ -150,16 +156,15 @@ public class ConfigurationImpl
     }
 
     public MessageInterpolator getDefaultMessageInterpolator() {
-        return defaultMessageResolver;
+        return defaultMessageInterpolator;
     }
 
     public TraversableResolver getDefaultTraversableResolver() {
-        return traversableResolver;
+        return defaultTraversableResolver;
     }
 
-    // TODO RSt - not used yet
     public ConstraintValidatorFactory getDefaultConstraintValidatorFactory() {
-        return constraintFactory;
+        return defaultConstraintValidatorFactory;
     }
 
     /**
@@ -168,17 +173,49 @@ public class ConfigurationImpl
      * @throw ValidationException if the ValidatorFactory cannot be built
      */
     public ValidatorFactory buildValidatorFactory() {
+        prepare();
         if (provider != null) {
             return provider.buildValidatorFactory(this);
         } else {
             return findProvider().buildValidatorFactory(this);
         }
     }
+    
+    void prepare() {
+        if(prepared) return;
+        parseValidationXml();
+        applyDefaults();
+        prepared = true;
+
+    }
+
+    /** Check whether a validation.xml file exists and parses it with JAXB */
+    private void parseValidationXml() {
+        if (ignoreXmlConfiguration) {
+            log.info("ignoreXmlConfiguration == true");
+        } else {
+            new ValidationParser(getProperties().get(PROPERTY_VALIDATION_XML_PATH))
+                  .processValidationConfig(this);
+        }
+    }
+
+    private void applyDefaults() {
+        // make sure we use the defaults in case they haven't been provided yet
+        if (traversableResolver == null) {
+            traversableResolver = getDefaultTraversableResolver();
+        }
+        if (messageInterpolator == null) {
+            messageInterpolator = getDefaultMessageInterpolator();
+        }
+        if (constraintValidatorFactory == null) {
+            constraintValidatorFactory = getDefaultConstraintValidatorFactory();
+        }
+    }
 
     // TODO RSt - clarify usage, see AgimatecFactoryContext.getConstraintValidatorFactory()
     //                           and AgimatecValidatorFactory.getConstraintValidatorFactory()
     public ConstraintValidatorFactory getConstraintValidatorFactory() {
-        return constraintFactory;
+        return constraintValidatorFactory;
     }
 
     public TraversableResolver getTraversableResolver() {
@@ -189,20 +226,11 @@ public class ConfigurationImpl
         return provider;
     }
 
+    public void setProvider(ValidationProvider provider) {
+        this.provider = provider;
+    }
+
     private ValidationProvider findProvider() {
-        /* if (!isIgnoreXmlConfiguration()) {
-            InputStream stream = getClass().getClassLoader()
-                  .getResourceAsStream("META-INF/validation.xml");
-            // TODO RSt - nyi: config by XML
-            if (stream != null) {
-                try {
-                    readValidationXml(stream);
-                    stream.close();
-                } catch (Exception e) {
-                    throw new ValidationException("error reading stream", e);
-                }
-            }
-        }    */
         if (providerClass != null) {
             for (ValidationProvider provider : providerResolver
                   .getValidationProviders()) {
@@ -213,22 +241,13 @@ public class ConfigurationImpl
             throw new ValidationException(
                   "Unable to find suitable provider: " + providerClass);
         } else {
-            List<ValidationProvider<?>> providers =
-                  providerResolver.getValidationProviders();
+            List<ValidationProvider<?>> providers = providerResolver.getValidationProviders();
             return providers.get(0);
         }
     }
 
-    /** used by XStream to set values from configuration file */
-    public void setProviderClass(Class<? extends Configuration<?>> providerClass) {
+    public void setProviderClass(Class<? extends ValidationProvider<?>> providerClass) {
         this.providerClass = providerClass;
     }
 
-    public void setConstraintFactory(ConstraintValidatorFactory constraintFactory) {
-        this.constraintFactory = constraintFactory;
-    }
-
-    public void setMessageInterpolator(MessageInterpolator messageResolver) {
-        this.messageInterpolator = messageResolver;
-    }
 }

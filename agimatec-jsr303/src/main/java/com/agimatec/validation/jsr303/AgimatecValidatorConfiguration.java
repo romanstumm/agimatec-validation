@@ -30,4 +30,12 @@ import javax.validation.Configuration;
  */
 public interface AgimatecValidatorConfiguration
         extends Configuration<AgimatecValidatorConfiguration> {
+
+    // BEGIN PROPERTY NAMES
+
+    /**
+     * the location where to look for the validation.xml file.
+     * default: "META-INF/validation.xml"
+     */
+    String PROPERTY_VALIDATION_XML_PATH = "validation-xml-path";
 }

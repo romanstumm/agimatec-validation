@@ -31,13 +31,7 @@ import javax.validation.spi.ValidationProvider;
 
 /**
  * Description: Implementation of {@link ValidationProvider} for jsr303 implementation of
- * the agimatec-validation framework.<pre>
- * TODO RSt - Not yet implemented features:
- *   * JSR-303 XML mappings (validation.xml), but proprietary agimatec-validation-XML supported
- *   * need to improve integration between JSR303 annotations and agimatec-metadata validations.
- *   * use of ConstraintViolationException (not clear in spec...?)
- * </pre>
- * <p/>
+ * the agimatec-validation framework.
  * <p/>
  * <br/>
  * User: roman.stumm <br/>
@@ -51,7 +45,7 @@ public class AgimatecValidationProvider
         return AgimatecValidatorConfiguration.class == builderClass;
     }
 
-    public AgimatecValidatorConfiguration createSpecializedConfiguration(
+    public ConfigurationImpl createSpecializedConfiguration(
           BootstrapState state) {
         return new ConfigurationImpl(state, this);
     }
@@ -67,22 +61,19 @@ public class AgimatecValidationProvider
     public AgimatecValidatorFactory buildValidatorFactory(ConfigurationState builder) {
         try {
             AgimatecValidatorFactory factory = new AgimatecValidatorFactory();
-            // Create MetaBeanManager that uses Introspector + Annotations for meta-data
-            ValidationMappingMetaBeanFactory xmlMetaBeanFactory =
-                  new ValidationMappingMetaBeanFactory(builder);
-            // enhancement: xml-first or annotations-first, is jsr-spec unclear on this issue?
+            /*
+             * Create MetaBeanManager that
+             * uses JSR303-XML + JSR303-Annotations
+             * to build meta-data from
+             */
+            // this is relevant: xml before annotations
+            // (because ignore-annotations settings in xml)
             MetaBeanManager metaBeanManager =
                   new MetaBeanManager(new MetaBeanBuilder(new MetaBeanFactory[]{
                         /*optional: new IntrospectorMetaBeanFactory(),*/
-                        new AnnotationMetaBeanFactory(builder.getConstraintValidatorFactory()),
-                        xmlMetaBeanFactory}));
-
-            // when you want to combine Introspector, agimatec-XML and Annotations
-            // you can simply add the AnnotationMetaBeanFactory:
-            /*MetaBeanManager metaBeanManager = new MetaBeanManager();
-            metaBeanManager.getBuilder().addFactory(
-                  new AnnotationMetaBeanFactory(builder.getConstraintValidatorFactory()));
-            */
+                        /*optional: new XMLMetaBeanFactory(),*/
+                        new ValidationMappingMetaBeanFactory(builder),
+                        new AnnotationMetaBeanFactory(builder.getConstraintValidatorFactory())}));
             factory.setMetaBeanManager(metaBeanManager);
             factory.setMessageInterpolator(builder.getMessageInterpolator());
             factory.setTraversableResolver(builder.getTraversableResolver());

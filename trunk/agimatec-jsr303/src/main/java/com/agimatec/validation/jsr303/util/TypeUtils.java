@@ -14,7 +14,7 @@ import java.util.*;
  *  &lt;artifactId&gt;jtype&lt;/artifactId&gt;
  *  &lt;version&gt;0.1.1&lt;/version&gt;
  * </pre> but tried to reduce dependencies, so here is some code, that
- * handles jave5 generic types to find suitable implementations for
+ * handles java5 generic types to find suitable implementations for
  * ConstraintValidators.
  * <br/>
  * User: roman <br/>

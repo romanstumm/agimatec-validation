@@ -44,8 +44,9 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
     public static AgimatecValidatorFactory getDefault() {
         if (DEFAULT_FACTORY == null) {
             AgimatecValidationProvider provider = new AgimatecValidationProvider();
-            DEFAULT_FACTORY =
-                  provider.buildValidatorFactory(new ConfigurationImpl(null, provider));
+            ConfigurationImpl config = provider.createSpecializedConfiguration(null);
+            config.prepare();
+            DEFAULT_FACTORY = provider.buildValidatorFactory(config);
         }
         return DEFAULT_FACTORY;
     }
@@ -90,8 +91,7 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
     }
 
     public MessageInterpolator getMessageInterpolator() {
-        return ((messageResolver != null) ? messageResolver :
-              getDefaultMessageInterpolator());
+        return ((messageResolver != null) ? messageResolver : getDefaultMessageInterpolator());
     }
 
     public MetaBeanManager getMetaBeanManager() {

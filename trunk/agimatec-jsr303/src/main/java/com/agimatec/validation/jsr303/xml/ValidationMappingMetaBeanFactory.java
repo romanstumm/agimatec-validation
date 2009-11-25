@@ -36,13 +36,39 @@ public class ValidationMappingMetaBeanFactory implements MetaBeanFactory {
     }
 
     /**
+     * TODO RSt - implement spec ValidationException
+     * A given class must not be described more than once amongst all the XML mapping descriptors.
+     * A given field or getter must not be described more than once on a given class description.
+     * A given constraint definition must not be overridden more than once amongst
+     * all the XML mapping descriptors.
+     * ==> If any of these rule is violated in a given validation deployment,
+     * a ValidationException is raised during the creation of the ValidatorFactory.
+     *
+     * If the name of the class does refer to a class not present in in the classpath,
+     * a ValidationException is raised.
+     */
+
+    /**
+     * If default-package is set, all unqualified class names (including annotations)
+     * are considered part of the package described by default-package.
+     */
+
+    /**
+     * By default, all constraint declarations expressed via annotation are
+     * ignored for classes described in XML.
+     *
+     * You can force Bean Validation to consider both annotations and XML constraint
+     * declarations by using ignore-annotation="false" on bean.
+     */
+
+    /**
      * add the information from validation.xml to the metaBean.
-     * @param metaBean
+     *
      * @throws Exception
      */
     public void buildMetaBean(MetaBean metaBean) throws Exception {
-        if(config.isIgnoreXmlConfiguration()) return;
-        
+        if (config.isIgnoreXmlConfiguration()) return;
+
         // TODO RSt - add information from validation.xml to the metaBean
 
     }

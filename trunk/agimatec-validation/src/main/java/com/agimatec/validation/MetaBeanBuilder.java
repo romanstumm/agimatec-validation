@@ -41,19 +41,28 @@ public class MetaBeanBuilder {
 
     /** here you can install different kinds of factories to create MetaBeans from */
     private MetaBeanFactory[] factories;
-    private final XMLMetaBeanFactory xmlFactory = new XMLMetaBeanFactory();
+    private XMLMetaBeanFactory xmlFactory;
 
     public MetaBeanBuilder() {
-        setFactories(
-              new MetaBeanFactory[]{new IntrospectorMetaBeanFactory(), xmlFactory});
+        this(new MetaBeanFactory[]{new IntrospectorMetaBeanFactory(),
+              new XMLMetaBeanFactory()});
     }
 
     public MetaBeanBuilder(MetaBeanFactory[] factories) {
-        this.factories = factories;
+        setFactories(factories);
     }
 
-    public void setFactories(MetaBeanFactory[] factories) {
+    private void setFactories(MetaBeanFactory[] factories) {
         this.factories = factories;
+        for (MetaBeanFactory each : factories) {
+            if (xmlFactory == null && each instanceof XMLMetaBeanFactory) {
+                xmlFactory = (XMLMetaBeanFactory) each;
+                return;
+            }
+        }
+        if (xmlFactory == null) {  // if not set in the array, create a xmlFactory
+            xmlFactory = new XMLMetaBeanFactory();
+        }
     }
 
     public XMLMetaBeanFactory getXmlFactory() {
@@ -78,8 +87,7 @@ public class MetaBeanBuilder {
     public Map<String, MetaBean> buildAll() throws Exception {
         final Map<String, MetaBean> all = new HashMap<String, MetaBean>();
         xmlFactory.visitXMLBeanMeta(null, new XMLMetaBeanFactory.Visitor() {
-            public void visit(XMLMetaBean empty, XMLMetaBeanInfos xmlInfos)
-                  throws Exception {
+            public void visit(XMLMetaBean empty, XMLMetaBeanInfos xmlInfos) throws Exception {
                 if (xmlInfos.getBeans() == null) return; // empty file, ignore
                 XMLMetaBeanFactory.XMLResult carrier =
                       new XMLMetaBeanFactory.XMLResult(null, xmlInfos);

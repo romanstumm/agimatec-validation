@@ -21,6 +21,7 @@ package com.agimatec.validation.jsr303.util;
 import com.agimatec.validation.util.PrivilegedActions;
 
 import javax.validation.ValidationException;
+import java.security.PrivilegedAction;
 
 /**
  * Description: utility methods to perform actions with AccessController or without.<br/>
@@ -45,5 +46,26 @@ public class SecureActions extends PrivilegedActions {
     public static <T> T newInstance(final Class<T> cls, final Class[] paramTypes,
                                     final Object[] values) {
         return newInstance(cls, ValidationException.class, paramTypes, values);
+    }
+
+    public static Class<?> loadClass(final String className, final Class<?> caller) {
+        return run(new PrivilegedAction<Class<?>>() {
+            public Class<?> run() {
+                try {
+                    ClassLoader contextClassLoader =
+                          Thread.currentThread().getContextClassLoader();
+                    if (contextClassLoader != null) {
+                        return contextClassLoader.loadClass(className);
+                    }
+                } catch (Throwable e) {
+                    // ignore
+                }
+                try {
+                    return Class.forName(className, true, caller.getClassLoader());
+                } catch (ClassNotFoundException e) {
+                    throw new ValidationException("Unable to load class: " + className, e);
+                }
+            }
+        });
     }
 }

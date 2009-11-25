@@ -82,6 +82,70 @@ public class ValidationMappingParser {
         return schema;
     }
 
-    // TODO - finish....
+    // TODO RSt -  finish....
+
+    private void processClassLevel() {
+        /*
+   When ignore-annotations is true, class-level Bean Validation annotations are ignored
+   for this class (including the @GroupSequence).
+   When ignore-annotations is false:
+   •  Constraints declared in XML and constraints declared in annotations are added and form
+      the list of class-level declared constraints.
+   •  @GroupSequence is considered unless group-sequence element is explicitly used.
+        */
+    }
+
+    private void processFieldLevel() {
+        /*
+        If the name of the field does not correspond to a field in the given bean a ValidationException is raised.
+         */
+
+        /*
+When ignore-annotations is true, field-level Bean Validation annotations on the targeted field are ignored
+(including the @Valid). When ignore-annotations is false:
+•    Constraints declared in XML and constraints declared in annotations are added and form the list of field-level
+    declared constraints.
+•    @Valid  is considered unless the valid element is explicitly used. Note that the only way to disable cascading on
+    a field marked as @Valid is to use ignore-validation=true.
+    */
+    }
+
+    private void processPropertyLevel() {
+        /*
+        If the name of the property does not correspond to a property in the given bean a ValidationException is raised.
+        */
+
+        /*
+When ignore-annotations is true, property-level Bean Validation annotations on the targeted property are ig-
+nored (including the @Valid). When ignore-annotations is false:
+•   Constraints declared in XML and constraints declared in annotations are added and form the list of property-
+   level declared constraints.
+•  @Valid is considered unless the valid element is explicitly used. Note that the only way to disable cascading on
+    a property marked as @Valid is to use ignore-validation=true.
+        */
+    }
+
+    private void processConstraints() {
+        /*
+Other custom elements of an annotation are represented by element. The name attribute is mandatory and repres-
+ents the name of the element in the constraint declaration. “message”, “groups” are not permitted names, use the
+message or groups elements instead. Otherwise a ValidationException is raised.
+         */
+
+        /*
+If an XML constraint declaration is missing mandatory elements, or if it contains elements
+not part of the constraint definition, a ValidationException is raised.
+         */
+    }
+
+    private void overrideConstraintDefinition() {
+        /*
+If include-existing-validator is set to false, ConstraintValidator defined on the constraint annotation are ig-
+nored. If set to true, the list of ConstraintValidators described in XML are concatenated to the list of Con-
+straintValidator described on the annotation to form a new array of ConstraintValidator evaluated. Annota-
+tion based ConstraintValidator come before XML based ConstraintValidatot in the array. The new list is re-
+turned by ConstraintDescriptor.getConstraintValidatorClasses().
+        */
+    }
 
 }

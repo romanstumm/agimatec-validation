@@ -192,6 +192,7 @@ public class Jsr303Test extends TestCase {
     }
 
     private Validator getValidator() {
+//        return Validation.buildDefaultValidatorFactory().getValidator();
         return AgimatecValidatorFactory.getDefault().getValidator();
     }
 }

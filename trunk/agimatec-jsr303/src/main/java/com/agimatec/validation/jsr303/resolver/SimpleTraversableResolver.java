@@ -1,4 +1,4 @@
-package com.agimatec.validation.jsr303;
+package com.agimatec.validation.jsr303.resolver;
 
 import javax.validation.Path;
 import javax.validation.TraversableResolver;
@@ -11,7 +11,7 @@ import java.lang.annotation.ElementType;
  * Time: 13:21:18 <br/>
  * Copyright: Agimatec GmbH
  */
-public class SimpleTraversableResolver implements TraversableResolver {
+public class SimpleTraversableResolver implements TraversableResolver, CachingRelevant {
     /** @return true */
     public boolean isReachable(Object traversableObject, Path.Node traversableProperty,
                                Class<?> rootBeanType, Path pathToTraversableObject,
@@ -25,5 +25,9 @@ public class SimpleTraversableResolver implements TraversableResolver {
                                 Class<?> rootBeanType, Path pathToTraversableObject,
                                 ElementType elementType) {
         return true;
+    }
+
+    public boolean needsCaching() {
+        return false;  // no
     }
 }

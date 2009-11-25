@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.agimatec.validation.jsr303;
+package com.agimatec.validation.jsr303.resolver;
 
 import com.agimatec.validation.jsr303.util.SecureActions;
 import org.apache.commons.lang.ClassUtils;
@@ -27,7 +27,7 @@ import java.lang.annotation.ElementType;
 
 
 /** @see javax.validation.TraversableResolver */
-public class DefaultTraversableResolver implements TraversableResolver {
+public class DefaultTraversableResolver implements TraversableResolver, CachingRelevant {
     private static final Log log = LogFactory.getLog(DefaultTraversableResolver.class);
 
     /** Class to load to check whether JPA 2 is on the classpath. */
@@ -85,4 +85,7 @@ public class DefaultTraversableResolver implements TraversableResolver {
         }
     }
 
+    public boolean needsCaching() {
+        return jpaTR != null && CachingTraversableResolver.needsCaching(jpaTR);
+    }
 }

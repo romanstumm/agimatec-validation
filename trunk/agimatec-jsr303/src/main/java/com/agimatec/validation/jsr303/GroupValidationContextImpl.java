@@ -19,6 +19,7 @@ package com.agimatec.validation.jsr303;
 import com.agimatec.validation.BeanValidationContext;
 import com.agimatec.validation.jsr303.groups.Group;
 import com.agimatec.validation.jsr303.groups.Groups;
+import com.agimatec.validation.jsr303.resolver.CachingTraversableResolver;
 import com.agimatec.validation.jsr303.util.NodeImpl;
 import com.agimatec.validation.jsr303.util.PathImpl;
 import com.agimatec.validation.model.MetaBean;
@@ -57,8 +58,7 @@ final class GroupValidationContextImpl extends BeanValidationContext<ConstraintV
     private IdentityHashMap<Object, IdentityHashMap<ConstraintValidator, Object>> validatedConstraints =
           new IdentityHashMap();
     private ConstraintValidation currentConstraint;
-    private TraversableResolver traversableResolver;
-
+    private final TraversableResolver traversableResolver;
 
     public GroupValidationContextImpl(ConstraintValidationListener listener,
                                       MessageInterpolator aMessageResolver,
@@ -66,7 +66,7 @@ final class GroupValidationContextImpl extends BeanValidationContext<ConstraintV
                                       MetaBean rootMetaBean) {
         super(listener);
         this.messageResolver = aMessageResolver;
-        this.traversableResolver = traversableResolver;
+        this.traversableResolver = CachingTraversableResolver.cacheFor(traversableResolver);
         this.rootMetaBean = rootMetaBean;
         this.path = PathImpl.create(null);
     }

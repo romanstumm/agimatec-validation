@@ -29,13 +29,31 @@ import javax.validation.Configuration;
  * Copyright: Agimatec GmbH
  */
 public interface AgimatecValidatorConfiguration
-        extends Configuration<AgimatecValidatorConfiguration> {
+      extends Configuration<AgimatecValidatorConfiguration> {
 
     // BEGIN PROPERTY NAMES
 
-    /**
-     * the location where to look for the validation.xml file.
-     * default: "META-INF/validation.xml"
-     */
-    String PROPERTY_VALIDATION_XML_PATH = "validation-xml-path";
+    public interface Properties {
+        /**
+         * the location where to look for the validation.xml file.
+         * default: "META-INF/validation.xml"
+         */
+        String VALIDATION_XML_PATH = "agimatec.validation-xml-path";
+
+        /**
+         * true/false. use Introspector (java beans) metadata additionally
+         * to build metadata with JSR303.
+         * default: false
+         */
+        String ENABLE_INTROSPECTOR = "agimatec.enable-introspector";
+
+        /**
+         * true/false. use agimatec metaBeans xml format additionally to
+         * build metadata with JSR303.
+         * default: false
+         */
+        String ENABLE_METABEANS_XML = "agimatec.enable-metabeans-xml";
+
+//   BeanValidator.treatMapsLikeBeans: String TREAT_MAPS_LIKE_BEANS = "agimatec.treatMapsLikeBeans";
+    }
 }

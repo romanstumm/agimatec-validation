@@ -20,6 +20,8 @@ import com.agimatec.validation.MetaBeanFactory;
 import com.agimatec.validation.model.MetaBean;
 
 import javax.validation.spi.ConfigurationState;
+import java.io.InputStream;
+import java.util.Set;
 
 /**
  * Description: TODO RSt - not yet implemented: jsr303-xml support<br/>
@@ -29,10 +31,11 @@ import javax.validation.spi.ConfigurationState;
  * Copyright: Agimatec GmbH
  */
 public class ValidationMappingMetaBeanFactory implements MetaBeanFactory {
-    private ConfigurationState config;
 
-    public ValidationMappingMetaBeanFactory(ConfigurationState configurationState) {
-        this.config = configurationState;
+    private Set<InputStream> streams;
+
+    public ValidationMappingMetaBeanFactory(ConfigurationState config) {
+        streams = config.getMappingStreams();
     }
 
     /**
@@ -67,9 +70,12 @@ public class ValidationMappingMetaBeanFactory implements MetaBeanFactory {
      * @throws Exception
      */
     public void buildMetaBean(MetaBean metaBean) throws Exception {
-        if (config.isIgnoreXmlConfiguration()) return;
-
-        // TODO RSt - add information from validation.xml to the metaBean
-
+        if (!streams.isEmpty()) {
+            ValidationMappingParser parser = new ValidationMappingParser();
+            parser.parse(streams);
+            // enhancement: stop parsing when found, because
+            // A given class must not be described more than once amongst all the XML mapping descriptors.
+        }
+        // TODO RSt - add information from xml to the metaBean
     }
 }

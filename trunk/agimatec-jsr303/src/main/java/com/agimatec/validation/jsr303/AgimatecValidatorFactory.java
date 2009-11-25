@@ -18,11 +18,16 @@
  */
 package com.agimatec.validation.jsr303;
 
+import com.agimatec.validation.IntrospectorMetaBeanFactory;
+import com.agimatec.validation.MetaBeanBuilder;
+import com.agimatec.validation.MetaBeanFactory;
 import com.agimatec.validation.MetaBeanManager;
 import com.agimatec.validation.jsr303.util.SecureActions;
+import com.agimatec.validation.jsr303.xml.ValidationMappingMetaBeanFactory;
 import org.apache.commons.lang.ClassUtils;
 
 import javax.validation.*;
+import javax.validation.spi.ConfigurationState;
 
 /**
  * Description: a factory is a complete configurated object that can create validators<br/>
@@ -32,7 +37,8 @@ import javax.validation.*;
  * Time: 17:06:20 <br/>
  * Copyright: Agimatec GmbH
  */
-public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
+public class AgimatecValidatorFactory
+      implements ValidatorFactory, Cloneable, AgimatecValidatorConfiguration.Properties {
     private static AgimatecValidatorFactory DEFAULT_FACTORY;
 
     private MetaBeanManager metaBeanManager;
@@ -51,7 +57,36 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
         return DEFAULT_FACTORY;
     }
 
-    public AgimatecValidatorFactory() {
+    public AgimatecValidatorFactory(ConfigurationState configuration) {
+        setMetaBeanManager(buildMetaBeanManager(configuration));
+        setMessageInterpolator(configuration.getMessageInterpolator());
+        setTraversableResolver(configuration.getTraversableResolver());
+        setConstraintValidatorFactory(configuration.getConstraintValidatorFactory());
+    }
+
+    /**
+     * Create MetaBeanManager that
+     * uses JSR303-XML + JSR303-Annotations
+     * to build meta-data from.
+     */
+    private MetaBeanManager buildMetaBeanManager(ConfigurationState configuration) {
+        // this is relevant: xml before annotations
+        // (because ignore-annotations settings in xml)
+
+        MetaBeanManager metaBeanManager = new MetaBeanManager(new MetaBeanBuilder(
+              new MetaBeanFactory[]{new AnnotationMetaBeanFactory(
+                    configuration.getConstraintValidatorFactory())}));
+        if (!configuration.isIgnoreXmlConfiguration()) {
+            metaBeanManager.getBuilder()
+                  .addFirstFactory(new ValidationMappingMetaBeanFactory(configuration));
+        }
+        if (Boolean.parseBoolean(configuration.getProperties().get(ENABLE_INTROSPECTOR))) {
+            metaBeanManager.getBuilder().addFirstFactory(new IntrospectorMetaBeanFactory());
+        }
+        if (Boolean.parseBoolean(configuration.getProperties().get(ENABLE_METABEANS_XML))) {
+            metaBeanManager.getBuilder().addLastFactory(new IntrospectorMetaBeanFactory());
+        }
+        return metaBeanManager;
     }
 
     protected MessageInterpolator getDefaultMessageInterpolator() {
@@ -82,11 +117,11 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
         }
     }
 
-    public void setMetaBeanManager(MetaBeanManager metaBeanManager) {
+    public final void setMetaBeanManager(MetaBeanManager metaBeanManager) {
         this.metaBeanManager = metaBeanManager;
     }
 
-    public void setMessageInterpolator(MessageInterpolator messageResolver) {
+    public final void setMessageInterpolator(MessageInterpolator messageResolver) {
         this.messageResolver = messageResolver;
     }
 
@@ -98,7 +133,7 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
         return metaBeanManager;
     }
 
-    public void setTraversableResolver(TraversableResolver traversableResolver) {
+    public final void setTraversableResolver(TraversableResolver traversableResolver) {
         this.traversableResolver = traversableResolver;
     }
 
@@ -110,7 +145,7 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
         return constraintValidatorFactory;
     }
 
-    public void setConstraintValidatorFactory(
+    public final void setConstraintValidatorFactory(
           ConstraintValidatorFactory constraintValidatorFactory) {
         this.constraintValidatorFactory = constraintValidatorFactory;
     }

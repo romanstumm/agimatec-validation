@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.agimatec.validation.jsr303;
+package com.agimatec.validation.jsr303.resolver;
 
 import javax.persistence.Persistence;
 import javax.validation.Path;
@@ -23,7 +23,7 @@ import java.lang.annotation.ElementType;
 
 
 /** @see javax.validation.TraversableResolver */
-public class JPATraversableResolver implements TraversableResolver {
+public class JPATraversableResolver implements TraversableResolver, CachingRelevant {
 
     public boolean isReachable(Object traversableObject, Path.Node traversableProperty,
                                Class<?> rootBeanType, Path pathToTraversableObject,
@@ -36,5 +36,9 @@ public class JPATraversableResolver implements TraversableResolver {
                                 Class<?> rootBeanType, Path pathToTraversableObject,
                                 ElementType elementType) {
         return true;
+    }
+
+    public boolean needsCaching() {
+        return true; // yes
     }
 }

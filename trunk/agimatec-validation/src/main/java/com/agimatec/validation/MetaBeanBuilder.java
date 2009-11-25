@@ -70,7 +70,7 @@ public class MetaBeanBuilder {
     }
 
     /** convenience method */
-    public void addFactory(MetaBeanFactory metaBeanFactory) {
+    public void addLastFactory(MetaBeanFactory metaBeanFactory) {
         if (factories == null) factories = new MetaBeanFactory[1];
         else {
             MetaBeanFactory[] facold = factories;
@@ -78,6 +78,17 @@ public class MetaBeanBuilder {
             System.arraycopy(facold, 0, factories, 0, facold.length);
         }
         factories[factories.length - 1] = metaBeanFactory;
+    }
+
+    /** convenience method */
+    public void addFirstFactory(MetaBeanFactory metaBeanFactory) {
+        if (factories == null) factories = new MetaBeanFactory[1];
+        else {
+            MetaBeanFactory[] facold = factories;
+            factories = new MetaBeanFactory[facold.length + 1];
+            System.arraycopy(facold, 0, factories, 1, facold.length);
+        }
+        factories[0] = metaBeanFactory;
     }
 
     public void addLoader(XMLMetaBeanLoader loader) {

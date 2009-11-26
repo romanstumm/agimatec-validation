@@ -54,22 +54,24 @@ public class MetaBeanBuilder {
 
     private void setFactories(MetaBeanFactory[] factories) {
         this.factories = factories;
+        updateXmlFactory();
+    }
+
+    private void updateXmlFactory() {
         for (MetaBeanFactory each : factories) {
-            if (xmlFactory == null && each instanceof XMLMetaBeanFactory) {
+            if (each instanceof XMLMetaBeanFactory) { // use the first one!
                 xmlFactory = (XMLMetaBeanFactory) each;
                 return;
             }
         }
-        if (xmlFactory == null) {  // if not set in the array, create a xmlFactory
-            xmlFactory = new XMLMetaBeanFactory();
-        }
+        xmlFactory = null; // none
     }
 
     public XMLMetaBeanFactory getXmlFactory() {
         return xmlFactory;
     }
-
-    /** convenience method */
+/*
+    *//** convenience method *//*
     public void addLastFactory(MetaBeanFactory metaBeanFactory) {
         if (factories == null) factories = new MetaBeanFactory[1];
         else {
@@ -78,9 +80,10 @@ public class MetaBeanBuilder {
             System.arraycopy(facold, 0, factories, 0, facold.length);
         }
         factories[factories.length - 1] = metaBeanFactory;
+        updateXmlFactory();
     }
 
-    /** convenience method */
+    *//** convenience method *//*
     public void addFirstFactory(MetaBeanFactory metaBeanFactory) {
         if (factories == null) factories = new MetaBeanFactory[1];
         else {
@@ -89,41 +92,47 @@ public class MetaBeanBuilder {
             System.arraycopy(facold, 0, factories, 1, facold.length);
         }
         factories[0] = metaBeanFactory;
-    }
+        updateXmlFactory();
+    }*/
 
     public void addLoader(XMLMetaBeanLoader loader) {
+        assertXmlFactory();
         xmlFactory.addLoader(loader);
     }
 
     public Map<String, MetaBean> buildAll() throws Exception {
         final Map<String, MetaBean> all = new HashMap<String, MetaBean>();
-        xmlFactory.visitXMLBeanMeta(null, new XMLMetaBeanFactory.Visitor() {
-            public void visit(XMLMetaBean empty, XMLMetaBeanInfos xmlInfos) throws Exception {
-                if (xmlInfos.getBeans() == null) return; // empty file, ignore
-                XMLMetaBeanFactory.XMLResult carrier =
-                      new XMLMetaBeanFactory.XMLResult(null, xmlInfos);
+        if (xmlFactory != null) {
+            xmlFactory.visitXMLBeanMeta(null, new XMLMetaBeanFactory.Visitor() {
+                public void visit(XMLMetaBean empty, XMLMetaBeanInfos xmlInfos)
+                      throws Exception {
+                    if (xmlInfos.getBeans() == null) return; // empty file, ignore
+                    XMLMetaBeanFactory.XMLResult carrier =
+                          new XMLMetaBeanFactory.XMLResult(null, xmlInfos);
 
-                for (XMLMetaBean xmlMeta : xmlInfos.getBeans()) {
-                    MetaBean meta = all.get(xmlMeta.getId());
-                    if (meta == null) {
-                        meta = createMetaBean(xmlMeta);
-                        all.put(xmlMeta.getId(), meta);
+                    for (XMLMetaBean xmlMeta : xmlInfos.getBeans()) {
+                        MetaBean meta = all.get(xmlMeta.getId());
+                        if (meta == null) {
+                            meta = createMetaBean(xmlMeta);
+                            all.put(xmlMeta.getId(), meta);
+                        }
+                        carrier.xmlMeta = xmlMeta;
+                        xmlFactory.enrichMetaBean(meta, carrier);
                     }
-                    carrier.xmlMeta = xmlMeta;
-                    xmlFactory.enrichMetaBean(meta, carrier);
                 }
-            }
 
-            public MetaBean getMetaBean() {
-                return null;  // do nothing
-            }
-        });
+                public MetaBean getMetaBean() {
+                    return null;  // do nothing
+                }
+            });
+        }
         return all;
     }
 
     public Map<String, MetaBean> enrichCopies(Map<String, MetaBean> all,
                                               XMLMetaBeanInfos... infosArray)
           throws Exception {
+        assertXmlFactory();
         final Map<String, MetaBean> copies = new HashMap<String, MetaBean>(all.size());
         boolean nothing = true;
         XMLMetaBeanFactory.XMLResult carrier = new XMLMetaBeanFactory.XMLResult();
@@ -167,8 +176,15 @@ public class MetaBeanBuilder {
         return copies;
     }
 
+    private void assertXmlFactory() {
+        if (xmlFactory == null) {
+            throw new IllegalStateException("no xmlFactory available");
+        }
+    }
+
     public MetaBean buildForId(String beanInfoId) throws Exception {
         final XMLMetaBeanFactory.Visitor v;
+        assertXmlFactory();
         xmlFactory.visitXMLBeanMeta(beanInfoId, v = new XMLMetaBeanFactory.Visitor() {
             private MetaBean meta;
 

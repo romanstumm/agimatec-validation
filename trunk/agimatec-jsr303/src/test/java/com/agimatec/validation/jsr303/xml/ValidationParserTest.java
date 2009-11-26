@@ -45,6 +45,10 @@ public class ValidationParserTest extends TestCase
         assertNotNull(validator);
     }
 
+    public void testXmlEntitySample() {
+           // TODO RSt - nyi test sample-constraints.xml
+    }
+
     public static Test suite() {
         return new TestSuite(ValidationParserTest.class);
     }

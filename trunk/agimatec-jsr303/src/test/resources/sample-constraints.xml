@@ -3,37 +3,16 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation=
         "http://jboss.org/xml/ns/javax/validation/mapping validation-mapping-1.0.xsd">
-  <default-package>com.acme.app.domain</default-package>
-  <bean class="Customer" ignore-annotations="false">
-    <class ignore-annotations="true">
-      [...]
-    </class>
+  <default-package>com.agimatec.validation.jsr303.example</default-package>
 
-    <constraint-definition annotation="javax.validation.constraint.Size">
-        <validated-by include-existing-validators="true">
-            <value>com.acme.app.constraint.SizeValidatorForDictionary</value>
-        </validated-by>
-    </constraint-definition>
-    <constraint-definition annotation="AcmeOrderNumber">
-      [...]
-    </constraint-definition>      
-
-    <field name="firstName">
-      <!-- @LooksLike(patterns={
-                 @Pattern(value="myRegExp", flag=PatternFlag.INSENSITIVE),
-                 @Pattern(value="my2ndRegExp")}
-             )
-       -->
-      <constraint annotation="com.acme.app.constraint.LooksLike">
-        <element name="patterns">
+  <bean class="XmlEntitySampleBean" ignore-annotations="false">
+    <class ignore-annotations="true"/>
+    <field name="zipCode">
+      <!--@FrenchZipCode(patterns={@Size(3)})-->
+      <constraint annotation="com.agimatec.validation.constraints.FrenchZipCode">
+        <element name="size">
           <annotation>
-            <element name="value">myRegExp</element>
-            <element name="flag">
-              <value>INSENSITIVE</value>
-            </element>
-          </annotation>
-          <annotation>
-            <element name="value">my2ndRegExp</element>
+            <element name="value">3</element>
           </annotation>
         </element>
       </constraint>
@@ -52,7 +31,6 @@
 
     </field>
     <getter name="firstName">
-      [...]
 
     </getter>
     <getter name="orders">
@@ -76,7 +54,12 @@
   </bean>
   <bean class="com.acme.common.model.Address">
     <class>
-      [...]
     </class>
   </bean>
+  <constraint-definition annotation="javax.validation.constraint.Size">
+      <validated-by include-existing-validators="true">
+          <value>com.agimatec.validation.constraints.SizeValidatorForArrayOfObject</value>
+      </validated-by>
+  </constraint-definition>
+
 </constraint-mappings>

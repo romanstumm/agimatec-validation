@@ -43,9 +43,6 @@ abstract class ElementDescriptorImpl implements ElementDescriptor {
         createConstraintDescriptors(validations);
     }
 
-    public ElementDescriptorImpl() {
-    }
-
     /**
      * @return Statically defined returned type.
      */
@@ -70,7 +67,7 @@ abstract class ElementDescriptorImpl implements ElementDescriptor {
         return false;
     }
 
-    protected void createConstraintDescriptors(Validation[] validations) {
+    private void createConstraintDescriptors(Validation[] validations) {
         final Set<ConstraintDescriptor<?>> cds = new HashSet(validations.length);
         for (Validation validation : validations) {
             if (validation instanceof ConstraintValidation) {

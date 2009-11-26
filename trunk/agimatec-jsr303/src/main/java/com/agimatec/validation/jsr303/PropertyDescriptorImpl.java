@@ -18,6 +18,9 @@
  */
 package com.agimatec.validation.jsr303;
 
+import com.agimatec.validation.model.MetaBean;
+import com.agimatec.validation.model.Validation;
+
 import javax.validation.metadata.PropertyDescriptor;
 
 
@@ -31,6 +34,10 @@ import javax.validation.metadata.PropertyDescriptor;
 class PropertyDescriptorImpl extends ElementDescriptorImpl implements PropertyDescriptor {
     private boolean cascaded;
     private String propertyPath;
+
+    PropertyDescriptorImpl(MetaBean metaBean, Validation[] validations) {
+        super(metaBean, validations);
+    }
 
     public void setCascaded(boolean cascaded) {
         this.cascaded = cascaded;

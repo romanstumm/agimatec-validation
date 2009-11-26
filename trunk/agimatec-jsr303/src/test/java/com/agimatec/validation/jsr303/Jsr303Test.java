@@ -62,6 +62,11 @@ public class Jsr303Test extends TestCase {
         Assert.assertTrue(!validator.validateProperty(object, "title").isEmpty());
     }*/
 
+    public void testPropertyDescriptorHasConstraints() {
+        BeanDescriptor cons = getValidator().getConstraintsForClass(Book.class);
+        assertTrue(cons.getConstraintsForProperty("author").hasConstraints());
+    }
+
     public void testValidateValue() {
         Assert.assertTrue(getValidator()
               .validateValue(Book.class, "subtitle", "123456789098765432").isEmpty());

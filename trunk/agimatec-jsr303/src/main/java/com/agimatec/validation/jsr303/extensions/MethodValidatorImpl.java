@@ -44,7 +44,7 @@ class MethodValidatorImpl extends ClassValidator implements MethodValidator {
 
     @Override
     protected BeanDescriptorImpl createBeanDescriptor(MetaBean metaBean) {
-        return new MethodBeanDescriptorImpl(metaBean, metaBean.getValidations());
+        return new MethodBeanDescriptorImpl(factoryContext, metaBean, metaBean.getValidations());
     }    
 
     /**

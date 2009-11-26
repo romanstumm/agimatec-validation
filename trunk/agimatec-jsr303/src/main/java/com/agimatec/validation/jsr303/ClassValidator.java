@@ -305,7 +305,7 @@ public class ClassValidator extends BeanValidator implements Validator {
     }
 
     protected BeanDescriptorImpl createBeanDescriptor(MetaBean metaBean) {
-        return new BeanDescriptorImpl(metaBean, metaBean.getValidations());
+        return new BeanDescriptorImpl(factoryContext, metaBean, metaBean.getValidations());
     }
 
     /**

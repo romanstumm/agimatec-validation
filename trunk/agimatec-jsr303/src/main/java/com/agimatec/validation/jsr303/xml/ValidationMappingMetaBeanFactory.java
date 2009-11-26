@@ -72,7 +72,7 @@ public class ValidationMappingMetaBeanFactory implements MetaBeanFactory {
     public void buildMetaBean(MetaBean metaBean) throws Exception {
         if (!streams.isEmpty()) {
             ValidationMappingParser parser = new ValidationMappingParser();
-            parser.parse(streams);
+            parser.processMappingConfig(streams);
             // enhancement: stop parsing when found, because
             // A given class must not be described more than once amongst all the XML mapping descriptors.
         }

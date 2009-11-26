@@ -19,8 +19,12 @@
 package com.agimatec.validation.jsr303.util;
 
 import com.agimatec.validation.util.PrivilegedActions;
+import org.apache.commons.lang.StringUtils;
 
 import javax.validation.ValidationException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.security.PrivilegedAction;
 
 /**
@@ -67,5 +71,50 @@ public class SecureActions extends PrivilegedActions {
                 }
             }
         });
+    }
+
+    public static Field getDeclaredField(final Class clazz, final String fieldName) {
+        return run(new PrivilegedAction<Field>() {
+            public Field run() {
+                try {
+                    Field f = clazz.getDeclaredField(fieldName);
+                    setAccessibility(f);
+                    return f;
+                } catch (NoSuchFieldException e) {
+                    return null;
+                }
+            }
+        });
+    }
+
+    private static void setAccessibility(Field field) {
+        if (!Modifier.isPublic(field.getModifiers()) || (
+              Modifier.isPublic(field.getModifiers()) &&
+                    Modifier.isAbstract(field.getModifiers()))) {
+            field.setAccessible(true);
+        }
+    }
+
+    /**
+     * Returns the <b>public method</b> with the specified name or null if it does not exist.
+     *
+     * @return Returns the method or null if not found.
+     */
+    public static Method getMethod(final Class<?> clazz, final String methodName) {
+        return run(new PrivilegedAction<Method>() {
+            public Method run() {
+                try {
+                    String methodName0 = StringUtils.capitalize(methodName);
+                    try {
+                        return clazz.getMethod("get" + methodName0);
+                    } catch (NoSuchMethodException e) {
+                        return clazz.getMethod("is" + methodName0);
+                    }
+                } catch (NoSuchMethodException e) {
+                    return null;
+                }
+            }
+        });
+
     }
 }

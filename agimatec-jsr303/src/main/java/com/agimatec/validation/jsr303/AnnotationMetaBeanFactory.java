@@ -36,11 +36,12 @@ import org.apache.commons.logging.LogFactory;
 import javax.validation.*;
 import javax.validation.groups.Default;
 import java.beans.Introspector;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Description: process the class annotations for constraint validations
@@ -53,15 +54,16 @@ import java.util.*;
 public class AnnotationMetaBeanFactory implements MetaBeanFactory {
     private static final Log log = LogFactory.getLog(AnnotationMetaBeanFactory.class);
     private static final String ANNOTATION_VALUE = "value";
-    private static final String DEFAULT_CONSTAINTS =
-          "com/agimatec/validation/jsr303/DefaultConstraints.properties";
+    private static final DefaultConstraints defaultConstraints = new DefaultConstraints();
 
     private final ConstraintValidatorFactory constraintFactory;
-    protected Map<String, Class[]> defaultConstraints;
-
 
     public AnnotationMetaBeanFactory(ConstraintValidatorFactory constraintFactory) {
         this.constraintFactory = constraintFactory;
+    }
+
+    public static DefaultConstraints getDefaultConstraints() {
+        return defaultConstraints;
     }
 
     /**
@@ -217,47 +219,7 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
 
     private Class<? extends ConstraintValidator<?, ?>>[] getDefaultConstraintValidator(
           Annotation annotation) {
-        return getDefaultConstraints().get(annotation.annotationType().getName());
-    }
-
-    protected Map<String, Class[]> getDefaultConstraints() {
-        if (defaultConstraints == null) {
-            Properties defaultConstraintProperties = new Properties();
-            ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-            if (classloader == null) classloader = getClass().getClassLoader();
-            InputStream stream = classloader.getResourceAsStream(DEFAULT_CONSTAINTS);
-            if (stream != null) {
-                try {
-                    defaultConstraintProperties.load(stream);
-                } catch (IOException e) {
-                    log.error("cannot load " + DEFAULT_CONSTAINTS, e);
-                }
-            } else {
-                log.warn("cannot find " + DEFAULT_CONSTAINTS);
-            }
-            defaultConstraints = new HashMap();
-            for (Map.Entry entry : defaultConstraintProperties.entrySet()) {
-
-                StringTokenizer tokens =
-                      new StringTokenizer((String) entry.getValue(), ", ");
-                LinkedList classes = new LinkedList();
-                while (tokens.hasMoreTokens()) {
-                    String eachClassName = tokens.nextToken();
-                    try {
-                        Class constraintValidatorClass =
-                              Class.forName(eachClassName, true, classloader);
-                        classes.add(constraintValidatorClass);
-                    } catch (ClassNotFoundException e) {
-                        log.error("Cannot find class " + entry.getValue(), e);
-                    }
-                }
-                defaultConstraints
-                      .put((String) entry.getKey(),
-                            (Class[]) classes.toArray(new Class[classes.size()]));
-
-            }
-        }
-        return defaultConstraints;
+        return getDefaultConstraints().getValidatorClasses(annotation.annotationType());
     }
 
     private boolean processValid(MetaProperty prop, AccessStrategy access) {

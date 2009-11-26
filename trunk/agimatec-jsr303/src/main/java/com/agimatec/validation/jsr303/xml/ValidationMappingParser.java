@@ -18,8 +18,8 @@ package com.agimatec.validation.jsr303.xml;
 
 import com.agimatec.validation.jsr303.AnnotationMetaBeanFactory;
 import com.agimatec.validation.jsr303.util.SecureActions;
-import com.agimatec.validation.util.PrivilegedActions;
-import org.xml.sax.SAXException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
@@ -30,13 +30,11 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.util.*;
 
 
@@ -45,7 +43,7 @@ import java.util.*;
  * Copyright: Agimatec GmbH, 2009
  */
 public class ValidationMappingParser {
-
+    private static final Log log = LogFactory.getLog(ValidationMappingParser.class);
     private static final String VALIDATION_MAPPING_XSD = "META-INF/validation-mapping-1.0.xsd";
 
     private final AnnotationIgnores annotationIgnores;
@@ -111,17 +109,7 @@ public class ValidationMappingParser {
 
     /** @return validation-mapping-1.0.xsd based schema */
     private Schema getSchema() {
-        Schema schema;
-        URL schemaUrl =
-              PrivilegedActions.getClassLoader(getClass()).getResource(VALIDATION_MAPPING_XSD);
-        SchemaFactory sf =
-              SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        try {
-            schema = sf.newSchema(schemaUrl);
-        } catch (SAXException e) {
-            throw new ValidationException("Failed to parse schema.", e);
-        }
-        return schema;
+        return ValidationParser.getSchema(VALIDATION_MAPPING_XSD);
     }
 
     // TODO RSt -  finish....
@@ -191,7 +179,7 @@ When ignore-annotations is true, field-level Bean Validation annotations on the 
             String fieldName = fieldType.getName();
             if (fieldNames.contains(fieldName)) {
                 throw new ValidationException(fieldName +
-                      " is defined twice in mapping xml for bean " + beanClass.getName());
+                      " is defined more than once in mapping xml for bean " + beanClass.getName());
             } else {
                 fieldNames.add(fieldName);
             }
@@ -252,7 +240,7 @@ nored (including the @Valid). When ignore-annotations is false:
             String getterName = getterType.getName();
             if (getterNames.contains(getterName)) {
                 throw new ValidationException(getterName +
-                      " is defined twice in mapping xml for bean " + beanClass.getName());
+                      " is defined more than once in mapping xml for bean " + beanClass.getName());
             } else {
                 getterNames.add(getterName);
             }

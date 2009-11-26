@@ -33,7 +33,7 @@ import java.util.Enumeration;
  * Copyright: Agimatec GmbH
  */
 public class ValidationParser {
-    public static final String DEFAULT_VALIDATION_XML_FILE = "META-INF/validation.xml";
+    private static final String DEFAULT_VALIDATION_XML_FILE = "META-INF/validation.xml";
     private static final String VALIDATION_CONFIGURATION_XSD =
           "META-INF/validation-configuration-1.0.xsd";
     private static final Log log = LogFactory.getLog(ValidationParser.class);
@@ -65,7 +65,7 @@ public class ValidationParser {
 
             if (log.isInfoEnabled()) log.info(validationXmlFile + " found.");
 
-            Schema schema = getValidationConfigurationSchema();
+            Schema schema = getSchema();
             JAXBContext jc = JAXBContext.newInstance(ValidationConfigType.class);
             Unmarshaller unmarshaller = jc.createUnmarshaller();
             unmarshaller.setSchema(schema);
@@ -97,14 +97,18 @@ public class ValidationParser {
         }
     }
 
-    private Schema getValidationConfigurationSchema() {
-        ClassLoader loader = PrivilegedActions.getClassLoader(getClass());
+    private Schema getSchema() {
+        return getSchema(VALIDATION_CONFIGURATION_XSD);
+    }
+
+    static Schema getSchema(String xsd) {
+        ClassLoader loader = PrivilegedActions.getClassLoader(ValidationParser.class);
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        URL schemaUrl = loader.getResource(VALIDATION_CONFIGURATION_XSD);
+        URL schemaUrl = loader.getResource(xsd);
         try {
             return sf.newSchema(schemaUrl);
         } catch (SAXException e) {
-            log.warn("Unable to create schema for " + VALIDATION_CONFIGURATION_XSD, e);
+            log.warn("Unable to parse schema: " + xsd, e);
             return null;
         }
     }

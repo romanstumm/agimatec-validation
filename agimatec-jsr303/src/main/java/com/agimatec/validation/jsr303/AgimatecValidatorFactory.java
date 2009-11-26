@@ -24,10 +24,14 @@ import com.agimatec.validation.MetaBeanFactory;
 import com.agimatec.validation.MetaBeanManager;
 import com.agimatec.validation.jsr303.util.SecureActions;
 import com.agimatec.validation.jsr303.xml.ValidationMappingMetaBeanFactory;
+import com.agimatec.validation.xml.XMLMetaBeanFactory;
 import org.apache.commons.lang.ClassUtils;
 
 import javax.validation.*;
+import javax.validation.bootstrap.ProviderSpecificBootstrap;
 import javax.validation.spi.ConfigurationState;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Description: a factory is a complete configurated object that can create validators<br/>
@@ -46,13 +50,14 @@ public class AgimatecValidatorFactory
     private TraversableResolver traversableResolver;
     private ConstraintValidatorFactory constraintValidatorFactory;
 
-    /** convenience to retrieve a default global ValidatorFactory */
+    /** convenience to retrieve a default global AgimatecValidatorFactory */
     public static AgimatecValidatorFactory getDefault() {
         if (DEFAULT_FACTORY == null) {
-            AgimatecValidationProvider provider = new AgimatecValidationProvider();
-            ConfigurationImpl config = provider.createSpecializedConfiguration(null);
-            config.prepare();
-            DEFAULT_FACTORY = provider.buildValidatorFactory(config);
+            ProviderSpecificBootstrap<AgimatecValidatorConfiguration> provider =
+                  Validation.byProvider(AgimatecValidationProvider.class);
+            AgimatecValidatorConfiguration configuration = provider.configure();
+            DEFAULT_FACTORY = (AgimatecValidatorFactory) configuration
+                  .buildValidatorFactory();
         }
         return DEFAULT_FACTORY;
     }
@@ -72,21 +77,23 @@ public class AgimatecValidatorFactory
     private MetaBeanManager buildMetaBeanManager(ConfigurationState configuration) {
         // this is relevant: xml before annotations
         // (because ignore-annotations settings in xml)
-
-        MetaBeanManager metaBeanManager = new MetaBeanManager(new MetaBeanBuilder(
-              new MetaBeanFactory[]{new AnnotationMetaBeanFactory(
-                    configuration.getConstraintValidatorFactory())}));
-        if (!configuration.isIgnoreXmlConfiguration()) {
-            metaBeanManager.getBuilder()
-                  .addFirstFactory(new ValidationMappingMetaBeanFactory(configuration));
-        }
+        List<MetaBeanFactory> builders = new ArrayList(4);
         if (Boolean.parseBoolean(configuration.getProperties().get(ENABLE_INTROSPECTOR))) {
-            metaBeanManager.getBuilder().addFirstFactory(new IntrospectorMetaBeanFactory());
+            builders.add(new IntrospectorMetaBeanFactory());
         }
+
+        if (!configuration.isIgnoreXmlConfiguration()) {
+            builders.add(new ValidationMappingMetaBeanFactory(configuration));
+        }
+
+        builders.add(new AnnotationMetaBeanFactory(
+              configuration.getConstraintValidatorFactory()));
+
         if (Boolean.parseBoolean(configuration.getProperties().get(ENABLE_METABEANS_XML))) {
-            metaBeanManager.getBuilder().addLastFactory(new IntrospectorMetaBeanFactory());
+            builders.add(new XMLMetaBeanFactory());
         }
-        return metaBeanManager;
+        return new MetaBeanManager(
+              new MetaBeanBuilder(builders.toArray(new MetaBeanFactory[builders.size()])));
     }
 
     protected MessageInterpolator getDefaultMessageInterpolator() {

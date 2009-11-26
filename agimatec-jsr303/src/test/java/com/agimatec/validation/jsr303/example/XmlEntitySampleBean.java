@@ -8,4 +8,5 @@ package com.agimatec.validation.jsr303.example;
  * Copyright: Agimatec GmbH
  */
 public class XmlEntitySampleBean {
+    private String zipCode;
 }

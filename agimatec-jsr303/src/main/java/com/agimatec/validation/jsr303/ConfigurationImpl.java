@@ -42,15 +42,18 @@ import java.util.*;
  */
 public class ConfigurationImpl implements AgimatecValidatorConfiguration, ConfigurationState {
     private static final Log log = LogFactory.getLog(ConfigurationImpl.class);
-    protected ValidationProvider provider;
+    protected final ValidationProvider provider;
     protected final ValidationProviderResolver providerResolver;
     protected Class<? extends ValidationProvider<?>> providerClass;
     protected MessageInterpolator messageInterpolator;
     protected ConstraintValidatorFactory constraintValidatorFactory;
     private TraversableResolver traversableResolver;
 
-    private boolean prepared = false;
     // BEGIN DEFAULTS
+    /**
+     * false = dirty flag (to prevent from multiple parsing validation.xml)
+     */
+    private boolean prepared = false;
     private final TraversableResolver defaultTraversableResolver =
           new DefaultTraversableResolver();
     protected final MessageInterpolator defaultMessageInterpolator =
@@ -64,16 +67,16 @@ public class ConfigurationImpl implements AgimatecValidatorConfiguration, Config
     private boolean ignoreXmlConfiguration = false;
 
     public ConfigurationImpl(BootstrapState aState, ValidationProvider aProvider) {
-        if (aState != null) {
+        if (aProvider != null) {
+            this.provider = aProvider;
+            this.providerResolver = null;
+        } else if (aState != null) {
             this.provider = null;
             if (aState.getValidationProviderResolver() == null) {
                 providerResolver = aState.getDefaultValidationProviderResolver();
             } else {
                 providerResolver = aState.getValidationProviderResolver();
             }
-        } else if (aProvider != null) {
-            this.provider = aProvider;
-            this.providerResolver = null;
         } else {
             throw new ValidationException("either provider or state are required");
         }
@@ -81,6 +84,7 @@ public class ConfigurationImpl implements AgimatecValidatorConfiguration, Config
 
     public AgimatecValidatorConfiguration traversableResolver(TraversableResolver resolver) {
         traversableResolver = resolver;
+        this.prepared = false;
         return this;
     }
 
@@ -92,17 +96,20 @@ public class ConfigurationImpl implements AgimatecValidatorConfiguration, Config
      */
     public AgimatecValidatorConfiguration ignoreXmlConfiguration() {
         ignoreXmlConfiguration = true;
+//        this.prepared = false;
         return this;
     }
 
     public ConfigurationImpl messageInterpolator(MessageInterpolator resolver) {
         this.messageInterpolator = resolver;
+        this.prepared = false;
         return this;
     }
 
     public ConfigurationImpl constraintValidatorFactory(
           ConstraintValidatorFactory constraintFactory) {
         this.constraintValidatorFactory = constraintFactory;
+        this.prepared = false;
         return this;
     }
 
@@ -182,12 +189,11 @@ public class ConfigurationImpl implements AgimatecValidatorConfiguration, Config
         }
     }
 
-    void prepare() {
+    private void prepare() {
         if (prepared) return;
         parseValidationXml();
         applyDefaults();
         prepared = true;
-
     }
 
     /** Check whether a validation.xml file exists and parses it with JAXB */
@@ -225,10 +231,6 @@ public class ConfigurationImpl implements AgimatecValidatorConfiguration, Config
 
     public ValidationProvider getProvider() {
         return provider;
-    }
-
-    public void setProvider(ValidationProvider provider) {
-        this.provider = provider;
     }
 
     private ValidationProvider findProvider() {

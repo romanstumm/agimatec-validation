@@ -81,9 +81,6 @@ public class ValidationParser {
     }
 
     private InputStream getInputStream(String path) throws IOException {
-        if (path.startsWith("/")) {
-            path = path.substring(1);
-        }
         ClassLoader loader = PrivilegedActions.getClassLoader(getClass());
         Enumeration<URL> urls = loader.getResources(path);
         if (urls.hasMoreElements()) {

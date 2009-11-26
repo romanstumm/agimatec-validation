@@ -36,9 +36,12 @@ import java.util.Set;
  * Copyright: Agimatec GmbH
  */
 public class BeanDescriptorImpl extends ElementDescriptorImpl implements BeanDescriptor {
+    private final AgimatecFactoryContext factoryContext;
 
-    protected BeanDescriptorImpl(MetaBean metaBean, Validation[] validations) {
+    protected BeanDescriptorImpl(AgimatecFactoryContext factoryContext, MetaBean metaBean,
+                                 Validation[] validations) {
         super(metaBean, validations);
+        this.factoryContext = factoryContext;
     }
 
     /**
@@ -76,13 +79,14 @@ public class BeanDescriptorImpl extends ElementDescriptorImpl implements BeanDes
         PropertyDescriptorImpl edesc =
               prop.getFeature(Jsr303Features.Property.PropertyDescriptor);
         if (edesc == null) {
-            edesc = new PropertyDescriptorImpl();
-            edesc.setElementClass(
-                  prop.getFeature(Features.Property.REF_BEAN_TYPE, prop.getTypeClass()));
+            Class<?> targetClass =
+                  prop.getFeature(Features.Property.REF_BEAN_TYPE, prop.getTypeClass());
+            edesc = new PropertyDescriptorImpl(
+                  factoryContext.getMetaBeanManager().findForClass(targetClass),
+                  prop.getValidations());
             edesc.setCascaded((prop.getMetaBean() != null ||
                   prop.getFeature(Features.Property.REF_CASCADE) != null));
             edesc.setPropertyPath(prop.getName());
-            edesc.createConstraintDescriptors(prop.getValidations());
             prop.putFeature(Jsr303Features.Property.PropertyDescriptor, edesc);
         }
         return edesc;

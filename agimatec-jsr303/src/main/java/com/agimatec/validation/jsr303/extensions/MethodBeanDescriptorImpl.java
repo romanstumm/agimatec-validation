@@ -16,6 +16,7 @@
  */
 package com.agimatec.validation.jsr303.extensions;
 
+import com.agimatec.validation.jsr303.AgimatecFactoryContext;
 import com.agimatec.validation.jsr303.BeanDescriptorImpl;
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.Validation;
@@ -33,8 +34,8 @@ import java.util.Set;
  */
 class MethodBeanDescriptorImpl extends BeanDescriptorImpl
       implements MethodBeanDescriptor {
-    protected MethodBeanDescriptorImpl(MetaBean metaBean, Validation[] validations) {
-        super(metaBean, validations);
+    protected MethodBeanDescriptorImpl(AgimatecFactoryContext factoryContext, MetaBean metaBean, Validation[] validations) {
+        super(factoryContext, metaBean, validations);
     }
 
     public MethodDescriptor getConstraintsForMethod(Method method) {

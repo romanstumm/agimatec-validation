@@ -66,6 +66,7 @@ public class Jsr303Test extends TestCase {
         BeanDescriptor cons = getValidator().getConstraintsForClass(Book.class);
         assertTrue(cons.getConstraintsForProperty("author").hasConstraints());
         assertTrue(cons.getConstraintsForProperty("title").hasConstraints());
+        assertTrue(cons.getConstraintsForProperty("uselessField").hasConstraints());
         // cons.getConstraintsForProperty("unconstraintField") == null without Introspector
         // cons.getConstraintsForProperty("unconstraintField") != null with Introspector
         assertTrue(cons.getConstraintsForProperty("unconstraintField") == null ||

@@ -81,9 +81,15 @@ public class BeanDescriptorImpl extends ElementDescriptorImpl implements BeanDes
         if (edesc == null) {
             Class<?> targetClass =
                   prop.getFeature(Features.Property.REF_BEAN_TYPE, prop.getTypeClass());
-            edesc = new PropertyDescriptorImpl(
-                  factoryContext.getMetaBeanManager().findForClass(targetClass),
-                  prop.getValidations());
+            if (targetClass.isPrimitive()) {
+                // optimization: do not create MetaBean for primitives
+                // enhancement: do not create MetaBean for classes without any metadata?
+                edesc = new PropertyDescriptorImpl(targetClass, prop.getValidations());
+            } else {
+                edesc = new PropertyDescriptorImpl(
+                      factoryContext.getMetaBeanManager().findForClass(targetClass),
+                      prop.getValidations());
+            }
             edesc.setCascaded((prop.getMetaBean() != null ||
                   prop.getFeature(Features.Property.REF_CASCADE) != null));
             edesc.setPropertyPath(prop.getName());

@@ -38,6 +38,9 @@ public class Book {
     @NotNull(groups = First.class)
     private Author author;
 
+    @NotNull
+    private int uselessField;
+
     private int unconstraintField;
 
     public int getUnconstraintField() {

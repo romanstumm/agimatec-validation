@@ -39,6 +39,10 @@ class PropertyDescriptorImpl extends ElementDescriptorImpl implements PropertyDe
         super(metaBean, validations);
     }
 
+    PropertyDescriptorImpl(Class elementClass, Validation[] validations) {
+        super(elementClass, validations);
+    }
+
     public void setCascaded(boolean cascaded) {
         this.cascaded = cascaded;
     }

@@ -43,15 +43,13 @@ final class ConstraintFinderImpl implements ElementDescriptor.ConstraintFinder {
     private final Set<Scope> findInScopes;
     private Set<ConstraintValidation> constraintDescriptors;
 
-    ConstraintFinderImpl(MetaBean metaBean,
-                         Set constraintDescriptors) {
+    ConstraintFinderImpl(MetaBean metaBean, Set constraintDescriptors) {
         this.metaBean = metaBean;
         this.constraintDescriptors = constraintDescriptors;
         this.findInScopes = new HashSet<Scope>(Arrays.asList(Scope.values()));
     }
 
-    public ElementDescriptor.ConstraintFinder unorderedAndMatchingGroups(
-          Class<?>... groups) {
+    public ElementDescriptor.ConstraintFinder unorderedAndMatchingGroups(Class<?>... groups) {
         Set<ConstraintValidation> matchingDescriptors =
               new HashSet<ConstraintValidation>(constraintDescriptors.size());
         Groups groupChain = new GroupsComputer().computeGroups(groups);
@@ -91,15 +89,17 @@ final class ConstraintFinderImpl implements ElementDescriptor.ConstraintFinder {
 
     private boolean isInScope(ConstraintValidation descriptor) {
         if (findInScopes.size() == Scope.values().length) return true; // all scopes
-        Class owner = descriptor.getOwner();
-        for (Scope scope : findInScopes) {
-            switch (scope) {
-                case LOCAL_ELEMENT:
-                    if (owner.equals(metaBean.getBeanClass())) return true;
-                    break;
-                case HIERARCHY:
-                    if (!owner.equals(metaBean.getBeanClass())) return true;
-                    break;
+        if (metaBean != null) {
+            Class owner = descriptor.getOwner();
+            for (Scope scope : findInScopes) {
+                switch (scope) {
+                    case LOCAL_ELEMENT:
+                        if (owner.equals(metaBean.getBeanClass())) return true;
+                        break;
+                    case HIERARCHY:
+                        if (!owner.equals(metaBean.getBeanClass())) return true;
+                        break;
+                }
             }
         }
         return false;
@@ -117,7 +117,7 @@ final class ConstraintFinderImpl implements ElementDescriptor.ConstraintFinder {
 
     public Set<ConstraintDescriptor<?>> getConstraintDescriptors() {
         //noinspection RedundantCast
-        return (Set)constraintDescriptors;
+        return (Set) constraintDescriptors;
     }
 
     public boolean hasConstraints() {

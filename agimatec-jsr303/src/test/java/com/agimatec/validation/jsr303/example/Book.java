@@ -38,6 +38,16 @@ public class Book {
     @NotNull(groups = First.class)
     private Author author;
 
+    private int unconstraintField;
+
+    public int getUnconstraintField() {
+        return unconstraintField;
+    }
+
+    public void setUnconstraintField(int unconstraintField) {
+        this.unconstraintField = unconstraintField;
+    }
+
     public String getTitle() {
         return title;
     }

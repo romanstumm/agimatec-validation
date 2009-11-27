@@ -42,7 +42,10 @@ public interface AgimatecValidatorConfiguration
 
         /**
          * true/false. use Introspector (java beans) metadata additionally
-         * to build metadata with JSR303.
+         * to build metadata with JSR303.<br>
+         * This means that all properties exist that are java-bean properties and
+         * and that some features (Hidden, Readonly) are taken from Introspector
+         * to create the meta data.<br>
          * default: false
          */
         String ENABLE_INTROSPECTOR = "agimatec.enable-introspector";

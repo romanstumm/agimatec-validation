@@ -9,7 +9,7 @@ Working on new release 0.9.5 (November,December 2009)
 -------------------------------------------
   * XML deployment descriptor (under construction)
   * planned: method-level validation
-  * fixed Issue#20 ElementDescriptor.hasConstraints() thrown NullPointerException
+  * fixed Issue#20
 
 Working on new release 0.9.4 (October, November 2009)
 -------------------------------------------

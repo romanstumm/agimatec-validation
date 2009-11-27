@@ -53,10 +53,19 @@ public class BeanDescriptorImpl extends ElementDescriptorImpl implements BeanDes
      * @return true if the bean nvolves validation
      */
     public boolean isBeanConstrained() {
-        if (hasConstraints()) return true;
+        if (hasAnyConstraints()) return true;
         for (MetaProperty mprop : metaBean.getProperties()) {
             if (mprop.getMetaBean() != null ||
                   mprop.getFeature(Features.Property.REF_CASCADE) != null) return true;
+        }
+        return false;
+    }
+
+    private boolean hasAnyConstraints() {
+        if (hasConstraints()) return true;
+        if (metaBean.getValidations().length > 0) return true;
+        for (MetaProperty mprop : metaBean.getProperties()) {
+            if (mprop.getValidations().length > 0) return true;
         }
         return false;
     }

@@ -301,14 +301,15 @@ public class ValidationTest extends TestCase {
         Validator bookValidator = getValidator();
         BeanDescriptor bookBeanDescriptor =
               bookValidator.getConstraintsForClass(Book.class);
-//
-        Assert.assertTrue(bookBeanDescriptor.hasConstraints());
-//          assertTrue(bookBeanDescriptor.getElementType() == ElementType.TYPE);
+
+        // expect no constraints on Book's Class-Level
+        Assert.assertFalse(bookBeanDescriptor.hasConstraints());
+        // but there are constraints on Book's Property-Level
+        Assert.assertTrue(bookBeanDescriptor.isBeanConstrained());
         Assert.assertTrue(
               bookBeanDescriptor.getConstraintDescriptors().size() == 0); //no constraint
-//        assertTrue("".equals(bookBeanDescriptor.getPropertyPath())); //root element
         //more specifically "author" and "title"
-        Assert.assertTrue(bookBeanDescriptor.getConstrainedProperties().size() == 3);
+        Assert.assertEquals(4, bookBeanDescriptor.getConstrainedProperties().size());
         //not a property
         Assert.assertTrue(
               bookBeanDescriptor.getConstraintsForProperty("doesNotExist") == null);
@@ -317,7 +318,6 @@ public class ValidationTest extends TestCase {
               bookBeanDescriptor.getConstraintsForProperty("description") == null);
         PropertyDescriptor propertyDescriptor =
               bookBeanDescriptor.getConstraintsForProperty("title");
-//        assertTrue(propertyDescriptor.getElementType() == ElementType.METHOD);
         Assert.assertEquals(2, propertyDescriptor.getConstraintDescriptors().size());
         Assert.assertTrue("title".equals(propertyDescriptor.getPropertyName()));
         //assuming the implementation returns the NotEmpty constraint first
@@ -336,11 +336,6 @@ public class ValidationTest extends TestCase {
         Assert.assertTrue(constraintDescriptor.getGroups().size() == 1); //"first"
         Assert.assertEquals(NotNullValidator.class,
               constraintDescriptor.getConstraintValidatorClasses().get(0));
-        /*  StandardConstraint standardConstraint =
-                (StandardConstraint) ((ConstraintValidation) constraintDescriptor).
-                        getConstraintImplementation();
-        //@NotEmpty cannot be null
-        assertTrue(!standardConstraint.getStandardConstraints().getNullability());*/
         //assuming the implementation returns the Size constraint first
         propertyDescriptor = bookBeanDescriptor.getConstraintsForProperty("subtitle");
         Iterator<ConstraintDescriptor<?>> iterator =
@@ -352,7 +347,6 @@ public class ValidationTest extends TestCase {
               ((Integer) constraintDescriptor.getAttributes().get("max")) == 30);
         Assert.assertTrue(constraintDescriptor.getGroups().size() == 1);
         propertyDescriptor = bookBeanDescriptor.getConstraintsForProperty("author");
-//        assertEquals(ElementType.FIELD, propertyDescriptor.getElementType());
         Assert.assertTrue(propertyDescriptor.getConstraintDescriptors().size() == 1);
         Assert.assertTrue(propertyDescriptor.isCascaded());
     }

@@ -65,13 +65,6 @@ abstract class ElementDescriptorImpl implements ElementDescriptor {
     /** return true if at least one constraint declaration is present on the element. */
     public boolean hasConstraints() {
         return !constraintDescriptors.isEmpty();
-        /*if(!constraintDescriptors.isEmpty()) return true;
-        if(metaBean == null) return false;
-        if (metaBean.getValidations().length > 0) return true;
-        for (MetaProperty mprop : metaBean.getProperties()) {
-            if (mprop.getValidations().length > 0) return true;
-        }
-        return false;*/
     }
 
     private void createConstraintDescriptors(Validation[] validations) {

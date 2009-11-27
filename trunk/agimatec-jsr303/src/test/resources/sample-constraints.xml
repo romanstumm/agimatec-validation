@@ -8,21 +8,18 @@
   <bean class="XmlEntitySampleBean" ignore-annotations="false">
     <class ignore-annotations="true"/>
     <field name="zipCode">
-      <!--@FrenchZipCode(patterns={@Size(3)})-->
+      <!--@FrenchZipCode(size=3)-->
       <constraint annotation="com.agimatec.validation.constraints.FrenchZipCode">
         <element name="size">
-          <annotation>
-            <element name="value">3</element>
-          </annotation>
+          <value>3</value>
         </element>
       </constraint>
 
     </field>
-    <field name="orders">
+    <field name="valueCode">
       <valid/>
-      <!-- @DiscreteSize(value={ 0, 20 } )
-       -->
-      <constraint annotation="com.acme.app.constraint.DiscreteSize">
+      <!-- @HasValue({ 0, 20 }) -->
+      <constraint annotation="com.agimatec.validation.constraints.HasValue">
         <element name="value">
           <value>0</value>
           <value>20</value>
@@ -31,20 +28,17 @@
 
     </field>
     <getter name="firstName">
-
-    </getter>
-    <getter name="orders">
       <valid/>
       <!-- @Size(message="Size is limited",
-                 groups={Default.class, LightValidation.class},
+                 groups={First.class, Default.class},
                  max=30
            )
       -->
-      <constraint annotation="javax.validation.constraint.Size">
+      <constraint annotation="javax.validation.constraints.Size">
         <message>Size is limited</message>
         <groups>
-          <value>com.acme.app.model.LightValidation</value>
-          <value>javax.persistence.Default</value>
+          <value>com.agimatec.validation.jsr303.example.First</value>
+          <value>javax.validation.groups.Default</value>
         </groups>
         <element name="max">30</element>
       </constraint>
@@ -52,12 +46,9 @@
     </getter>
 
   </bean>
-  <bean class="com.acme.common.model.Address">
-    <class>
-    </class>
-  </bean>
-  <constraint-definition annotation="javax.validation.constraint.Size">
-      <validated-by include-existing-validators="true">
+
+  <constraint-definition annotation="javax.validation.constraints.Size">
+      <validated-by include-existing-validators="false">
           <value>com.agimatec.validation.constraints.SizeValidatorForArrayOfObject</value>
       </validated-by>
   </constraint-definition>

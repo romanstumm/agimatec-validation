@@ -42,6 +42,7 @@ import java.util.*;
  */
 public class ConfigurationImpl implements AgimatecValidatorConfiguration, ConfigurationState {
     private static final Log log = LogFactory.getLog(ConfigurationImpl.class);
+    
     protected final ValidationProvider provider;
     protected final ValidationProviderResolver providerResolver;
     protected Class<? extends ValidationProvider<?>> providerClass;
@@ -198,7 +199,7 @@ public class ConfigurationImpl implements AgimatecValidatorConfiguration, Config
 
     /** Check whether a validation.xml file exists and parses it with JAXB */
     private void parseValidationXml() {
-        if (ignoreXmlConfiguration) {
+        if (isIgnoreXmlConfiguration()) {
             log.info("ignoreXmlConfiguration == true");
         } else {
             new ValidationParser(getProperties().get(Properties.VALIDATION_XML_PATH))
@@ -219,8 +220,9 @@ public class ConfigurationImpl implements AgimatecValidatorConfiguration, Config
         }
     }
 
-    // TODO RSt - clarify usage, see AgimatecFactoryContext.getConstraintValidatorFactory()
-    //                           and AgimatecValidatorFactory.getConstraintValidatorFactory()
+    /**
+     * @return the constraint validator factory of this configuration.
+     */
     public ConstraintValidatorFactory getConstraintValidatorFactory() {
         return constraintValidatorFactory;
     }

@@ -3,14 +3,17 @@ package com.agimatec.validation.jsr303.xml;
 import com.agimatec.validation.jsr303.AgimatecValidationProvider;
 import com.agimatec.validation.jsr303.AgimatecValidatorConfiguration;
 import com.agimatec.validation.jsr303.ConfigurationImpl;
+import com.agimatec.validation.jsr303.example.XmlEntitySampleBean;
 import com.agimatec.validation.jsr303.resolver.SimpleTraversableResolver;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.util.Set;
 
 /**
  * ValidationParser Tester.
@@ -33,10 +36,7 @@ public class ValidationParserTest extends TestCase
     }
 
     public void testConfigureFromXml() {
-        AgimatecValidatorConfiguration config =
-              Validation.byProvider(AgimatecValidationProvider.class).configure();
-        config.addProperty(VALIDATION_XML_PATH, "sample-validation.xml");
-        ValidatorFactory factory = config.buildValidatorFactory();
+        ValidatorFactory factory = getFactory();
         assertTrue(factory.getMessageInterpolator() instanceof TestMessageInterpolator);
         assertTrue(factory
               .getConstraintValidatorFactory() instanceof TestConstraintValidatorFactory);
@@ -45,8 +45,18 @@ public class ValidationParserTest extends TestCase
         assertNotNull(validator);
     }
 
+    private ValidatorFactory getFactory() {
+        AgimatecValidatorConfiguration config =
+              Validation.byProvider(AgimatecValidationProvider.class).configure();
+        config.addProperty(VALIDATION_XML_PATH, "sample-validation.xml");
+        return config.buildValidatorFactory();
+    }
+
     public void testXmlEntitySample() {
-           // TODO RSt - nyi test sample-constraints.xml
+        XmlEntitySampleBean bean = new XmlEntitySampleBean();
+        Validator validator = getFactory().getValidator();
+        Set<ConstraintViolation<XmlEntitySampleBean>> results = validator.validate(bean);
+        // TODO RSt - add assertions
     }
 
     public static Test suite() {

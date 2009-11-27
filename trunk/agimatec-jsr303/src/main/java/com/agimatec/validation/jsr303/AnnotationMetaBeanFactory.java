@@ -54,16 +54,20 @@ import java.util.Set;
 public class AnnotationMetaBeanFactory implements MetaBeanFactory {
     private static final Log log = LogFactory.getLog(AnnotationMetaBeanFactory.class);
     private static final String ANNOTATION_VALUE = "value";
-    private static final DefaultConstraints defaultConstraints = new DefaultConstraints();
+    private final AgimatecFactoryContext factoryContext;
 
-    private final ConstraintValidatorFactory constraintFactory;
 
-    public AnnotationMetaBeanFactory(ConstraintValidatorFactory constraintFactory) {
-        this.constraintFactory = constraintFactory;
+    public AnnotationMetaBeanFactory(AgimatecFactoryContext factoryContext) {
+        this.factoryContext = factoryContext;
     }
 
-    public static DefaultConstraints getDefaultConstraints() {
-        return defaultConstraints;
+    private ConstraintValidatorFactory getConstraintValidatorFactory() {
+        return factoryContext.getConstraintValidatorFactory();
+    }
+
+    private ConstraintDefaults getDefaultConstraints() {
+        return factoryContext.getFactory().getDefaultConstraints();
+
     }
 
     /**
@@ -129,11 +133,10 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
         Method[] methods = beanClass.getDeclaredMethods();
         for (Method method : methods) {
             String propName = null;
-            if (method.getName().startsWith("get") &&
-                  method.getParameterTypes().length == 0) {
+            if (method.getName().startsWith("get") && method.getParameterTypes().length == 0) {
                 propName = Introspector.decapitalize(method.getName().substring(3));
-            } else if (method.getName().startsWith("is") &&
-                  method.getParameterTypes().length == 0) {
+            } else
+            if (method.getName().startsWith("is") && method.getParameterTypes().length == 0) {
                 propName = Introspector.decapitalize(method.getName().substring(2));
             }
             // setter annotation is NOT supported in the spec
@@ -165,15 +168,14 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
           throws IllegalAccessException, InvocationTargetException {
         boolean changed = false;
         for (Annotation annotation : element.getDeclaredAnnotations()) {
-            changed |= processAnnotation(annotation, prop, metabean, owner, access,
-                  validation);
+            changed |=
+                  processAnnotation(annotation, prop, metabean, owner, access, validation);
         }
         return changed;
     }
 
     private boolean processAnnotation(Annotation annotation, MetaProperty prop,
-                                      MetaBean metabean, Class owner,
-                                      AccessStrategy access,
+                                      MetaBean metabean, Class owner, AccessStrategy access,
                                       AnnotationConstraintBuilder validation)
           throws IllegalAccessException, InvocationTargetException {
         if (annotation instanceof Valid) {
@@ -184,16 +186,15 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
              * policy contains RUNTIME and if the annotation itself is annotated with
              * javax.validation.Constraint.
              */
-            Constraint vcAnno =
-                  annotation.annotationType().getAnnotation(Constraint.class);
+            Constraint vcAnno = annotation.annotationType().getAnnotation(Constraint.class);
             Class<? extends ConstraintValidator<?, ?>>[] validatorClasses;
             if (vcAnno != null) {
                 validatorClasses = vcAnno.validatedBy();
                 if (validatorClasses.length == 0) {
                     validatorClasses = getDefaultConstraintValidator(annotation);
                 }
-                return applyConstraint(annotation, validatorClasses, metabean, prop,
-                      owner, access, validation);
+                return applyConstraint(annotation, validatorClasses, metabean, prop, owner,
+                      access, validation);
             } else {
                 /**
                  * Multi-valued constraints:
@@ -202,8 +203,7 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
                  * whose value element has a return type of an array of
                  * constraint annotations in a special way.
                  */
-                Object result =
-                      SecureActions.getAnnotationValue(annotation, ANNOTATION_VALUE);
+                Object result = SecureActions.getAnnotationValue(annotation, ANNOTATION_VALUE);
                 if (result != null && result instanceof Annotation[]) {
                     boolean changed = false;
                     for (Annotation each : (Annotation[]) result) {
@@ -267,12 +267,11 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
             }
             if (!containsDefault) {
                 throw new GroupDefinitionException(
-                      "Redefined default group sequence must contain " +
-                            beanClass.getName());
+                      "Redefined default group sequence must contain " + beanClass.getName());
             }
             if (log.isDebugEnabled()) {
-                log.debug("Default group sequence for bean " + beanClass.getName() +
-                      " is: " + groupSeq);
+                log.debug("Default group sequence for bean " + beanClass.getName() + " is: " +
+                      groupSeq);
             }
         }
     }
@@ -307,7 +306,7 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
             fillAssignableTypes(type, validatorTypes.keySet(), assignableTypes);
             reduceAssignableTypes(assignableTypes);
             checkOneType(assignableTypes, type, owner, annotation, access);
-            validator = constraintFactory
+            validator = getConstraintValidatorFactory()
                   .getInstance(validatorTypes.get(assignableTypes.get(0)));
             validator.initialize(annotation);
         } else {
@@ -334,8 +333,8 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
         }
     }
 
-    private void checkOneType(List<Type> types, Type targetType, Class owner,
-                              Annotation anno, AccessStrategy access) {
+    private void checkOneType(List<Type> types, Type targetType, Class owner, Annotation anno,
+                              AccessStrategy access) {
 
         if (types.isEmpty()) {
             StringBuilder buf = new StringBuilder()

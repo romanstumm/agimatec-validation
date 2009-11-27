@@ -70,15 +70,12 @@ public final class ConverterUtils {
         });
         converterMap.put(Class.class.getName(), new Converter() {
             public Class<?> fromString(String value) {
-                /**
-                 * Class is represented by the fully qualified class name of the class.
-                 * enhancement: Note that if the raw string is unqualified, default package is taken into account.
-                 */
                 return SecureActions.loadClass(value, getClass());
             }
         });
 
     }
+
 
     /** implementation of spec: 7.1.3. Converting the string representation of a value */
     public static Object fromStringToType(String value, Class<?> type) {

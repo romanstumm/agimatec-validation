@@ -16,13 +16,21 @@
  */
 package com.agimatec.validation.jsr303.xml;
 
-import com.agimatec.validation.jsr303.AnnotationMetaBeanFactory;
+import com.agimatec.validation.jsr303.AgimatecValidatorFactory;
+import com.agimatec.validation.jsr303.ConstraintCached;
+import com.agimatec.validation.jsr303.ConstraintDefaults;
+import com.agimatec.validation.jsr303.ConstraintValidation;
+import com.agimatec.validation.jsr303.util.ConverterUtils;
 import com.agimatec.validation.jsr303.util.SecureActions;
+import com.agimatec.validation.util.AccessStrategy;
+import com.agimatec.validation.util.FieldAccess;
+import com.agimatec.validation.util.MethodAccess;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
+import javax.validation.Payload;
 import javax.validation.ValidationException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -31,7 +39,9 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -45,40 +55,39 @@ import java.util.*;
 public class ValidationMappingParser {
     private static final Log log = LogFactory.getLog(ValidationMappingParser.class);
     private static final String VALIDATION_MAPPING_XSD = "META-INF/validation-mapping-1.0.xsd";
+    private static final String[] RESERVED_PARAMS = {"message", "groups", "payload"};
 
-    private final AnnotationIgnores annotationIgnores;
     private final Set<Class> processedClasses;
     private final Map<Class<?>, List<Class<?>>> defaultSequences;
     private final Map<Class<?>, List<Member>> cascadedMembers;
+    private final Map<Class<?>, List<MetaConstraint<?, ? extends Annotation>>> constraintMap;
+    private final AgimatecValidatorFactory factory;
 
-    public ValidationMappingParser() {
-        annotationIgnores = new AnnotationIgnores();
+    public ValidationMappingParser(AgimatecValidatorFactory factory) {
+        this.factory = factory;
+
         processedClasses = new HashSet<Class>();
         defaultSequences = new HashMap<Class<?>, List<Class<?>>>();
         cascadedMembers = new HashMap<Class<?>, List<Member>>();
+        constraintMap = new HashMap<Class<?>, List<MetaConstraint<?, ? extends Annotation>>>();
     }
 
     /** @param xmlStreams One or more contraints.xml file streams to parse */
     public void processMappingConfig(Set<InputStream> xmlStreams) throws ValidationException {
-        Iterator<InputStream> streams = xmlStreams.iterator();
-        while (streams.hasNext()) {
-            InputStream in = streams.next();
-            ConstraintMappingsType mapping = parseXmlMappings(in);
-            streams.remove(); // remove all that are done!
+        for (InputStream xmlStream : xmlStreams) {
+            ConstraintMappingsType mapping = parseXmlMappings(xmlStream);
 
             String defaultPackage = mapping.getDefaultPackage();
             processConstraintDefinitions(mapping.getConstraintDefinition(), defaultPackage);
             for (BeanType bean : mapping.getBean()) {
                 Class<?> beanClass = loadClass(bean.getClazz(), defaultPackage);
-                if (processedClasses.add(beanClass)) {
-
-                } else {
+                if (!processedClasses.add(beanClass)) {
                     // spec: A given class must not be described more than once amongst all
                     //  the XML mapping descriptors.
                     throw new ValidationException(
                           beanClass.getName() + " has already be configured in xml.");
                 }
-                annotationIgnores
+                getAnnotationIgnores()
                       .setDefaultIgnoreAnnotation(beanClass, bean.isIgnoreAnnotations());
                 processClassLevel(bean.getClassType(), beanClass, defaultPackage);
                 processFieldLevel(bean.getField(), beanClass, defaultPackage);
@@ -130,7 +139,7 @@ public class ValidationMappingParser {
 
         // ignore annotation
         if (classType.isIgnoreAnnotations() != null) {
-            annotationIgnores
+            getAnnotationIgnores()
                   .setIgnoreAnnotationsOnClass(beanClass, classType.isIgnoreAnnotations());
         }
 
@@ -143,10 +152,201 @@ public class ValidationMappingParser {
 
         // constraints
         for (ConstraintType constraint : classType.getConstraint()) {
-//			Constraint<?, ?> cnstraint = createConstraint( constraint, beanClass, null, defaultPackage );
-//			addConstraint( beanClass, metaConstraint );
+            MetaConstraint<?, ?> metaConstraint =
+                  createConstraint(constraint, beanClass, null, defaultPackage);
+            addMetaConstraint(beanClass, metaConstraint);
         }
     }
+
+    private <A extends Annotation, T> MetaConstraint<?, ?> createConstraint(
+          ConstraintType constraint, Class<T> beanClass, Member member,
+          String defaultPackage) {
+        Class<A> annotationClass =
+              (Class<A>) loadClass(constraint.getAnnotation(), defaultPackage);
+        MetaAnnotation<A> annotationDescriptor = new MetaAnnotation<A>(annotationClass);
+
+        if (constraint.getMessage() != null) {
+            annotationDescriptor.setMessage(constraint.getMessage());
+        }
+        annotationDescriptor
+              .setGroups(getGroups(constraint.getGroups(), defaultPackage));
+        annotationDescriptor
+              .setPayload(getPayload(constraint.getPayload(), defaultPackage));
+
+        for (ElementType elementType : constraint.getElement()) {
+            String name = elementType.getName();
+            checkNameIsValid(name);
+            Class<?> returnType = getAnnotationParameterType(annotationClass, name);
+            Object elementValue = getElementValue(elementType, returnType, defaultPackage);
+            annotationDescriptor.putValue(name, elementValue);
+        }
+
+        A annotation = annotationDescriptor.createAnnotation();
+
+        AccessStrategy access = null;
+        if (member instanceof Method) {
+            access = new MethodAccess((Method) member);
+        } else if (member instanceof Field) {
+            access = new FieldAccess((Field) member);
+        }
+
+        // TODO RSt - check parameters
+        ConstraintValidation<A> constraintDescriptor =
+              new ConstraintValidation<A>(null, null, annotation, beanClass, access, false);
+
+        return new MetaConstraint<T, A>(beanClass, member, constraintDescriptor);
+    }
+
+    private void checkNameIsValid(String name) {
+        for (String each : RESERVED_PARAMS) {
+            if (each.equals(name)) {
+                throw new ValidationException(each + " is a reserved parameter name.");
+            }
+        }
+    }
+
+    private <A extends Annotation> Class<?> getAnnotationParameterType(
+          Class<A> annotationClass, String name) {
+        Method m = SecureActions.getMethod(annotationClass, name);
+        if (m == null) {
+            throw new ValidationException("Annotation of type " + annotationClass.getName() +
+                  " does not contain a parameter " + name + ".");
+        }
+        return m.getReturnType();
+    }
+
+    private Object getElementValue(ElementType elementType, Class<?> returnType,
+                                   String defaultPackage) {
+        removeEmptyContentElements(elementType);
+
+        boolean isArray = returnType.isArray();
+        if (!isArray) {
+            if (elementType.getContent().size() != 1) {
+                throw new ValidationException(
+                      "Attempt to specify an array where single value is expected.");
+            }
+            return getSingleValue(elementType.getContent().get(0), returnType, defaultPackage);
+        } else {
+            List<Object> values = new ArrayList<Object>();
+            for (Serializable s : elementType.getContent()) {
+                values.add(getSingleValue(s, returnType.getComponentType(), defaultPackage));
+            }
+            return values.toArray(
+                  (Object[]) Array.newInstance(returnType.getComponentType(), values.size()));
+        }
+    }
+
+    private void removeEmptyContentElements(ElementType elementType) {
+        List<Serializable> contentToDelete = new ArrayList<Serializable>();
+        for (Serializable content : elementType.getContent()) {
+            if (content instanceof String && ((String) content).matches("[\\n ].*")) {
+                contentToDelete.add(content);
+            }
+        }
+        elementType.getContent().removeAll(contentToDelete);
+    }
+
+    private Object getSingleValue(Serializable serializable, Class<?> returnType,
+                                  String defaultPackage) {
+
+        Object returnValue;
+        if (serializable instanceof String) {
+            String value = (String) serializable;
+            returnValue = convertToResultType(returnType, value, defaultPackage);
+        } else if (serializable instanceof JAXBElement &&
+              ((JAXBElement) serializable).getDeclaredType()
+                    .equals(String.class)) {
+            JAXBElement<?> elem = (JAXBElement<?>) serializable;
+            String value = (String) elem.getValue();
+            returnValue = convertToResultType(returnType, value, defaultPackage);
+        } else if (serializable instanceof JAXBElement &&
+              ((JAXBElement) serializable).getDeclaredType()
+                    .equals(AnnotationType.class)) {
+            JAXBElement<?> elem = (JAXBElement<?>) serializable;
+            AnnotationType annotationType = (AnnotationType) elem.getValue();
+            try {
+                Class<Annotation> annotationClass = (Class<Annotation>) returnType;
+                returnValue =
+                      createAnnotation(annotationType, annotationClass, defaultPackage);
+            } catch (ClassCastException e) {
+                throw new ValidationException("Unexpected parameter value");
+            }
+        } else {
+            throw new ValidationException("Unexpected parameter value");
+        }
+        return returnValue;
+
+    }
+
+    private Object convertToResultType(Class<?> returnType, String value,
+                                       String defaultPackage) {
+        /**
+         * Class is represented by the fully qualified class name of the class.
+         * spec: Note that if the raw string is unqualified,
+         * default package is taken into account.
+         */
+        if (returnType.equals(Class.class)) {
+            value = toQualifiedClassName(value, defaultPackage);
+        }
+        return ConverterUtils.fromStringToType(value, returnType);
+    }
+
+    private <A extends Annotation> Annotation createAnnotation(AnnotationType annotationType,
+                                                               Class<A> returnType,
+                                                               String defaultPackage) {
+        MetaAnnotation<A> metaAnnotation = new MetaAnnotation<A>(returnType);
+        for (ElementType elementType : annotationType.getElement()) {
+            String name = elementType.getName();
+            Class<?> parameterType = getAnnotationParameterType(returnType, name);
+            Object elementValue = getElementValue(elementType, parameterType, defaultPackage);
+            metaAnnotation.putValue(name, elementValue);
+        }
+        return metaAnnotation.createAnnotation();
+    }
+
+    private Class<?>[] getGroups(GroupsType groupsType, String defaultPackage) {
+        if (groupsType == null) {
+            return new Class[]{};
+        }
+
+        List<Class<?>> groupList = new ArrayList<Class<?>>();
+        for (JAXBElement<String> groupClass : groupsType.getValue()) {
+            groupList.add(loadClass(groupClass.getValue(), defaultPackage));
+        }
+        return groupList.toArray(new Class[groupList.size()]);
+    }
+
+
+    private Class<? extends Payload>[] getPayload(PayloadType payloadType,
+                                                  String defaultPackage) {
+        if (payloadType == null) {
+            return new Class[]{};
+        }
+
+        List<Class<? extends Payload>> payloadList = new ArrayList<Class<? extends Payload>>();
+        for (JAXBElement<String> groupClass : payloadType.getValue()) {
+            Class<?> payload = loadClass(groupClass.getValue(), defaultPackage);
+            if (!Payload.class.isAssignableFrom(payload)) {
+                throw new ValidationException("Specified payload class " + payload.getName() +
+                      " does not implement javax.validation.Payload");
+            } else {
+                payloadList.add((Class<? extends Payload>) payload);
+            }
+        }
+        return payloadList.toArray(new Class[payloadList.size()]);
+    }
+
+    private void addMetaConstraint(Class<?> beanClass, MetaConstraint<?, ?> metaConstraint) {
+        if (constraintMap.containsKey(beanClass)) {
+            constraintMap.get(beanClass).add(metaConstraint);
+        } else {
+            List<MetaConstraint<?, ? extends Annotation>> constraintList =
+                  new ArrayList<MetaConstraint<?, ? extends Annotation>>();
+            constraintList.add(metaConstraint);
+            constraintMap.put(beanClass, constraintList);
+        }
+    }
+
 
     private List<Class<?>> createGroupSequence(GroupSequenceType groupSequenceType,
                                                String defaultPackage) {
@@ -179,7 +379,8 @@ When ignore-annotations is true, field-level Bean Validation annotations on the 
             String fieldName = fieldType.getName();
             if (fieldNames.contains(fieldName)) {
                 throw new ValidationException(fieldName +
-                      " is defined more than once in mapping xml for bean " + beanClass.getName());
+                      " is defined more than once in mapping xml for bean " +
+                      beanClass.getName());
             } else {
                 fieldNames.add(fieldName);
             }
@@ -193,7 +394,7 @@ When ignore-annotations is true, field-level Bean Validation annotations on the 
             boolean ignoreFieldAnnotation = fieldType.isIgnoreAnnotations() == null ? false :
                   fieldType.isIgnoreAnnotations();
             if (ignoreFieldAnnotation) {
-                annotationIgnores.setIgnoreAnnotationsOnMember(field);
+                getAnnotationIgnores().setIgnoreAnnotationsOnMember(field);
             }
 
             // valid
@@ -202,10 +403,10 @@ When ignore-annotations is true, field-level Bean Validation annotations on the 
             }
 
             // constraints
-            for (ConstraintType constraint : fieldType.getConstraint()) {
-//                Constraint<?, ?> constraint =
-//                      createConstraint(constraint, beanClass, field, defaultPackage);
-//                addConstraint(beanClass, metaConstraint);
+            for (ConstraintType constraintType : fieldType.getConstraint()) {
+                MetaConstraint<?, ?> constraint =
+                      createConstraint(constraintType, beanClass, field, defaultPackage);
+                addMetaConstraint(beanClass, constraint);
             }
         }
     }
@@ -240,11 +441,12 @@ nored (including the @Valid). When ignore-annotations is false:
             String getterName = getterType.getName();
             if (getterNames.contains(getterName)) {
                 throw new ValidationException(getterName +
-                      " is defined more than once in mapping xml for bean " + beanClass.getName());
+                      " is defined more than once in mapping xml for bean " +
+                      beanClass.getName());
             } else {
                 getterNames.add(getterName);
             }
-            final Method method = SecureActions.getMethod(beanClass, getterName);
+            final Method method = SecureActions.getGetter(beanClass, getterName);
             if (method == null) {
                 throw new ValidationException(
                       beanClass.getName() + " does not contain the property  " + getterName);
@@ -254,7 +456,7 @@ nored (including the @Valid). When ignore-annotations is false:
             boolean ignoreGetterAnnotation = getterType.isIgnoreAnnotations() == null ? false :
                   getterType.isIgnoreAnnotations();
             if (ignoreGetterAnnotation) {
-                annotationIgnores.setIgnoreAnnotationsOnMember(method);
+                getAnnotationIgnores().setIgnoreAnnotationsOnMember(method);
             }
 
             // valid
@@ -263,10 +465,10 @@ nored (including the @Valid). When ignore-annotations is false:
             }
 
             // constraints
-            for (ConstraintType constraint : getterType.getConstraint()) {
-//                Constraint<?, ?> metaConstraint =
-//                      createConstraint(constraint, beanClass, method, defaultPackage);
-//                addConstraint(beanClass, metaConstraint);
+            for (ConstraintType constraintType : getterType.getConstraint()) {
+                MetaConstraint<?, ?> metaConstraint =
+                      createConstraint(constraintType, beanClass, method, defaultPackage);
+                addMetaConstraint(beanClass, metaConstraint);
             }
         }
     }
@@ -282,14 +484,6 @@ If an XML constraint declaration is missing mandatory elements, or if it contain
 not part of the constraint definition, a ValidationException is raised.
      */
 
-    /*
-If include-existing-validator is set to false, ConstraintValidator defined on the constraint annotation are ig-
-nored. If set to true, the list of ConstraintValidators described in XML are concatenated to the list of Con-
-straintValidator described on the annotation to form a new array of ConstraintValidator evaluated. Annota-
-tion based ConstraintValidator come before XML based ConstraintValidatot in the array. The new list is re-
-turned by ConstraintDescriptor.getConstraintValidatorClasses().
-    */
-
     private void processConstraintDefinitions(
           List<ConstraintDefinitionType> constraintDefinitionList, String defaultPackage) {
         for (ConstraintDefinitionType constraintDefinition : constraintDefinitionList) {
@@ -302,10 +496,19 @@ turned by ConstraintDescriptor.getConstraintValidatorClasses().
             Class<? extends Annotation> annotationClass = (Class<? extends Annotation>) clazz;
 
             ValidatedByType validatedByType = constraintDefinition.getValidatedBy();
-            List<Class<? extends ConstraintValidator<? extends Annotation, ?>>> classes =
-                  new ArrayList<Class<? extends ConstraintValidator<? extends Annotation, ?>>>();
+            List<Class<? extends ConstraintValidator>> classes =
+                  new ArrayList<Class<? extends ConstraintValidator>>();
+            /*
+             If include-existing-validator is set to false,
+             ConstraintValidator defined on the constraint annotation are ignored.
+              */
             if (validatedByType.isIncludeExistingValidators() != null &&
                   validatedByType.isIncludeExistingValidators()) {
+                /*
+                 If set to true, the list of ConstraintValidators described in XML
+                 are concatenated to the list of ConstraintValidator described on the
+                 annotation to form a new array of ConstraintValidator evaluated.
+                 */
                 classes
                       .addAll(findConstraintValidatorClasses(annotationClass));
             }
@@ -320,10 +523,19 @@ turned by ConstraintDescriptor.getConstraintValidatorClasses().
                           validatorClass + " is not a constraint validator class");
                 }
 
-                classes.add(validatorClass);
+                /*
+                Annotation based ConstraintValidator come before XML based
+                ConstraintValidator in the array. The new list is returned
+                by ConstraintDescriptor.getConstraintValidatorClasses().
+                 */
+                if (!classes.contains(validatorClass)) classes.add(validatorClass);
             }
-            /*constraintHelper.addConstraintValidatorDefinition(annotationClass,
-                  classes);*/
+            if (getConstraintsCache().containsConstraintValidator(annotationClass)) {
+                throw new ValidationException("Constraint validator for " +
+                      annotationClass.getName() + " already configured.");
+            } else {
+                getConstraintsCache().putConstraintValidator(annotationClass, classes);
+            }
         }
     }
 
@@ -332,8 +544,8 @@ turned by ConstraintDescriptor.getConstraintValidatorClasses().
         List<Class<? extends ConstraintValidator<? extends Annotation, ?>>> classes =
               new ArrayList<Class<? extends ConstraintValidator<? extends Annotation, ?>>>();
 
-        Class<? extends ConstraintValidator<?, ?>>[] validator = AnnotationMetaBeanFactory
-              .getDefaultConstraints().getValidatorClasses(annotationType);
+        Class<? extends ConstraintValidator<?, ?>>[] validator =
+              getDefaultConstraints().getValidatorClasses(annotationType);
         if (validator != null) {
             classes
                   .addAll(Arrays.asList(validator));
@@ -347,14 +559,30 @@ turned by ConstraintDescriptor.getConstraintValidatorClasses().
     }
 
     private Class<?> loadClass(String className, String defaultPackage) {
+        return SecureActions
+              .loadClass(toQualifiedClassName(className, defaultPackage), this.getClass());
+    }
+
+    private String toQualifiedClassName(String className, String defaultPackage) {
         if (!isQualifiedClass(className)) {
             className = defaultPackage + "." + className;
         }
-        return SecureActions.loadClass(className, this.getClass());
+        return className;
     }
 
     private boolean isQualifiedClass(String clazz) {
         return clazz.contains(".");
     }
 
+    private AnnotationIgnores getAnnotationIgnores() {
+        return factory.getAnnotationIgnores();
+    }
+
+    private ConstraintDefaults getDefaultConstraints() {
+        return factory.getDefaultConstraints();
+    }
+
+    private ConstraintCached getConstraintsCache() {
+        return factory.getConstraintsCache();
+    }
 }

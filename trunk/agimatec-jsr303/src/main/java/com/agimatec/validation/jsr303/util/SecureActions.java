@@ -22,6 +22,7 @@ import com.agimatec.validation.util.PrivilegedActions;
 import org.apache.commons.lang.StringUtils;
 
 import javax.validation.ValidationException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -100,7 +101,7 @@ public class SecureActions extends PrivilegedActions {
      *
      * @return Returns the method or null if not found.
      */
-    public static Method getMethod(final Class<?> clazz, final String methodName) {
+    public static Method getGetter(final Class<?> clazz, final String methodName) {
         return run(new PrivilegedAction<Method>() {
             public Method run() {
                 try {
@@ -117,4 +118,38 @@ public class SecureActions extends PrivilegedActions {
         });
 
     }
+
+    public static Method getMethod(final Class<?> clazz, final String methodName) {
+        return run(new PrivilegedAction<Method>() {
+            public Method run() {
+                try {
+                    return clazz.getMethod(methodName);
+                } catch (NoSuchMethodException e) {
+                    return null;
+                }
+            }
+        });
+    }
+
+    public static Method[] getDeclaredMethods(final Class<?> clazz) {
+        return run(new PrivilegedAction<Method[]>() {
+            public Method[] run() {
+                return clazz.getDeclaredMethods();
+            }
+        });
+    }
+
+    public static <T> Constructor<T> getConstructor(final Class<T> clazz,
+                                                    final Class<?>... params) {
+        return run(new PrivilegedAction<Constructor<T>>() {
+            public Constructor<T> run() {
+                try {
+                    return clazz.getConstructor(params);
+                } catch (NoSuchMethodException e) {
+                    return null;
+                }
+            }
+        });
+    }
+
 }

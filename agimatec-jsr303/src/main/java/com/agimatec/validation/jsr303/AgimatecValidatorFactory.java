@@ -18,20 +18,16 @@
  */
 package com.agimatec.validation.jsr303;
 
-import com.agimatec.validation.IntrospectorMetaBeanFactory;
-import com.agimatec.validation.MetaBeanBuilder;
-import com.agimatec.validation.MetaBeanFactory;
-import com.agimatec.validation.MetaBeanManager;
 import com.agimatec.validation.jsr303.util.SecureActions;
-import com.agimatec.validation.jsr303.xml.ValidationMappingMetaBeanFactory;
-import com.agimatec.validation.xml.XMLMetaBeanFactory;
+import com.agimatec.validation.jsr303.xml.AnnotationIgnores;
+import com.agimatec.validation.jsr303.xml.ValidationMappingParser;
 import org.apache.commons.lang.ClassUtils;
 
 import javax.validation.*;
 import javax.validation.bootstrap.ProviderSpecificBootstrap;
 import javax.validation.spi.ConfigurationState;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Description: a factory is a complete configurated object that can create validators<br/>
@@ -42,13 +38,28 @@ import java.util.List;
  * Copyright: Agimatec GmbH
  */
 public class AgimatecValidatorFactory
-      implements ValidatorFactory, Cloneable, AgimatecValidatorConfiguration.Properties {
+      implements ValidatorFactory, Cloneable {
     private static AgimatecValidatorFactory DEFAULT_FACTORY;
+    private static final ConstraintDefaults defaultConstraints = new ConstraintDefaults();
 
-    private MetaBeanManager metaBeanManager;
     private MessageInterpolator messageResolver;
     private TraversableResolver traversableResolver;
     private ConstraintValidatorFactory constraintValidatorFactory;
+    private final Map<String,String> properties;
+    private final AnnotationIgnores annotationIgnores = new AnnotationIgnores();
+    private final ConstraintCached constraintsCache = new ConstraintCached();
+
+    public ConstraintDefaults getDefaultConstraints() {
+        return defaultConstraints;
+    }
+
+    public AnnotationIgnores getAnnotationIgnores() {
+        return annotationIgnores;
+    }
+
+    public ConstraintCached getConstraintsCache() {
+        return constraintsCache;
+    }
 
     /** convenience to retrieve a default global AgimatecValidatorFactory */
     public static AgimatecValidatorFactory getDefault() {
@@ -63,37 +74,17 @@ public class AgimatecValidatorFactory
     }
 
     public AgimatecValidatorFactory(ConfigurationState configuration) {
-        setMetaBeanManager(buildMetaBeanManager(configuration));
         setMessageInterpolator(configuration.getMessageInterpolator());
         setTraversableResolver(configuration.getTraversableResolver());
         setConstraintValidatorFactory(configuration.getConstraintValidatorFactory());
+        properties = new HashMap<String,String>(configuration.getProperties());
+
+        ValidationMappingParser parser = new ValidationMappingParser(this);
+        parser.processMappingConfig(configuration.getMappingStreams());
     }
 
-    /**
-     * Create MetaBeanManager that
-     * uses JSR303-XML + JSR303-Annotations
-     * to build meta-data from.
-     */
-    private MetaBeanManager buildMetaBeanManager(ConfigurationState configuration) {
-        // this is relevant: xml before annotations
-        // (because ignore-annotations settings in xml)
-        List<MetaBeanFactory> builders = new ArrayList(4);
-        if (Boolean.parseBoolean(configuration.getProperties().get(ENABLE_INTROSPECTOR))) {
-            builders.add(new IntrospectorMetaBeanFactory());
-        }
-
-        if (!configuration.isIgnoreXmlConfiguration()) {
-            builders.add(new ValidationMappingMetaBeanFactory(configuration));
-        }
-
-        builders.add(new AnnotationMetaBeanFactory(
-              configuration.getConstraintValidatorFactory()));
-
-        if (Boolean.parseBoolean(configuration.getProperties().get(ENABLE_METABEANS_XML))) {
-            builders.add(new XMLMetaBeanFactory());
-        }
-        return new MetaBeanManager(
-              new MetaBeanBuilder(builders.toArray(new MetaBeanFactory[builders.size()])));
+    public Map<String, String> getProperties() {
+        return properties;
     }
 
     protected MessageInterpolator getDefaultMessageInterpolator() {
@@ -124,20 +115,12 @@ public class AgimatecValidatorFactory
         }
     }
 
-    public final void setMetaBeanManager(MetaBeanManager metaBeanManager) {
-        this.metaBeanManager = metaBeanManager;
-    }
-
     public final void setMessageInterpolator(MessageInterpolator messageResolver) {
         this.messageResolver = messageResolver;
     }
 
     public MessageInterpolator getMessageInterpolator() {
         return ((messageResolver != null) ? messageResolver : getDefaultMessageInterpolator());
-    }
-
-    public MetaBeanManager getMetaBeanManager() {
-        return metaBeanManager;
     }
 
     public final void setTraversableResolver(TraversableResolver traversableResolver) {
@@ -182,4 +165,5 @@ public class AgimatecValidatorFactory
             }
         }
     }
+
 }

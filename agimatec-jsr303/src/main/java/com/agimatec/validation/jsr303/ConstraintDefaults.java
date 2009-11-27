@@ -36,13 +36,13 @@ import java.util.*;
  * Time: 15:12:23 <br/>
  * Copyright: Agimatec GmbH
  */
-public class DefaultConstraints {
-    private static final Log log = LogFactory.getLog(DefaultConstraints.class);
+public class ConstraintDefaults {
+    private static final Log log = LogFactory.getLog(ConstraintDefaults.class);
     private static final String DEFAULT_CONSTAINTS =
           "com/agimatec/validation/jsr303/DefaultConstraints.properties";
     protected Map<String, Class[]> defaultConstraints;
 
-    public DefaultConstraints() {
+    public ConstraintDefaults() {
         defaultConstraints = loadDefaultConstraints(DEFAULT_CONSTAINTS);
     }
 

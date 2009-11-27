@@ -69,7 +69,7 @@ public class ClassValidator extends BeanValidator implements Validator {
         if (object == null) throw new IllegalArgumentException("cannot validate null");
         try {
             final GroupValidationContext context =
-                  createContext(factoryContext.getFactory().getMetaBeanManager()
+                  createContext(factoryContext.getMetaBeanManager()
                         .findForClass(object.getClass()), object, groupArray);
             final ConstraintValidationListener result = context.getListener();
             final Groups groups = context.getGroups();

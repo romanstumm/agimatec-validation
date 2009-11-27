@@ -40,8 +40,9 @@ import java.util.Set;
  */
 public class GroupSequenceTest extends TestCase {
     public void testGroupSequence1() {
-        MetaBean metaBean = AgimatecValidatorFactory.getDefault().getMetaBeanManager()
-              .findForClass(GInterface1.class);
+        MetaBean metaBean =
+              AgimatecValidatorFactory.getDefault().usingContext().getMetaBeanManager()
+                    .findForClass(GInterface1.class);
         List<Group> gseq = metaBean.getFeature(Jsr303Features.Bean.GROUP_SEQUENCE);
         Assert.assertNotNull(gseq);
         Assert.assertEquals(1, gseq.size());
@@ -49,8 +50,9 @@ public class GroupSequenceTest extends TestCase {
     }
 
     public void testGroupSequence2() {
-        MetaBean metaBean = AgimatecValidatorFactory.getDefault().getMetaBeanManager()
-              .findForClass(GClass1.class);
+        MetaBean metaBean =
+              AgimatecValidatorFactory.getDefault().usingContext().getMetaBeanManager()
+                    .findForClass(GClass1.class);
         List<Group> gseq = metaBean.getFeature(Jsr303Features.Bean.GROUP_SEQUENCE);
         Assert.assertNotNull(gseq);
         Assert.assertEquals(1, gseq.size());
@@ -58,8 +60,9 @@ public class GroupSequenceTest extends TestCase {
     }
 
     public void testGroupSequence3() {
-        MetaBean metaBean = AgimatecValidatorFactory.getDefault().getMetaBeanManager()
-              .findForClass(GClass2.class);
+        MetaBean metaBean =
+              AgimatecValidatorFactory.getDefault().usingContext().getMetaBeanManager()
+                    .findForClass(GClass2.class);
         List<Group> gseq = metaBean.getFeature(Jsr303Features.Bean.GROUP_SEQUENCE);
         Assert.assertNotNull(gseq);
         Assert.assertEquals(2, gseq.size());
@@ -68,8 +71,9 @@ public class GroupSequenceTest extends TestCase {
     }
 
     public void testGroupSequence4() {
-        MetaBean metaBean = AgimatecValidatorFactory.getDefault().getMetaBeanManager()
-              .findForClass(GClass3.class);
+        MetaBean metaBean =
+              AgimatecValidatorFactory.getDefault().usingContext().getMetaBeanManager()
+                    .findForClass(GClass3.class);
         List<Group> gseq = metaBean.getFeature(Jsr303Features.Bean.GROUP_SEQUENCE);
         Assert.assertNotNull(gseq);
         Assert.assertEquals(2, gseq.size());
@@ -97,34 +101,29 @@ public class GroupSequenceTest extends TestCase {
         author.setFirstName("Gavin");
         author.setLastName("King");
 
-        constraintViolations =
-              validator.validate(book, First.class, Second.class, Last.class);
+        constraintViolations = validator.validate(book, First.class, Second.class, Last.class);
         ConstraintViolation constraintViolation = constraintViolations.iterator().next();
         assertEquals(1, constraintViolations.size());
-        assertEquals("may not be empty",
-              constraintViolation.getMessage());
+        assertEquals("may not be empty", constraintViolation.getMessage());
         assertEquals(book, constraintViolation.getRootBean());
-        assertEquals(book.getTitle(),
-              constraintViolation.getInvalidValue());
+        assertEquals(book.getTitle(), constraintViolation.getInvalidValue());
         assertEquals("title", constraintViolation.getPropertyPath().toString());
 
         book.setTitle("My fault");
         book.setSubtitle("confessions of a president - a book for a nice price");
 
-        constraintViolations =
-              validator.validate(book, First.class, Second.class, Last.class);
+        constraintViolations = validator.validate(book, First.class, Second.class, Last.class);
         assertEquals(1, constraintViolations.size());
         constraintViolation = constraintViolations.iterator().next();
         assertEquals("size must be between 0 and 30", constraintViolation.getMessage());
-        assertEquals( book, constraintViolation.getRootBean());
+        assertEquals(book, constraintViolation.getRootBean());
         assertEquals(book.getSubtitle(), constraintViolation.getInvalidValue());
         assertEquals("subtitle", constraintViolation.getPropertyPath().toString());
 
         book.setSubtitle("Capitalism in crisis");
         author.setCompany("1234567890ß9876543212578909876542245678987432");
 
-        constraintViolations =
-              validator.validate(book);
+        constraintViolations = validator.validate(book);
         constraintViolation = constraintViolations.iterator().next();
         assertEquals(1, constraintViolations.size());
         assertEquals("size must be between 0 and 40", constraintViolation.getMessage());
@@ -134,8 +133,7 @@ public class GroupSequenceTest extends TestCase {
 
         author.setCompany("agimatec");
 
-        constraintViolations =
-              validator.validate(book, First.class, Second.class, Last.class);
+        constraintViolations = validator.validate(book, First.class, Second.class, Last.class);
         assertEquals(0, constraintViolations.size());
     }
 

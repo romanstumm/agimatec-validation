@@ -18,9 +18,16 @@
  */
 package com.agimatec.validation.jsr303;
 
-import com.agimatec.validation.MetaBeanFinder;
+import com.agimatec.validation.IntrospectorMetaBeanFactory;
+import com.agimatec.validation.MetaBeanBuilder;
+import com.agimatec.validation.MetaBeanFactory;
+import com.agimatec.validation.MetaBeanManager;
+import com.agimatec.validation.jsr303.xml.ValidationMappingMetaBeanFactory;
+import com.agimatec.validation.xml.XMLMetaBeanFactory;
 
 import javax.validation.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Description: Represents the context that is used to create <code>ClassValidator</code>
@@ -31,17 +38,25 @@ import javax.validation.*;
  * Copyright: Agimatec GmbH
  */
 public class AgimatecFactoryContext implements ValidatorContext {
+    private final MetaBeanManager metaBeanManager;
+
     private MessageInterpolator messageInterpolator;
     private TraversableResolver traversableResolver;
     private AgimatecValidatorFactory factory;
     private ConstraintValidatorFactory constraintValidatorFactory;
 
+
     public AgimatecFactoryContext(AgimatecValidatorFactory factory) {
         this.factory = factory;
+        this.metaBeanManager = buildMetaBeanManager();
     }
 
     public AgimatecValidatorFactory getFactory() {
         return factory;
+    }
+
+    public final MetaBeanManager getMetaBeanManager() {
+        return metaBeanManager;
     }
 
     public ValidatorContext messageInterpolator(MessageInterpolator messageInterpolator) {
@@ -54,7 +69,6 @@ public class AgimatecFactoryContext implements ValidatorContext {
         return this;
     }
 
-    // TODO RSt - not used yet
     public ValidatorContext constraintValidatorFactory(
           ConstraintValidatorFactory constraintValidatorFactory) {
         this.constraintValidatorFactory = constraintValidatorFactory;
@@ -62,16 +76,17 @@ public class AgimatecFactoryContext implements ValidatorContext {
     }
 
     public ConstraintValidatorFactory getConstraintValidatorFactory() {
-        return constraintValidatorFactory == null ?
-              factory.getConstraintValidatorFactory() : constraintValidatorFactory;
+        return constraintValidatorFactory == null ? factory.getConstraintValidatorFactory() :
+              constraintValidatorFactory;
     }
 
     public Validator getValidator() {
-        return new ClassValidator(this);
-    }
-
-    public MetaBeanFinder getMetaBeanManager() {
-        return factory.getMetaBeanManager();
+        ClassValidator validator = new ClassValidator(this);
+        if (Boolean.getBoolean(factory.getProperties().get(
+              AgimatecValidatorConfiguration.Properties.TREAT_MAPS_LIKE_BEANS))) {
+            validator.setTreatMapsLikeBeans(true);
+        }
+        return validator;
     }
 
     public MessageInterpolator getMessageInterpolator() {
@@ -82,5 +97,29 @@ public class AgimatecFactoryContext implements ValidatorContext {
     public TraversableResolver getTraversableResolver() {
         return traversableResolver == null ? factory.getTraversableResolver() :
               traversableResolver;
+    }
+
+    /**
+     * Create MetaBeanManager that
+     * uses JSR303-XML + JSR303-Annotations
+     * to build meta-data from.
+     */
+    private MetaBeanManager buildMetaBeanManager() {
+        // this is relevant: xml before annotations
+        // (because ignore-annotations settings in xml)
+        List<MetaBeanFactory> builders = new ArrayList(4);
+        if (Boolean.parseBoolean(factory.getProperties().get(
+              AgimatecValidatorConfiguration.Properties.ENABLE_INTROSPECTOR))) {
+            builders.add(new IntrospectorMetaBeanFactory());
+        }
+        builders.add(new ValidationMappingMetaBeanFactory(this));
+        builders.add(new AnnotationMetaBeanFactory(this));
+
+        if (Boolean.parseBoolean(factory.getProperties().get(
+              AgimatecValidatorConfiguration.Properties.ENABLE_METABEANS_XML))) {
+            builders.add(new XMLMetaBeanFactory());
+        }
+        return new MetaBeanManager(
+              new MetaBeanBuilder(builders.toArray(new MetaBeanFactory[builders.size()])));
     }
 }

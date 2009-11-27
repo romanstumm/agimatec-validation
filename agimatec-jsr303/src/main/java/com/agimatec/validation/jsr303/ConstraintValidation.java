@@ -41,15 +41,16 @@ import java.util.*;
  * Time: 17:31:36 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-public class ConstraintValidation implements Validation, ConstraintDescriptor {
+public class ConstraintValidation<T extends Annotation>
+      implements Validation, ConstraintDescriptor<T> {
     private static final String ANNOTATION_MESSAGE = "message";
     private final ConstraintValidator validator;
-    private final Annotation annotation; // for metadata request API
+    private final T annotation; // for metadata request API
     private final AccessStrategy access;
     private final boolean reportFromComposite;
     private final Map<String, Object> attributes;
 
-    private Set<ConstraintValidation> composedConstraints;
+    private Set<ConstraintValidation<?>> composedConstraints;
 
     /**
      * the owner is the type where the validation comes from.
@@ -58,8 +59,7 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
     private final Class owner;
     private Set<Class<?>> groups;
     private Set<Class<? extends Payload>> payload;
-    private Class<? extends ConstraintValidator<?, ?>>[] validatorClasses;
-
+    private Class<? extends ConstraintValidator<T, ?>>[] validatorClasses;
 
     /**
      * @param validator  - the constraint validator
@@ -68,9 +68,9 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
      *                   (class, interface, annotation type)
      * @param access     - how to access the value
      */
-    protected ConstraintValidation(
-          Class<? extends ConstraintValidator<?, ?>>[] validatorClasses,
-          ConstraintValidator validator, Annotation annotation, Class owner,
+    public ConstraintValidation(
+          Class<? extends ConstraintValidator<T, ?>>[] validatorClasses,
+          ConstraintValidator validator, T annotation, Class owner,
           AccessStrategy access, boolean reportFromComposite) {
         this.attributes = new HashMap();
         this.validatorClasses = validatorClasses;
@@ -172,8 +172,7 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
                         access.getElementType())) return false;
         } catch (RuntimeException e) {
             throw new ValidationException(
-                  "Error in TraversableResolver.isReachable() for " + context.getBean(),
-                  e);
+                  "Error in TraversableResolver.isReachable() for " + context.getBean(), e);
         }
 
         try {
@@ -221,7 +220,7 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
     }
 
     /** TODO RSt - generate annotation when descriptor is based on XML */
-    public Annotation getAnnotation() {
+    public T getAnnotation() {
         return annotation;
     }
 
@@ -236,11 +235,11 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
         return attributes;
     }
 
-    public Set<ConstraintDescriptor> getComposingConstraints() {
+    public Set<ConstraintDescriptor<?>> getComposingConstraints() {
         return composedConstraints == null ? Collections.EMPTY_SET : composedConstraints;
     }
 
-    Set<ConstraintValidation> getComposingValidations() {
+    Set<ConstraintValidation<?>> getComposingValidations() {
         return composedConstraints == null ? Collections.EMPTY_SET : composedConstraints;
     }
 
@@ -252,7 +251,7 @@ public class ConstraintValidation implements Validation, ConstraintDescriptor {
         return payload;
     }
 
-    public List<Class<? extends ConstraintValidator<?, ?>>> getConstraintValidatorClasses() {
+    public List<Class<? extends ConstraintValidator<T, ?>>> getConstraintValidatorClasses() {
         return Arrays.asList(validatorClasses);
     }
 

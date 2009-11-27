@@ -57,7 +57,6 @@ public class BootstrapTest extends TestCase {
         AgimatecValidatorFactory factory2 =
                 (AgimatecValidatorFactory) Validation.buildDefaultValidatorFactory();
         Assert.assertTrue(factory2 != factory);
-        Assert.assertTrue(factory2.getMetaBeanManager() != factory.getMetaBeanManager());
         Assert.assertTrue(factory2.getMessageInterpolator() != factory.getMessageInterpolator());
 
     }

@@ -45,7 +45,7 @@ final class AnnotationConstraintBuilder {
     private static final String ANNOTATION_PAYLOAD = "payload";
     private static final String ANNOTATION_GROUPS = "groups";
 
-    private final ConstraintValidation constraintValidation;
+    private final ConstraintValidation<?> constraintValidation;
     private List<ConstraintOverrides> overrides;
 
     public AnnotationConstraintBuilder(
@@ -180,7 +180,7 @@ final class AnnotationConstraintBuilder {
 
     private int computeIndex(ConstraintValidation composite) {
         int idx = -1;
-        for (ConstraintValidation each : constraintValidation.getComposingValidations()) {
+        for (ConstraintValidation<?> each : constraintValidation.getComposingValidations()) {
             if (each.getAnnotation().annotationType() ==
                   composite.getAnnotation().annotationType()) {
                 idx++;

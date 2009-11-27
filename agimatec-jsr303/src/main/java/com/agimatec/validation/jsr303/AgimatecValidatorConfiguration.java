@@ -31,8 +31,9 @@ import javax.validation.Configuration;
 public interface AgimatecValidatorConfiguration
       extends Configuration<AgimatecValidatorConfiguration> {
 
-    // BEGIN PROPERTY NAMES
-
+    /**
+     * proprietary property keys for {@link ConfigurationImpl}  
+     */
     public interface Properties {
         /**
          * the location where to look for the validation.xml file.
@@ -57,6 +58,10 @@ public interface AgimatecValidatorConfiguration
          */
         String ENABLE_METABEANS_XML = "agimatec.enable-metabeans-xml";
 
-//   BeanValidator.treatMapsLikeBeans: String TREAT_MAPS_LIKE_BEANS = "agimatec.treatMapsLikeBeans";
+        /**
+         * BeanValidator.treatMapsLikeBeans.
+         * default: false 
+         */
+         String TREAT_MAPS_LIKE_BEANS = "agimatec.treat-maps-like-beans";
     }
 }

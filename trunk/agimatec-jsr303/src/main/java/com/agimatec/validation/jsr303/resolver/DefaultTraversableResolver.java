@@ -36,7 +36,7 @@ public class DefaultTraversableResolver implements TraversableResolver, CachingR
 
     /** Class to instantiate in case JPA 2 is on the classpath. */
     private static final String JPA_AWARE_TRAVERSABLE_RESOLVER_CLASSNAME =
-          "com.agimatec.validation.jsr303.JPATraversableResolver";
+          "com.agimatec.validation.jsr303.resolver.JPATraversableResolver";
 
 
     private TraversableResolver jpaTR;
@@ -81,7 +81,7 @@ public class DefaultTraversableResolver implements TraversableResolver, CachingR
         } catch (Exception e) {
             log.warn("Unable to load or instanciate JPA aware resolver " +
                   JPA_AWARE_TRAVERSABLE_RESOLVER_CLASSNAME +
-                  ". All properties will per default be traversable.");
+                  ". All properties will per default be traversable.", e);
         }
     }
 

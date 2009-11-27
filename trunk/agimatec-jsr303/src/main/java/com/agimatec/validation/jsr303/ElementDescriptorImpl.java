@@ -17,7 +17,6 @@
 package com.agimatec.validation.jsr303;
 
 import com.agimatec.validation.model.MetaBean;
-import com.agimatec.validation.model.MetaProperty;
 import com.agimatec.validation.model.Validation;
 
 import javax.validation.metadata.ConstraintDescriptor;
@@ -33,21 +32,24 @@ import java.util.Set;
  * Copyright: Agimatec GmbH 2008
  */
 abstract class ElementDescriptorImpl implements ElementDescriptor {
-    protected MetaBean metaBean;
-    protected Class elementClass;
+    protected final MetaBean metaBean;
+    protected final Class elementClass;
     private Set<ConstraintDescriptor<?>> constraintDescriptors;
 
-    public ElementDescriptorImpl(MetaBean metaBean, Validation[] validations) {
+    protected ElementDescriptorImpl(MetaBean metaBean,
+                                 Validation[] validations) {
         this.metaBean = metaBean;
-        if(metaBean != null) {
-            this.elementClass = metaBean.getBeanClass();
-        }
+        this.elementClass = metaBean.getBeanClass();
         createConstraintDescriptors(validations);
     }
 
-    /**
-     * @return Statically defined returned type.
-     */
+    protected ElementDescriptorImpl(Class elementClass, Validation[] validations) {
+        this.metaBean = null;
+        this.elementClass = elementClass;
+        createConstraintDescriptors(validations);
+    }
+
+    /** @return Statically defined returned type. */
     public Class getElementClass() {
         return elementClass;
     }
@@ -62,13 +64,14 @@ abstract class ElementDescriptorImpl implements ElementDescriptor {
 
     /** return true if at least one constraint declaration is present on the element. */
     public boolean hasConstraints() {
-        if(!constraintDescriptors.isEmpty()) return true;
+        return !constraintDescriptors.isEmpty();
+        /*if(!constraintDescriptors.isEmpty()) return true;
         if(metaBean == null) return false;
         if (metaBean.getValidations().length > 0) return true;
         for (MetaProperty mprop : metaBean.getProperties()) {
             if (mprop.getValidations().length > 0) return true;
         }
-        return false;
+        return false;*/
     }
 
     private void createConstraintDescriptors(Validation[] validations) {
@@ -82,13 +85,7 @@ abstract class ElementDescriptorImpl implements ElementDescriptor {
         setConstraintDescriptors(cds);
     }
 
-    public void setConstraintDescriptors(
-          Set<ConstraintDescriptor<?>> constraintDescriptors) {
+    public void setConstraintDescriptors(Set<ConstraintDescriptor<?>> constraintDescriptors) {
         this.constraintDescriptors = constraintDescriptors;
     }
-
-    public void setElementClass(Class returnType) {
-        this.elementClass = returnType;
-    }
-
 }

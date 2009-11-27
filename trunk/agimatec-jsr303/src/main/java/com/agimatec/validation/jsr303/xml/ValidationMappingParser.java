@@ -63,7 +63,7 @@ public class ValidationMappingParser {
         Iterator<InputStream> streams = xmlStreams.iterator();
         while (streams.hasNext()) {
             InputStream in = streams.next();
-            ConstraintMappingsType mapping = parseMappingStream(in);
+            ConstraintMappingsType mapping = parseXmlMappings(in);
             streams.remove(); // remove all that are done!
 
             String defaultPackage = mapping.getDefaultPackage();
@@ -90,7 +90,7 @@ public class ValidationMappingParser {
     }
 
     /** @param in XML stream to parse using the validation-mapping-1.0.xsd */
-    private ConstraintMappingsType parseMappingStream(InputStream in) {
+    private ConstraintMappingsType parseXmlMappings(InputStream in) {
         ConstraintMappingsType mappings;
         try {
             JAXBContext jc = JAXBContext.newInstance(ConstraintMappingsType.class);

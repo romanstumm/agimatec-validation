@@ -65,6 +65,12 @@ public class Jsr303Test extends TestCase {
     public void testPropertyDescriptorHasConstraints() {
         BeanDescriptor cons = getValidator().getConstraintsForClass(Book.class);
         assertTrue(cons.getConstraintsForProperty("author").hasConstraints());
+        assertTrue(cons.getConstraintsForProperty("title").hasConstraints());
+        // cons.getConstraintsForProperty("unconstraintField") == null without Introspector
+        // cons.getConstraintsForProperty("unconstraintField") != null with Introspector
+        assertTrue(cons.getConstraintsForProperty("unconstraintField") == null ||
+              !cons.getConstraintsForProperty("unconstraintField").hasConstraints());
+        assertNull(cons.getConstraintsForProperty("unknownField"));
     }
 
     public void testValidateValue() {
@@ -165,11 +171,9 @@ public class Jsr303Test extends TestCase {
             fail("UnexpectedTypeException expected but not thrown");
         } catch (UnexpectedTypeException ex) {
             // we expected this
-            assertEquals(
-                  "No validator could be found for type java.lang.Object. " +
-                        "See: @Max at private java.lang.Object " +
-                        "com.agimatec.validation.jsr303.example." +
-                        "NoValidatorTestEntity.anything",
+            assertEquals("No validator could be found for type java.lang.Object. " +
+                  "See: @Max at private java.lang.Object " +
+                  "com.agimatec.validation.jsr303.example." + "NoValidatorTestEntity.anything",
                   ex.getMessage());
         }
     }

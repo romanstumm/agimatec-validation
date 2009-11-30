@@ -54,7 +54,9 @@ public class AgimatecValidationProvider
      */
     public AgimatecValidatorFactory buildValidatorFactory(ConfigurationState configuration) {
         try {
-            return new AgimatecValidatorFactory(configuration);
+            AgimatecValidatorFactory factory = new AgimatecValidatorFactory();
+            factory.configure(configuration);
+            return factory;
         } catch (RuntimeException ex) {
             throw new ValidationException("error building ValidatorFactory", ex);
         }

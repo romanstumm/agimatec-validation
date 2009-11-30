@@ -16,10 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package com.agimatec.validation.jsr303;
+package com.agimatec.validation.jsr303.util;
 
-import com.agimatec.validation.jsr303.util.NodeImpl;
-import com.agimatec.validation.jsr303.util.PathImpl;
+import com.agimatec.validation.jsr303.ConstraintValidatorContextImpl;
 
 import javax.validation.ConstraintValidatorContext;
 
@@ -30,13 +29,13 @@ import javax.validation.ConstraintValidatorContext;
  * Time: 15:29:03 <br/>
  * Copyright: Agimatec GmbH
  */
-final class NodeBuilderDefinedContextImpl
+public final class NodeBuilderDefinedContextImpl
       implements ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderDefinedContext {
     private final ConstraintValidatorContextImpl parent;
     private final String messageTemplate;
     private final PathImpl propertyPath;
 
-    NodeBuilderDefinedContextImpl(ConstraintValidatorContextImpl contextImpl, String template,
+    public NodeBuilderDefinedContextImpl(ConstraintValidatorContextImpl contextImpl, String template,
                     PathImpl path) {
         parent = contextImpl;
         messageTemplate = template;

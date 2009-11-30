@@ -22,7 +22,6 @@ import com.agimatec.validation.IntrospectorMetaBeanFactory;
 import com.agimatec.validation.MetaBeanBuilder;
 import com.agimatec.validation.MetaBeanFactory;
 import com.agimatec.validation.MetaBeanManager;
-import com.agimatec.validation.jsr303.xml.ValidationMappingMetaBeanFactory;
 import com.agimatec.validation.xml.XMLMetaBeanFactory;
 
 import javax.validation.*;
@@ -107,13 +106,12 @@ public class AgimatecFactoryContext implements ValidatorContext {
     private MetaBeanManager buildMetaBeanManager() {
         // this is relevant: xml before annotations
         // (because ignore-annotations settings in xml)
-        List<MetaBeanFactory> builders = new ArrayList(4);
+        List<MetaBeanFactory> builders = new ArrayList(3);
         if (Boolean.parseBoolean(factory.getProperties().get(
               AgimatecValidatorConfiguration.Properties.ENABLE_INTROSPECTOR))) {
             builders.add(new IntrospectorMetaBeanFactory());
         }
-        builders.add(new ValidationMappingMetaBeanFactory(this));
-        builders.add(new AnnotationMetaBeanFactory(this));
+        builders.add(new Jsr303MetaBeanFactory(this));
 
         if (Boolean.parseBoolean(factory.getProperties().get(
               AgimatecValidatorConfiguration.Properties.ENABLE_METABEANS_XML))) {

@@ -219,7 +219,6 @@ public class ConstraintValidation<T extends Annotation>
         return owner;
     }
 
-    /** TODO RSt - generate annotation when descriptor is based on XML */
     public T getAnnotation() {
         return annotation;
     }

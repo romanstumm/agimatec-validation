@@ -16,14 +16,16 @@
  */
 package com.agimatec.validation.jsr303.xml;
 
-import com.agimatec.validation.jsr303.ConstraintValidation;
 import com.agimatec.validation.jsr303.util.TypeUtils;
+import com.agimatec.validation.util.AccessStrategy;
+import com.agimatec.validation.util.FieldAccess;
+import com.agimatec.validation.util.MethodAccess;
 
 import javax.validation.ValidationException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.util.Set;
 
 /**
  * Description: hold parsed information from xml to complete MetaBean later<br/>
@@ -38,46 +40,45 @@ public class MetaConstraint<T, A extends Annotation> {
     private final Member member;
 
     /**
-     * The JavaBeans name of the field/property the constraint was placed on. {@code null} if this is a
-     * class level constraint.
+     * The JavaBeans name of the field/property the constraint was placed on.
+     * {@code null} if this is a class level constraint.
      */
     private final String propertyName;
 
     /** The class of the bean hosting this constraint. */
     private final Class<T> beanClass;
 
-    /** The constraint tree created from the constraint annotation. */
-    private final ConstraintValidation<A> constraintValidation;
+    /** constraint annotation (proxy) */
+    private final A annotation;
+
+    private final AccessStrategy accessStrategy;
 
     /**
-     * @param beanClass            The class in which the constraint is defined on
-     * @param member               The member on which the constraint is defined on, {@code null} if it is a class constraint}
-     * @param constraintValidation The constraint descriptor for this constraint
+     * @param beanClass The class in which the constraint is defined on
+     * @param member    The member on which the constraint is defined on, {@code null} if it is a class constraint}
      */
-    public MetaConstraint(Class<T> beanClass, Member member,
-                          ConstraintValidation<A> constraintValidation) {
+    public MetaConstraint(Class<T> beanClass, Member member, A annotation) {
         this.member = member;
-        if (this.member != null) {
+        this.beanClass = beanClass;
+        this.annotation = annotation;
+        if (member != null) {
             this.propertyName = TypeUtils.getPropertyName(member);
-            if (member instanceof Method && propertyName ==
-                  null) { // can happen if member is a Method which does not follow the bean convention
+            if (propertyName ==
+                  null) { // can happen if method does not follow the bean convention
                 throw new ValidationException(
-                      "Annotated methods must follow the JavaBeans naming convention. " +
-                            member.getName() + "() does not.");
+                      "Annotated method does not follow the JavaBeans naming convention: " +
+                            member);
             }
         } else {
             this.propertyName = null;
         }
-        this.beanClass = beanClass;
-        this.constraintValidation = constraintValidation;
-    }
-
-    /**
-     * @return Returns the list of groups this constraint is part of. This might include the default group even when
-     *         it is not explicitly specified, but part of the redefined default group list of the hosting bean.
-     */
-    public Set<Class<?>> getGroupList() {
-        return constraintValidation.getGroups();
+        if (member instanceof Method) {
+            accessStrategy = new MethodAccess((Method) member);
+        } else if (member instanceof Field) {
+            accessStrategy = new FieldAccess((Field) member);
+        } else {
+            accessStrategy = null; // class level
+        }
     }
 
     public Class<T> getBeanClass() {
@@ -89,11 +90,18 @@ public class MetaConstraint<T, A extends Annotation> {
     }
 
     /**
-     * @return The JavaBeans name of the field/property the constraint was placed on. {@code null} if this is a
-     *         class level constraint.
+     * @return The JavaBeans name of the field/property the constraint was placed on.
+     *         {@code null} if this is a class level constraint.
      */
     public String getPropertyName() {
         return propertyName;
-	}
+    }
 
+    public A getAnnotation() {
+        return annotation;
+    }
+
+    public AccessStrategy getAccessStrategy() {
+        return accessStrategy;
+    }
 }

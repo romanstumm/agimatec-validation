@@ -32,7 +32,7 @@ import java.security.PrivilegedAction;
 import java.util.*;
 
 /**
- * Description: helper class that builds a constraintValidation or its
+ * Description: helper class that builds a {@link ConstraintValidation} or its
  * composite constraint validations by parsing the jsr303-annotations
  * and providing information (e.g. for @OverridesAttributes) <br/>
  * User: roman <br/>

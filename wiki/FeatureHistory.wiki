@@ -11,7 +11,7 @@ Working on new release 0.9.5 (November,December 2009)
   * planned: method-level validation
   * Issue#20: fixed NullPointerException in hasConstraints()
 
-Working on new release 0.9.4 (October, November 2009)
+release 0.9.4 (October, November 2009)
 -------------------------------------------
   * compiled with validation-api 1.0.0.GA
   * Issue#17: Validation of Maps, Sets implemented

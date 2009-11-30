@@ -20,14 +20,16 @@ package com.agimatec.validation.jsr303;
 
 import com.agimatec.validation.jsr303.util.SecureActions;
 import com.agimatec.validation.jsr303.xml.AnnotationIgnores;
+import com.agimatec.validation.jsr303.xml.MetaConstraint;
 import com.agimatec.validation.jsr303.xml.ValidationMappingParser;
 import org.apache.commons.lang.ClassUtils;
 
 import javax.validation.*;
 import javax.validation.bootstrap.ProviderSpecificBootstrap;
 import javax.validation.spi.ConfigurationState;
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Member;
+import java.util.*;
 
 /**
  * Description: a factory is a complete configurated object that can create validators<br/>
@@ -37,29 +39,21 @@ import java.util.Map;
  * Time: 17:06:20 <br/>
  * Copyright: Agimatec GmbH
  */
-public class AgimatecValidatorFactory
-      implements ValidatorFactory, Cloneable {
+public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
     private static AgimatecValidatorFactory DEFAULT_FACTORY;
     private static final ConstraintDefaults defaultConstraints = new ConstraintDefaults();
 
     private MessageInterpolator messageResolver;
     private TraversableResolver traversableResolver;
     private ConstraintValidatorFactory constraintValidatorFactory;
-    private final Map<String,String> properties;
+    private final Map<String, String> properties;
+
+    /** information from xml parsing */
     private final AnnotationIgnores annotationIgnores = new AnnotationIgnores();
     private final ConstraintCached constraintsCache = new ConstraintCached();
-
-    public ConstraintDefaults getDefaultConstraints() {
-        return defaultConstraints;
-    }
-
-    public AnnotationIgnores getAnnotationIgnores() {
-        return annotationIgnores;
-    }
-
-    public ConstraintCached getConstraintsCache() {
-        return constraintsCache;
-    }
+    private final Map<Class<?>, Class<?>[]> defaultSequences;
+    private final Map<Class<?>, List<Member>> cascadedMembers;
+    private final Map<Class<?>, List<MetaConstraint<?, ? extends Annotation>>> constraintMap;
 
     /** convenience to retrieve a default global AgimatecValidatorFactory */
     public static AgimatecValidatorFactory getDefault() {
@@ -73,12 +67,18 @@ public class AgimatecValidatorFactory
         return DEFAULT_FACTORY;
     }
 
-    public AgimatecValidatorFactory(ConfigurationState configuration) {
+    public AgimatecValidatorFactory() {
+        properties = new HashMap<String, String>();
+        defaultSequences = new HashMap();
+        cascadedMembers = new HashMap<Class<?>, List<Member>>();
+        constraintMap = new HashMap<Class<?>, List<MetaConstraint<?, ? extends Annotation>>>();
+    }
+
+    public void configure(ConfigurationState configuration) {
+        getProperties().putAll(configuration.getProperties());
         setMessageInterpolator(configuration.getMessageInterpolator());
         setTraversableResolver(configuration.getTraversableResolver());
         setConstraintValidatorFactory(configuration.getConstraintValidatorFactory());
-        properties = new HashMap<String,String>(configuration.getProperties());
-
         ValidationMappingParser parser = new ValidationMappingParser(this);
         parser.processMappingConfig(configuration.getMappingStreams());
     }
@@ -163,6 +163,69 @@ public class AgimatecValidatorFactory
             } catch (ClassNotFoundException e) {
                 throw new ValidationException("Type " + type + " not supported");
             }
+        }
+    }
+
+    public ConstraintDefaults getDefaultConstraints() {
+        return defaultConstraints;
+    }
+
+    public AnnotationIgnores getAnnotationIgnores() {
+        return annotationIgnores;
+    }
+
+    public ConstraintCached getConstraintsCache() {
+        return constraintsCache;
+    }
+
+    public void addMetaConstraint(Class<?> beanClass, MetaConstraint<?, ?> metaConstraint) {
+        if (constraintMap.containsKey(beanClass)) {
+            constraintMap.get(beanClass).add(metaConstraint);
+        } else {
+            List<MetaConstraint<?, ? extends Annotation>> constraintList =
+                  new ArrayList<MetaConstraint<?, ? extends Annotation>>();
+            constraintList.add(metaConstraint);
+            constraintMap.put(beanClass, constraintList);
+        }
+    }
+
+    public void addCascadedMember(Class<?> beanClass, Member member) {
+        if (cascadedMembers.containsKey(beanClass)) {
+            cascadedMembers.get(beanClass).add(member);
+        } else {
+            List<Member> tmpList = new ArrayList<Member>();
+            tmpList.add(member);
+            cascadedMembers.put(beanClass, tmpList);
+        }
+    }
+
+    public void addDefaultSequence(Class<?> beanClass, Class<?>[] groupSequence) {
+        defaultSequences.put(beanClass, groupSequence);
+    }
+
+    public <T> List<MetaConstraint<T, ? extends Annotation>> getMetaConstraints(
+          Class<T> beanClass) {
+        if (constraintMap.containsKey(beanClass)) {
+            //noinspection RedundantCast
+            return (List) constraintMap.get(beanClass);
+        } else {
+            return Collections.EMPTY_LIST;
+        }
+    }
+
+    public List<Member> getCascadedMembers(Class<?> beanClass) {
+        if (cascadedMembers.containsKey(beanClass)) {
+            return cascadedMembers.get(beanClass);
+        } else {
+            return Collections.EMPTY_LIST;
+        }
+    }
+
+    public Class<?>[] getDefaultSequence(Class<?> beanClass) {
+        if (defaultSequences.containsKey(beanClass)) {
+            return defaultSequences.get(beanClass);
+        } else {
+            return null;
         }
     }
 

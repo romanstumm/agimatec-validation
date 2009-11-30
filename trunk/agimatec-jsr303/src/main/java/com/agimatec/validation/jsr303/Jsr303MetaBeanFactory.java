@@ -44,20 +44,20 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Description: process the class annotations for constraint validations
- * to build the MetaBean<br/>
+ * Description: process the class annotations for JSR303 constraint validations
+ * to build the MetaBean with information from annotations and JSR303 constraint
+ * mappings (defined in xml)<br/>
  * User: roman.stumm <br/>
  * Date: 01.04.2008 <br/>
  * Time: 14:12:51 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-public class AnnotationMetaBeanFactory implements MetaBeanFactory {
-    private static final Log log = LogFactory.getLog(AnnotationMetaBeanFactory.class);
+public class Jsr303MetaBeanFactory implements MetaBeanFactory {
+    private static final Log log = LogFactory.getLog(Jsr303MetaBeanFactory.class);
     private static final String ANNOTATION_VALUE = "value";
     private final AgimatecFactoryContext factoryContext;
 
-
-    public AnnotationMetaBeanFactory(AgimatecFactoryContext factoryContext) {
+    public Jsr303MetaBeanFactory(AgimatecFactoryContext factoryContext) {
         this.factoryContext = factoryContext;
     }
 
@@ -111,52 +111,66 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
      */
     private void processClass(Class<?> beanClass, MetaBean metabean)
           throws IllegalAccessException, InvocationTargetException {
+        if (factoryContext.getFactory().getAnnotationIgnores()
+              .isIgnoreAnnotations(beanClass)) {
+            return; // ignore on class level
+        }
         processAnnotations(metabean, null, beanClass, beanClass, null, null);
 
         Field[] fields = beanClass.getDeclaredFields();
         for (Field field : fields) {
             MetaProperty metaProperty = metabean.getProperty(field.getName());
             // create a property for those fields for which there is not yet a MetaProperty
-            if (metaProperty == null) {
-                metaProperty = new MetaProperty();
-                metaProperty.setName(field.getName());
-                metaProperty.setType(field.getType());
-                if (processAnnotations(metabean, metaProperty, beanClass, field,
-                      new FieldAccess(field), null)) {
-                    metabean.putProperty(metaProperty.getName(), metaProperty);
+            if (!factoryContext.getFactory().getAnnotationIgnores()
+                  .isIgnoreAnnotations(field)) {
+                if (metaProperty == null) {
+                    metaProperty = new MetaProperty();
+                    metaProperty.setName(field.getName());
+                    metaProperty.setType(field.getType());
+                    if (processAnnotations(metabean, metaProperty, beanClass, field,
+                          new FieldAccess(field), null)) {
+                        metabean.putProperty(metaProperty.getName(), metaProperty);
+                    }
+                } else {
+                    processAnnotations(metabean, metaProperty, beanClass, field,
+                          new FieldAccess(field), null);
                 }
-            } else {
-                processAnnotations(metabean, metaProperty, beanClass, field,
-                      new FieldAccess(field), null);
             }
         }
         Method[] methods = beanClass.getDeclaredMethods();
         for (Method method : methods) {
+
             String propName = null;
             if (method.getName().startsWith("get") && method.getParameterTypes().length == 0) {
                 propName = Introspector.decapitalize(method.getName().substring(3));
             } else
             if (method.getName().startsWith("is") && method.getParameterTypes().length == 0) {
                 propName = Introspector.decapitalize(method.getName().substring(2));
-            }
+            }/* else
+            if (method.getName().startsWith("has") && method.getParameterTypes().length == 0) {
+                propName = Introspector.decapitalize(method.getName().substring(2));
+            }*/
             // setter annotation is NOT supported in the spec
             /*  else if (method.getName().startsWith("set") && method.getParameterTypes().length == 1) {
                 propName = Introspector.decapitalize(method.getName().substring(3));
             } */
             if (propName != null) {
-                MetaProperty metaProperty = metabean.getProperty(propName);
-                // create a property for those methods for which there is not yet a MetaProperty
-                if (metaProperty == null) {
-                    metaProperty = new MetaProperty();
-                    metaProperty.setName(propName);
-                    metaProperty.setType(method.getReturnType());
-                    if (processAnnotations(metabean, metaProperty, beanClass, method,
-                          new MethodAccess(method), null)) {
-                        metabean.putProperty(propName, metaProperty);
+                if (!factoryContext.getFactory().getAnnotationIgnores()
+                      .isIgnoreAnnotations(method)) {
+                    MetaProperty metaProperty = metabean.getProperty(propName);
+                    // create a property for those methods for which there is not yet a MetaProperty
+                    if (metaProperty == null) {
+                        metaProperty = new MetaProperty();
+                        metaProperty.setName(propName);
+                        metaProperty.setType(method.getReturnType());
+                        if (processAnnotations(metabean, metaProperty, beanClass, method,
+                              new MethodAccess(method), null)) {
+                            metabean.putProperty(propName, metaProperty);
+                        }
+                    } else {
+                        processAnnotations(metabean, metaProperty, beanClass, method,
+                              new MethodAccess(method), null);
                     }
-                } else {
-                    processAnnotations(metabean, metaProperty, beanClass, method,
-                          new MethodAccess(method), null);
                 }
             }
         }
@@ -166,6 +180,7 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
                                        AnnotatedElement element, AccessStrategy access,
                                        AnnotationConstraintBuilder validation)
           throws IllegalAccessException, InvocationTargetException {
+
         boolean changed = false;
         for (Annotation annotation : element.getDeclaredAnnotations()) {
             changed |=
@@ -249,30 +264,40 @@ public class AnnotationMetaBeanFactory implements MetaBeanFactory {
             groupSeq = new ArrayList(annotation == null ? 1 : annotation.value().length);
             metabean.putFeature(Jsr303Features.Bean.GROUP_SEQUENCE, groupSeq);
         }
-        if (annotation == null) {
-            groupSeq.add(Group.DEFAULT);
+        Class<?>[] groupClasses = factoryContext.getFactory().getDefaultSequence(beanClass);
+        if (groupClasses != null && groupClasses.length > 0) {
+            if (annotation == null) {
+                groupSeq.add(Group.DEFAULT);
+                return;
+            }
         } else {
-            boolean containsDefault = false;
-            for (Class<?> groupClass : annotation.value()) {
-                if (groupClass.getName().equals(beanClass.getName())) {
-                    groupSeq.add(Group.DEFAULT);
-                    containsDefault = true;
-                } else if (groupClass.getName().equals(Default.class.getName())) {
-                    throw new GroupDefinitionException(
-                          "'Default.class' must not appear in @GroupSequence! Use '" +
-                                beanClass.getSimpleName() + ".class' instead.");
-                } else {
-                    groupSeq.add(new Group(groupClass));
-                }
+            if (annotation == null) {
+                groupSeq.add(Group.DEFAULT);
+                return;
+            } else {
+                groupClasses = annotation.value();
             }
-            if (!containsDefault) {
+        }
+        boolean containsDefault = false;
+        for (Class<?> groupClass : groupClasses) {
+            if (groupClass.getName().equals(beanClass.getName())) {
+                groupSeq.add(Group.DEFAULT);
+                containsDefault = true;
+            } else if (groupClass.getName().equals(Default.class.getName())) {
                 throw new GroupDefinitionException(
-                      "Redefined default group sequence must contain " + beanClass.getName());
+                      "'Default.class' must not appear in @GroupSequence! Use '" +
+                            beanClass.getSimpleName() + ".class' instead.");
+            } else {
+                groupSeq.add(new Group(groupClass));
             }
-            if (log.isDebugEnabled()) {
-                log.debug("Default group sequence for bean " + beanClass.getName() + " is: " +
-                      groupSeq);
-            }
+        }
+        if (!containsDefault) {
+            throw new GroupDefinitionException(
+                  "Redefined default group sequence must contain " + beanClass.getName());
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("Default group sequence for bean " + beanClass.getName() + " is: " +
+                  groupSeq);
         }
     }
 

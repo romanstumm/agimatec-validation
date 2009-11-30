@@ -16,10 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package com.agimatec.validation.jsr303;
+package com.agimatec.validation.jsr303.util;
 
-import com.agimatec.validation.jsr303.util.NodeImpl;
-import com.agimatec.validation.jsr303.util.PathImpl;
+import com.agimatec.validation.jsr303.ConstraintValidatorContextImpl;
 
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.Path;

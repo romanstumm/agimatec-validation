@@ -18,6 +18,9 @@
  */
 package com.agimatec.validation.jsr303;
 
+import com.agimatec.validation.jsr303.util.NodeBuilderDefinedContextImpl;
+import com.agimatec.validation.jsr303.util.NodeImpl;
+import com.agimatec.validation.jsr303.util.PathImpl;
 import com.agimatec.validation.model.ValidationListener;
 
 import javax.validation.ConstraintValidatorContext;
@@ -58,9 +61,40 @@ public class ConstraintValidatorContextImpl implements ConstraintValidatorContex
         return constraintDescriptor.getMessageTemplate();
     }
 
-    public ConstraintViolationBuilder buildConstraintViolationWithTemplate(String messageTemplate) {
+    public ConstraintViolationBuilder buildConstraintViolationWithTemplate(
+          String messageTemplate) {
         return new ConstraintViolationBuilderImpl(this, messageTemplate,
               validationContext.getPropertyPath());
+    }
+
+    private static final class ConstraintViolationBuilderImpl
+          implements ConstraintValidatorContext.ConstraintViolationBuilder {
+        private final ConstraintValidatorContextImpl parent;
+        private final String messageTemplate;
+        private final PathImpl propertyPath;
+
+        ConstraintViolationBuilderImpl(ConstraintValidatorContextImpl contextImpl,
+                                       String template, PathImpl path) {
+            parent = contextImpl;
+            messageTemplate = template;
+            propertyPath = path;
+        }
+
+        public NodeBuilderDefinedContext addNode(String name) {
+            PathImpl path;
+            if (propertyPath.isRootPath()) {
+                path = PathImpl.create(name);
+            } else {
+                path = PathImpl.copy(propertyPath);
+                path.addNode(new NodeImpl(name));
+            }
+            return new NodeBuilderDefinedContextImpl(parent, messageTemplate, path);
+        }
+
+        public ConstraintValidatorContext addConstraintViolation() {
+            parent.addError(messageTemplate, propertyPath);
+            return parent;
+        }
     }
 
     public List<ValidationListener.Error> getErrorMessages() {
@@ -73,7 +107,8 @@ public class ConstraintValidatorContextImpl implements ConstraintValidatorContex
               new ArrayList<ValidationListener.Error>(errorMessages);
         if (!defaultDisabled) {
             returnedErrorMessages.add(new ValidationListener.Error(
-                  getDefaultConstraintMessageTemplate(), validationContext.getPropertyPath(), null));
+                  getDefaultConstraintMessageTemplate(), validationContext.getPropertyPath(),
+                  null));
         }
         return returnedErrorMessages;
     }
@@ -87,7 +122,6 @@ public class ConstraintValidatorContextImpl implements ConstraintValidatorContex
     }
 
     public void addError(String messageTemplate, Path propertyPath) {
-        errorMessages.add(new ValidationListener.Error(messageTemplate,
-              propertyPath, null));
+        errorMessages.add(new ValidationListener.Error(messageTemplate, propertyPath, null));
     }
 }

@@ -27,35 +27,33 @@ public class TypeUtils {
     private static final Map<Class<?>, Set<Class<?>>> SUBTYPES_BY_PRIMITIVE;
     private static final int VALIDATOR_TYPE_INDEX = 1;
 
-	/**
-	 * Process bean properties getter by applying the JavaBean naming conventions.
-	 *
-	 * @param member the member for which to get the property name.
-	 *
-	 * @return The bean method name with the "is" or "get" prefix stripped off, <code>null</code>
-	 *         the method name id not according to the JavaBeans standard.
-	 */
-	public static String getPropertyName(Member member) {
-		String name = null;
+    /**
+     * Process bean properties getter by applying the JavaBean naming conventions.
+     *
+     * @param member the member for which to get the property name.
+     * @return The bean method name with the "is" or "get" prefix stripped off, <code>null</code>
+     *         the method name id not according to the JavaBeans standard.
+     */
+    public static String getPropertyName(Member member) {
+        String name = null;
 
-		if ( member instanceof Field ) {
-			name = member.getName();
-		}
+        if (member instanceof Field) {
+            name = member.getName();
+        }
 
-		if ( member instanceof Method ) {
-			String methodName = member.getName();
-			if ( methodName.startsWith( "is" ) ) {
-				name = Introspector.decapitalize( methodName.substring( 2 ) );
-			}
-			else if ( methodName.startsWith( "has" ) ) {
+        if (member instanceof Method) {
+            String methodName = member.getName();
+            if (methodName.startsWith("is")) {
+                name = Introspector.decapitalize(methodName.substring(2));
+            } /* else if ( methodName.startsWith("has")) {
 				name = Introspector.decapitalize( methodName.substring( 3 ) );
-			}
-			else if ( methodName.startsWith( "get" ) ) {
-				name = Introspector.decapitalize( methodName.substring( 3 ) );
-			}
-		}
-		return name;
-	}
+			} */
+            else if (methodName.startsWith("get")) {
+                name = Introspector.decapitalize(methodName.substring(3));
+            }
+        }
+        return name;
+    }
 
     static {
         Map<Class<?>, Set<Class<?>>> subtypesByPrimitive =
@@ -66,8 +64,7 @@ public class TypeUtils {
         putPrimitiveSubtypes(subtypesByPrimitive, Byte.TYPE);
         putPrimitiveSubtypes(subtypesByPrimitive, Character.TYPE);
         putPrimitiveSubtypes(subtypesByPrimitive, Short.TYPE, Byte.TYPE);
-        putPrimitiveSubtypes(subtypesByPrimitive, Integer.TYPE, Character.TYPE,
-              Short.TYPE);
+        putPrimitiveSubtypes(subtypesByPrimitive, Integer.TYPE, Character.TYPE, Short.TYPE);
         putPrimitiveSubtypes(subtypesByPrimitive, Long.TYPE, Integer.TYPE);
         putPrimitiveSubtypes(subtypesByPrimitive, Float.TYPE, Long.TYPE);
         putPrimitiveSubtypes(subtypesByPrimitive, Double.TYPE, Float.TYPE);
@@ -75,9 +72,9 @@ public class TypeUtils {
         SUBTYPES_BY_PRIMITIVE = subtypesByPrimitive;
     }
 
-    private static void putPrimitiveSubtypes(
-          Map<Class<?>, Set<Class<?>>> subtypesByPrimitive, Class<?> primitiveType,
-          Class<?>... directSubtypes) {
+    private static void putPrimitiveSubtypes(Map<Class<?>, Set<Class<?>>> subtypesByPrimitive,
+                                             Class<?> primitiveType,
+                                             Class<?>... directSubtypes) {
         Set<Class<?>> subtypes = new HashSet<Class<?>>();
 
         for (Class<?> directSubtype : directSubtypes) {
@@ -137,6 +134,7 @@ public class TypeUtils {
         }
         return validatorsTypes;
     }
+
     // ((ParameterizedType)validator.getGenericInterfaces()[0]).getActualTypeArguments()[1]
     private static Type getValidatorType(
           Class<? extends ConstraintValidator<?, ?>> validator) {
@@ -145,8 +143,7 @@ public class TypeUtils {
         Type validatorType = ((ParameterizedType) constraintValidatorType)
               .getActualTypeArguments()[VALIDATOR_TYPE_INDEX];
         if (validatorType == null) {
-            throw new ValidationException(
-                  "null is an invalid type for a ConstraintValidator");
+            throw new ValidationException("null is an invalid type for a ConstraintValidator");
         } else if (validatorType instanceof GenericArrayType) {
             validatorType = getArrayType(getComponentType(validatorType));
         }
@@ -226,8 +223,7 @@ public class TypeUtils {
 
             if (type instanceof GenericArrayType) {
                 if (((Class<?>) supertype).isArray()) {
-                    return isAssignable(getComponentType(supertype),
-                          getComponentType(type));
+                    return isAssignable(getComponentType(supertype), getComponentType(type));
                 }
 
                 return isArraySupertype((Class<?>) supertype);
@@ -304,8 +300,7 @@ public class TypeUtils {
         return true;
     }
 
-    private static boolean isTypeVariableAssignable(Type supertype,
-                                                    TypeVariable<?> type) {
+    private static boolean isTypeVariableAssignable(Type supertype, TypeVariable<?> type) {
         for (Type bound : type.getBounds()) {
             if (isAssignable(supertype, bound)) {
                 return true;
@@ -450,8 +445,7 @@ public class TypeUtils {
             return Collections.emptyMap();
         }
 
-        TypeVariable<?>[] typeParameters =
-              getErasedReferenceType(type).getTypeParameters();
+        TypeVariable<?>[] typeParameters = getErasedReferenceType(type).getTypeParameters();
         Type[] typeArguments = ((ParameterizedType) type).getActualTypeArguments();
 
         if (typeParameters.length != typeArguments.length) {
@@ -483,8 +477,7 @@ public class TypeUtils {
 
             if (actualTypeArgument == null) {
                 throw new IllegalArgumentException(
-                      "Missing actual type argument for type parameter: " +
-                            typeParameter);
+                      "Missing actual type argument for type parameter: " + typeParameter);
             }
 
             actualTypeArguments[i] = actualTypeArgument;

@@ -39,4 +39,6 @@ public abstract class AccessStrategy {
     public abstract ElementType getElementType();
 
     public abstract Type getJavaType();
+
+    public abstract String getPropertyName();
 }

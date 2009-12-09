@@ -22,6 +22,7 @@ import com.agimatec.validation.MetaBeanFactory;
 import com.agimatec.validation.jsr303.groups.Group;
 import com.agimatec.validation.jsr303.util.SecureActions;
 import com.agimatec.validation.jsr303.util.TypeUtils;
+import com.agimatec.validation.jsr303.xml.MetaConstraint;
 import com.agimatec.validation.model.Features;
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.MetaProperty;
@@ -35,7 +36,6 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.validation.*;
 import javax.validation.groups.Default;
-import java.beans.Introspector;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.ArrayList;
@@ -124,9 +124,7 @@ public class Jsr303MetaBeanFactory implements MetaBeanFactory {
             if (!factoryContext.getFactory().getAnnotationIgnores()
                   .isIgnoreAnnotations(field)) {
                 if (metaProperty == null) {
-                    metaProperty = new MetaProperty();
-                    metaProperty.setName(field.getName());
-                    metaProperty.setType(field.getType());
+                    metaProperty = createMetaProperty(field.getName(), field.getType());
                     if (processAnnotations(metabean, metaProperty, beanClass, field,
                           new FieldAccess(field), null)) {
                         metabean.putProperty(metaProperty.getName(), metaProperty);
@@ -141,39 +139,64 @@ public class Jsr303MetaBeanFactory implements MetaBeanFactory {
         for (Method method : methods) {
 
             String propName = null;
-            if (method.getName().startsWith("get") && method.getParameterTypes().length == 0) {
-                propName = Introspector.decapitalize(method.getName().substring(3));
-            } else
-            if (method.getName().startsWith("is") && method.getParameterTypes().length == 0) {
-                propName = Introspector.decapitalize(method.getName().substring(2));
-            }/* else
-            if (method.getName().startsWith("has") && method.getParameterTypes().length == 0) {
-                propName = Introspector.decapitalize(method.getName().substring(2));
-            }*/
-            // setter annotation is NOT supported in the spec
-            /*  else if (method.getName().startsWith("set") && method.getParameterTypes().length == 1) {
-                propName = Introspector.decapitalize(method.getName().substring(3));
-            } */
+            if (method.getParameterTypes().length == 0) {
+                propName = MethodAccess.getPropertyName(method);
+            }
             if (propName != null) {
                 if (!factoryContext.getFactory().getAnnotationIgnores()
                       .isIgnoreAnnotations(method)) {
                     MetaProperty metaProperty = metabean.getProperty(propName);
                     // create a property for those methods for which there is not yet a MetaProperty
                     if (metaProperty == null) {
-                        metaProperty = new MetaProperty();
-                        metaProperty.setName(propName);
-                        metaProperty.setType(method.getReturnType());
+                        metaProperty = createMetaProperty(propName, method.getReturnType());
                         if (processAnnotations(metabean, metaProperty, beanClass, method,
-                              new MethodAccess(method), null)) {
+                              new MethodAccess(propName, method), null)) {
                             metabean.putProperty(propName, metaProperty);
                         }
                     } else {
                         processAnnotations(metabean, metaProperty, beanClass, method,
-                              new MethodAccess(method), null);
+                              new MethodAccess(propName, method), null);
                     }
                 }
             }
         }
+        addXmlConstraints(beanClass, metabean);
+    }
+
+    /** add cascade validation and constraints from xml mappings */
+    private void addXmlConstraints(Class<?> beanClass, MetaBean metabean)
+          throws IllegalAccessException, InvocationTargetException {
+        for (MetaConstraint<?, ? extends Annotation> meta : factoryContext.getFactory()
+              .getMetaConstraints(beanClass)) {
+            MetaProperty metaProperty =
+                  metabean.getProperty(meta.getAccessStrategy().getPropertyName());
+            if (metaProperty == null) {
+                metaProperty = createMetaProperty(meta.getAccessStrategy().getPropertyName(),
+                      meta.getAccessStrategy().getJavaType());
+                metabean.putProperty(metaProperty.getName(), metaProperty);
+            }
+            Class<? extends ConstraintValidator<?, ?>>[] constraintClasses =
+                  findConstraintValidatorClasses(meta.getAnnotation(), null);
+            applyConstraint(meta.getAnnotation(), constraintClasses, metabean, metaProperty,
+                  beanClass, meta.getAccessStrategy(), null);
+        }
+        for (AccessStrategy access : factoryContext.getFactory().getValidAccesses(beanClass)) {
+            MetaProperty metaProperty = metabean.getProperty(access.getPropertyName());
+            if (metaProperty == null) {
+                metaProperty =
+                      createMetaProperty(access.getPropertyName(), access.getJavaType());
+                metabean.putProperty(metaProperty.getName(), metaProperty);
+            }
+            processValid(metaProperty, access);
+        }
+    }
+
+    private MetaProperty createMetaProperty(String propName, Type type) {
+        MetaProperty metaProperty;
+        metaProperty = new MetaProperty();
+        metaProperty.setName(propName);
+        metaProperty.setType(type);
+        return metaProperty;
     }
 
     private boolean processAnnotations(MetaBean metabean, MetaProperty prop, Class owner,
@@ -204,10 +227,7 @@ public class Jsr303MetaBeanFactory implements MetaBeanFactory {
             Constraint vcAnno = annotation.annotationType().getAnnotation(Constraint.class);
             Class<? extends ConstraintValidator<?, ?>>[] validatorClasses;
             if (vcAnno != null) {
-                validatorClasses = vcAnno.validatedBy();
-                if (validatorClasses.length == 0) {
-                    validatorClasses = getDefaultConstraintValidator(annotation);
-                }
+                validatorClasses = findConstraintValidatorClasses(annotation, vcAnno);
                 return applyConstraint(annotation, validatorClasses, metabean, prop, owner,
                       access, validation);
             } else {
@@ -232,9 +252,23 @@ public class Jsr303MetaBeanFactory implements MetaBeanFactory {
         return false;
     }
 
-    private Class<? extends ConstraintValidator<?, ?>>[] getDefaultConstraintValidator(
-          Annotation annotation) {
-        return getDefaultConstraints().getValidatorClasses(annotation.annotationType());
+    private Class<? extends ConstraintValidator<?, ?>>[] findConstraintValidatorClasses(
+          Annotation annotation, Constraint vcAnno) {
+        if (vcAnno == null) {
+            vcAnno = annotation.annotationType().getAnnotation(Constraint.class);
+        }
+        Class<? extends ConstraintValidator<?, ?>>[] validatorClasses;
+        validatorClasses = factoryContext.getFactory()
+              .getConstraintsCache()
+              .getConstraintValidators(annotation.annotationType());
+        if (validatorClasses == null) {
+            validatorClasses = vcAnno.validatedBy();
+            if (validatorClasses.length == 0) {
+                validatorClasses = getDefaultConstraints()
+                      .getValidatorClasses(annotation.annotationType());
+            }
+        }
+        return validatorClasses;
     }
 
     private boolean processValid(MetaProperty prop, AccessStrategy access) {
@@ -265,12 +299,7 @@ public class Jsr303MetaBeanFactory implements MetaBeanFactory {
             metabean.putFeature(Jsr303Features.Bean.GROUP_SEQUENCE, groupSeq);
         }
         Class<?>[] groupClasses = factoryContext.getFactory().getDefaultSequence(beanClass);
-        if (groupClasses != null && groupClasses.length > 0) {
-            if (annotation == null) {
-                groupSeq.add(Group.DEFAULT);
-                return;
-            }
-        } else {
+        if (groupClasses == null || groupClasses.length == 0) {
             if (annotation == null) {
                 groupSeq.add(Group.DEFAULT);
                 return;

@@ -21,7 +21,6 @@ package com.agimatec.validation.jsr303;
 import javax.validation.ConstraintValidator;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,15 +32,21 @@ import java.util.Map;
  * Copyright: Agimatec GmbH
  */
 public class ConstraintCached {
-    private final Map<Class<? extends Annotation>, List<Class<? extends ConstraintValidator>>> constraintValidatorClasses =
+    private final Map<Class<? extends Annotation>, Class<? extends ConstraintValidator<?, ?>>[]> classes =
           new HashMap();
 
     public <A extends Annotation> void putConstraintValidator(Class<A> annotationClass,
-                                                              List<Class<? extends ConstraintValidator>> definitionClasses) {
-        constraintValidatorClasses.put(annotationClass, definitionClasses);
+                                                              Class<? extends ConstraintValidator<?, ?>>[] definitionClasses) {
+        classes.put(annotationClass, definitionClasses);
     }
 
     public boolean containsConstraintValidator(Class<? extends Annotation> annotationClass) {
-        return constraintValidatorClasses.containsKey(annotationClass);
+        return classes.containsKey(annotationClass);
     }
+
+    public <A extends Annotation> Class<? extends ConstraintValidator<?, ?>>[] getConstraintValidators(
+          Class<A> annotationClass) {
+        return classes.get(annotationClass);
+    }
+
 }

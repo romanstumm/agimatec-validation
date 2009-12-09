@@ -16,7 +16,6 @@
  */
 package com.agimatec.validation.jsr303.xml;
 
-import com.agimatec.validation.jsr303.util.TypeUtils;
 import com.agimatec.validation.util.AccessStrategy;
 import com.agimatec.validation.util.FieldAccess;
 import com.agimatec.validation.util.MethodAccess;
@@ -39,12 +38,6 @@ public class MetaConstraint<T, A extends Annotation> {
     /** The member the constraint was defined on. */
     private final Member member;
 
-    /**
-     * The JavaBeans name of the field/property the constraint was placed on.
-     * {@code null} if this is a class level constraint.
-     */
-    private final String propertyName;
-
     /** The class of the bean hosting this constraint. */
     private final Class<T> beanClass;
 
@@ -62,22 +55,25 @@ public class MetaConstraint<T, A extends Annotation> {
         this.beanClass = beanClass;
         this.annotation = annotation;
         if (member != null) {
-            this.propertyName = TypeUtils.getPropertyName(member);
-            if (propertyName ==
+            accessStrategy = createAccessStrategy(member);
+            if (accessStrategy == null || accessStrategy.getPropertyName() ==
                   null) { // can happen if method does not follow the bean convention
                 throw new ValidationException(
                       "Annotated method does not follow the JavaBeans naming convention: " +
                             member);
             }
         } else {
-            this.propertyName = null;
+            this.accessStrategy = null;
         }
+    }
+
+    private static AccessStrategy createAccessStrategy(Member member) {
         if (member instanceof Method) {
-            accessStrategy = new MethodAccess((Method) member);
+            return new MethodAccess((Method) member);
         } else if (member instanceof Field) {
-            accessStrategy = new FieldAccess((Field) member);
+            return new FieldAccess((Field) member);
         } else {
-            accessStrategy = null; // class level
+            return null; // class level
         }
     }
 
@@ -87,14 +83,6 @@ public class MetaConstraint<T, A extends Annotation> {
 
     public Member getMember() {
         return member;
-    }
-
-    /**
-     * @return The JavaBeans name of the field/property the constraint was placed on.
-     *         {@code null} if this is a class level constraint.
-     */
-    public String getPropertyName() {
-        return propertyName;
     }
 
     public A getAnnotation() {

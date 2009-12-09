@@ -89,6 +89,10 @@ public class PropertyAccess extends AccessStrategy {
         return Object.class; // unknown type: allow any type?? 
     }
 
+    public String getPropertyName() {
+        return propertyName;
+    }
+
     public Object get(Object bean) {
         try {
             if (rememberField != null) {  // cache field of previous access

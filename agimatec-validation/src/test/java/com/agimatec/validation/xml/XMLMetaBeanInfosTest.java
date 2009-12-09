@@ -141,12 +141,27 @@ public class XMLMetaBeanInfosTest extends TestCase {
         infos.getBeans().add(bean2);
 
         String xml = XMLMapper.getInstance().getXStream().toXML(infos);
-        System.out.println(xml);
+//        System.out.println(xml);
         XMLMetaBeanInfos infos2 =
-                (XMLMetaBeanInfos) XMLMapper.getInstance().getXStream().fromXML(xml);
+              (XMLMetaBeanInfos) XMLMapper.getInstance().getXStream().fromXML(xml);
         assertEquals(2, infos2.getBeans().size());
     }
 
+
+    public void testMaxValueParsing() {
+        String xml = "\n" +
+              "<beanInfos>  <bean id=\"com.agimatec.connecta.model.Profile\">\n" +
+              "    <property name=\"activationDay\" minValue=\"1\" maxValue=\"31\"/>\n" +
+              "    <property name=\"activationMonth\" minValue=\"1\" maxValue=\"12\"/>\n" +
+              "  </bean></beanInfos>";
+        XMLMetaBeanInfos beanInfos = (XMLMetaBeanInfos) XMLMapper.getInstance()
+              .getXStream().fromXML(xml);
+        assertNotNull(beanInfos);
+        assertEquals(Long.valueOf(31),
+              beanInfos.getBeans().get(0).getProperty("activationDay").getMaxValue());
+        assertEquals(Long.valueOf(1),
+              beanInfos.getBeans().get(0).getProperty("activationDay").getMinValue());
+    }
 
     public static Test suite() {
         return new TestSuite(XMLMetaBeanInfosTest.class);

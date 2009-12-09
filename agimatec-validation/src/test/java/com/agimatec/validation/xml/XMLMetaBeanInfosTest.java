@@ -157,9 +157,9 @@ public class XMLMetaBeanInfosTest extends TestCase {
         XMLMetaBeanInfos beanInfos = (XMLMetaBeanInfos) XMLMapper.getInstance()
               .getXStream().fromXML(xml);
         assertNotNull(beanInfos);
-        assertEquals(Long.valueOf(31),
+        assertEquals(Integer.valueOf(31),
               beanInfos.getBeans().get(0).getProperty("activationDay").getMaxValue());
-        assertEquals(Long.valueOf(1),
+        assertEquals(Integer.valueOf(1),
               beanInfos.getBeans().get(0).getProperty("activationDay").getMinValue());
     }
 

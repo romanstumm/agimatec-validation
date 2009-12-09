@@ -31,10 +31,20 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 @XStreamAlias("property")
 public class XMLMetaProperty extends XMLMetaElement {
 
+    /**
+     * if you need other types (Long, double, String) for maxValue and
+     * minValue, configure via
+     * <pre>
+     * &lt;feature key="maxValue">
+     *   &lt;value class="java.lang.Long">1000&lt;/value>
+     * &lt;/feature>
+     * </pre>
+     * instead with explicit typing.
+     */
     @XStreamAsAttribute()
-    private Long maxValue; // XStream requires a non-abstract type to parse XML
+    private Integer maxValue; // XStream requires a non-abstract type to parse XML
     @XStreamAsAttribute()
-    private Long minValue; // XStream requires a non-abstract type to parse XML
+    private Integer minValue; // XStream requires a non-abstract type to parse XML
 
     private String regexp;
 
@@ -42,19 +52,19 @@ public class XMLMetaProperty extends XMLMetaElement {
     private String timeLag;
 
 
-    public Long getMaxValue() {
+    public Integer getMaxValue() {
         return maxValue;
     }
 
-    public void setMaxValue(Long maxValue) {
+    public void setMaxValue(Integer maxValue) {
         this.maxValue = maxValue;
     }
 
-    public Long getMinValue() {
+    public Integer getMinValue() {
         return minValue;
     }
 
-    public void setMinValue(Long minValue) {
+    public void setMinValue(Integer minValue) {
         this.minValue = minValue;
     }
 

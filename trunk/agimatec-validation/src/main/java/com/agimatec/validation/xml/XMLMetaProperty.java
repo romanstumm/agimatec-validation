@@ -32,9 +32,9 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 public class XMLMetaProperty extends XMLMetaElement {
 
     @XStreamAsAttribute()
-    private Number maxValue;
+    private Long maxValue; // XStream requires a non-abstract type to parse XML
     @XStreamAsAttribute()
-    private Number minValue;
+    private Long minValue; // XStream requires a non-abstract type to parse XML
 
     private String regexp;
 
@@ -42,19 +42,19 @@ public class XMLMetaProperty extends XMLMetaElement {
     private String timeLag;
 
 
-    public Number getMaxValue() {
+    public Long getMaxValue() {
         return maxValue;
     }
 
-    public void setMaxValue(Number maxValue) {
+    public void setMaxValue(Long maxValue) {
         this.maxValue = maxValue;
     }
 
-    public Number getMinValue() {
+    public Long getMinValue() {
         return minValue;
     }
 
-    public void setMinValue(Number minValue) {
+    public void setMinValue(Long minValue) {
         this.minValue = minValue;
     }
 

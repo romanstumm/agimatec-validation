@@ -19,6 +19,8 @@ package com.agimatec.validation.jsr303.xml;
 import com.agimatec.validation.jsr303.AgimatecValidatorFactory;
 import com.agimatec.validation.jsr303.util.ConverterUtils;
 import com.agimatec.validation.jsr303.util.SecureActions;
+import com.agimatec.validation.util.FieldAccess;
+import com.agimatec.validation.util.MethodAccess;
 
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
@@ -340,7 +342,7 @@ public class ValidationMappingParser {
 
             // valid
             if (fieldType.getValid() != null) {
-                factory.addCascadedMember(beanClass, field);
+                factory.addValid(beanClass, new FieldAccess(field));
             }
 
             // constraints
@@ -379,7 +381,7 @@ public class ValidationMappingParser {
 
             // valid
             if (getterType.getValid() != null) {
-                factory.addCascadedMember(beanClass, method);
+                factory.addValid(beanClass, new MethodAccess(getterName, method));
             }
 
             // constraints
@@ -403,8 +405,7 @@ public class ValidationMappingParser {
             Class<? extends Annotation> annotationClass = (Class<? extends Annotation>) clazz;
 
             ValidatedByType validatedByType = constraintDefinition.getValidatedBy();
-            List<Class<? extends ConstraintValidator>> classes =
-                  new ArrayList<Class<? extends ConstraintValidator>>();
+            List<Class<? extends ConstraintValidator<?,?>>> classes = new ArrayList();
             /*
              If include-existing-validator is set to false,
              ConstraintValidator defined on the constraint annotation are ignored.
@@ -416,8 +417,7 @@ public class ValidationMappingParser {
                  are concatenated to the list of ConstraintValidator described on the
                  annotation to form a new array of ConstraintValidator evaluated.
                  */
-                classes
-                      .addAll(findConstraintValidatorClasses(annotationClass));
+                classes.addAll(findConstraintValidatorClasses(annotationClass));
             }
             for (JAXBElement<String> validatorClassName : validatedByType.getValue()) {
                 Class<? extends ConstraintValidator<?, ?>> validatorClass;
@@ -441,7 +441,8 @@ public class ValidationMappingParser {
                 throw new ValidationException("Constraint validator for " +
                       annotationClass.getName() + " already configured.");
             } else {
-                factory.getConstraintsCache().putConstraintValidator(annotationClass, classes);
+                factory.getConstraintsCache().putConstraintValidator(annotationClass,
+                      classes.toArray(new Class[classes.size()]));
             }
         }
     }

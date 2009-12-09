@@ -22,13 +22,13 @@ import com.agimatec.validation.jsr303.util.SecureActions;
 import com.agimatec.validation.jsr303.xml.AnnotationIgnores;
 import com.agimatec.validation.jsr303.xml.MetaConstraint;
 import com.agimatec.validation.jsr303.xml.ValidationMappingParser;
+import com.agimatec.validation.util.AccessStrategy;
 import org.apache.commons.lang.ClassUtils;
 
 import javax.validation.*;
 import javax.validation.bootstrap.ProviderSpecificBootstrap;
 import javax.validation.spi.ConfigurationState;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Member;
 import java.util.*;
 
 /**
@@ -52,7 +52,10 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
     private final AnnotationIgnores annotationIgnores = new AnnotationIgnores();
     private final ConstraintCached constraintsCache = new ConstraintCached();
     private final Map<Class<?>, Class<?>[]> defaultSequences;
-    private final Map<Class<?>, List<Member>> cascadedMembers;
+    /**
+     * access strategies for properties with cascade validation @Valid support
+     */
+    private final Map<Class<?>, List<AccessStrategy>> validAccesses;
     private final Map<Class<?>, List<MetaConstraint<?, ? extends Annotation>>> constraintMap;
 
     /** convenience to retrieve a default global AgimatecValidatorFactory */
@@ -70,8 +73,8 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
     public AgimatecValidatorFactory() {
         properties = new HashMap<String, String>();
         defaultSequences = new HashMap();
-        cascadedMembers = new HashMap<Class<?>, List<Member>>();
-        constraintMap = new HashMap<Class<?>, List<MetaConstraint<?, ? extends Annotation>>>();
+        validAccesses = new HashMap();
+        constraintMap = new HashMap();
     }
 
     public void configure(ConfigurationState configuration) {
@@ -189,13 +192,13 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
         }
     }
 
-    public void addCascadedMember(Class<?> beanClass, Member member) {
-        if (cascadedMembers.containsKey(beanClass)) {
-            cascadedMembers.get(beanClass).add(member);
+    public void addValid(Class<?> beanClass, AccessStrategy accessStategy) {
+        if (validAccesses.containsKey(beanClass)) {
+            validAccesses.get(beanClass).add(accessStategy);
         } else {
-            List<Member> tmpList = new ArrayList<Member>();
-            tmpList.add(member);
-            cascadedMembers.put(beanClass, tmpList);
+            List<AccessStrategy> tmpList = new ArrayList();
+            tmpList.add(accessStategy);
+            validAccesses.put(beanClass, tmpList);
         }
     }
 
@@ -213,9 +216,9 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
         }
     }
 
-    public List<Member> getCascadedMembers(Class<?> beanClass) {
-        if (cascadedMembers.containsKey(beanClass)) {
-            return cascadedMembers.get(beanClass);
+    public List<AccessStrategy> getValidAccesses(Class<?> beanClass) {
+        if (validAccesses.containsKey(beanClass)) {
+            return validAccesses.get(beanClass);
         } else {
             return Collections.EMPTY_LIST;
         }

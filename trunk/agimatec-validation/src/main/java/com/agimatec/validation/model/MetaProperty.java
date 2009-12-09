@@ -37,6 +37,9 @@ public class MetaProperty extends FeaturesCapable
     private Type type;
     private MetaBean metaBean;
 
+    public MetaProperty() {
+    }
+
     /** the meta info of the target bean (mainly for relationships) */
     public MetaBean getMetaBean() {
         return metaBean;

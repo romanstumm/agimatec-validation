@@ -16,6 +16,7 @@
  */
 package com.agimatec.validation.util;
 
+import java.beans.Introspector;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -31,16 +32,56 @@ import java.security.PrivilegedAction;
  */
 public class MethodAccess extends AccessStrategy {
     private final Method method;
+    private final String propertyName;
 
     public Type getJavaType() {
         return method.getGenericReturnType();
     }
 
     public MethodAccess(Method method) {
+        this(getPropertyName(method), method);
+    }
+
+    public MethodAccess(String propertyName, Method method) {
         this.method = method;
+        this.propertyName = propertyName;
         if (!method.isAccessible()) {
             method.setAccessible(true);
         }
+    }
+
+    /**
+     * Process bean properties getter by applying the JavaBean naming conventions.
+     *
+     * @param member the member for which to get the property name.
+     * @return The bean method name with the "is" or "get" prefix stripped off, <code>null</code>
+     *         the method name id not according to the JavaBeans standard.
+     */
+    public static String getPropertyName(Method member) {
+        String name = null;
+        String methodName = member.getName();
+        if (methodName.startsWith("is")) {
+            name = Introspector.decapitalize(methodName.substring(2));
+        } /* else if ( methodName.startsWith("has")) {
+				name = Introspector.decapitalize( methodName.substring( 3 ) );
+			} */
+        // setter annotation is NOT supported in the spec
+        /*  else if (method.getName().startsWith("set") && method.getParameterTypes().length == 1) {
+           propName = Introspector.decapitalize(method.getName().substring(3));
+       } */
+        else if (methodName.startsWith("get")) {
+            name = Introspector.decapitalize(methodName.substring(3));
+        }
+        return name;
+    }
+
+    /**
+     * normally the propertyName of the getter method, e.g.<br>
+     * method: getName() -> propertyName: name<br>
+     * method: isValid() -> propertyName: valid<br>
+     */
+    public String getPropertyName() {
+        return propertyName;
     }
 
     public Object get(final Object instance) {

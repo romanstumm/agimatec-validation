@@ -59,6 +59,10 @@ public class FieldAccess extends AccessStrategy {
         return ElementType.FIELD;
     }
 
+    public String getPropertyName() {
+        return field.getName();
+    }
+
     public String toString() {
         return field.toString();
     }

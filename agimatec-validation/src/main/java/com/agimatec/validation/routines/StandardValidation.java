@@ -92,33 +92,44 @@ public class StandardValidation implements Validation {
             }
         } catch (PatternSyntaxException e) {
             throw new IllegalArgumentException(
-                    "regular expression malformed. regexp " + regExp + " at " + context, e);
+                  "regular expression malformed. regexp " + regExp + " at " + context, e);
         }
     }
 
     protected void validateMinValue(ValidationContext context) {
         Comparable minValue = (Comparable) context.getMetaProperty().getFeature(MIN_VALUE);
-        if (minValue == null) return;
-        if (context.getPropertyValue() == null) return;
-        int r = minValue.compareTo(context.getPropertyValue());
-        if (r > 0) {
+        if (minValue == null || context.getPropertyValue() == null) return;
+        if (compare(context, minValue, context.getPropertyValue()) > 0) {
             context.getListener().addError(MIN_VALUE, context);
         }
     }
 
     protected void validateMaxValue(ValidationContext context) {
         Comparable maxValue = (Comparable) context.getMetaProperty().getFeature(MAX_VALUE);
-        if (maxValue == null) return;
-        if (context.getPropertyValue() == null) return;
-        int r = maxValue.compareTo(context.getPropertyValue());
-        if (r < 0) {
+        if (maxValue == null || context.getPropertyValue() == null) return;
+        if (compare(context, maxValue, context.getPropertyValue()) < 0) {
             context.getListener().addError(MAX_VALUE, context);
         }
     }
 
+    private int compare(ValidationContext context, Comparable constraintValue,
+                        Object currentValue) {
+        int r;
+        if (constraintValue.getClass().isAssignableFrom(currentValue.getClass())) {
+            r = constraintValue.compareTo(context.getPropertyValue());
+        } else if (currentValue instanceof Number) {
+            double dv = ((Number) currentValue).doubleValue();
+            double mdv = ((Number) constraintValue).doubleValue();
+            r = mdv > dv ? 1 : -1;
+        } else {
+            r = String.valueOf(constraintValue).compareTo(String.valueOf(currentValue));
+        }
+        return r;
+    }
+
     protected void validateMaxLength(ValidationContext context) {
         Integer maxLength = (Integer) context.getMetaProperty()
-                .getFeature(Features.Property.MAX_LENGTH);
+              .getFeature(Features.Property.MAX_LENGTH);
         if (maxLength == null) return;
         if (context.getPropertyValue() == null) return;
 
@@ -136,7 +147,7 @@ public class StandardValidation implements Validation {
 
     protected void validateMinLength(ValidationContext context) {
         Integer maxLength = (Integer) context.getMetaProperty()
-                .getFeature(Features.Property.MIN_LENGTH);
+              .getFeature(Features.Property.MIN_LENGTH);
         if (maxLength == null) return;
         if (context.getPropertyValue() == null) return;
 

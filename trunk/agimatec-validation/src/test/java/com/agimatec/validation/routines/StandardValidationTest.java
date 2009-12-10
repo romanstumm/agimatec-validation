@@ -26,6 +26,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,6 +46,7 @@ public class StandardValidationTest extends TestCase implements ValidationListen
     private MetaProperty metaProperty;
     private String stringValue;
     private Date dateValue;
+    private int intValue;
 
     public StandardValidationTest(String name) {
         super(name);
@@ -136,6 +138,47 @@ public class StandardValidationTest extends TestCase implements ValidationListen
         stringValue = "3333";
         validation.validateMinValue(context);
         assertTrue(reasons.contains(Reasons.MIN_VALUE));
+    }
+
+    public int getIntValue() {
+        return intValue;
+    }
+
+    public void testValidateMinValue_MixedNumber() {
+        metaProperty.setName("intValue");
+        metaProperty.putFeature(Features.Property.MIN_VALUE, new Long(0));
+        intValue = 5;
+        validation.validateMinValue(context);
+        assertTrue(reasons.isEmpty());
+        context.unknownValue();
+        intValue = -1;
+        validation.validateMinValue(context);
+        assertTrue(reasons.contains(Reasons.MIN_VALUE));
+    }
+
+    public void testValidateMinValue_Date_Timestamp() {
+        metaProperty.setName("dateValue");
+        Date dt = new Date();
+        metaProperty.putFeature(Features.Property.MIN_VALUE, dt);
+        dateValue = new Timestamp(dt.getTime()+1000);
+        validation.validateMinValue(context);
+        assertTrue(reasons.isEmpty());
+        context.unknownValue();
+        dateValue = new Timestamp(dt.getTime()-1000);
+        validation.validateMinValue(context);
+        assertTrue(reasons.contains(Reasons.MIN_VALUE));
+    }
+
+    public void testValidateMaxValue_AlphabeticString() {
+        metaProperty.setName("stringValue");
+        metaProperty.putFeature(Features.Property.MAX_VALUE, "BBBB");
+        stringValue = "AAAA";
+        validation.validateMaxValue(context);
+        assertTrue(reasons.isEmpty());
+        context.unknownValue();
+        stringValue = "BBBC";
+        validation.validateMaxValue(context);
+        assertTrue(reasons.contains(Reasons.MAX_VALUE));
     }
 
     public void testValidateRegExp() {

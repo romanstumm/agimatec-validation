@@ -1,0 +1,12 @@
+<validation-config
+    xmlns="http://jboss.org/xml/ns/javax/validation/configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation=
+        "http://jboss.org/xml/ns/javax/validation/configuration validation-configuration-1.0.xsd">
+  <default-provider>com.agimatec.validation.jsr303.AgimatecValidationProvider</default-provider>
+  <message-interpolator>com.agimatec.validation.jsr303.xml.TestMessageInterpolator</message-interpolator>
+  <traversable-resolver>com.agimatec.validation.jsr303.resolver.SimpleTraversableResolver</traversable-resolver>
+  <constraint-validator-factory>com.agimatec.validation.jsr303.xml.TestConstraintValidatorFactory</constraint-validator-factory>
+  <constraint-mapping>sample-constraints.xml</constraint-mapping>
+  <property name="test-prop">test-prop-value</property>
+</validation-config>

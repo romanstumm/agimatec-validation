@@ -111,51 +111,52 @@ public class Jsr303MetaBeanFactory implements MetaBeanFactory {
      */
     private void processClass(Class<?> beanClass, MetaBean metabean)
           throws IllegalAccessException, InvocationTargetException {
-        if (factoryContext.getFactory().getAnnotationIgnores()
-              .isIgnoreAnnotations(beanClass)) {
-            return; // ignore on class level
-        }
-        processAnnotations(metabean, null, beanClass, beanClass, null, null);
+        if (!factoryContext.getFactory().getAnnotationIgnores()
+              .isIgnoreAnnotations(beanClass)) { // ignore on class level
 
-        Field[] fields = beanClass.getDeclaredFields();
-        for (Field field : fields) {
-            MetaProperty metaProperty = metabean.getProperty(field.getName());
-            // create a property for those fields for which there is not yet a MetaProperty
-            if (!factoryContext.getFactory().getAnnotationIgnores()
-                  .isIgnoreAnnotations(field)) {
-                if (metaProperty == null) {
-                    metaProperty = createMetaProperty(field.getName(), field.getType());
-                    if (processAnnotations(metabean, metaProperty, beanClass, field,
-                          new FieldAccess(field), null)) {
-                        metabean.putProperty(metaProperty.getName(), metaProperty);
-                    }
-                } else {
-                    processAnnotations(metabean, metaProperty, beanClass, field,
-                          new FieldAccess(field), null);
-                }
-            }
-        }
-        Method[] methods = beanClass.getDeclaredMethods();
-        for (Method method : methods) {
+            processAnnotations(metabean, null, beanClass, beanClass, null, null);
 
-            String propName = null;
-            if (method.getParameterTypes().length == 0) {
-                propName = MethodAccess.getPropertyName(method);
-            }
-            if (propName != null) {
+            Field[] fields = beanClass.getDeclaredFields();
+            for (Field field : fields) {
+                MetaProperty metaProperty = metabean.getProperty(field.getName());
+                // create a property for those fields for which there is not yet a MetaProperty
                 if (!factoryContext.getFactory().getAnnotationIgnores()
-                      .isIgnoreAnnotations(method)) {
-                    MetaProperty metaProperty = metabean.getProperty(propName);
-                    // create a property for those methods for which there is not yet a MetaProperty
+                      .isIgnoreAnnotations(field)) {
                     if (metaProperty == null) {
-                        metaProperty = createMetaProperty(propName, method.getReturnType());
-                        if (processAnnotations(metabean, metaProperty, beanClass, method,
-                              new MethodAccess(propName, method), null)) {
-                            metabean.putProperty(propName, metaProperty);
+                        metaProperty = createMetaProperty(field.getName(), field.getType());
+                        if (processAnnotations(metabean, metaProperty, beanClass, field,
+                              new FieldAccess(field), null)) {
+                            metabean.putProperty(metaProperty.getName(), metaProperty);
                         }
                     } else {
-                        processAnnotations(metabean, metaProperty, beanClass, method,
-                              new MethodAccess(propName, method), null);
+                        processAnnotations(metabean, metaProperty, beanClass, field,
+                              new FieldAccess(field), null);
+                    }
+                }
+            }
+            Method[] methods = beanClass.getDeclaredMethods();
+            for (Method method : methods) {
+
+                String propName = null;
+                if (method.getParameterTypes().length == 0) {
+                    propName = MethodAccess.getPropertyName(method);
+                }
+                if (propName != null) {
+                    if (!factoryContext.getFactory().getAnnotationIgnores()
+                          .isIgnoreAnnotations(method)) {
+                        MetaProperty metaProperty = metabean.getProperty(propName);
+                        // create a property for those methods for which there is not yet a MetaProperty
+                        if (metaProperty == null) {
+                            metaProperty =
+                                  createMetaProperty(propName, method.getReturnType());
+                            if (processAnnotations(metabean, metaProperty, beanClass, method,
+                                  new MethodAccess(propName, method), null)) {
+                                metabean.putProperty(propName, metaProperty);
+                            }
+                        } else {
+                            processAnnotations(metabean, metaProperty, beanClass, method,
+                                  new MethodAccess(propName, method), null);
+                        }
                     }
                 }
             }
@@ -168,12 +169,18 @@ public class Jsr303MetaBeanFactory implements MetaBeanFactory {
           throws IllegalAccessException, InvocationTargetException {
         for (MetaConstraint<?, ? extends Annotation> meta : factoryContext.getFactory()
               .getMetaConstraints(beanClass)) {
-            MetaProperty metaProperty =
-                  metabean.getProperty(meta.getAccessStrategy().getPropertyName());
-            if (metaProperty == null) {
-                metaProperty = createMetaProperty(meta.getAccessStrategy().getPropertyName(),
-                      meta.getAccessStrategy().getJavaType());
-                metabean.putProperty(metaProperty.getName(), metaProperty);
+            MetaProperty metaProperty;
+            if (meta.getAccessStrategy() == null) { // class level
+                metaProperty = null;
+            } else { // property level
+                metaProperty =
+                      metabean.getProperty(meta.getAccessStrategy().getPropertyName());
+                if (metaProperty == null) {
+                    metaProperty = createMetaProperty(
+                          meta.getAccessStrategy().getPropertyName(),
+                          meta.getAccessStrategy().getJavaType());
+                    metabean.putProperty(metaProperty.getName(), metaProperty);
+                }
             }
             Class<? extends ConstraintValidator<?, ?>>[] constraintClasses =
                   findConstraintValidatorClasses(meta.getAnnotation(), null);
@@ -354,9 +361,9 @@ public class Jsr303MetaBeanFactory implements MetaBeanFactory {
              * supertype of T and not a supertype of the chosen
              * ConstraintValidator supported type.
              */
-            List<Type> assignableTypes = new ArrayList(constraintClasses.length);
             Map<Type, Class<? extends ConstraintValidator<?, ?>>> validatorTypes =
                   TypeUtils.getValidatorsTypes(constraintClasses);
+            final List<Type> assignableTypes = new ArrayList(constraintClasses.length);
             fillAssignableTypes(type, validatorTypes.keySet(), assignableTypes);
             reduceAssignableTypes(assignableTypes);
             checkOneType(assignableTypes, type, owner, annotation, access);
@@ -373,9 +380,9 @@ public class Jsr303MetaBeanFactory implements MetaBeanFactory {
         if (processAnnotations(metabean, prop, owner, annotation.annotationType(), access,
               builder) || validator != null) {  // recursion!
             if (parentValidation == null) {
-                if (prop != null) {
+                if (prop != null) {   // add to property level
                     prop.addValidation(builder.getConstraintValidation());
-                } else {
+                } else { // add to class level
                     metabean.addValidation(builder.getConstraintValidation());
                 }
             } else {

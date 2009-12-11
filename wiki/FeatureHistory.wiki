@@ -1,5 +1,9 @@
 #summary Features and revision history
 
+= News =
+
+[ http://wiki.apache.org/incubator/ValidationProposal Proposal for agimatec-validation to become an Apache Incubator project]
+
 = Latest changes =
 The sources in svn are probably newer than the release you find in the "Downloads" section. Refer to BuildAgimatecValidation to create a jar from the sources.
 

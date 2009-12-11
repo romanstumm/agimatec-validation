@@ -11,7 +11,8 @@ Working on next release 0.9.6
   * (planned: method-level validation (under construction))
 
 release 0.9.5 (11th December 2009)
--------------------------------------------
+----------------------------------
+*FEATURE-COMPLETE IMPLEMENTATION OF JSR303*
   * performance improvements
   * jsr303 bootstrap API completed
   * Issue#14: JSR303 XML deployment descriptor and constraints supported

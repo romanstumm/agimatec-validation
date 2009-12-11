@@ -4,10 +4,10 @@
 
 The Wiki of "agimatec-validation" is open for community contribution. Useful information will be eventually incorporated into other parts of this site. Please be careful not to overwrite content from other people! 
 
+  * [FeatureHistory News]
   * [GettingStarted Getting Started]
   * [BuildAgimatecValidation How to build agimatec-validation]
   * [ProjectStatus Project Status]
-  * [FeatureHistory News]
   * [FeatureRequests Things to be done]
 
 <br>

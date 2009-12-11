@@ -18,7 +18,7 @@
 }}}
 
 = Articels / JSR303 Documentation =
-  * [http://www.agimatec.de/blog/?s=validierung&x=0&y=0 Blog entries about validation from agimatec]
+  * [http://www.agimatec.de/blog/?s=validierung&x=0&y=0 German blog entries about validation from agimatec]
 
   * [http://musingsofaprogrammingaddict.blogspot.com/2009/01/getting-started-with-jsr-303-beans.html Getting started with jsr-303 from Gunnar Morling ]
 

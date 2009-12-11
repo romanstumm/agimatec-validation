@@ -5,8 +5,8 @@ The sources in svn are probably newer than the release you find in the "Download
 
 = History =
 
-Working on new 0.9.6
---------------------
+Working on next release 0.9.6
+-----------------------------
   * bug fixes
   * (planned: method-level validation (under construction))
 

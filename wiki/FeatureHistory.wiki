@@ -5,13 +5,11 @@ The sources in svn are probably newer than the release you find in the "Download
 
 = History =
 
-Working on next release 0.9.6
------------------------------
+===Working on next release 0.9.6===
   * bug fixes
   * (planned: method-level validation (under construction))
 
-release 0.9.5 (11th December 2009)
-----------------------------------
+===release 0.9.5 (11th December 2009)===
 *FEATURE-COMPLETE IMPLEMENTATION OF JSR303*
   * performance improvements
   * jsr303 bootstrap API completed
@@ -19,8 +17,7 @@ release 0.9.5 (11th December 2009)
   * Issue#20: fixed NullPointerException in hasConstraints()
   * fixes in agimatec-validation core (propietary validation of maxValue/minValue)
 
-release 0.9.4 (October, November 2009)
--------------------------------------------
+===release 0.9.4 (October, November 2009)===
   * compiled with validation-api 1.0.0.GA
   * Issue#17: Validation of Maps, Sets implemented
   * Annotation.payload implemented
@@ -33,56 +30,50 @@ release 0.9.4 (October, November 2009)
   * new feature: BeanValidator.treatMapsLikeBeans 
   * started work on: method-level validation
 
-1st Oct 2009
-------------
+===1st Oct 2009===
   * released jars, version 0.9.3, compilable to validation-api 1.0.CR5
   * ValidatorContext: ValidatorFactory.usingContext()
   * TraversableResolver
   * Path, Node  
   * Object graph validation: Array, Collection, Set, Map (value) validation supported (any object implementing Iterable)
 
-20.07.2009
-----------
+===20.07.2009===
 version 0.9.1-SNAPSHOT - r239
   * artifacts published to http://oss.sonatype.org/content/repositories/agimatec-snapshots/com/agimatec/
   * compatible with validation-api-1.0.CR1.jar
   * constraints {{{@DecimalMin}}} and {{{@DecimalMax}}} now available
 
-01.07.2009
-----------
+===01.07.2009===
 version 0.9.1-SNAPSHOT - r212
   * compatible with validation-api-1.0.Beta4.jar
 
-09.04.2009
-----------
+===09.04.2009===
 version 0.9.0-snapshot - r211
   * compatible with latest version of validation-api.jar (beta4-snapshot)
   * support group sequences and group inheritance
 
-19.02.2009
-----------
+===19.02.2009===
 version 0.7.3-snapshot
   * SVN URL of validation api classes has moved to 
     http://anonsvn.jboss.org/repos/hibernate/beanvalidation/trunk/validation-api
   * agimatec-validation made compatible with current state of JSR303 validation-api
 
 
-03.02.2009
-----------
+===03.02.2009===
   * renamed bootstrap classes of validation-api.jar supported
   * Default-!BuildInConstraint Configuration for standard Annotations (!NotNull, Null, Max, Size...) implemented. Thus javax.validation.constraint annotations will also be validated automatically.
 
-*November 2008:
+===November 2008===
 The reference implementation and JSR303 specification is rapidly changing at the moment.
 Check out the svn-sources to get the code compatible with the current state of the validation-api.*
 
-V0.7.3 (snapshot): (Jan 2009)
+===V0.7.3 (snapshot): (Jan 2009)===
   * compatible with validation-api (snapshot 4tn feb. 2009), many classes have been renamed
   * validates all javax.validation.constraints that currently exist in the validation-api
    (see resource defaultConstraints.properties in agimatec-validation.jar)
   * not-yet-implemented: !OverridesParameter, !TraversableResolver, !ValidatorContext, group inheritance, type-safety check calling !ConstraintValidator 
 
-V0.7.1 (snapshot): (Nov. 2008)
+===V0.7.1 (snapshot): (Nov. 2008)===
   * compatible with validation-api.jar (snapshot 24th november 2008)
    - the interfaces and classes of the specificiation changed their names quite often since release 0.7-SNAPSHOT
   * using javax.validation/validation-api from reference implementation
@@ -94,17 +85,17 @@ V0.7.1 (snapshot): (Nov. 2008)
   * composed constraints implemented (currently without !OverridesParameter!)
   * support for nested properties (needs improvement!)
 
-V0.6.1:
+===V0.6.1===
   * Implemented issue-6: Provide a bootstrap method for Validator with specific Locale
   * Implemented issue-7: Provide annotation @Email
   * Implemented issue-8: Maven surefire 2.4.2 version in pom.xml
 
-V0.5:
+===V0.5===
   * support for resolution of association types during runtime. (required by JSR303)
     consequences: relationship targets can have different types, generics on collection types not required anymore
   * !ValidationContext and !GroupValidationContext are interfaces
   * new testcase !ValidationTest.testValidAnnotation() tests nested, polimorphic relationships  
-V0.4:
+===V0.4===
   * implementation of [http://jcp.org/aboutJava/communityprocess/edr/jsr303/ JSR 303: bean-validation]
   * Define constraints with predefined annotations
   * Create own validators and annotations to define custom constraints

@@ -10,7 +10,7 @@ Working on new 0.9.6
   * bug fixes
   * (planned: method-level validation (under construction))
 
-release 0.9.5 (November,December 2009)
+release 0.9.5 (November, December 2009)
 -------------------------------------------
   * performance improvements
   * jsr303 bootstrap API completed

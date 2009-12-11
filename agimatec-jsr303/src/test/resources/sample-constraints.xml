@@ -31,7 +31,7 @@
       <valid/>
       <!-- @Size(message="Size is limited",
                  groups={First.class, Default.class},
-                 max=30
+                 max=10
            )
       -->
       <constraint annotation="javax.validation.constraints.Size">
@@ -40,7 +40,7 @@
           <value>com.agimatec.validation.jsr303.example.First</value>
           <value>javax.validation.groups.Default</value>
         </groups>
-        <element name="max">30</element>
+        <element name="max">10</element>
       </constraint>
 
     </getter>
@@ -49,7 +49,7 @@
 
   <constraint-definition annotation="javax.validation.constraints.Size">
       <validated-by include-existing-validators="false">
-          <value>com.agimatec.validation.constraints.SizeValidatorForArrayOfObject</value>
+          <value>com.agimatec.validation.constraints.SizeValidatorForString</value>
       </validated-by>
   </constraint-definition>
 

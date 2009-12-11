@@ -182,8 +182,9 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
     }
 
     public void addMetaConstraint(Class<?> beanClass, MetaConstraint<?, ?> metaConstraint) {
-        if (constraintMap.containsKey(beanClass)) {
-            constraintMap.get(beanClass).add(metaConstraint);
+        List<MetaConstraint<?,? extends Annotation>> slot = constraintMap.get(beanClass);
+        if (slot != null) {
+            slot.add(metaConstraint);
         } else {
             List<MetaConstraint<?, ? extends Annotation>> constraintList =
                   new ArrayList<MetaConstraint<?, ? extends Annotation>>();
@@ -193,8 +194,9 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
     }
 
     public void addValid(Class<?> beanClass, AccessStrategy accessStategy) {
-        if (validAccesses.containsKey(beanClass)) {
-            validAccesses.get(beanClass).add(accessStategy);
+        List<AccessStrategy> slot = validAccesses.get(beanClass);
+        if (slot != null) {
+            slot.add(accessStategy);
         } else {
             List<AccessStrategy> tmpList = new ArrayList();
             tmpList.add(accessStategy);
@@ -208,28 +210,26 @@ public class AgimatecValidatorFactory implements ValidatorFactory, Cloneable {
 
     public <T> List<MetaConstraint<T, ? extends Annotation>> getMetaConstraints(
           Class<T> beanClass) {
-        if (constraintMap.containsKey(beanClass)) {
+        List<MetaConstraint<?,? extends Annotation>> slot = constraintMap.get(beanClass);
+        if (slot != null) {
             //noinspection RedundantCast
-            return (List) constraintMap.get(beanClass);
+            return (List)slot;
         } else {
             return Collections.EMPTY_LIST;
         }
     }
 
     public List<AccessStrategy> getValidAccesses(Class<?> beanClass) {
-        if (validAccesses.containsKey(beanClass)) {
-            return validAccesses.get(beanClass);
+        List<AccessStrategy> slot = validAccesses.get(beanClass);
+        if (slot != null) {
+            return slot;
         } else {
             return Collections.EMPTY_LIST;
         }
     }
 
     public Class<?>[] getDefaultSequence(Class<?> beanClass) {
-        if (defaultSequences.containsKey(beanClass)) {
-            return defaultSequences.get(beanClass);
-        } else {
-            return null;
-        }
+        return defaultSequences.get(beanClass);
     }
 
 }

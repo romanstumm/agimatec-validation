@@ -54,9 +54,18 @@ public class ValidationParserTest extends TestCase
 
     public void testXmlEntitySample() {
         XmlEntitySampleBean bean = new XmlEntitySampleBean();
+        bean.setFirstName("tooooooooooooooooooooooooooo long");
+        bean.setValueCode("illegal");
         Validator validator = getFactory().getValidator();
         Set<ConstraintViolation<XmlEntitySampleBean>> results = validator.validate(bean);
-        // TODO RSt - add assertions
+        assertTrue(!results.isEmpty());
+        assertTrue(results.size() == 3);
+
+        bean.setZipCode("valid");
+        bean.setValueCode("20");
+        bean.setFirstName("valid");
+        results = validator.validate(bean);
+        assertTrue(results.isEmpty());
     }
 
     public static Test suite() {

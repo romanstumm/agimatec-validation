@@ -17,7 +17,7 @@
 {{{
 }}}
 
-= Articels =
+= Articels / JSR303 Documentation =
 [http://www.agimatec.de/blog/?s=validierung&x=0&y=0 Blog entries about validation from agimatec]
 
 = Examples =
@@ -75,6 +75,20 @@ public class Customer{
 
     // ... getter and setter methods if required...
 }
+}}}
+
+
+=== Experimental method-level validation ===
+Though not yet part of the JSR-303 specification, you can have a look at the method-level validation API proposed in the specification:
+{{{
+import com.agimatec.validation.jsr303.extensions.*;
+
+javax.validation.Validator validator = // or use javax.validation.Validation.buildDefaultValidatorFactory() API ...
+  AgimatecValidatorFactory.getDefault().getValidator();
+
+// this is an example of how to get an instance of MethodValidator
+MethodValidator mv = validator.unwrap(MethodValidator.class);
+
 }}}
 
 == Using the agimatec-validation API ==

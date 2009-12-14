@@ -40,7 +40,19 @@ import java.util.Map;
  */
 public class BeanValidator {
     private boolean treatMapsLikeBeans = false;
-    
+    private final MetaBeanFinder metaBeanFinder;
+
+    /**
+     * convenience method. Use the global instance of MetaBeanManagerFactory.getFinder().
+     */
+    public BeanValidator() {
+        this(MetaBeanManagerFactory.getFinder());
+    }
+
+    public BeanValidator(MetaBeanFinder metaBeanFinder) {
+        this.metaBeanFinder = metaBeanFinder;
+    }
+
     /**
      * Behavior configuration -
      * <pre>
@@ -68,7 +80,7 @@ public class BeanValidator {
      */
     public ValidationResults validate(Object bean) {
         MetaBean metaBean =
-              MetaBeanManagerFactory.getFinder().findForClass(bean.getClass());
+              getMetaBeanFinder().findForClass(bean.getClass());
         return validate(bean, metaBean);
     }
 
@@ -132,11 +144,9 @@ public class BeanValidator {
             } else {
                 beanClass = parameter.getClass();
             }
-            context.setBean(parameter,
-                  MetaBeanManagerFactory.getFinder().findForClass(beanClass));
+            context.setBean(parameter,getMetaBeanFinder().findForClass(beanClass));
         } else {
-            context.setBean(parameter,
-                  MetaBeanManagerFactory.getFinder().findForId(validate.value()));
+            context.setBean(parameter,getMetaBeanFinder().findForId(validate.value()));
         }
         return true;
     }
@@ -323,5 +333,14 @@ public class BeanValidator {
         for (Validation validation : context.getMetaBean().getValidations()) {
             validation.validate(context);
         }
+    }
+
+    /**
+     * the metabean finder associated with this validator.
+     * @see com.agimatec.validation.MetaBeanManagerFactory#getFinder() 
+     * @return a MetaBeanFinder
+     */
+    public MetaBeanFinder getMetaBeanFinder() {
+        return metaBeanFinder;
     }
 }

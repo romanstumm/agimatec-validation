@@ -17,6 +17,7 @@
 package com.agimatec.validation.integration;
 
 import com.agimatec.validation.BeanValidator;
+import com.agimatec.validation.MetaBeanFinder;
 import com.agimatec.validation.model.ValidationContext;
 
 /**
@@ -30,6 +31,12 @@ import com.agimatec.validation.model.ValidationContext;
  * @see ThreadValidationContext
  */
 public class ThreadBeanValidator extends BeanValidator {
+    public ThreadBeanValidator() {
+    }
+
+    public ThreadBeanValidator(MetaBeanFinder metaBeanFinder) {
+        super(metaBeanFinder);
+    }
 
     @Override
     protected ValidationContext createContext() {

@@ -96,7 +96,7 @@ public class BeanDescriptorImpl extends ElementDescriptorImpl implements BeanDes
                 edesc = new PropertyDescriptorImpl(targetClass, prop.getValidations());
             } else {
                 edesc = new PropertyDescriptorImpl(
-                      factoryContext.getMetaBeanManager().findForClass(targetClass),
+                      factoryContext.getMetaBeanFinder().findForClass(targetClass),
                       prop.getValidations());
             }
             edesc.setCascaded((prop.getMetaBean() != null ||

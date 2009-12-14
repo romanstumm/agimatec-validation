@@ -106,7 +106,7 @@ class MethodValidatorImpl extends ClassValidator implements MethodValidator {
                                                                  Class<?>... groupArray) {
         try {
             final GroupValidationContext context =
-                  createContext(factoryContext.getMetaBeanManager()
+                  createContext(factoryContext.getMetaBeanFinder()
                         .findForClass(clazz), returnedValue, groupArray);
             final ConstraintValidationListener result = context.getListener();
 
@@ -117,7 +117,7 @@ class MethodValidatorImpl extends ClassValidator implements MethodValidator {
                 // 2. If @Valid is placed on a parameter, validate the parameter itself
                 if (method.getAnnotation(Valid.class) != null) {
                     context.setBean(returnedValue,
-                          factoryContext.getMetaBeanManager().
+                          factoryContext.getMetaBeanFinder().
                                 findForClass(returnedValue.getClass()));
                     final Groups groups = context.getGroups();
                     // 1. process groups
@@ -155,7 +155,7 @@ class MethodValidatorImpl extends ClassValidator implements MethodValidator {
         if (parameters.length > 0) {
             try {
                 final GroupValidationContext context =
-                      createContext(factoryContext.getMetaBeanManager()
+                      createContext(factoryContext.getMetaBeanFinder()
                             .findForClass(clazz), parameters, groupArray);
                 final ConstraintValidationListener result = context.getListener();
 
@@ -178,7 +178,7 @@ class MethodValidatorImpl extends ClassValidator implements MethodValidator {
                                                               Class<?>... groupArray) {
         try {
             final GroupValidationContext context =
-                  createContext(factoryContext.getMetaBeanManager()
+                  createContext(factoryContext.getMetaBeanFinder()
                         .findForClass(clazz), parameter, groupArray);
             final ConstraintValidationListener result = context.getListener();
             validateParameterInContext(context, annotations, parameter, parameterIndex);
@@ -200,7 +200,7 @@ class MethodValidatorImpl extends ClassValidator implements MethodValidator {
                 // 2. If @Valid is placed on a parameter, validate the parameter itself
                 if (anno instanceof Valid) {
                     context.setBean(parameter,
-                          factoryContext.getMetaBeanManager().
+                          factoryContext.getMetaBeanFinder().
                                 findForClass(parameter.getClass()));
                     final Groups groups = context.getGroups();
                     // 1. process groups

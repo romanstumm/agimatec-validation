@@ -32,18 +32,35 @@ import com.agimatec.validation.xml.XMLMetaBeanRegistry;
 public class MetaBeanManagerFactory {
     private static MetaBeanManager manager = new MetaBeanManager();
 
+    /**
+     * global meta bean finder.
+     * @return
+     */
     public static MetaBeanFinder getFinder() {
         return manager;
     }
 
+    /**
+     * global meta bean registry
+     * @return
+     */
     public static XMLMetaBeanRegistry getRegistry() {
         return manager;
     }
 
+    /**
+     * global meta bean enricher
+     * @return
+     */
     public static MetaBeanEnricher getEnricher() {
         return manager;
     }
 
+    /**
+     * set global meta bean manager, that is responsible
+     * for finding, caching, xml registry and enrichment algorithm.
+     * @param finder
+     */
     public static void setManager(MetaBeanManager finder) {
         manager = finder;
     }

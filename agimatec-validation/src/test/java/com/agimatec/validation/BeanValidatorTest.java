@@ -59,7 +59,7 @@ public class BeanValidatorTest extends TestCase {
 
         // 1. validate a bean
         BusinessObjectAddress adr = new BusinessObjectAddress();
-        BeanValidator validator = new BeanValidator();
+        BeanValidator<ValidationResults> validator = new BeanValidator();
         ValidationResults results = validator.validate(adr, mb);
         assertEquals(2,
               results.getErrorsByReason().get(Features.Property.MANDATORY).size());
@@ -85,7 +85,7 @@ public class BeanValidatorTest extends TestCase {
         BusinessObject object = new BusinessObject();
         object.setAddress(new BusinessObjectAddress());
         object.getAddress().setOwner(object);
-        BeanValidator validator = new BeanValidator();
+        BeanValidator<ValidationResults> validator = new BeanValidator();
         ValidationResults results = validator.validate(object, info);
         assertTrue(results.hasErrorForReason(Reasons.MANDATORY));
         assertTrue(results.hasError(object, null));

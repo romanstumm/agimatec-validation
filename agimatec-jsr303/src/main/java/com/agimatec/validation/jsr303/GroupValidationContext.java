@@ -21,6 +21,7 @@ import com.agimatec.validation.jsr303.groups.Groups;
 import com.agimatec.validation.jsr303.util.PathImpl;
 import com.agimatec.validation.model.MetaBean;
 import com.agimatec.validation.model.ValidationContext;
+import com.agimatec.validation.model.ValidationListener;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.MessageInterpolator;
@@ -33,8 +34,8 @@ import javax.validation.TraversableResolver;
  * Time: 10:15:08 <br/>
  * Copyright: Agimatec GmbH
  */
-public interface GroupValidationContext
-      extends ValidationContext<ConstraintValidationListener> {
+public interface GroupValidationContext<T extends ValidationListener>
+      extends ValidationContext<T> {
     /** the groups in their sequence for validation */
     Groups getGroups();
 

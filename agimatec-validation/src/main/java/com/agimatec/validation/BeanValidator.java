@@ -38,7 +38,7 @@ import java.util.Map;
  * Time: 12:28:46 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-public class BeanValidator {
+public class BeanValidator<T extends ValidationListener> {
     private boolean treatMapsLikeBeans = false;
     private final MetaBeanFinder metaBeanFinder;
 
@@ -78,7 +78,7 @@ public class BeanValidator {
      *
      * @return results - validation results found
      */
-    public ValidationResults validate(Object bean) {
+    public T validate(Object bean) {
         MetaBean metaBean =
               getMetaBeanFinder().findForClass(bean.getClass());
         return validate(bean, metaBean);
@@ -91,8 +91,8 @@ public class BeanValidator {
      * @param bean - a single bean or a collection of beans (that share the same metaBean!)
      * @return results - validation results found
      */
-    public ValidationResults validate(Object bean, MetaBean metaBean) {
-        ValidationContext<ValidationResults> context = createContext();
+    public T validate(Object bean, MetaBean metaBean) {
+        ValidationContext<T> context = createContext();
         context.setBean(bean, metaBean);
         validateContext(context);
         return context.getListener();
@@ -108,11 +108,11 @@ public class BeanValidator {
      * @return a validation result or null when there was nothing to validate
      * @see Validate
      */
-    public ValidationResults validateCall(Method method, Object[] parameters) {
+    public T validateCall(Method method, Object[] parameters) {
         if (parameters.length > 0) {
             // shortcut (for performance!)
             Annotation[][] annotations = method.getParameterAnnotations();
-            ValidationContext<ValidationResults> context = null;
+            ValidationContext<T> context = null;
             for (int i = 0; i < parameters.length; i++) {
                 for (Annotation anno : annotations[i]) {
                     if (anno instanceof Validate) {
@@ -155,16 +155,16 @@ public class BeanValidator {
      * factory method -
      * overwrite in subclasses
      */
-    protected ValidationResults createResults() {
-        return new ValidationResults();
+    protected T createResults() {
+        return (T) new ValidationResults();
     }
 
     /**
      * factory method -
      * overwrite in subclasses
      */
-    protected ValidationContext<ValidationResults> createContext() {
-        return new BeanValidationContext<ValidationResults>(createResults());
+    protected ValidationContext<T> createContext() {
+        return new BeanValidationContext<T>(createResults());
     }
 
     /**
@@ -174,8 +174,8 @@ public class BeanValidator {
      * @param metaProperty - metadata for the property
      * @return validation results
      */
-    public ValidationResults validateProperty(Object bean, MetaProperty metaProperty) {
-        ValidationContext<ValidationResults> context = createContext();
+    public T validateProperty(Object bean, MetaProperty metaProperty) {
+        ValidationContext<T> context = createContext();
         context.setBean(bean);
         context.setMetaProperty(metaProperty);
         validateProperty(context);

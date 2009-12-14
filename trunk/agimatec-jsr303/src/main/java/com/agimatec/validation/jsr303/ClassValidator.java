@@ -69,7 +69,7 @@ public class ClassValidator extends BeanValidator implements Validator {
     public <T> Set<ConstraintViolation<T>> validate(T object, Class<?>... groupArray) {
         if (object == null) throw new IllegalArgumentException("cannot validate null");
         try {
-            final GroupValidationContext context =
+            final GroupValidationContext<ConstraintValidationListener<T>> context =
                   createContext(factoryContext.getMetaBeanFinder()
                         .findForClass(object.getClass()), object, groupArray);
             final ConstraintValidationListener result = context.getListener();
@@ -158,10 +158,10 @@ public class ClassValidator extends BeanValidator implements Validator {
         try {
             MetaBean metaBean =
                   factoryContext.getMetaBeanFinder().findForClass(object.getClass());
-            GroupValidationContext context = createContext(metaBean, object, groups);
+            GroupValidationContext<ConstraintValidationListener<T>> context =
+                  createContext(metaBean, object, groups);
             ConstraintValidationListener result = context.getListener();
-            NestedMetaProperty nestedProp =
-                  getNestedProperty(metaBean, object, propertyName);
+            NestedMetaProperty nestedProp = getNestedProperty(metaBean, object, propertyName);
             context.setMetaProperty(nestedProp.getMetaProperty());
             if (nestedProp.isNested()) {
                 context.setFixedValue(nestedProp.getValue());
@@ -232,13 +232,12 @@ public class ClassValidator extends BeanValidator implements Validator {
      *          during the validation process
      */
     public <T> Set<ConstraintViolation<T>> validateValue(Class<T> beanType,
-                                                         String propertyName,
-                                                         Object value,
+                                                         String propertyName, Object value,
                                                          Class<?>... groups) {
         try {
-            MetaBean metaBean =
-                  factoryContext.getMetaBeanFinder().findForClass(beanType);
-            GroupValidationContext context = createContext(metaBean, null, groups);
+            MetaBean metaBean = factoryContext.getMetaBeanFinder().findForClass(beanType);
+            GroupValidationContext<ConstraintValidationListener<T>> context =
+                  createContext(metaBean, null, groups);
             ConstraintValidationListener result = context.getListener();
             context.setMetaProperty(
                   getNestedProperty(metaBean, null, propertyName).getMetaProperty());
@@ -268,13 +267,13 @@ public class ClassValidator extends BeanValidator implements Validator {
         }
     }
 
-    protected <T> GroupValidationContext createContext(MetaBean metaBean, T object,
-                                                       Class<?>[] groups) {
-        ConstraintValidationListener<T> listener =
-              new ConstraintValidationListener<T>(object);
-        GroupValidationContextImpl context = new GroupValidationContextImpl(listener,
-              this.factoryContext.getMessageInterpolator(),
-              this.factoryContext.getTraversableResolver(), metaBean);
+    protected <T> GroupValidationContext<ConstraintValidationListener<T>> createContext(
+          MetaBean metaBean, T object, Class<?>[] groups) {
+        ConstraintValidationListener<T> listener = new ConstraintValidationListener<T>(object);
+        GroupValidationContextImpl<ConstraintValidationListener<T>> context =
+              new GroupValidationContextImpl(listener,
+                    this.factoryContext.getMessageInterpolator(),
+                    this.factoryContext.getTraversableResolver(), metaBean);
         context.setBean(object, metaBean);
         context.setGroups(groupsComputer.computeGroups(groups));
         return context;
@@ -300,8 +299,7 @@ public class ClassValidator extends BeanValidator implements Validator {
             }
             return edesc;
         } catch (RuntimeException ex) {
-            throw new ValidationException("error retrieving constraints for " + clazz,
-                  ex);
+            throw new ValidationException("error retrieving constraints for " + clazz, ex);
         }
     }
 
@@ -324,15 +322,13 @@ public class ClassValidator extends BeanValidator implements Validator {
         if (type.isAssignableFrom(getClass())) {
             return (T) this;
         } else if (!type.isInterface()) {
-            return SecureActions.newInstance(type,
-                  new Class[]{AgimatecFactoryContext.class},
+            return SecureActions.newInstance(type, new Class[]{AgimatecFactoryContext.class},
                   new Object[]{factoryContext});
         } else {
             try {
                 Class<T> cls = ClassUtils.getClass(type.getName() + "Impl");
                 return SecureActions.newInstance(cls,
-                      new Class[]{AgimatecFactoryContext.class},
-                      new Object[]{factoryContext});
+                      new Class[]{AgimatecFactoryContext.class}, new Object[]{factoryContext});
             } catch (ClassNotFoundException e) {
                 throw new ValidationException("Type " + type + " not supported");
             }

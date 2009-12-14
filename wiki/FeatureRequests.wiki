@@ -13,9 +13,9 @@
 
 == Exceptions to support properly ==
  * UnexpectedTypeException – invalid property type 
-   * (spec: _Applying a constraint annotation to an incompatible type will raise an UnexpectedTypeException._)
-   * verifyResolveWasUnique: No validator could be found for type
-   * verifyResolveWasUnique: There are multiple validators which could validate...
+   * ~~(spec: _Applying a constraint annotation to an incompatible type will raise an UnexpectedTypeException._)~~ OK
+   * ~~verifyResolveWasUnique: No validator could be found for type~~ OK
+   * ~~verifyResolveWasUnique: There are multiple validators which could validate...~~ OK
  * ConstraintDefinitionException – illegal constraint
    * OverrideAttributes: overriding type of a composite constraint must be identical to the overridden one.
    * OverrideAttributes: Overridden constraint does not define an attribute with name...

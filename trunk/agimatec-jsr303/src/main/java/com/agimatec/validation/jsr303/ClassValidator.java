@@ -51,6 +51,7 @@ public class ClassValidator extends BeanValidator implements Validator {
     protected final GroupsComputer groupsComputer = new GroupsComputer();
 
     public ClassValidator(AgimatecFactoryContext factoryContext) {
+        super(factoryContext.getMetaBeanFinder());
         this.factoryContext = factoryContext;
     }
 
@@ -69,7 +70,7 @@ public class ClassValidator extends BeanValidator implements Validator {
         if (object == null) throw new IllegalArgumentException("cannot validate null");
         try {
             final GroupValidationContext context =
-                  createContext(factoryContext.getMetaBeanManager()
+                  createContext(factoryContext.getMetaBeanFinder()
                         .findForClass(object.getClass()), object, groupArray);
             final ConstraintValidationListener result = context.getListener();
             final Groups groups = context.getGroups();
@@ -156,7 +157,7 @@ public class ClassValidator extends BeanValidator implements Validator {
         if (object == null) throw new IllegalArgumentException("cannot validate null");
         try {
             MetaBean metaBean =
-                  factoryContext.getMetaBeanManager().findForClass(object.getClass());
+                  factoryContext.getMetaBeanFinder().findForClass(object.getClass());
             GroupValidationContext context = createContext(metaBean, object, groups);
             ConstraintValidationListener result = context.getListener();
             NestedMetaProperty nestedProp =
@@ -236,7 +237,7 @@ public class ClassValidator extends BeanValidator implements Validator {
                                                          Class<?>... groups) {
         try {
             MetaBean metaBean =
-                  factoryContext.getMetaBeanManager().findForClass(beanType);
+                  factoryContext.getMetaBeanFinder().findForClass(beanType);
             GroupValidationContext context = createContext(metaBean, null, groups);
             ConstraintValidationListener result = context.getListener();
             context.setMetaProperty(
@@ -290,7 +291,7 @@ public class ClassValidator extends BeanValidator implements Validator {
      */
     public BeanDescriptor getConstraintsForClass(Class<?> clazz) {
         try {
-            MetaBean metaBean = factoryContext.getMetaBeanManager().findForClass(clazz);
+            MetaBean metaBean = factoryContext.getMetaBeanFinder().findForClass(clazz);
             BeanDescriptorImpl edesc =
                   metaBean.getFeature(Jsr303Features.Bean.BEAN_DESCRIPTOR);
             if (edesc == null) {

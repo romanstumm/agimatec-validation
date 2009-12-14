@@ -18,10 +18,7 @@
  */
 package com.agimatec.validation.jsr303;
 
-import com.agimatec.validation.IntrospectorMetaBeanFactory;
-import com.agimatec.validation.MetaBeanBuilder;
-import com.agimatec.validation.MetaBeanFactory;
-import com.agimatec.validation.MetaBeanManager;
+import com.agimatec.validation.*;
 import com.agimatec.validation.xml.XMLMetaBeanFactory;
 
 import javax.validation.*;
@@ -37,25 +34,30 @@ import java.util.List;
  * Copyright: Agimatec GmbH
  */
 public class AgimatecFactoryContext implements ValidatorContext {
-    private final MetaBeanManager metaBeanManager;
+    private final AgimatecValidatorFactory factory;
+    private final MetaBeanFinder metaBeanFinder;
 
     private MessageInterpolator messageInterpolator;
     private TraversableResolver traversableResolver;
-    private AgimatecValidatorFactory factory;
     private ConstraintValidatorFactory constraintValidatorFactory;
-
 
     public AgimatecFactoryContext(AgimatecValidatorFactory factory) {
         this.factory = factory;
-        this.metaBeanManager = buildMetaBeanManager();
+        this.metaBeanFinder = buildMetaBeanManager();
+    }
+
+    protected AgimatecFactoryContext(AgimatecValidatorFactory factory,
+                                     MetaBeanFinder metaBeanFinder) {
+        this.factory = factory;
+        this.metaBeanFinder = metaBeanFinder;
     }
 
     public AgimatecValidatorFactory getFactory() {
         return factory;
     }
 
-    public final MetaBeanManager getMetaBeanManager() {
-        return metaBeanManager;
+    public final MetaBeanFinder getMetaBeanFinder() {
+        return metaBeanFinder;
     }
 
     public ValidatorContext messageInterpolator(MessageInterpolator messageInterpolator) {

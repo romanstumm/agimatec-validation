@@ -40,6 +40,8 @@ public class PathImplTest extends TestCase {
     public void testParsing() {
         String property = "order[3].deliveryAddress.addressline[1]";
         Path path = PathImpl.fromString(property);
+        assertEquals(property, path.toString());
+        
         Iterator<Path.Node> propIter = path.iterator();
 
         assertTrue(propIter.hasNext());
@@ -85,8 +87,11 @@ public class PathImplTest extends TestCase {
 
     public void testNull() {
         assertEquals(PathImpl.fromString(null), PathImpl.create(null));
+
+        assertEquals("", PathImpl.create(null).toString());
         Path path = PathImpl.create(null);
-        assertFalse(path.iterator().hasNext());
+        Path.Node node = path.iterator().next();
+        assertEquals(null, node.getName());
     }
 
     public void testUnbalancedBraces() {
@@ -123,7 +128,19 @@ public class PathImplTest extends TestCase {
 
     public void testEmptyString() {
         Path path = PathImpl.fromString("");
-        assertFalse(path.iterator().hasNext());
+        assertEquals(null, path.iterator().next().getName());
+    }
+
+    public void testToString() {
+        PathImpl path = PathImpl.create(null);
+        path.addNode(new NodeImpl("firstName"));
+        assertEquals("firstName", path.toString());
+
+        path = PathImpl.create(null);
+        path.getLeafNode().setIndex(2);
+        assertEquals("[2]", path.toString());
+        path.addNode(new NodeImpl("firstName"));
+        assertEquals("[2].firstName", path.toString());
     }
 
     public static Test suite() {

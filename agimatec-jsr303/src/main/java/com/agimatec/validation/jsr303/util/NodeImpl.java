@@ -19,31 +19,35 @@
 package com.agimatec.validation.jsr303.util;
 
 import javax.validation.Path;
+import java.io.Serializable;
 
 /**
- * Description: a node (property) as part of a Path <br/>
+ * Description: a node (property) as part of a Path.
+ * (Implementation based on reference implementation) <br/>
  * User: roman <br/>
  * Date: 28.09.2009 <br/>
  * Time: 11:56:35 <br/>
  * Copyright: Agimatec GmbH
  */
-public final class NodeImpl implements Path.Node {
+public final class NodeImpl implements Path.Node, Serializable {
+
+    private static final String INDEX_OPEN = "[";
+    private static final String INDEX_CLOSE = "]";
 
     private final String name;
     private boolean isInIterable;
     private Integer index;
     private Object key;
 
-
     public NodeImpl(String name) {
         this.name = name;
     }
 
-    public NodeImpl(Path.Node node) {
-        name = node.getName();
-        isInIterable = node.isInIterable();
-        index = node.getIndex();
-        key = node.getKey();
+    NodeImpl(Path.Node node) {
+        this.name = node.getName();
+        this.isInIterable = node.isInIterable();
+        this.index = node.getIndex();
+        this.key = node.getKey();
     }
 
     public String getName() {
@@ -80,13 +84,13 @@ public final class NodeImpl implements Path.Node {
     public String toString() {
         StringBuilder builder = new StringBuilder(name == null ? "" : name);
         if (isInIterable) {
-            builder.append("[");
+            builder.append(INDEX_OPEN);
             if (getIndex() != null) {
                 builder.append(getIndex());
             } else if (getKey() != null) {
                 builder.append(getKey());
             }
-            builder.append("]");
+            builder.append(INDEX_CLOSE);
         }
         return builder.toString();
     }
@@ -102,11 +106,20 @@ public final class NodeImpl implements Path.Node {
 
         NodeImpl node = (NodeImpl) o;
 
-        return isInIterable == node.isInIterable &&
-              !(index != null ? !index.equals(node.index) : node.index != null) &&
-              !(key != null ? !key.equals(node.key) : node.key != null) &&
-              !(name != null ? !name.equals(node.name) : node.name != null);
+        if (isInIterable != node.isInIterable) {
+            return false;
+        }
+        if (index != null ? !index.equals(node.index) : node.index != null) {
+            return false;
+        }
+        if (key != null ? !key.equals(node.key) : node.key != null) {
+            return false;
+        }
+        if (name != null ? !name.equals(node.name) : node.name != null) {
+            return false;
+        }
 
+        return true;
     }
 
     @Override

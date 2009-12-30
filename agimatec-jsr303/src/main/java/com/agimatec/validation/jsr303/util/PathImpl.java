@@ -19,6 +19,7 @@
 package com.agimatec.validation.jsr303.util;
 
 import javax.validation.Path;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -26,25 +27,30 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Description: object holding the property path as a list of nodes<br/>
+ * Description: object holding the property path as a list of nodes.
+ * (Implementation based on reference implementation)
+ * <br/>
  * User: roman <br/>
  * Date: 28.09.2009 <br/>
  * Time: 11:21:33 <br/>
  * Copyright: Agimatec GmbH
  */
-public final class PathImpl implements Path {
+public class PathImpl implements Path, Serializable {
 
-    /** Regular expression used to split a string path into its elements. */
+    /**
+     * Regular expression used to split a string path into its elements.
+     *
+     * @see <a href="http://www.regexplanet.com/simple/index.jsp">Regular expression tester</a>
+     */
     private static final Pattern pathPattern =
-          Pattern.compile("(\\w+)(\\[(\\w+)\\])?(\\.(.*))*");
+          Pattern.compile("(\\w+)(\\[(\\w*)\\])?(\\.(.*))*");
 
     private static final String PROPERTY_PATH_SEPERATOR = ".";
 
     private final List<Node> nodeList;
 
     /**
-     * Returns a {@code Path} instance representing the path described
-     * by the given string. To create a root node empty string or null should be passed.
+     * Returns a {@code Path} instance representing the path described by the given string. To create a root node the empty string should be passed.
      *
      * @param propertyPath the path as string representation.
      * @return a {@code Path} instance representing the path described by the given string.
@@ -54,39 +60,13 @@ public final class PathImpl implements Path {
             return create(null);
         }
 
-        PathImpl path = new PathImpl();
-        String tmp = propertyPath;
-        do {
-            Matcher matcher = pathPattern.matcher(tmp);
-            if (matcher.matches()) {
-                String value = matcher.group(1);
-                String index = matcher.group(3);
-                NodeImpl node = new NodeImpl(value);
-                if (index != null) {
-                    node.setInIterable(true);
-                    try {
-                        Integer i = Integer.parseInt(index);
-                        node.setIndex(i);
-                    } catch (NumberFormatException e) {
-                        node.setKey(index);
-                    }
-                }
-                path.addNode(node);
-                tmp = matcher.group(5);
-            } else {
-                throw new IllegalArgumentException(
-                      "Unable to parse property path " + propertyPath);
-            }
-        } while (tmp != null);
-        return path;
+        return parseProperty(propertyPath);
     }
 
     public static PathImpl create(String name) {
         PathImpl path = new PathImpl();
-        if (name != null) {
-            NodeImpl node = new NodeImpl(name);
-            path.addNode(node);
-        }
+        NodeImpl node = new NodeImpl(name);
+        path.addNode(node);
         return path;
     }
 
@@ -113,7 +93,7 @@ public final class PathImpl implements Path {
     }
 
     public boolean isRootPath() {
-        return nodeList.isEmpty();
+        return nodeList.size() == 1 && nodeList.get(0).getName() == null;
     }
 
     public PathImpl getPathWithoutLeafNode() {
@@ -137,6 +117,18 @@ public final class PathImpl implements Path {
         return nodeList.remove(nodeList.size() - 1);
     }
 
+    public NodeImpl getLeafNode() {
+        if (nodeList.size() == 0) {
+            return null;
+        }
+        return (NodeImpl) nodeList.get(nodeList.size() - 1);
+    }
+
+
+    public Iterator<Path.Node> iterator() {
+        return nodeList.iterator();
+    }
+
     public boolean isSubPathOf(Path path) {
         Iterator<Node> pathIter = path.iterator();
         Iterator<Node> thisIter = iterator();
@@ -153,17 +145,6 @@ public final class PathImpl implements Path {
         return true;
     }
 
-    public NodeImpl getLeafNode() {
-        if (nodeList.size() == 0) {
-            return null;
-        }
-        return (NodeImpl) nodeList.get(nodeList.size() - 1);
-    }
-
-    public Iterator<Node> iterator() {
-        return nodeList.iterator();
-    }
-
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -171,7 +152,7 @@ public final class PathImpl implements Path {
         while (iter.hasNext()) {
             Node node = iter.next();
             builder.append(node.toString());
-            if (iter.hasNext()) {
+            if (iter.hasNext() && builder.length() > 0) {
                 builder.append(PROPERTY_PATH_SEPERATOR);
             }
         }
@@ -196,6 +177,37 @@ public final class PathImpl implements Path {
     @Override
     public int hashCode() {
         return nodeList != null ? nodeList.hashCode() : 0;
+    }
+
+    private static PathImpl parseProperty(String property) {
+        PathImpl path = new PathImpl();
+        String tmp = property;
+        do {
+            Matcher matcher = pathPattern.matcher(tmp);
+            if (matcher.matches()) {
+                String value = matcher.group(1);
+                String indexed = matcher.group(2);
+                String index = matcher.group(3);
+                NodeImpl node = new NodeImpl(value);
+                if (indexed != null) {
+                    node.setInIterable(true);
+                }
+                if (index != null && index.length() > 0) {
+                    try {
+                        Integer i = Integer.valueOf(index);
+                        node.setIndex(i);
+                    } catch (NumberFormatException e) {
+                        node.setKey(index);
+                    }
+                }
+                path.addNode(node);
+                tmp = matcher.group(5);
+            } else {
+                throw new IllegalArgumentException(
+                      "Unable to parse property path " + property);
+            }
+        } while (tmp != null);
+        return path;
     }
 
 }

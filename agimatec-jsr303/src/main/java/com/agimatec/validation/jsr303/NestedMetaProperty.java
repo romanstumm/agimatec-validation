@@ -57,7 +57,7 @@ final class NestedMetaProperty {
                     token = tokens.nextToken();
                     if (!"]".equals(token)) {
                         throw new ValidationException(
-                                "invalid propertyName format at: " + propertyPath);
+                                "']' missing, invalid property format: " + propertyPath);
                     }
                     useIndexedValue(idx);
                     resolveMetaBean();
@@ -65,7 +65,7 @@ final class NestedMetaProperty {
                     MetaProperty mp = getMetaBean().getProperty(token);
                     if (mp == null) {
                         throw new ValidationException(
-                                "unknown property " + token + " in " + propertyPath);
+                                "unknown property '" + token + "' in " + getMetaBean().getId());
                     }
                     if (getValue() != null) {
                         setValue(
@@ -79,7 +79,7 @@ final class NestedMetaProperty {
             throw ex; // route exception
         } catch (Exception ex) { // wrap exception
             throw new ValidationException(
-                    "invalid propertyName: " + propertyPath, ex);
+                    "invalid property format: " + propertyPath, ex);
 
         }
     }

@@ -26,6 +26,7 @@ import junit.framework.TestCase;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.UnexpectedTypeException;
+import javax.validation.ValidationException;
 import javax.validation.Validator;
 import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.ConstraintDescriptor;
@@ -75,12 +76,24 @@ public class Jsr303Test extends TestCase {
     }
 
     public void testValidateValue() {
-        Assert.assertTrue(getValidator()
-              .validateValue(Book.class, "subtitle", "123456789098765432").isEmpty());
-        Assert.assertFalse(getValidator()
-              .validateValue(Book.class, "subtitle",
-                    "123456789098765432123412345678909876543212341234564567890987654321234",
-                    Second.class).isEmpty());
+        Validator validator = getValidator();
+        assertTrue(
+              validator.validateValue(Book.class, "subtitle", "123456789098765432").isEmpty());
+        assertFalse(validator.validateValue(Book.class, "subtitle",
+              "123456789098765432123412345678909876543212341234564567890987654321234",
+              Second.class).isEmpty());
+        // tests for issue 22: validation of a field without any constraints 
+        assertEquals(0, validator.validateValue(Book.class, "unconstraintField", 4).size());
+        // tests for issue 22: validation of unknown field cause ValidationException
+        try {
+            validator.validateValue(Book.class, "unknownProperty", 4);
+            fail("unknownProperty not detected");
+        } catch (ValidationException ex) {
+            // OK
+            assertEquals(
+                  "unknown property 'unknownProperty' in com.agimatec.validation.jsr303.example.Book",
+                  ex.getMessage());
+        }
     }
 
     public void testMetadataAPI_Book() {

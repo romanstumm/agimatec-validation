@@ -124,10 +124,10 @@ public class Jsr303MetaBeanFactory implements MetaBeanFactory {
                       .isIgnoreAnnotations(field)) {
                     if (metaProperty == null) {
                         metaProperty = createMetaProperty(field.getName(), field.getType());
-                        if (processAnnotations(metabean, metaProperty, beanClass, field,
-                              new FieldAccess(field), null)) {
+                        /*if (*/processAnnotations(metabean, metaProperty, beanClass, field,
+                              new FieldAccess(field), null);//) {
                             metabean.putProperty(metaProperty.getName(), metaProperty);
-                        }
+                        //}
                     } else {
                         processAnnotations(metabean, metaProperty, beanClass, field,
                               new FieldAccess(field), null);
@@ -149,10 +149,10 @@ public class Jsr303MetaBeanFactory implements MetaBeanFactory {
                         if (metaProperty == null) {
                             metaProperty =
                                   createMetaProperty(propName, method.getReturnType());
-                            if (processAnnotations(metabean, metaProperty, beanClass, method,
-                                  new MethodAccess(propName, method), null)) {
+                            /*if (*/processAnnotations(metabean, metaProperty, beanClass, method,
+                                  new MethodAccess(propName, method), null);//) {
                                 metabean.putProperty(propName, metaProperty);
-                            }
+                            //}
                         } else {
                             processAnnotations(metabean, metaProperty, beanClass, method,
                                   new MethodAccess(propName, method), null);

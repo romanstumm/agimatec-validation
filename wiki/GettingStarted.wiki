@@ -98,7 +98,7 @@ MethodValidator mv = validator.unwrap(MethodValidator.class);
 }}}
 
 == Using the agimatec-validation API ==
-The framework offers additional features that are not part of the upcoming specification.
+The framework offers additional features that are not part of the JSR-303 specification.
 
 1. describe your business classes with XML
 

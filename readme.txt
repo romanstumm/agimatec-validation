@@ -13,6 +13,13 @@ compile all projects:
 ---------------------
 mvn install
 
+compile with alternative dependencies (geronimo):
+-------------------------------------------------
+compile using geronimo artifacts for validation-api
+instead of reference implementation of validation-api:
+
+mvn install -Dagimatec-on-geronimo
+
 (artifacts are generated into the target directories and your local .m2 repo)
 
 (Optional) generate site, javadoc:
@@ -59,5 +66,5 @@ http://code.google.com/p/agimatec-validation
 http://groups.google.com/group/agimatec-validation
 http://www.agimatec.de
 
-Roman Stumm, agimatec GmbH, 2008, 2009
+Roman Stumm, agimatec GmbH, 2008, 2009, 2010
 email: roman.stumm@agimatec.de

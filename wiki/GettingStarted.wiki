@@ -142,7 +142,7 @@ You can also add custom validators or exchange the default validators:
 </beanInfos>
 }}}
 
-  * {{{<validator>}} under {{{<beanInfos>}}} registers a custom-validator implementation that you can use for validating beans or properties described in the xml-file
+  * {{{<validator>}}} under {{{<beanInfos>}}} registers a custom-validator implementation that you can use for validating beans or properties described in the xml-file
   * the default validator has id="standard", when registering another implementation under this name, you hook in you custom validator instead of the default implementation
   * {{{<validator/>}}} tag can be added under {{{<property/>}}} or {{{<relationship/>}}} (property-level-validation) and under {{{<bean/>}}} (bean-level-validation). The attribute "refId" refers to the "id" of the {{{<validator/>}}} under {{{<beanInfos/>}}}
 

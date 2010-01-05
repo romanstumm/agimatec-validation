@@ -174,10 +174,10 @@ public class BootstrapTest extends TestCase {
             Assert.fail();
         }
         catch (ValidationException e) {
-            Assert.assertEquals(
+            Assert.assertTrue(
                     "Wrong error message",
-                    "Unable to find provider: class com.agimatec.validation.jsr303.AgimatecValidationProvider",
-                    e.getMessage()
+                    e.getMessage().contains("provider") && 
+                    e.getMessage().contains("com.agimatec.validation.jsr303.AgimatecValidationProvider")
             );
         }
     }

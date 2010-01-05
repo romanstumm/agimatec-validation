@@ -33,8 +33,14 @@ mvn clean install
 compile agimatec-jsr303 project:
 ------------------------------------
 mvn install
-
 (artifacts are generated into the target directory)
+
+compile with alternative dependencies (geronimo):
+-------------------------------------------------
+compile agimatec-jsr303 using geronimo artifacts for validation-api
+instead of reference implementation of validation-api:
+
+mvn install -Dagimatec-on-geronimo
 
 (optional) generate site, javadoc:
 -----------------------
@@ -90,5 +96,5 @@ Feedback, questions, contribution
 http://code.google.com/p/agimatec-validation
 http://www.agimatec.de
 
-Roman Stumm, agimatec GmbH, 2008, 2009
+Roman Stumm, agimatec GmbH, 2008, 2009, 2010
 email: roman.stumm@agimatec.de

@@ -19,6 +19,7 @@
 {{{
 }}}
 
+
 = Articels / JSR303 Documentation =
   * [http://www.agimatec.de/blog/?s=validierung&x=0&y=0 German blog entries about validation from agimatec]
 
@@ -124,8 +125,8 @@ The framework offers additional features that are not part of the JSR-303 specif
 }}}
 
   * the xml describes two classes: Address and Country
-  * validator validates Adress.country, because of <relationship/> tag, that links the address to its child country
-  * you can add more "features" to both a <bean/> or a <property/> with the <feature/> tag.
+  * validator validates Adress.country, because of {{{<relationship/>}}} tag, that links the address to its child country
+  * you can add more "features" to both a {{{<bean/>}}} or a {{{<property/>}}} with the {{{<feature/>}}} tag.
   * the value of the feature can be of any type (based on XStream xml serializer)
 
 You can also add custom validators or exchange the default validators:
@@ -141,9 +142,9 @@ You can also add custom validators or exchange the default validators:
 </beanInfos>
 }}}
 
-  * <validator> under <beanInfos> registers a custom-validator implementation that you can use for validating beans or properties described in the xml-file
+  * {{{<validator>}} under {{{<beanInfos>}}} registers a custom-validator implementation that you can use for validating beans or properties described in the xml-file
   * the default validator has id="standard", when registering another implementation under this name, you hook in you custom validator instead of the default implementation
-  * <validator/> tag can be added under <property/> (property-level-valiation) and under <bean/> (bean-level-validation). The attribute "refId" refers to the "id" of the <validator/> under <beanInfos/>
+  * {{{<validator/>}}} tag can be added under {{{<property/>}}} or {{{<relationship/>}}} (property-level-validation) and under {{{<bean/>}}} (bean-level-validation). The attribute "refId" refers to the "id" of the {{{<validator/>}}} under {{{<beanInfos/>}}}
 
 2. create a !BeanValidator
 

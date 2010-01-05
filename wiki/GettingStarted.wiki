@@ -13,6 +13,8 @@
 || commons-lang || [http://commons.apache.org/lang/ commons-lang] || 2.4 || required ||
 || com.thoughtworks.xstream || [http://xstream.codehaus.org/download.html xstream ] || 1.3.1 || optional, for XML processing of bean-infos (proprietary) xml only. jsr303-xml deployment descriptor handled with JAX-B ||
 || org.freemarker || [http://freemarker.org/ freemarker] || 2.3.15 || optional, for JSON code generator ||
+|| javax.xml.bind || jaxb-api || 2.1 || JDK1.5 only, agimatec-jsr303 only ||
+|| com.sun.xml.bind || jaxb-impl || 2.1.3||JDK1.5 only, agimatec-jsr303 only ||
 
 {{{
 }}}

@@ -20,7 +20,9 @@
 <!--
     Maven release plugin requires the project tag to be on a single line.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.agimatec</groupId>
@@ -34,9 +36,12 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <agimatec-site-url>http://agimatec-validation.googlecode.com/svn/site/maven2</agimatec-site-url>
-    <agimatec-snapshots-url>http://oss.sonatype.org/content/repositories/agimatec-snapshots</agimatec-snapshots-url>
-    <agimatec-releases-url>http://oss.sonatype.org/content/repositories/agimatec-releases</agimatec-releases-url>
+    <agimatec-site-url>http://agimatec-validation.googlecode.com/svn/site/maven2
+    </agimatec-site-url>
+    <agimatec-snapshots-url>http://oss.sonatype.org/content/repositories/agimatec-snapshots
+    </agimatec-snapshots-url>
+    <agimatec-releases-url>http://oss.sonatype.org/content/repositories/agimatec-releases
+    </agimatec-releases-url>
   </properties>
 
   <organization>
@@ -50,7 +55,8 @@
 
   <scm>
     <connection>scm:svn:http://agimatec-validation.googlecode.com/svn/trunk</connection>
-    <developerConnection>scm:svn:https://agimatec-validation.googlecode.com/svn/trunk</developerConnection>
+    <developerConnection>scm:svn:https://agimatec-validation.googlecode.com/svn/trunk
+    </developerConnection>
     <url>http://agimatec-validation.googlecode.com/svn/trunk</url>
   </scm>
 
@@ -95,20 +101,20 @@
         <enabled>false</enabled>
       </releases>
     </repository>
-<!--
-    <repository>
-      <id>geronimo-staging</id>
-      <url>https://repository.apache.org/content/repositories/staging/</url>
-      <releases>
-        <checksumPolicy>fail</checksumPolicy>
-        <enabled>true</enabled>
-        <updatePolicy>always</updatePolicy>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
--->
+    <!--
+        <repository>
+          <id>geronimo-staging</id>
+          <url>https://repository.apache.org/content/repositories/staging/</url>
+          <releases>
+            <checksumPolicy>fail</checksumPolicy>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </repository>
+    -->
   </repositories>
 
   <distributionManagement>
@@ -171,7 +177,7 @@
         <version>1.0.0.GA</version>
       </dependency>
       <!-- Apache Geronimo version of the spec -->
-     <dependency>
+      <dependency>
         <groupId>org.apache.geronimo.specs</groupId>
         <artifactId>geronimo-validation_1.0_spec</artifactId>
         <version>1.0-SNAPSHOT</version>
@@ -206,7 +212,8 @@
       <dependency>
         <groupId>commons-beanutils</groupId>
         <artifactId>commons-beanutils</artifactId>
-        <version>1.8.2</version> <!-- 1.8.0 is also compatible -->
+        <version>1.8.2</version>
+        <!-- 1.8.0 is also compatible -->
       </dependency>
       <dependency>
         <groupId>com.thoughtworks.xstream</groupId>
@@ -221,7 +228,8 @@
       <dependency>
         <groupId>org.freemarker</groupId>
         <artifactId>freemarker</artifactId>
-        <version>2.3.15</version> <!-- some older version is also compatible -->
+        <version>2.3.15</version>
+        <!-- some older version is also compatible -->
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -236,14 +244,28 @@
       <!-- also include license and notice files -->
       <resource>
         <directory>${basedir}</directory>
-          <includes>
-            <include>NOTICE.txt</include>
-            <include>LICENSE.txt</include>
-            <include>DISCLAIMER.txt</include>
-          </includes>
+        <includes>
+          <include>NOTICE.txt</include>
+          <include>LICENSE.txt</include>
+          <include>DISCLAIMER.txt</include>
+        </includes>
         <targetPath>META-INF</targetPath>
       </resource>
     </resources>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+      </testResource>
+      <testResource>
+        <directory>${basedir}</directory>
+        <includes>
+          <include>NOTICE.txt</include>
+          <include>LICENSE.txt</include>
+          <include>DISCLAIMER.txt</include>
+        </includes>
+        <targetPath>META-INF</targetPath>
+      </testResource>
+    </testResources>
 
     <extensions>
       <extension>
@@ -361,7 +383,7 @@
             <numUnapprovedLicenses>0</numUnapprovedLicenses>
             <excludes>
               <!--
-                  comments are usupported by Java service descriptors
+                  comments are unsupported by Java service descriptors
               -->
               <exclude>**/javax.validation.spi.ValidationProvider</exclude>
 
@@ -405,6 +427,7 @@
             <id>attach-sources</id>
             <goals>
               <goal>jar</goal>
+              <goal>test-jar</goal>
             </goals>
           </execution>
         </executions>
@@ -467,7 +490,7 @@
               <updateReleaseInfo>true</updateReleaseInfo>
             </configuration>
           </plugin>
-          <!-- this fails the ianal check
+          <!-- this fails the final check
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>

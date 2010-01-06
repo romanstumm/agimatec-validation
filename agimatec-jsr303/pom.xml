@@ -218,6 +218,20 @@
         <targetPath>META-INF</targetPath>
       </resource>
     </resources>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+      </testResource>
+      <testResource>
+        <directory>${basedir}</directory>
+        <includes>
+          <include>NOTICE.txt</include>
+          <include>LICENSE.txt</include>
+          <include>DISCLAIMER.txt</include>
+        </includes>
+        <targetPath>META-INF</targetPath>
+      </testResource>
+    </testResources>
 
     <extensions>
       <extension>
@@ -244,6 +258,93 @@
           <extension>true</extension>
         </configuration>
       </plugin>
+
+      <!--
+      create a directory unter test/agimatec-validation-dist/**
+      with all artifacts, sources and dependencies
+      for download from the project website
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${dist-dir}/lib</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>true</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
+              <includeScope>compile</includeScope>
+            </configuration>
+          </execution>
+          <execution>
+            <id>src-dependencies</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <classifier>sources</classifier>
+              <failOnMissingClassifierArtifact>false</failOnMissingClassifierArtifact>
+              <outputDirectory>${dist-dir}/src</outputDirectory>
+              <excludeTransitive>true</excludeTransitive>
+              <includeScope>compile</includeScope>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-installed</id>
+            <phase>install</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>${project.artifactId}</artifactId>
+                  <version>${project.version}</version>
+                  <type>${project.packaging}</type>
+                </artifactItem>
+              </artifactItems>
+              <outputDirectory>${dist-dir}/lib</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-sources</id>
+            <phase>install</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>${project.artifactId}</artifactId>
+                  <version>${project.version}</version>
+                  <type>${project.packaging}</type>
+                  <classifier>sources</classifier>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>${project.artifactId}</artifactId>
+                  <version>${project.version}</version>
+                  <type>${project.packaging}</type>
+                  <classifier>test-sources</classifier>
+                </artifactItem>
+              </artifactItems>
+              <outputDirectory>${dist-dir}/src</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
+  <properties>
+    <dist-dir>${project.build.directory}/agimatec-validation-dist-${project.version}</dist-dir>
+  </properties>
 </project>

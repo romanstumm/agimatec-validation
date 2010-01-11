@@ -19,7 +19,7 @@ The sources in svn are probably newer than the release you find in the "Download
   * jsr303 bootstrap API completed
   * Issue#14: JSR303 XML deployment descriptor and constraints supported
   * Issue#20: fixed NullPointerException in hasConstraints()
-  * fixes in agimatec-validation core (propietary validation of maxValue/minValue)
+  * fixes in agimatec-validation core (proprietary validation of maxValue/minValue)
 
 ===release 0.9.4 (October, November 2009)===
   * compiled with validation-api 1.0.0.GA

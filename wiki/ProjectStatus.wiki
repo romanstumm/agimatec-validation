@@ -2,6 +2,8 @@
 
 = Project status =
 
+[http://wiki.apache.org/incubator/ValidationProposal Proposal for agimatec-validation to become an Apache Incubator project]
+
   * You can find features and news at FeatureHistory.
 
   * For things to be done refer to FeatureRequests.

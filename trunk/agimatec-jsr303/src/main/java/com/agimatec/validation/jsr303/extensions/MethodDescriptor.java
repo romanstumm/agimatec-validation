@@ -27,7 +27,9 @@ import java.util.List;
  * Time: 12:38:09 <br/>
  * Copyright: Agimatec GmbH
  */
-public interface MethodDescriptor extends ElementDescriptor { 
+public interface MethodDescriptor extends ElementDescriptor {
     List<ParameterDescriptor> getParameterDescriptors(); //index aligned
+
     boolean isCascaded();
+
 }

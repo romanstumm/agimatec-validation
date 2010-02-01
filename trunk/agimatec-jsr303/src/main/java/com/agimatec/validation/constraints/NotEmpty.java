@@ -36,7 +36,7 @@ import java.lang.annotation.Target;
 @Constraint(
       validatedBy = {NotEmptyValidatorForCollection.class, NotEmptyValidatorForMap.class,
             NotEmptyValidatorForString.class, NotEmptyValidator.class})
-@Target({METHOD, FIELD, ANNOTATION_TYPE})
+@Target({METHOD, FIELD, ANNOTATION_TYPE, PARAMETER})
 @Retention(RUNTIME)
 public @interface NotEmpty {
     Class<?>[] groups() default {};

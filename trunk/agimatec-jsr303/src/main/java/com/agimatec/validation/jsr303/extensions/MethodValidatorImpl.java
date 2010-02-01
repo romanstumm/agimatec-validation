@@ -22,8 +22,7 @@ import com.agimatec.validation.jsr303.groups.Groups;
 import com.agimatec.validation.model.MetaBean;
 
 import javax.validation.ConstraintViolation;
-import javax.validation.Valid;
-import java.lang.annotation.Annotation;
+import javax.validation.metadata.ConstraintDescriptor;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -38,14 +37,19 @@ import java.util.Set;
  * Copyright: Agimatec GmbH
  */
 class MethodValidatorImpl extends ClassValidator implements MethodValidator {
+
     public MethodValidatorImpl(AgimatecFactoryContext factoryContext) {
         super(factoryContext);
     }
 
     @Override
     protected BeanDescriptorImpl createBeanDescriptor(MetaBean metaBean) {
-        return new MethodBeanDescriptorImpl(factoryContext, metaBean,
-              metaBean.getValidations());
+        MethodBeanDescriptorImpl descriptor = new MethodBeanDescriptorImpl(factoryContext,
+              metaBean, metaBean.getValidations());
+        MethodValidatorMetaBeanFactory factory =
+              new MethodValidatorMetaBeanFactory(factoryContext);
+        factory.buildMethodDescriptor(descriptor);
+        return descriptor;
     }
 
     /**
@@ -65,24 +69,37 @@ class MethodValidatorImpl extends ClassValidator implements MethodValidator {
     public <T> Set<ConstraintViolation<T>> validateParameters(Class<T> clazz, Method method,
                                                               Object[] parameters,
                                                               Class<?>... groupArray) {
-        return validateParameters(clazz, method.getParameterAnnotations(), parameters,
-              groupArray);
+        MethodBeanDescriptorImpl beanDesc =
+              (MethodBeanDescriptorImpl) getConstraintsForClass(clazz);
+        MethodDescriptorImpl methodDescriptor =
+              (MethodDescriptorImpl) beanDesc.getConstraintsForMethod(method);
+        return validateParameters(methodDescriptor.getMetaBean(),
+              methodDescriptor.getParameterDescriptors(), parameters, groupArray);
     }
 
     public <T> Set<ConstraintViolation<T>> validateParameter(Class<T> clazz, Method method,
                                                              Object parameter,
                                                              int parameterIndex,
                                                              Class<?>... groupArray) {
-        return validateParameter(clazz, method.getParameterAnnotations(), parameter,
-              parameterIndex, groupArray);
+        MethodBeanDescriptorImpl beanDesc =
+              (MethodBeanDescriptorImpl) getConstraintsForClass(clazz);
+        MethodDescriptorImpl methodDescriptor =
+              (MethodDescriptorImpl) beanDesc.getConstraintsForMethod(method);
+        ParameterDescriptorImpl paramDesc = (ParameterDescriptorImpl) methodDescriptor
+              .getParameterDescriptors().get(parameterIndex);
+        return validateParameter(paramDesc, parameter, groupArray);
     }
 
     public <T> Set<ConstraintViolation<T>> validateParameters(Class<T> clazz,
                                                               Constructor constructor,
                                                               Object[] parameters,
                                                               Class<?>... groupArray) {
-        return validateParameters(clazz, constructor.getParameterAnnotations(), parameters,
-              groupArray);
+        MethodBeanDescriptorImpl beanDesc =
+              (MethodBeanDescriptorImpl) getConstraintsForClass(clazz);
+        ConstructorDescriptorImpl constructorDescriptor =
+              (ConstructorDescriptorImpl) beanDesc.getConstraintsForConstructor(constructor);
+        return validateParameters(constructorDescriptor.getMetaBean(),
+              constructorDescriptor.getParameterDescriptors(), parameters, groupArray);
     }
 
     public <T> Set<ConstraintViolation<T>> validateParameter(Class<T> clazz,
@@ -90,74 +107,49 @@ class MethodValidatorImpl extends ClassValidator implements MethodValidator {
                                                              Object parameter,
                                                              int parameterIndex,
                                                              Class<?>... groupArray) {
-        return validateParameter(clazz, constructor.getParameterAnnotations(), parameter,
-              parameterIndex, groupArray);
+        MethodBeanDescriptorImpl beanDesc =
+              (MethodBeanDescriptorImpl) getConstraintsForClass(clazz);
+        ConstructorDescriptorImpl methodDescriptor =
+              (ConstructorDescriptorImpl) beanDesc.getConstraintsForConstructor(constructor);
+        ParameterDescriptorImpl paramDesc = (ParameterDescriptorImpl) methodDescriptor
+              .getParameterDescriptors().get(parameterIndex);
+        return validateParameter(paramDesc, parameter, groupArray);
     }
 
     /**
-     * enhancement: validateReturnedValue evaluates the constraints hosted on the method itself.
      * If @Valid  is placed on the method, the constraints declared on the object
      * itself are considered.
      */
     public <T> Set<ConstraintViolation<T>> validateReturnedValue(Class<T> clazz, Method method,
                                                                  Object returnedValue,
                                                                  Class<?>... groupArray) {
-        try {
-            final GroupValidationContext<ConstraintValidationListener<Object>> context =
-                  createContext(factoryContext.getMetaBeanFinder()
-                        .findForClass(clazz), returnedValue, groupArray);
-            final ConstraintValidationListener result = context.getListener();
-
-            // 1. enhancement: validate constraints hosted on the parameters of the method
-            // TODO - implement ...
-
-            if (returnedValue != null) {
-                // 2. If @Valid is placed on a parameter, validate the parameter itself
-                if (method.getAnnotation(Valid.class) != null) {
-                    context.setBean(returnedValue, factoryContext.getMetaBeanFinder().
-                          findForClass(returnedValue.getClass()));
-                    final Groups groups = context.getGroups();
-                    // 1. process groups
-                    for (Group current : groups.getGroups()) {
-                        context.setCurrentGroup(current);
-                        validateContext(context);
-                    }
-                    // 2. process sequences
-                    for (List<Group> eachSeq : groups.getSequences()) {
-                        for (Group current : eachSeq) {
-                            context.setCurrentGroup(current);
-                            validateContext(context);
-                            /**
-                             * if one of the group process in the sequence leads to one or more validation failure,
-                             * the groups following in the sequence must not be processed
-                             */
-                            if (!context.getListener().isEmpty()) break;
-                        }
-//            if (!context.getListener().isEmpty()) break; // ?? TODO RSt - clarify!
-                    }
-                }
-            }
-            return result.getConstaintViolations();
-        } catch (RuntimeException ex) {
-            throw unrecoverableValidationError(ex, returnedValue);
-        }
+        MethodBeanDescriptorImpl beanDesc =
+              (MethodBeanDescriptorImpl) getConstraintsForClass(clazz);
+        MethodDescriptorImpl methodDescriptor =
+              (MethodDescriptorImpl) beanDesc.getConstraintsForMethod(method);
+        final GroupValidationContext<ConstraintValidationListener<Object>> context =
+              createContext(methodDescriptor.getMetaBean(), returnedValue, groupArray);
+        validateReturnedValueInContext(context, methodDescriptor);
+        ConstraintValidationListener result = context.getListener();
+        return result.getConstaintViolations();
     }
 
-    private <T> Set<ConstraintViolation<T>> validateParameters(Class<T> clazz,
-                                                               Annotation[][] annotations,
+    private <T> Set<ConstraintViolation<T>> validateParameters(MetaBean metaBean,
+                                                               List<ParameterDescriptor> paramDescriptors,
                                                                Object[] parameters,
                                                                Class<?>... groupArray) {
         if (parameters == null) throw new IllegalArgumentException("cannot validate null");
         if (parameters.length > 0) {
             try {
                 GroupValidationContext<ConstraintValidationListener<Object[]>> context =
-                      createContext(factoryContext.getMetaBeanFinder()
-                            .findForClass(clazz), parameters, groupArray);
-                final ConstraintValidationListener result = context.getListener();
-
+                      createContext(metaBean, null, groupArray);
                 for (int i = 0; i < parameters.length; i++) {
-                    validateParameterInContext(context, annotations, parameters[i], i);
+                    ParameterDescriptorImpl paramDesc =
+                          (ParameterDescriptorImpl) paramDescriptors.get(i);
+                    context.setBean(parameters[i]);
+                    validateParameterInContext(context, paramDesc);
                 }
+                ConstraintValidationListener result = context.getListener();
                 return result.getConstaintViolations();
             } catch (RuntimeException ex) {
                 throw unrecoverableValidationError(ex, parameters);
@@ -167,56 +159,114 @@ class MethodValidatorImpl extends ClassValidator implements MethodValidator {
         }
     }
 
-    private <T> Set<ConstraintViolation<T>> validateParameter(Class<T> clazz,
-                                                              Annotation[][] annotations,
-                                                              Object parameter,
-                                                              int parameterIndex,
-                                                              Class<?>... groupArray) {
+    private <T> Set<ConstraintViolation<T>> validateParameter(
+          ParameterDescriptorImpl paramDesc, Object parameter, Class<?>... groupArray) {
         try {
             final GroupValidationContext<ConstraintValidationListener<Object>> context =
-                  createContext(factoryContext.getMetaBeanFinder()
-                        .findForClass(clazz), parameter, groupArray);
+                  createContext(paramDesc.getMetaBean(), parameter, groupArray);
             final ConstraintValidationListener result = context.getListener();
-            validateParameterInContext(context, annotations, parameter, parameterIndex);
+            validateParameterInContext(context, paramDesc);
             return result.getConstaintViolations();
         } catch (RuntimeException ex) {
             throw unrecoverableValidationError(ex, parameter);
         }
     }
 
+    /** validate constraints hosted on parameters of a method */
     private <T> void validateParameterInContext(
           GroupValidationContext<ConstraintValidationListener<T>> context,
-          Annotation[][] annotations, Object parameter, int parameterIndex) {
+          ParameterDescriptorImpl paramDesc) {
 
-        // 1. enhancement: validate constraints hosted on the parameters of the method
-        // TODO - implement ...
+        final Groups groups = context.getGroups();
 
-        if (parameter != null) {
-            for (Annotation anno : annotations[parameterIndex]) {
-                // 2. If @Valid is placed on a parameter, validate the parameter itself
-                if (anno instanceof Valid) {
-                    context.setBean(parameter, factoryContext.getMetaBeanFinder().
-                          findForClass(parameter.getClass()));
-                    final Groups groups = context.getGroups();
-                    // 1. process groups
-                    for (Group current : groups.getGroups()) {
-                        context.setCurrentGroup(current);
-                        validateContext(context);
-                    }
-                    // 2. process sequences
-                    for (List<Group> eachSeq : groups.getSequences()) {
-                        for (Group current : eachSeq) {
-                            context.setCurrentGroup(current);
-                            validateContext(context);
-                            /**
-                             * if one of the group process in the sequence leads to one or more validation failure,
-                             * the groups following in the sequence must not be processed
-                             */
-                            if (!context.getListener().isEmpty()) break;
-                        }
-//            if (!context.getListener().isEmpty()) break; // ?? TODO RSt - clarify!
-                    }
-                    break; // next parameter
+        for (ConstraintDescriptor consDesc : paramDesc.getConstraintDescriptors()) {
+            ConstraintValidation validation = (ConstraintValidation) consDesc;
+            // 1. process groups
+            for (Group current : groups.getGroups()) {
+                context.setCurrentGroup(current);
+                validation.validate(context);
+            }
+            // 2. process sequences
+            for (List<Group> eachSeq : groups.getSequences()) {
+                for (Group current : eachSeq) {
+                    context.setCurrentGroup(current);
+                    validation.validate(context);
+                    /**
+                     * if one of the group process in the sequence leads to one or more validation failure,
+                     * the groups following in the sequence must not be processed
+                     */
+                    if (!context.getListener().isEmpty()) break;
+                }
+            }
+        }
+        if (paramDesc.isCascaded() && context.getValidatedValue() != null) {
+            context.setMetaBean(factoryContext.getMetaBeanFinder().
+                  findForClass(context.getValidatedValue().getClass()));
+            // 1. process groups
+            for (Group current : groups.getGroups()) {
+                context.setCurrentGroup(current);
+                validateContext(context);
+            }
+            // 2. process sequences
+            for (List<Group> eachSeq : groups.getSequences()) {
+                for (Group current : eachSeq) {
+                    context.setCurrentGroup(current);
+                    validateContext(context);
+                    /**
+                     * if one of the group process in the sequence leads to one or more validation failure,
+                     * the groups following in the sequence must not be processed
+                     */
+                    if (!context.getListener().isEmpty()) break;
+                }
+            }
+        }
+    }
+
+    /** validate constraints hosted on parameters of a method */
+    private <T> void validateReturnedValueInContext(
+          GroupValidationContext<ConstraintValidationListener<T>> context,
+          MethodDescriptorImpl methodDescriptor) {
+
+        final Groups groups = context.getGroups();
+
+        for (ConstraintDescriptor consDesc : methodDescriptor.getConstraintDescriptors()) {
+            ConstraintValidation validation = (ConstraintValidation) consDesc;
+            // 1. process groups
+            for (Group current : groups.getGroups()) {
+                context.setCurrentGroup(current);
+                validation.validate(context);
+            }
+            // 2. process sequences
+            for (List<Group> eachSeq : groups.getSequences()) {
+                for (Group current : eachSeq) {
+                    context.setCurrentGroup(current);
+                    validation.validate(context);
+                    /**
+                     * if one of the group process in the sequence leads to one or more validation failure,
+                     * the groups following in the sequence must not be processed
+                     */
+                    if (!context.getListener().isEmpty()) break;
+                }
+            }
+        }
+        if (methodDescriptor.isCascaded() && context.getValidatedValue() != null) {
+            context.setMetaBean(factoryContext.getMetaBeanFinder().
+                  findForClass(context.getValidatedValue().getClass()));
+            // 1. process groups
+            for (Group current : groups.getGroups()) {
+                context.setCurrentGroup(current);
+                validateContext(context);
+            }
+            // 2. process sequences
+            for (List<Group> eachSeq : groups.getSequences()) {
+                for (Group current : eachSeq) {
+                    context.setCurrentGroup(current);
+                    validateContext(context);
+                    /**
+                     * if one of the group process in the sequence leads to one or more validation failure,
+                     * the groups following in the sequence must not be processed
+                     */
+                    if (!context.getListener().isEmpty()) break;
                 }
             }
         }

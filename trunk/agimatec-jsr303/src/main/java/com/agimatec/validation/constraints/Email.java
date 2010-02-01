@@ -41,7 +41,7 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Constraint(validatedBy = EmailValidator.class)
-@Target({METHOD, FIELD, ANNOTATION_TYPE})
+@Target({METHOD, FIELD, ANNOTATION_TYPE, PARAMETER})
 @Retention(RUNTIME)
 public @interface Email {
     Class<?>[] groups() default {};

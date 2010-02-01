@@ -11,7 +11,7 @@ The sources in svn are probably newer than the release you find in the "Download
 
 ===Working on next release 0.9.6===
   * bug fixes: Issue#22, Issue#21 and others
-  * (planned: method-level validation (under construction))
+  * method-level validation (annotation-based, experimental, no XML-deployment descriptor yet)
 
 ===release 0.9.5 (11th December 2009)===
 *FEATURE-COMPLETE IMPLEMENTATION OF JSR303*

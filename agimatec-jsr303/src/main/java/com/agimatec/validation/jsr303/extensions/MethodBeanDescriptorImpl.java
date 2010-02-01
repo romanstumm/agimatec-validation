@@ -23,6 +23,8 @@ import com.agimatec.validation.model.Validation;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -34,23 +36,52 @@ import java.util.Set;
  */
 class MethodBeanDescriptorImpl extends BeanDescriptorImpl
       implements MethodBeanDescriptor {
-    protected MethodBeanDescriptorImpl(AgimatecFactoryContext factoryContext, MetaBean metaBean, Validation[] validations) {
+    private Map<Method, MethodDescriptorImpl> methodConstraints;
+    private Map<Constructor, ConstructorDescriptorImpl> constructorConstraints;
+
+    protected MethodBeanDescriptorImpl(AgimatecFactoryContext factoryContext,
+                                       MetaBean metaBean, Validation[] validations) {
         super(factoryContext, metaBean, validations);
     }
 
-    public MethodDescriptor getConstraintsForMethod(Method method) {
-        return null;  // TODO RSt - nyi
+    public void setMethodConstraints(Map<Method, MethodDescriptorImpl> methodConstraints) {
+        this.methodConstraints = methodConstraints;
     }
 
-    public MethodDescriptor getConstraintsForConstructor(Constructor constructor) {
-        return null;  // TODO RSt - nyi
+    public void setConstructorConstraints(
+          Map<Constructor, ConstructorDescriptorImpl> constructorConstraints) {
+        this.constructorConstraints = constructorConstraints;
+    }
+
+    public MethodDescriptor getConstraintsForMethod(Method method) {
+        return methodConstraints.get(method);
+    }
+
+    public ConstructorDescriptor getConstraintsForConstructor(Constructor constructor) {
+        return constructorConstraints.get(constructor);
     }
 
     public Set<MethodDescriptor> getConstrainedMethods() {
-        return null;  // TODO RSt - nyi
+        return new HashSet(methodConstraints.values());
+    }
+
+    public void putMethodDescriptor(Method method, MethodDescriptorImpl desc) {
+        methodConstraints.put(method, desc);
     }
 
     public Set<ConstructorDescriptor> getConstrainedConstructors() {
-        return null;  // TODO RSt - nyi
+        return new HashSet(methodConstraints.values());
+    }
+
+    public void putConstructorDescriptor(Constructor cons, ConstructorDescriptorImpl desc) {
+        constructorConstraints.put(cons, desc);
+    }
+
+    public Map<Method, MethodDescriptorImpl> getMethodConstraints() {
+        return methodConstraints;
+    }
+
+    public Map<Constructor, ConstructorDescriptorImpl> getConstructorConstraints() {
+        return constructorConstraints;
     }
 }

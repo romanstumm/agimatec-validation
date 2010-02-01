@@ -27,6 +27,11 @@ import javax.validation.metadata.ElementDescriptor;
  * Copyright: Agimatec GmbH
  */
 public interface ParameterDescriptor extends ElementDescriptor {
+    /**
+     * Is the parameter marked by the <code>@Valid</code> annotation.
+     *
+     * @return <code>true</code> if the annotation is present, <code>false</code> otherwise.
+     */
     boolean isCascaded();
 
     int getIndex();

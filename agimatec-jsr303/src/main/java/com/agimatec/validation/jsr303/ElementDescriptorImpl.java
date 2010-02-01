@@ -31,7 +31,7 @@ import java.util.Set;
  * Time: 12:23:45 <br/>
  * Copyright: Agimatec GmbH 2008
  */
-abstract class ElementDescriptorImpl implements ElementDescriptor {
+public abstract class ElementDescriptorImpl implements ElementDescriptor {
     protected final MetaBean metaBean;
     protected final Class elementClass;
     private Set<ConstraintDescriptor<?>> constraintDescriptors;
@@ -80,5 +80,9 @@ abstract class ElementDescriptorImpl implements ElementDescriptor {
 
     public void setConstraintDescriptors(Set<ConstraintDescriptor<?>> constraintDescriptors) {
         this.constraintDescriptors = constraintDescriptors;
+    }
+
+    public MetaBean getMetaBean() {
+        return metaBean;
     }
 }

@@ -29,4 +29,6 @@ import java.util.List;
  */
 public interface ConstructorDescriptor extends ElementDescriptor {
     List<ParameterDescriptor> getParameterDescriptors(); //index aligned
+
+    boolean isCascaded();
 }

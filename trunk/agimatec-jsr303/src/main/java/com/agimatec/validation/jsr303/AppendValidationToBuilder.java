@@ -20,9 +20,17 @@ package com.agimatec.validation.jsr303;
  * Description: <br/>
  * User: roman <br/>
  * Date: 01.02.2010 <br/>
- * Time: 12:27:22 <br/>
+ * Time: 12:28:56 <br/>
  * Copyright: Agimatec GmbH
  */
-public interface ValidationCollector {
-     void addValidation(ConstraintValidation validation);
+public class AppendValidationToBuilder implements AppendValidation {
+    private final AnnotationConstraintBuilder builder;
+
+    public AppendValidationToBuilder(AnnotationConstraintBuilder builder) {
+        this.builder = builder;
+    }
+
+    public void append(ConstraintValidation validation) {
+        builder.addComposed(validation);
+    }
 }

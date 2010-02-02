@@ -17,8 +17,8 @@
 package com.agimatec.validation.jsr303.extensions;
 
 import com.agimatec.validation.jsr303.AgimatecFactoryContext;
+import com.agimatec.validation.jsr303.AppendValidation;
 import com.agimatec.validation.jsr303.Jsr303MetaBeanFactory;
-import com.agimatec.validation.jsr303.ValidationCollector;
 import com.agimatec.validation.jsr303.util.SecureActions;
 import com.agimatec.validation.model.Validation;
 
@@ -90,7 +90,7 @@ public class MethodValidatorMetaBeanFactory extends Jsr303MetaBeanFactory {
                 beanDesc.putMethodDescriptor(method, methodDesc);
 
                 // return value validations
-                ValidationCollectorGeneric validations = new ValidationCollectorGeneric();
+                AppendValidationToList validations = new AppendValidationToList();
                 for (Annotation anno : method.getAnnotations()) {
                     processAnnotation(anno, methodDesc, validations);
                 }
@@ -111,7 +111,7 @@ public class MethodValidatorMetaBeanFactory extends Jsr303MetaBeanFactory {
     private void processAnnotations(ProcedureDescriptor methodDesc, Annotation[] paramAnnos,
                                     int idx)
           throws InvocationTargetException, IllegalAccessException {
-        ValidationCollectorGeneric validations = new ValidationCollectorGeneric();
+        AppendValidationToList validations = new AppendValidationToList();
         for (Annotation anno : paramAnnos) {
             processAnnotation(anno, methodDesc, validations);
         }
@@ -123,7 +123,7 @@ public class MethodValidatorMetaBeanFactory extends Jsr303MetaBeanFactory {
     }
 
     private void processAnnotation(Annotation annotation, ProcedureDescriptor desc,
-                                   ValidationCollector validations)
+                                   AppendValidation validations)
           throws InvocationTargetException, IllegalAccessException {
 
         if (annotation instanceof Valid) {

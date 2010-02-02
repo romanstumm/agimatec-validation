@@ -14,25 +14,32 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.agimatec.validation.jsr303;
+package com.agimatec.validation.jsr303.extensions;
 
-import com.agimatec.validation.model.FeaturesCapable;
+import com.agimatec.validation.jsr303.AppendValidation;
+import com.agimatec.validation.jsr303.ConstraintValidation;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Description: <br/>
  * User: roman <br/>
  * Date: 01.02.2010 <br/>
- * Time: 12:29:52 <br/>
+ * Time: 13:41:22 <br/>
  * Copyright: Agimatec GmbH
  */
-public class ValidationCollectorFeature implements ValidationCollector {
-    private final FeaturesCapable feature;
+public class AppendValidationToList implements AppendValidation {
+    private final List<ConstraintValidation> validations = new ArrayList();
 
-    public ValidationCollectorFeature(FeaturesCapable meta) {
-        this.feature = meta;
+    public AppendValidationToList() {
     }
 
-    public void addValidation(ConstraintValidation validation) {
-        feature.addValidation(validation);
+    public void append(ConstraintValidation validation) {
+        validations.add(validation);
+    }
+
+    public List<ConstraintValidation> getValidations() {        
+        return validations;
     }
 }

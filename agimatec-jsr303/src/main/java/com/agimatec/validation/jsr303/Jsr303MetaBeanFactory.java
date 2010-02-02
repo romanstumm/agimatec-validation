@@ -115,7 +115,7 @@ public class Jsr303MetaBeanFactory implements MetaBeanFactory {
               .isIgnoreAnnotations(beanClass)) { // ignore on class level
 
             processAnnotations(null, beanClass, beanClass, null,
-                  new ValidationCollectorFeature(metabean));
+                  new AppendValidationToMeta(metabean));
 
             Field[] fields = beanClass.getDeclaredFields();
             for (Field field : fields) {
@@ -128,13 +128,13 @@ public class Jsr303MetaBeanFactory implements MetaBeanFactory {
                         /*if (*/
                         processAnnotations(metaProperty, beanClass, field,
                               new FieldAccess(field),
-                              new ValidationCollectorFeature(metaProperty));//) {
+                              new AppendValidationToMeta(metaProperty));//) {
                         metabean.putProperty(metaProperty.getName(), metaProperty);
                         //}
                     } else {
                         processAnnotations(metaProperty, beanClass, field,
                               new FieldAccess(field),
-                              new ValidationCollectorFeature(metaProperty));
+                              new AppendValidationToMeta(metaProperty));
                     }
                 }
             }
@@ -156,13 +156,13 @@ public class Jsr303MetaBeanFactory implements MetaBeanFactory {
                             /*if (*/
                             processAnnotations(metaProperty, beanClass, method,
                                   new MethodAccess(propName, method),
-                                  new ValidationCollectorFeature(metaProperty));//) {
+                                  new AppendValidationToMeta(metaProperty));//) {
                             metabean.putProperty(propName, metaProperty);
                             //}
                         } else {
                             processAnnotations(metaProperty, beanClass, method,
                                   new MethodAccess(propName, method),
-                                  new ValidationCollectorFeature(metaProperty));
+                                  new AppendValidationToMeta(metaProperty));
                         }
                     }
                 }
@@ -192,7 +192,7 @@ public class Jsr303MetaBeanFactory implements MetaBeanFactory {
             Class<? extends ConstraintValidator<?, ?>>[] constraintClasses =
                   findConstraintValidatorClasses(meta.getAnnotation(), null);
             applyConstraint(meta.getAnnotation(), constraintClasses, metaProperty, beanClass,
-                  meta.getAccessStrategy(), new ValidationCollectorFeature(
+                  meta.getAccessStrategy(), new AppendValidationToMeta(
                   metaProperty == null ? metabean : metaProperty));
         }
         for (AccessStrategy access : factoryContext.getFactory().getValidAccesses(beanClass)) {
@@ -216,18 +216,18 @@ public class Jsr303MetaBeanFactory implements MetaBeanFactory {
 
     private boolean processAnnotations(MetaProperty prop, Class owner,
                                        AnnotatedElement element, AccessStrategy access,
-                                       ValidationCollector collector)
+                                       AppendValidation appender)
           throws IllegalAccessException, InvocationTargetException {
 
         boolean changed = false;
         for (Annotation annotation : element.getDeclaredAnnotations()) {
-            changed |= processAnnotation(annotation, prop, owner, access, collector);
+            changed |= processAnnotation(annotation, prop, owner, access, appender);
         }
         return changed;
     }
 
     private boolean processAnnotation(Annotation annotation, MetaProperty prop, Class owner,
-                                      AccessStrategy access, ValidationCollector collector)
+                                      AccessStrategy access, AppendValidation appender)
           throws IllegalAccessException, InvocationTargetException {
         if (annotation instanceof Valid) {
             return processValid(prop, access);
@@ -242,7 +242,7 @@ public class Jsr303MetaBeanFactory implements MetaBeanFactory {
                 Class<? extends ConstraintValidator<?, ?>>[] validatorClasses;
                 validatorClasses = findConstraintValidatorClasses(annotation, vcAnno);
                 return applyConstraint(annotation, validatorClasses, prop, owner, access,
-                      collector);
+                      appender);
             } else {
                 /**
                  * Multi-valued constraints:
@@ -255,7 +255,7 @@ public class Jsr303MetaBeanFactory implements MetaBeanFactory {
                 if (result != null && result instanceof Annotation[]) {
                     boolean changed = false;
                     for (Annotation each : (Annotation[]) result) {
-                        changed |= processAnnotation(each, prop, owner, access, collector);
+                        changed |= processAnnotation(each, prop, owner, access, appender);
                     }
                     return changed;
                 }
@@ -349,7 +349,7 @@ public class Jsr303MetaBeanFactory implements MetaBeanFactory {
     protected boolean applyConstraint(Annotation annotation,
                                       Class<? extends ConstraintValidator<?, ?>>[] constraintClasses,
                                       MetaProperty prop, Class owner, AccessStrategy access,
-                                      ValidationCollector collector)
+                                      AppendValidation appender)
           throws IllegalAccessException, InvocationTargetException {
 
         final ConstraintValidator validator;
@@ -381,8 +381,8 @@ public class Jsr303MetaBeanFactory implements MetaBeanFactory {
         // process composed constraints:
         // here are not other superclasses possible, because annotations do not inherit!
         if (processAnnotations(prop, owner, annotation.annotationType(), access,
-              new ValidationCollectorComposed(builder)) || validator != null) {  // recursion!
-            collector.addValidation(builder.getConstraintValidation());
+              new AppendValidationToBuilder(builder)) || validator != null) {  // recursion!
+            appender.append(builder.getConstraintValidation());
             return true;
         } else {
             return false;

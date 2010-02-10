@@ -36,7 +36,7 @@
 
     <agimatec-site-url>http://agimatec-validation.googlecode.com/svn/site/maven2</agimatec-site-url>
     <agimatec-snapshots-url>http://oss.sonatype.org/content/repositories/agimatec-snapshots</agimatec-snapshots-url>
-    <agimatec-releases-url>http://oss.sonatype.org/content/repositories/agimatec-releases</agimatec-releases-url>
+    <agimatec-releases-url>http://oss.sonatype.org/service/local/staging/deploy/maven2</agimatec-releases-url>
   </properties>
 
   <organization>

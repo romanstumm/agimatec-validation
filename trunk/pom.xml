@@ -41,7 +41,6 @@
     <agimatec-snapshots-url>http://oss.sonatype.org/content/repositories/agimatec-snapshots
     </agimatec-snapshots-url>
     <agimatec-releases-url>http://oss.sonatype.org/service/local/staging/deploy/maven2</agimatec-releases-url>
-    </agimatec-releases-url>
   </properties>
 
   <organization>

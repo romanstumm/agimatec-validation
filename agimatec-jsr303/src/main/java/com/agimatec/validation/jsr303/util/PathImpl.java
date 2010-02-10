@@ -51,11 +51,12 @@ public class PathImpl implements Path, Serializable {
 
     /**
      * Returns a {@code Path} instance representing the path described by the given string. To create a root node the empty string should be passed.
+     * Note:  This signature is to maintain pluggability with the RI impl.
      *
      * @param propertyPath the path as string representation.
      * @return a {@code Path} instance representing the path described by the given string.
      */
-    public static PathImpl fromString(String propertyPath) {
+    public static PathImpl createPathFromString(String propertyPath) {
         if (propertyPath == null || propertyPath.length() == 0) {
             return create(null);
         }

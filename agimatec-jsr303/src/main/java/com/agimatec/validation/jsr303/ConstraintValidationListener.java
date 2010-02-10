@@ -79,7 +79,7 @@ public final class ConstraintValidationListener<T> implements ValidationListener
             else value = context.getPropertyValue();                        
             message = messageTemplate;
             if (propPath == null)
-                propPath = PathImpl.fromString(context.getPropertyName());
+                propPath = PathImpl.createPathFromString(context.getPropertyName());
             constraint = null;
         }
         ConstraintViolationImpl<T> ic = new ConstraintViolationImpl<T>(messageTemplate,

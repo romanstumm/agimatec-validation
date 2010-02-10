@@ -39,7 +39,7 @@ public class PathImplTest extends TestCase {
 
     public void testParsing() {
         String property = "order[3].deliveryAddress.addressline[1]";
-        Path path = PathImpl.fromString(property);
+        Path path = PathImpl.createPathFromString(property);
         assertEquals(property, path.toString());
         
         Iterator<Path.Node> propIter = path.iterator();
@@ -67,7 +67,7 @@ public class PathImplTest extends TestCase {
 
     public void testParseMapBasedProperty() {
         String property = "order[foo].deliveryAddress";
-        Path path = PathImpl.fromString(property);
+        Path path = PathImpl.createPathFromString(property);
         Iterator<Path.Node> propIter = path.iterator();
 
         assertTrue(propIter.hasNext());
@@ -86,7 +86,7 @@ public class PathImplTest extends TestCase {
     }
 
     public void testNull() {
-        assertEquals(PathImpl.fromString(null), PathImpl.create(null));
+        assertEquals(PathImpl.createPathFromString(null), PathImpl.create(null));
 
         assertEquals("", PathImpl.create(null).toString());
         Path path = PathImpl.create(null);
@@ -96,7 +96,7 @@ public class PathImplTest extends TestCase {
 
     public void testUnbalancedBraces() {
         try {
-            PathImpl.fromString("foo[.bar");
+            PathImpl.createPathFromString("foo[.bar");
             fail();
         } catch (IllegalArgumentException ex) {
         }
@@ -104,7 +104,7 @@ public class PathImplTest extends TestCase {
 
     public void testIndexInMiddleOfProperty() {
         try {
-            PathImpl.fromString("f[1]oo.bar");
+            PathImpl.createPathFromString("f[1]oo.bar");
             fail();
         } catch (IllegalArgumentException ex) {
         }
@@ -112,7 +112,7 @@ public class PathImplTest extends TestCase {
 
     public void testTrailingPathSeperator() {
         try {
-            PathImpl.fromString("foo.bar.");
+            PathImpl.createPathFromString("foo.bar.");
             fail();
         } catch (IllegalArgumentException ex) {
         }
@@ -120,14 +120,14 @@ public class PathImplTest extends TestCase {
 
     public void testLeadingPathSeperator() {
         try {
-            PathImpl.fromString(".foo.bar");
+            PathImpl.createPathFromString(".foo.bar");
             fail();
         } catch (IllegalArgumentException ex) {
         }
     }
 
     public void testEmptyString() {
-        Path path = PathImpl.fromString("");
+        Path path = PathImpl.createPathFromString("");
         assertEquals(null, path.iterator().next().getName());
     }
 

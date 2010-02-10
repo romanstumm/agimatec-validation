@@ -62,14 +62,14 @@
     </license>
   </licenses>
 
-  <!-- <mailingLists>
+  <mailingLists>
     <mailingList>
-      <name>Mailing List</name>
-      <subscribe>insert@mail.address.here</subscribe>
-      <unsubscribe>insert@mail.address.here</unsubscribe>
-      <post>insert@mail.address.here</post>
+      <name>Google Groups Mailing List</name>
+      <subscribe>agimatec-validation@googlegroups.com</subscribe>
+      <unsubscribe>agimatec-validation@googlegroups.com</unsubscribe>
+      <post>agimatec-validation@googlegroups.com</post>
     </mailingList>
-  </mailingLists>-->
+  </mailingLists>
 
   <developers>
     <developer>
@@ -86,6 +86,7 @@
     </developer>
   </developers>
 
+<!--
   <repositories>
     <repository>
       <id>apache.snapshots</id>
@@ -95,7 +96,6 @@
         <enabled>false</enabled>
       </releases>
     </repository>
-<!--
     <repository>
       <id>geronimo-staging</id>
       <url>https://repository.apache.org/content/repositories/staging/</url>
@@ -108,8 +108,8 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>
--->
   </repositories>
+-->
 
   <distributionManagement>
     <site>
@@ -466,6 +466,16 @@
             <artifactId>maven-deploy-plugin</artifactId>
             <configuration>
               <updateReleaseInfo>true</updateReleaseInfo>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-release-plugin</artifactId>
+            <configuration>
+              <useReleaseProfile>false</useReleaseProfile>
+              <goals>deploy</goals>
+              <arguments>-Prelease</arguments>
+              <autoVersionSubmodules>true</autoVersionSubmodules>
             </configuration>
           </plugin>
           <!-- this fails the ianal check

@@ -41,6 +41,28 @@ mvn site-deploy
   adequate values. You can do that by adding them to your maven settings.xml.
   This is the place where the server credenticals for uploads are kept. ]
  
+(Optional) Publish SNAPSHOT or Release artifacts
+------------------------------------------------
+mvn clean deploy -Prelease
+
+[ Note:
+  You will need to add the following information to your .m2/settings.xml
+  so the release plugin can log into the https://oss.sonatype.org/ site
+  to deploy the artifacts -
+        <server>
+            <id>agimatec-snapshots</id>
+            <username>${ossrh-uid}</username>
+            <password>${ossrh-pwd}</password>
+        </server>
+        <server>
+            <id>agimatec-releases</id>
+            <username>${ossrh-uid}</username>
+            <password>${ossrh-pwd}</password>
+        </server>
+  After deploying, log into https://oss.sonatype.org/, select Staging, right-
+  click on the new com.agimatec-### staging repo in the bottom pane and 
+  select Close, then right-click and choose Promote to Agimatec Releases.
+
 
 Getting started
 ---------------

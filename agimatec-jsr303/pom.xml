@@ -47,6 +47,7 @@
     and optionally, JSR303 annotation support.
   </description>
 
+  <!-- Sonatype repo doesn't allow this for release artifacts
   <repositories>
     <repository>
       <id>repository.jboss.org</id>
@@ -60,7 +61,6 @@
         <enabled>true</enabled>
       </releases>
     </repository>
-
     <repository>
       <id>snapshots.jboss.org</id>
       <name>JBoss Repository</name>
@@ -74,6 +74,7 @@
       </releases>
     </repository>
   </repositories>
+  -->
 
   <reporting>
     <plugins>

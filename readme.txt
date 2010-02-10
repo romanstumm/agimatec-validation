@@ -13,13 +13,6 @@ compile all projects:
 ---------------------
 mvn install
 
-compile with alternative dependencies (geronimo):
--------------------------------------------------
-compile using geronimo artifacts for validation-api
-instead of reference implementation of validation-api:
-
-mvn install -Dagimatec-on-geronimo
-
 (artifacts are generated into the target directories and your local .m2 repo)
 
 (Optional) generate site, javadoc:
@@ -48,6 +41,28 @@ mvn site-deploy
   adequate values. You can do that by adding them to your maven settings.xml.
   This is the place where the server credenticals for uploads are kept. ]
  
+(Optional) Publish SNAPSHOT or Release artifacts
+------------------------------------------------
+mvn clean deploy -Prelease
+
+[ Note:
+  You will need to add the following information to your .m2/settings.xml
+  so the release plugin can log into the https://oss.sonatype.org/ site
+  to deploy the artifacts -
+        <server>
+            <id>agimatec-snapshots</id>
+            <username>${ossrh-uid}</username>
+            <password>${ossrh-pwd}</password>
+        </server>
+        <server>
+            <id>agimatec-releases</id>
+            <username>${ossrh-uid}</username>
+            <password>${ossrh-pwd}</password>
+        </server>
+  After deploying, log into https://oss.sonatype.org/, select Staging, right-
+  click on the new com.agimatec-### staging repo in the bottom pane and 
+  select Close, then right-click and choose Promote to Agimatec Releases.
+
 
 Getting started
 ---------------
@@ -66,5 +81,5 @@ http://code.google.com/p/agimatec-validation
 http://groups.google.com/group/agimatec-validation
 http://www.agimatec.de
 
-Roman Stumm, agimatec GmbH, 2008, 2009, 2010
+Roman Stumm, agimatec GmbH, 2008, 2009
 email: roman.stumm@agimatec.de

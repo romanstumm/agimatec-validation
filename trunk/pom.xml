@@ -29,7 +29,7 @@
   <artifactId>agimatec-validation-parent</artifactId>
   <name>agimatec-validation-parent :: Parent POM</name>
   <packaging>pom</packaging>
-  <version>0.9.6</version>
+  <version>0.9.7-SNAPSHOT</version>
 
   <description>agimatec-validation parent pom</description>
 

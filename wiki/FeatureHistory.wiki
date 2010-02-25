@@ -9,7 +9,7 @@ The sources in svn are probably newer than the release you find in the "Download
 
 = History =
 
-===Working on next release 0.9.6===
+=== release 0.9.6 (25th Febr. 2010) ===
   * bug fixes: Issue#22, Issue#21 and others
   * method-level validation (annotation-based, experimental, no XML-deployment descriptor yet)
 

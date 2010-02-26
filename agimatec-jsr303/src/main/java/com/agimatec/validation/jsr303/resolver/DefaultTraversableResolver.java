@@ -64,9 +64,11 @@ public class DefaultTraversableResolver implements TraversableResolver, CachingR
     private void initJpa() {
         try {
             ClassUtils.getClass(PERSISTENCE_UTIL_CLASSNAME);
-            log.debug("Found " + PERSISTENCE_UTIL_CLASSNAME + " on classpath.");
+            if (log.isDebugEnabled())
+                log.debug("Found " + PERSISTENCE_UTIL_CLASSNAME + " on classpath.");
         } catch (Exception e) {
-            log.debug("Cannot find " + PERSISTENCE_UTIL_CLASSNAME +
+            if (log.isDebugEnabled())
+                log.debug("Cannot find " + PERSISTENCE_UTIL_CLASSNAME +
                   " on classpath. All properties will per default be traversable.");
             return;
         }
@@ -76,8 +78,9 @@ public class DefaultTraversableResolver implements TraversableResolver, CachingR
                   (Class<? extends TraversableResolver>) ClassUtils
                         .getClass(JPA_AWARE_TRAVERSABLE_RESOLVER_CLASSNAME);
             jpaTR = SecureActions.newInstance(jpaAwareResolverClass);
-            log.info("Instantiated an instance of " +
-                  JPA_AWARE_TRAVERSABLE_RESOLVER_CLASSNAME + ".");
+            if (log.isDebugEnabled())
+                log.debug("Instantiated an instance of " +
+                    JPA_AWARE_TRAVERSABLE_RESOLVER_CLASSNAME + ".");
         } catch (Exception e) {
             log.warn("Unable to load or instanciate JPA aware resolver " +
                   JPA_AWARE_TRAVERSABLE_RESOLVER_CLASSNAME +

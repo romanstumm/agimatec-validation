@@ -149,6 +149,7 @@
           <source>1.5</source>
           <links>
             <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
+            <link>http://java.sun.com/javaee/6/docs/api</link>
           </links>
         </configuration>
         <reportSets>
@@ -327,7 +328,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>2.5</version>
+          <version>2.2</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -499,7 +500,36 @@
               <autoVersionSubmodules>true</autoVersionSubmodules>
             </configuration>
           </plugin>
-          <!-- this fails the final check
+          <plugin>
+            <!-- Javadoc plugin doesn't copy resources like the jar plugin.
+                 We need to Unzip license,etc from normal jar to add.
+            -->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>javadoc.resources</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <tasks>
+                    <!-- create output dir for nested parent poms -->
+                    <mkdir dir="${project.build.directory}" />
+                    <unzip dest="${project.build.directory}/apidocs">
+                      <patternset>
+                        <include name="META-INF/*.txt" />
+                      </patternset>
+                      <fileset dir="${project.build.directory}">
+                        <include name="${artifactId}-${pom.version}.jar" />
+                      </fileset>
+                    </unzip>
+                  </tasks>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
@@ -508,14 +538,31 @@
             </configuration>
             <executions>
               <execution>
-                <id>attach-javadocs</id>
+                <id>attach-javadoc</id>
+                <phase>package</phase>
                 <goals>
                   <goal>jar</goal>
                 </goals>
               </execution>
+              <execution>
+                <phase>process-classes</phase>
+                <goals><goal>javadoc</goal></goals>
+                <configuration>
+                  <additionalparam>
+                    ${javadoc.additionalparam}
+                  </additionalparam>
+                  <aggregate>true</aggregate>
+                  <subpackages>com.agimatec</subpackages>
+                  <verbose>false</verbose>
+                  <maxmemory>512m</maxmemory>
+                  <links>
+                    <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
+                    <link>http://java.sun.com/javaee/6/docs/api</link>
+                  </links>
+                </configuration>
+              </execution>
             </executions>
           </plugin>
-          -->
         </plugins>
       </build>
     </profile>

@@ -2,6 +2,11 @@
 
 = News =
 
+  * 17th march 2010: 
+    agimatec-validation sources are now [http://svn.apache.org/repos/asf/incubator/bval/ hosted as apache incubator project]. Get the sources with:
+
+{{{svn checkout http://svn.apache.org/repos/asf/incubator/bval/trunk bval}}}
+
   * [http://wiki.apache.org/incubator/ValidationProposal Proposal for agimatec-validation to become an Apache Incubator project]
 
 = Latest changes =

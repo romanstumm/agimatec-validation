@@ -7,6 +7,8 @@
 
 {{{svn checkout http://svn.apache.org/repos/asf/incubator/bval/trunk bval}}}
 
+  * Apache BVAL (Incubator) Status Page: http://incubator.apache.org/projects/beanvalidation.html
+
   * [http://wiki.apache.org/incubator/ValidationProposal Proposal for agimatec-validation to become an Apache Incubator project]
 
 = Latest changes =

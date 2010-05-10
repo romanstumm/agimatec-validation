@@ -184,3 +184,6 @@ if(!results.getErrorsByOwner(object.getAddress()).isEmpty()) {
   // something wrong with customer.address.*
 }
 }}}
+
+5. a blog entry about method parameter validation
+http://carinae.net/2010/04/automatic-validation-method-calls-with-jsr-303-appendix-c/

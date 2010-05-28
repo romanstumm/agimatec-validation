@@ -21,6 +21,7 @@ import com.agimatec.validation.jsr303.AppendValidation;
 import com.agimatec.validation.jsr303.Jsr303MetaBeanFactory;
 import com.agimatec.validation.jsr303.util.SecureActions;
 import com.agimatec.validation.model.Validation;
+import org.apache.commons.lang.ClassUtils;
 
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
@@ -67,9 +68,10 @@ public class MethodValidatorMetaBeanFactory extends Jsr303MetaBeanFactory {
                 beanDesc.putConstructorDescriptor(cons, consDesc);
 
                 Annotation[][] paramsAnnos = cons.getParameterAnnotations();
+                Class[] paramTypes = cons.getParameterTypes();
                 int idx = 0;
                 for (Annotation[] paramAnnos : paramsAnnos) {
-                    processAnnotations(consDesc, paramAnnos, idx);
+                    processAnnotations(consDesc, paramAnnos, paramTypes[idx], idx);
                     idx++;
                 }
             }
@@ -92,58 +94,65 @@ public class MethodValidatorMetaBeanFactory extends Jsr303MetaBeanFactory {
                 // return value validations
                 AppendValidationToList validations = new AppendValidationToList();
                 for (Annotation anno : method.getAnnotations()) {
-                    processAnnotation(anno, methodDesc, validations);
+                    if ( anno instanceof Valid ) { 
+                        methodDesc.setCascaded( true );
+                    } else {
+                        processAnnotation(anno, methodDesc.getMetaBean().getClass(), validations);
+                    }
                 }
                 methodDesc.getConstraintDescriptors().addAll(
                       (List)validations.getValidations());
 
                 // parameter validations
                 Annotation[][] paramsAnnos = method.getParameterAnnotations();
+                Class[] paramTypes = method.getParameterTypes();
                 int idx = 0;
                 for (Annotation[] paramAnnos : paramsAnnos) {
-                    processAnnotations(methodDesc, paramAnnos, idx);
+                    processAnnotations(methodDesc, paramAnnos, paramTypes[idx], idx);
                     idx++;
                 }
             }
         }
     }
 
-    private void processAnnotations(ProcedureDescriptor methodDesc, Annotation[] paramAnnos,
+    private void processAnnotations(ProcedureDescriptor methodDesc, Annotation[] paramAnnos, Class parameterType,
                                     int idx)
           throws InvocationTargetException, IllegalAccessException {
         AppendValidationToList validations = new AppendValidationToList();
+        boolean cascaded = false;
         for (Annotation anno : paramAnnos) {
-            processAnnotation(anno, methodDesc, validations);
+            if ( anno instanceof Valid ) {
+                cascaded = true;
+            } else {
+                processAnnotation(anno, parameterType, validations);
+            }
         }
         ParameterDescriptorImpl paramDesc = new ParameterDescriptorImpl(
               methodDesc.getMetaBean(), validations.getValidations().toArray(
               new Validation[validations.getValidations().size()]));
         paramDesc.setIndex(idx);
+        paramDesc.setCascaded( cascaded );
         methodDesc.getParameterDescriptors().add(paramDesc);
     }
 
-    private void processAnnotation(Annotation annotation, ProcedureDescriptor desc,
+    private void processAnnotation(Annotation annotation, Class paramType,
                                    AppendValidation validations)
           throws InvocationTargetException, IllegalAccessException {
 
-        if (annotation instanceof Valid) {
-            desc.setCascaded(true);
+        Constraint vcAnno = annotation.annotationType().getAnnotation(Constraint.class);
+        if (vcAnno != null) {
+            Class<? extends ConstraintValidator<?, ?>>[] validatorClasses;
+            validatorClasses = findConstraintValidatorClasses(annotation, vcAnno);
+            applyConstraint(annotation, validatorClasses, null,
+                  ClassUtils.primitiveToWrapper(paramType), null, validations);
         } else {
-            Constraint vcAnno = annotation.annotationType().getAnnotation(Constraint.class);
-            if (vcAnno != null) {
-                Class<? extends ConstraintValidator<?, ?>>[] validatorClasses;
-                validatorClasses = findConstraintValidatorClasses(annotation, vcAnno);
-                applyConstraint(annotation, validatorClasses, null,
-                      desc.getMetaBean().getBeanClass(), null, validations);
-            } else {
-                /**
-                 * Multi-valued constraints
-                 */
-                Object result = SecureActions.getAnnotationValue(annotation, ANNOTATION_VALUE);
-                if (result != null && result instanceof Annotation[]) {
-                    for (Annotation each : (Annotation[]) result) {
-                        processAnnotation(each, desc, validations); // recursion
-                    }
+            /**
+             * Multi-valued constraints
+             */
+            Object result = SecureActions.getAnnotationValue(annotation, ANNOTATION_VALUE);
+            if (result != null && result instanceof Annotation[]) {
+                for (Annotation each : (Annotation[]) result) {
+                    processAnnotation(each, ClassUtils.primitiveToWrapper(paramType), validations); // recursion
                 }
             }
         }

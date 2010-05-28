@@ -8,7 +8,8 @@
 
 = News =
   * 28th may 2010:
-  download 0.9.7-SNAPSHOT.zip that contains patches and minor changes:
+  download 0.9.7-SNAPSHOT.zip that contains patches and minor changes
+
   Issue#26 method validation parameter processing problems - FIXED
 
   * 17th march 2010: 

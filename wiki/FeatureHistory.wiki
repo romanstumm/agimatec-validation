@@ -1,6 +1,15 @@
 #summary Features and revision history
 
+== THERE ARE NO FURTHER DEVELOPMENT PLANS FOR AGIMATEC-VALIDATION, BECAUSE AGIMATEC-VALIDATION HAS BECOME APACHE-BVAL. ==
+
+  * BVAL status page  http://incubator.apache.org/projects/beanvalidation.html
+  * latest sources    http://svn.apache.org/repos/asf/incubator/bval/.
+  * current artifacts https://repository.apache.org/content/groups/public/org/apache/bval/ 
+
 = News =
+  * 28th may 2010:
+  download 0.9.7-SNAPSHOT.zip that contains patches and minor changes:
+  Issue#26 method validation parameter processing problems - FIXED
 
   * 17th march 2010: 
     agimatec-validation sources are now [http://svn.apache.org/repos/asf/incubator/bval/ hosted as apache incubator project]. Get the sources with:
